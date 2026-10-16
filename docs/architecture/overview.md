@@ -43,6 +43,10 @@ and engine decision. They do not describe a deployed runtime. The
 from legacy IDs and deterministic helpers. Current source paths and supported
 preview checks remain as described on this page.
 
+The [adaptive Playbook design](adaptive-playbooks.md) refines how coverage goals,
+existing Playbook identities, immutable versions and case-specific plans relate.
+It retains the selected engine and adds detection/evidence qualification gates.
+
 ## Contracts to inspect
 
 - [Identity and tenant boundaries](../reference/identity.md): required UUID isolation versus verified auth behavior.

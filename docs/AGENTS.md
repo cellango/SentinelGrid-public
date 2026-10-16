@@ -45,7 +45,8 @@ alone never establishes a capability or permission.
   Do not put tenant, environment, model or version into the canonical role name.
 - Keep one canonical name across registry/configuration/docs/telemetry. Store
   `agent_version`, `prompt_version`, `model_version`, `tool_version` and
-  `workflow_version` independently. Pin immutable versions/digests for active runs.
+  `playbook_version`, runtime build, and legacy `workflow_version` independently.
+  Pin immutable versions/digests for active runs; retain compatible legacy fields.
 - Distinguish `agent_definition_id`, `agent_run_id`, `sensor_id`, `case_id`, `task_id`,
   `workflow_run_id`, `action_id` and `tool_call_id`. Do not introduce an ambiguous
   unqualified `agent_id` in new interfaces. Resolve legacy fields in an endpoint-
@@ -60,6 +61,19 @@ alone never establishes a capability or permission.
 - Inventory source modules, APIs, Compose/Helm/DNS names, queues, environment keys,
   registry IDs, metrics and integrations together before a rename. Use scoped,
   versioned compatibility aliases with tests; aliases cannot widen permissions.
+
+# Playbook and coverage vocabulary
+
+- Preserve existing Playbook keys/UUIDs and the editor. Publish immutable procedure
+  versions supporting fixed, conditional and adaptive modes. WF-* IDs are security
+  use-case coverage goals, not 120 parallel executable definitions.
+- The workflow is the control graph; the execution plan is bounded case-specific
+  task data. Reuse typed subplaybooks; validate graph semantics and mandatory work
+  before scheduling. Follow the [adaptive design](architecture/adaptive-playbooks.md).
+- Keep full definition/plan payloads, manifests, events, artifacts and effect receipts
+  under retention/access policy. Audit reconstruction makes no model/provider calls;
+  simulation is effect-disabled and separately identified. Recovery history alone
+  is not the audit trail.
 
 # Reasoning, authority and execution ownership
 

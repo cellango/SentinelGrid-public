@@ -83,6 +83,21 @@ working services. Additional source detail lives in [component categories](../re
 | SentinelGuard and vendor endpoint software | Sensor/endpoint management boundary | Retain product branding, installed IDs, enrollment identity and vendor names until explicit compatible migration |
 | AI Shield | AI security gateway/service boundary | Keep its own contracts and policy controls; the model gateway and reasoning roles remain different responsibilities |
 
+## Playbook content and adaptive plans
+
+Use the existing Playbook library/editor as the procedure authority, extended with
+immutable versions and fixed, conditional or adaptive planning contracts. WF-* IDs
+are use-case coverage goals linked many-to-many to those versions, not a parallel
+executable registry. A stable runtime protocol consumes bounded case-plan data;
+models cannot deploy arbitrary generated code. Preserve keys, tenant overrides,
+full definitions, plan revisions and execution history.
+
+The [adaptive Playbook and evidence design](adaptive-playbooks.md) defines routing/
+detection-quality gates, semantic graph compilation, controlled replanning and
+run manifests/events/artifacts independent of engine recovery history. This
+refinement retains Temporal behind `case_runtime`; framework replacement requires
+a superseding ADR and evidence.
+
 ## Execution, authority and records
 
 The [contracts](../reference/agentic-contracts.md) define the logical versioned

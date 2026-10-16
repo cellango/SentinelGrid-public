@@ -87,6 +87,22 @@ storage boundary. Application tables and paired ORM/Flyway migrations remain und
 physical application schema and vendor/application storage separation. Neither
 document assigns migration versions or implements that storage.
 
+## Research refinement: adaptive Playbooks
+
+The [adaptive Playbook design](../adaptive-playbooks.md) treats WF-* entries as
+coverage goals and reuses immutable versions of the existing Playbook library.
+Case-specific plan data may change within reviewed constraints while this engine
+remains the sole scheduler. Run manifests, full plan/definition payloads, append-only
+events and protected artifacts provide audit evidence independently of engine history.
+
+A later research proposal prefers native LangGraph, but reports on a custom engine
+described as LangGraph-style rather than a native implementation. Its useful domain
+requirements do not demonstrate a failure of the selected Temporal direction.
+Retain this decision; qualify it against the same three scenario fixtures, repaired
+fixed baseline and recovery/approval/evidence gates. A justified alternative spike
+may inform a superseding ADR; no second live scheduler, dependency or vendor storage
+is introduced by this refinement.
+
 ## Alternatives
 
 | Option | Assessment | Decision |

@@ -1,6 +1,6 @@
 # Case, execution and registry contracts
 
-Status: design contract revision 1, October 16, 2026. Not implemented API or database schema.
+Status: design contract revision 2, October 16, 2026. Not implemented API or database schema.
 These logical contracts implement the [selected target](../architecture/agentic-platform.md).
 Existing [runtime models](../../backend/libs/sg_agent_runtime/models.py) and
 [SOC models](../../backend/libs/sg_agent_runtime/soc_models.py) differ; do not assume
@@ -19,7 +19,8 @@ Use UTC timestamps, positive integer revisions and bounded collections/strings.
 Choose explicit limits in the implementation contract. Budgets use bounded integer
 token/time/cost units with named currency/unit where relevant. Names, priorities,
 model confidence and analyst tiers never grant permissions. Preserve independent
-contract, workflow, agent, prompt, model, tool and policy versions.
+contract, Playbook, runtime build, agent, prompt, model, tool and policy versions.
+Legacy workflow fields remain explicit compatibility aliases, not WF-* coverage IDs.
 
 External API request DTOs and internal trusted envelopes are different. Validate
 each caller/server request against one versioned contract. Only server code injects
@@ -32,14 +33,34 @@ Do not fabricate a queued approval or mark an unconfigured effect completed.
 | Record | Required logical fields | Invariants |
 | --- | --- | --- |
 | Case | `case_id`, `tenant_id`, `case_kind`, `goal`, `case_revision`, business `status`, accountable owner/reference, entity/service refs, criticality/constraints, evidence refs, access class, timestamps | Cases may represent incidents, exposure, access reviews or control work; incident IDs are linked objects, not the universal case identity |
-| Plan | `plan_id`, `case_id`, `plan_revision`, definition versions, typed task nodes, dependencies/conditions/joins, limits, desired outcomes | One active plan owner; append revisions; validate reachability and joins; feedback/model output cannot directly mutate execution state |
-| Run request | `workflow_run_id`, `workflow_id`, `workflow_version`, trusted tenant/case, trigger/source event, correlation/deduplication key, requested scope, definition digest, timestamps | Persist with the outbox before intake acknowledgment; redelivery references the same logical request |
+| Plan | `plan_id`, `case_id`, `plan_revision`, parent revision/hash, full canonical payload/hash, triggering evidence, pinned Playbook/procedure and planner versions, validation report/rationale, typed task nodes, dependencies/conditions/joins, limits, desired outcomes | One active plan owner; append revisions; validate reachability and joins; feedback/model output cannot directly mutate execution state |
+| Run request | run UUID, pinned Playbook/version UUID, use-case coverage refs, runtime build, trusted tenant/case, trigger/source event and selection binding/version, correlation/deduplication key, requested scope, full definition refs/digests, timestamps; explicitly mapped legacy workflow fields | Persist with the outbox before intake acknowledgment; redelivery references the same logical request |
 | Execution projection | workflow/run identity, engine reference, monotonic projection revision, observed status/step, observation time | Temporal owns scheduling history; this application view cannot independently claim or schedule tasks |
 | Evidence reference | `evidence_id`, tenant/case scope, source locator/type/version, content digest where applicable, collection/observation times, freshness, access/retention rules, provenance | Preserve immutable source identity and known gaps; resolve under current access policy; do not put raw secrets or unrestricted evidence in workflow history |
 
 Separate business case disposition from the state of a workflow run. Cases can have
 multiple workflow runs/children. Case closure requires verification and accountable
 acceptance; successful scheduling or a closed ticket is insufficient.
+
+## Content, selection and audit records
+
+| Record | Required logical fields / invariant |
+| --- | --- |
+| Immutable Playbook version | Existing Playbook identity/key, tenant scope, version UUID, full source and compiled payloads/digests, compiler/schema/runtime compatibility, fixed/conditional/adaptive contract, permitted procedures/invariants, publication decision; never mutate active versions |
+| Use-case binding | Stable WF-* coverage ID/version, exact Playbook/subprocedure versions, applicability, required outcome evidence and coverage assessment; many-to-many, not executable itself |
+| Detection binding/selection | Trusted tenant, exact rule/query version, parameters/source/extraction/monitor refs, immutable binding version, applicable Playbook version, override/fallback policy, candidates/exclusions and decision rationale |
+| Run manifest | Case/run/tenant, initial context/evidence refs, triggering events, selection, exact content/procedure/compiler/runtime/model/prompt/tool/policy versions and modes; full content available under access policy |
+| Execution event / attempt | Append-only event UUID and per-run sequence, task/attempt/revision, actor/time, typed decision/status, input/output artifact refs/digests, action/approval/receipt/verification links and integrity reference |
+| Evidence artifact / custody | Original bytes or approved representation, source/event/collection time, hash, protected location, redaction relationship, custody/access events, retention/legal hold; hash alone cannot reconstruct missing bytes |
+| Runtime history link | Scoped run-to-engine execution/history identity, worker build and state schema; recovery pointer, not sole audit record |
+
+Reconstruction is read-only, including offline exports with zero model/provider
+calls. Simulation has a new identity and effect-disabled tools. Live continuation
+checks current authority and durable state. Protect original model request/output
+artifacts only where policy permits; expose a separately redacted view, never raw
+credentials or hidden chain-of-thought. See the
+[adaptive design](../architecture/adaptive-playbooks.md) for publication, custody,
+controlled replanning and acceptance requirements.
 
 ## Task and agent invocation
 
@@ -67,7 +88,7 @@ The adapter validates schemas and bounds again before any provider operation.
 
 | Record | Required logical fields | Invariants |
 | --- | --- | --- |
-| Action proposal | `action_id`, trusted tenant/case, plan/case revision, `tool_id`, `tool_version`, exact typed target refs, validated parameters, expected effect, risk/business impact, preconditions/dependencies, compensation, verification specification, policy version, expiry, proposal hash | Immutable approved content; model proposes parameters, runtime resolves authority and targets |
+| Action proposal | `action_id`, immutable proposal ID/revision, trusted tenant/case, plan/case revision, `tool_id`, `tool_version`, exact typed target refs, validated parameters, expected effect, risk/business impact, preconditions/dependencies, compensation, verification specification, policy version, expiry, proposal hash | Immutable approved content; model proposes parameters, runtime resolves authority and targets |
 | Policy decision | decision ID/version, proposal hash, scoped principal/capabilities, allow/deny/approval-required result, reason, evaluated time and expiry | Evaluate current policy at execution; fail closed on unavailable authority; emergency authority is explicit policy |
 | Approval | `approval_id`, action/proposal hash, tenant/case/plan/case revision, policy version, exact targets, approver identity/role, separation-of-duties decision, decision/time/expiry | Persist real pending/approved/rejected state; changes to bound content require a new decision; a signal or model statement is not approval |
 | Action claim / receipt | `action_id`, stable idempotency key, tool/provider version, target refs, resource fence, attempt identity, provider request/effect IDs, typed execution outcome, timestamps, redacted receipt/evidence refs, reconciliation requirement | Retry identity is stable across workflow replay; ambiguous external state is reconciled before another effect |
@@ -80,12 +101,21 @@ target ownership and approver authority on resume and before execution.
 
 Compute `proposal_hash` as SHA-256 over an
 [RFC 8785 canonical JSON](https://www.rfc-editor.org/rfc/rfc8785) representation of
-the versioned proposal's bound fields: action/tenant/case IDs, plan and case revisions,
+the versioned proposal's bound fields: action/proposal/tenant/case IDs and proposal
+revision, plan and case revisions,
 tool ID/version, targets, parameters, expected effect, risk/constraints, preconditions,
 compensation, verification specification, policy version and expiry. Exclude the
 hash itself, mutable execution status and transport credentials. Implementations
 must publish exact field names/normalization and cross-language test vectors before
 using this as an approval boundary; never substitute an arbitrary JSON dump.
+
+Keep one logical action ID and effect idempotency key across unchanged retries and
+replans. A changed bound revision initially requires a new immutable proposal
+revision and fresh decision, while preserving that effect identity and prior
+receipts. Replanning cannot repeat a completed effect. A later policy-controlled
+carry-forward would need an explicit audited equivalence/current-authority
+attestation; it is not implicit approval reuse. Changed effect content requires
+its own reviewed intent and reconciliation of the prior one.
 
 Track action outcomes independently: accepted, dispatched, executed, ambiguous,
 failed, cancelled or unsupported, with verification `pending`, `passed`, `failed`
@@ -93,7 +123,7 @@ or `inconclusive` and an explicit simulation indicator. A task waiting on manual
 completion remains waiting until authenticated evidence is recorded. Effectful
 operations that cannot be reconciled safely remain blocked for human ownership.
 
-## Three definition registries
+## Playbook library and definition catalogs
 
 Registry data declares permitted designs; registration does not grant a tenant
 permission to run them. Pin immutable versions/digests on every invocation. Allow
@@ -102,14 +132,17 @@ before implementation/validation/enablement.
 
 | Registry | Required deployable-definition fields |
 | --- | --- |
-| Workflow | stable `workflow_id`, slug, name/description, independent version/digest, owner, applicability, trigger/input schema, evidence/freshness requirements, typed graph and completion criteria, permitted roles/tool capabilities, action/policy references, limits, evaluation suite, lifecycle status |
+| Playbook | Existing stable Playbook ID/key, immutable version UUID/digest and full payload, owner, applicability, trigger/input schema, fixed/conditional/adaptive contract, compiled graph/subprocedures and completion criteria, evidence/freshness, permitted roles/tools, policy, limits, evaluation suite and publication lifecycle |
+| Security use-case coverage | Stable WF-* ID and catalog version, applicability/outcomes, candidate/versioned Playbook bindings, reusable/partial/missing/unvalidated assessment and acceptance evidence; no executable graph or independent execution enablement |
 | Agent | `agent_definition_id`, canonical `agent_name`, version/digest, purpose, supported tasks, prompt version, input/output schemas, permitted versioned tools, model/data policy, evidence requirements, delegation/iteration/time/cost limits, escalation and evaluation suite, lifecycle status |
 | Tool | stable logical `tool_id`, version/digest, description, validated input/output schemas, read/write/impact classification, provider capability, target/scope rules, credential reference policy, authorization/approval requirements, bounds/timeouts/rate limits, idempotency/reconciliation and verification/receipt contracts, owner/tests, lifecycle status |
 
-Lifecycle: `proposed`, `designed`, `implemented`, `validated`, `enabled`, `retired`.
+Executable-definition lifecycle: `proposed`, `designed`, `implemented`, `validated`,
+`enabled`, `retired`. Coverage assessment is separate; listing a use case does not
+implement or enable a Playbook.
 Tenant enablement is a separate record binding tenant, definition versions,
 connector capabilities, approved policy/authority, limits, accountable owner and
-rollout evidence. A globally validated workflow can remain unavailable to a tenant.
+rollout evidence. A globally validated Playbook version can remain unavailable to a tenant.
 Retirement blocks new runs while existing runs are drained, cancelled or migrated
 under an explicit plan; never silently swap versions on active work.
 
@@ -139,6 +172,10 @@ limited-evidence or blocked outcomes. Synthetic and real provider results remain
 distinguishable. Ticket synchronization follows case records asynchronously.
 
 ## Compatibility and implementation gates
+
+Legacy `workflow_id`/`workflow_version` resolve to a pinned Playbook/control build
+through a versioned adapter; WF-* coverage IDs cannot be passed as executable IDs.
+Do not rewrite old execution history or repoint a historical alias.
 
 Existing `agent_id`, incident-as-case IDs, legacy task states and flat tool names
 remain current interfaces. An adapter must resolve their meaning by endpoint and

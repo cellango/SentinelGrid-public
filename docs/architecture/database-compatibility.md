@@ -102,6 +102,11 @@ qualification decisions for the implementation tasks, not selected pins here.
 
 ### Proposed application tables
 
+The [adaptive Playbook refinement](adaptive-playbooks.md) supersedes the earlier
+independent `workflow_definitions` proposal with immutable versions of the existing
+Playbook identity and a coverage catalog. It also makes the manifest/event/artifact
+audit records explicit. No physical table or migration has changed.
+
 These are physical planning names, **all absent until implemented**. Every
 tenant-owned row has `tenant_id UUID NOT NULL`. Unless shown otherwise, use a UUID
 primary key plus a unique `(tenant_id, id)` target for composite child references.
@@ -112,18 +117,27 @@ Existing domain links carry the source schema/type and tenant-bound source UUID.
 | `cases`, `case_access_grants`, `case_entity_links` | Independent case identity, revision, kind, goal, business status, accountable owner, classification, timestamps; scoped principal grants and canonical entity/service references. Unique `(tenant_id, case_id, source_type, source_id)` links |
 | `case_source_links` | Legacy incident/ticket/execution mapping with source system/schema/key and provenance; unique source identity per tenant and link kind. Explicit mapping, never an authorization alias |
 | `case_plan_revisions` | Immutable `(tenant_id, case_id, plan_revision)` with plan UUID, validated bounded graph, definition digests, constraints and author. One active revision pointer on the case, updated by compare-and-swap |
-| `workflow_run_requests`, `trigger_receipts` | Run UUID, case/plan/version, trusted initiator/scope, trigger identity, parent run, correlation, submission status and engine identity. Unique tenant/source/event/dedup identity rejects a conflicting reused key rather than accepting new content |
+| `workflow_run_requests`, `trigger_receipts` | Run UUID, existing Playbook/version and case/plan, coverage refs, immutable selection binding, compiler/runtime build, trusted initiator/scope, trigger identity, parent run, correlation, submission status and engine identity. Unique tenant/source/event/dedup identity rejects a conflicting reused key rather than accepting new content |
 | `workflow_run_projections`, `task_projections` | Engine run/task IDs, parent/dependency references, monotonic projection revision, observed state/time. Rebuildable display/query projections, never an independent runnable queue |
 | `manual_tasks`, `manual_task_events` | Authoritative human assignment, permitted decision, required evidence, deadline and append-only authenticated completion/cancellation/escalation events. Engine owns wake-up timing; application records prove what the person actually did |
 | `evidence_references`, `case_evidence_links` | Tenant/case, scoped source locator/version, digest where applicable, collection/observation/freshness times, provenance and access/retention classification. Immutable versions; reuse existing compliance evidence rather than duplicating artifacts |
 | `agent_invocations`, `agent_results` | Separate definition/run/task IDs, pinned prompt/model/tool versions, bounded input refs, typed result/evidence, uncertainty, usage and outcome. No credentials or hidden reasoning traces |
-| `action_proposals`, `policy_decisions` | Immutable exact target/parameters/tool/effect/constraints/revisions/expiry plus canonical proposal hash; policy version, caller capabilities and decision. New content creates a new proposal; never mutate an approved payload |
+| `action_proposals`, `policy_decisions` | Stable logical action ID, separate immutable proposal ID/revision with unique `(tenant_id, action_id, proposal_revision)`, exact target/parameters/tool/effect/constraints/revisions/expiry plus canonical proposal hash; policy version, caller capabilities and decision. New content creates a new proposal; never mutate an approved payload |
 | `approval_requests`, `approval_decisions` | Request/decision UUIDs tied to exact action/hash, tenant/case/plan/policy revisions, approver/role, separation of duties, expiry and revocation. Append decisions; enforce one effective decision under locking and current policy |
 | `action_claims`, `resource_fences`, `action_attempts`, `action_receipts` | One logical effect identity per tenant; stable idempotency key, scoped resource key/fencing generation, lease/attempt, provider request/effect identity, typed ambiguous/failed/executed result and immutable redacted receipt refs. Unique attempt numbers; no duplicate live claim for the same effect |
 | `action_verifications`, `case_closure_decisions` | Independent verifier/method/version, authoritative postconditions, health/freshness window, pass/fail/inconclusive, missing evidence and accountable closure/risk decision. Closure is a business decision, not a projected workflow status |
 | `outbox_events`, `consumer_receipts` | Atomic business-event UUID, tenant, aggregate/revision, event schema/version and bounded reference payload; delivery attempts/lease/next-attempt/dead-letter state. Unique consumer/event receipt and aggregate-event identity for idempotent processing |
-| `workflow_definitions`, `agent_definitions`, `tool_definitions` | Platform-controlled immutable definition UUID/key/version/digest plus schemas, owner, compatibility and lifecycle metadata. These are global reviewed definitions, not tenant-private prompts or credentials; runtime role has read access only |
-| `tenant_workflow_enablements` | Tenant-specific pinned definition versions, applicability, scope, connector/policy readiness, authorized owner and rollout evidence. Enabling a version is separate from registering it or completing a run |
+| `playbook_content_packages`, `use_case_catalog`, `agent_definitions`, `tool_definitions` | Platform-controlled immutable content packages, WF-* outcome coverage and agent/tool definitions. Full canonical payloads/digests, schemas, owner, compatibility and lifecycle. Runtime role reads global packages; no independent executable workflow registry |
+| `playbook_versions`, `use_case_playbook_bindings`, `tenant_playbook_enablements` | Tenant-owned immutable version snapshots extending existing Playbook identity; optional reviewed base package; full source/compiled content, compiler/runtime versions, planning contract, coverage links and separate authorized enablement. Preserve tenant customizations and source IDs |
+| `run_manifests`, `execution_events`, `task_attempts`, `decision_records`, `runtime_history_links` | Full run/selection/version/context manifest; append-only per-run event sequence/integrity refs, task/attempt and originating plan revision, typed decisions/input/output/authority links, engine history pointer. Unique `(tenant_id, run_id, sequence)` with serialized sequence allocation; event/outbox and authoritative writes commit together |
+| `evidence_artifacts`, `artifact_access_events` | Protected source/approved bytes, digests/location, redaction links, source/event/collection times, custody/access events, retention/hold; connect existing evidence stores and audit rather than copy raw data into history |
+
+In `security_ops`, plan immutable `detection_playbook_binding_versions` extending
+the existing rule/mapping identity. Bind tenant/rule/query version, exact Playbook
+version, conditions/precedence, fallback and publication decision; add cross-schema
+references in explicit follow-up migrations. Keep legacy mapping reads through a
+scoped compatibility projection/adapter, not a second active selection authority.
+The full history/catalog audit must precede any constraint change or data backfill.
 
 Tenant-owned customization must live in separate tenant-scoped version rows; it
 cannot write global definitions or use `tenant_id = NULL` as implicit shared access.
@@ -246,8 +260,8 @@ existing asset/service/evidence ownership before creating overlapping data store
 | --- | --- | --- |
 | D0 — inventory and runner | Record effective histories/catalogs; preserve checksums; fix location/validation/role/extension prerequisites in a reviewed change | Qualified public-lineage fresh baseline plus a recorded reconciliation route for each older database |
 | D1 — IAM and domain compatibility | Pair explicit-schema model fixes and additive IAM/RLS changes; preserve current domain/public-only features; normalize tenant IDs with verified mappings | Real least-privilege two-tenant and pooled-transaction tests; preserved domain data and APIs |
-| D2 — accepted source ports | Approval intent, domain additions, model routing/knowledge/memory and accepted prototype changes; globally new versions, no local-history imports | Each source migration has exact column/constraint/data mapping and feature parity; no competing execution authority |
-| D3 — shared case foundation | `case_runtime` models/migrations, definition versions, evidence/access/legacy links, intake/run/outbox; qualify Temporal vendor storage separately | Atomic acceptance/redelivery and application/vendor privilege boundaries, contract tests and replay/restore evidence |
+| D2 — accepted source ports | Immutable Playbook versions/bindings/compiler, qualified detection subset with all catalog rows dispositioned, approval intent, domain additions, model routing/knowledge/memory and accepted prototype changes; globally new versions, no local-history imports | Each source migration has exact column/constraint/data mapping and feature parity; no competing execution authority |
+| D3 — shared case foundation | `case_runtime` models/migrations, Playbook versions/coverage, run manifests/events/artifacts, evidence/access/legacy links, intake/run/outbox; qualify Temporal vendor storage separately | Atomic acceptance/redelivery and application/vendor privilege boundaries, contract tests and replay/restore evidence |
 | D4 — action and human authority | Immutable proposals/policy/approval decisions, manual tasks, claims/fences/receipts/verification; pair all callers with exact contracts | Changed/stale/forged approvals denied, ambiguous effects reconciled, no duplicate supported effects after worker death |
 | D5 — cutover and retirement | Backfill/projection reconciliation, active-run drain and single-owner cutover; keep rollback compatibility | Data/count/digest reconciliation, recovery rehearsal, current documentation and explicit old-path disposition |
 
@@ -274,6 +288,7 @@ configuration, checksums, catalogs and results privately without credentials.
 | Durability/concurrency | Duplicate intake, outbox crash before/after engine start, out-of-order projections, duplicate approvals, competing workers, lease expiry, stale fences, cancellation, uncertain commits/provider timeout; no authority lost or extra supported effects |
 | Embedding transition | Match exact producer/model/preprocessing/dimension/index; interrupted backfill resumes, coverage/quality/privacy checks pass; old reads work during rollback |
 | Failure and recovery | Interrupt additive backfill/index/migration steps; verify history and safe retry. Restore application plus vendor persistence/visibility and evidence refs to documented recovery points; reconcile outbox/projections/receipts without reissuing uncertain writes |
+| Evidence reconstruction | Export full pinned content, selection, manifest, every plan/attempt/decision/approval/receipt/verification and permitted artifacts; reconstruct offline with zero model/provider calls. Verify custody, integrity anchors, redaction/retention/hold and protected history after definition retirement |
 | Rolling compatibility and cutover | Old/new readers coexist during expansion; active definitions replay under qualified workers; drain old owner; rollback software without destructive schema downgrade or two schedulers |
 
 Use expand → backfill → validate → switch → retain → separately review contraction.

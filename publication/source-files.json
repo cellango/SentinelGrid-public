@@ -1990,6 +1990,7 @@
     "docs/AGENTS.md",
     "docs/README.md",
     "docs/SentinelGrid.svg",
+    "docs/architecture/adaptive-playbooks.md",
     "docs/architecture/agentic-platform.md",
     "docs/architecture/cloud-providers.md",
     "docs/architecture/database-compatibility.md",
