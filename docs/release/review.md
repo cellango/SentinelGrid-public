@@ -1,15 +1,18 @@
 # Public source preview review — October 15, 2026
 
-Decision updated October 16: **public source preview approved; finalization in
-progress**. The independent repository is public and its actual protections and
+Decision updated October 16: **developer source preview published**. The independent repository is public and its actual protections and
 private-reporting settings are verified. The original repository/history remain
 private. Cloud/image/package deployment remains excluded. The owner authorized
-a documentation refreeze and completion of `v0.1.0-preview.1` with incoming-report
+a documentation refreeze and publication of `v0.1.0-preview.1` with incoming-report
 access/notification delivery explicitly unverified. A private maintainer draft,
 checked delivery preferences and a received direct inbox test are separate
 observations. See [the protection record](repository-protections.md) and
 [the candidate record](candidate.md); the separately generated manifest binds the
 final commit and actual checks. Historical rows below retain their original scope.
+
+Published [v0.1.0-preview.1](https://github.com/cellango/SentinelGrid-public/releases/tag/v0.1.0-preview.1) at `7cf4a5766083533517ed3467858dd830ee540ed3` with the source-only archive, manifest and
+checksums. Exact-commit local/hosted checks passed. The original repository remains
+private.
 
 Work through the remaining gates using [Public Release Tasks](tasks.md).
 
@@ -170,7 +173,7 @@ business documents are omitted with verified private recovery copies. The old
 Task 7 snapshot contains retired material and cannot be the pushed candidate.
 Task 10 rebuilt a fresh root from its reviewed 3,231 selected files before pushing.
 
-## Remaining publication gates
+## Publication constraints and follow-up
 
 1. **Preserve the independent publication boundary:** Task 10 rebuilt and verified
    the source-only snapshot after dependency/documentation review. Publish only
@@ -197,7 +200,9 @@ Task 10 rebuilt a fresh root from its reviewed 3,231 selected files before pushi
 4. **Release identity:** Task 12 records the full commit, checks, dependency/asset
    digests and limitations in the prepared freeze manifest. Review that exact
    identity, repository visibility, and release contents before publication.
-   Verify anonymous clean-clone checks afterward. No release tag has been created.
+   The published `v0.1.0-preview.1` tag names the checked release commit; its three
+   release assets were uploaded and verified. Task 14 completes broader anonymous
+   clean-clone/feedback checks and tracks the deferred reporting test.
 
 ## Checklist disposition
 
