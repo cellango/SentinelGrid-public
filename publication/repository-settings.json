@@ -1,10 +1,10 @@
 {
   "format_version": 1,
-  "review_date": "2026-10-15",
+  "review_date": "2026-10-16",
   "repository": "cellango/SentinelGrid-public",
   "scope": "Repository settings for the independent developer source preview; original repository and account billing are outside these operations.",
-  "visibility": "private",
-  "task_11_status": "private_preparation_complete_with_public_only_verification_pending",
+  "visibility": "public",
+  "task_11_status": "complete_with_actual_public_controls_verified_in_task_13",
   "applied_and_read_back": {
     "actions_permissions": {
       "enabled": true,
@@ -30,8 +30,54 @@
     "run": 38847508895,
     "all_four_jobs": "success"
   },
-  "prepared_public_only": {
-    "activation_gate": "Only after the exact Task 13 visibility operation is approved; apply/read back required protections and verify private reporting access/notification receipt before release/tag finalization. Repeat public/fork verification in Task 14 using the same single authorized report. Stop finalization if a required setting or delivery cannot be verified.",
+  "not_performed": [
+    "Account plan or paid-feature purchase",
+    "Original repository modification",
+    "Collaborator invitation or external announcement",
+    "Additional incoming test or repeated direct email",
+    "Deployment, runtime, image, installer or package publication"
+  ],
+  "sources": {
+    "branch_protection": "https://docs.github.com/en/rest/branches/branch-protection#update-branch-protection",
+    "actions_permissions": "https://docs.github.com/en/rest/actions/permissions",
+    "private_reporting": "https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository",
+    "secret_protection": "https://docs.github.com/en/code-security/getting-started/quickstart-for-securing-your-repository"
+  },
+  "private_reporting_channel": {
+    "provider": "github_private_vulnerability_reporting",
+    "configuration": ".github/VULNERABILITY_REPORT.yml",
+    "issue_routing": ".github/ISSUE_TEMPLATE/config.yml",
+    "report_form": "https://github.com/cellango/SentinelGrid-public/security/advisories/new",
+    "reporting_email_in_source": false,
+    "notification_destination_configuration": "Maintainer GitHub repository subscription and account notification preferences; no source-controlled email address or product SMTP configuration.",
+    "current_availability": "enabled_on_public_repository",
+    "notification_subscription_verified": true,
+    "notification_api_readback": "Verified through GitHub UI; custom subscription returns null in GraphQL, and the current token lacks notification-mutation scope. No OAuth scope expansion.",
+    "public_activation_task": 13,
+    "public_verification_task": 14,
+    "test_authorization": {
+      "authorized": true,
+      "maximum_submissions": 1,
+      "submitted": 0,
+      "reference": "SG-REPORTING-2026-10-15",
+      "title": "TEST ONLY: SentinelGrid private-reporting delivery check",
+      "condition": "When a separate non-maintainer reporter becomes available; inspect existing reports before submitting and never duplicate an uncertain submission.",
+      "content": "Synthetic delivery test only; no actual vulnerability claim, credential, customer data or attachment.",
+      "notification_receipt_verified": false,
+      "repeat_submission_requires_new_authorization": true,
+      "incoming_submissions_observed": 0,
+      "owner_created_private_drafts_observed": 1
+    },
+    "notification_subscription": "custom_security_alerts",
+    "existing_email_delivery_preferences_verified": true,
+    "account_wide_preferences_changed": false,
+    "private_maintainer_draft_verified": true,
+    "anonymous_draft_access_denied": true,
+    "direct_inbox_test_owner_confirmed_received": true,
+    "incoming_reporter_access_verified": false,
+    "incoming_report_notification_receipt_verified": false
+  },
+  "applied_public_controls": {
     "branch_protection": {
       "method": "PUT",
       "endpoint": "repos/cellango/SentinelGrid-public/branches/main/protection",
@@ -39,7 +85,7 @@
         "get_status": 403,
         "message": "Upgrade to GitHub Pro or make this repository public to enable this feature."
       },
-      "state": "not_applied_or_enforced_while_private",
+      "state": "applied_and_read_back_after_owner_approved_public_visibility",
       "payload": {
         "required_status_checks": {
           "strict": true,
@@ -60,8 +106,7 @@
               "context": "secret-scan (history)",
               "app_id": 15368
             }
-          ],
-          "contexts": []
+          ]
         },
         "enforce_admins": true,
         "required_pull_request_reviews": {
@@ -87,7 +132,7 @@
         "enable_status": 422,
         "message": "Secret scanning is not available for this repository."
       },
-      "state": "not_enabled_while_private",
+      "state": "applied_and_read_back_after_owner_approved_public_visibility",
       "payload": {
         "security_and_analysis": {
           "secret_scanning": {
@@ -107,7 +152,7 @@
         "get_status": 422,
         "message": "Fork PR approval is not allowed for private repositories."
       },
-      "state": "pending_public_activation",
+      "state": "applied_and_read_back_after_owner_approved_public_visibility",
       "payload": {
         "approval_policy": "all_external_contributors"
       }
@@ -118,47 +163,22 @@
       "private_availability": {
         "get_status": 404
       },
-      "state": "pending_public_activation_and_notification_test",
+      "state": "applied_and_read_back_after_owner_approved_public_visibility",
       "report_form": "https://github.com/cellango/SentinelGrid-public/security/advisories/new",
-      "delivery_verification": "After approved visibility, enable/configure the GitHub channel and maintainer notification preferences, submit the single authorized private test, and confirm privacy/access/notification receipt before release/tag finalization. Task 14 verifies the same report without resubmitting. No test has been sent.",
+      "delivery_verification": "Enabled. Maintainer private draft access and anonymous denial verified; custom Security alerts and existing email preferences checked. Separate direct inbox test received. Incoming reporter access and GitHub notification receipt remain unverified under the owner-accepted source-preview exception.",
       "configuration": ".github/VULNERABILITY_REPORT.yml"
     }
   },
-  "not_performed": [
-    "Public visibility change",
-    "Account plan or paid-feature purchase",
-    "Original repository modification",
-    "Collaborator invitation or external message",
-    "Release, tag, deployment, product-secret import"
-  ],
-  "sources": {
-    "branch_protection": "https://docs.github.com/en/rest/branches/branch-protection#update-branch-protection",
-    "actions_permissions": "https://docs.github.com/en/rest/actions/permissions",
-    "private_reporting": "https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository",
-    "secret_protection": "https://docs.github.com/en/code-security/getting-started/quickstart-for-securing-your-repository"
-  },
-  "private_reporting_channel": {
-    "provider": "github_private_vulnerability_reporting",
-    "configuration": ".github/VULNERABILITY_REPORT.yml",
-    "issue_routing": ".github/ISSUE_TEMPLATE/config.yml",
-    "report_form": "https://github.com/cellango/SentinelGrid-public/security/advisories/new",
-    "reporting_email_in_source": false,
-    "notification_destination_configuration": "Maintainer GitHub repository subscription and account notification preferences; no source-controlled email address or product SMTP configuration.",
-    "current_availability": "unavailable_while_repository_private",
-    "notification_subscription_verified": false,
-    "notification_api_readback": "Current CLI token lacks notification scope; no scope expansion or account-wide preference change performed.",
-    "public_activation_task": 13,
-    "public_verification_task": 14,
-    "test_authorization": {
-      "authorized": true,
-      "maximum_submissions": 1,
-      "submitted": 0,
-      "reference": "SG-REPORTING-2026-10-15",
-      "title": "TEST ONLY: SentinelGrid private-reporting delivery check",
-      "condition": "Only after the configured destination is prepared and Task 13 public visibility is separately approved.",
-      "content": "Synthetic delivery test only; no actual vulnerability claim, credential, customer data or attachment.",
-      "notification_receipt_verified": false,
-      "repeat_submission_requires_new_authorization": true
-    }
+  "release_exception": {
+    "accepted_by": "repository_owner",
+    "date": "2026-10-16",
+    "scope": "v0.1.0-preview.1 developer source preview only",
+    "deferred_checks": [
+      "incoming_non_maintainer_reporter_access",
+      "github_generated_incoming_report_notification_receipt"
+    ],
+    "basis": "Owner requested documentation of the gap and completion of tagging/prerelease; no separate reporter was available. Direct inbox receipt does not verify GitHub reporting delivery.",
+    "follow_up_task": 14,
+    "verified_controls_still_required": true
   }
 }

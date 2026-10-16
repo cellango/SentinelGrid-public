@@ -5,8 +5,7 @@ Apache-2.0 for original SentinelGrid code. A supported runnable beta is a separa
 milestone. Follow [RELEASE_SCOPE.md](../../RELEASE_SCOPE.md).
 
 Work through these tasks in order, one at a time. Check a task only when its
-acceptance check passes, and record evidence without secret values. **Task 10 is
-next.** History changes, account changes, and publication will be reviewed as
+acceptance check passes, and record evidence without secret values. **Task 13 is in finalization; Task 14 follows publication.** History changes, account changes, and publication will be reviewed as
 concrete actions when their tasks are reached; this list does not execute them.
 
 ## Preparation already completed
@@ -298,18 +297,25 @@ tasks are closed, and the exact source/release contents are ready for owner revi
 
 ## Task 13 Publish the developer preview
 
-- [ ] Complete
+- [ ] Finalization in progress; verify the resulting tag/release before closing
 
-Present the destination, commit, visibility change, proposed preview tag, and release
-contents for final owner approval. After approval, publish that candidate with
-source-review release notes. Keep experimental runtime automation and cloud,
-image, and package publication disabled.
-Include the [prepared public-only protections](repository-protections.md) in that
-approval. After the approved visibility change, apply and read back the required
-settings before finalizing a tag or release; stop finalization if verification fails.
-Enable the configured private-reporting channel, configure maintainer notification
-preferences, and verify access and delivery using the single authorized synthetic
-report. Do not finalize the tag/release if the channel or receipt is unverified.
+The owner approved publication of the independent `cellango/SentinelGrid-public`
+and it is now public. Branch/Actions/secret/fork protections and private reporting
+are applied and verified. Security-alert subscriptions and existing email
+preferences were checked. A private owner-created synthetic draft was accessible
+to the maintainer, and a separate direct inbox test was received.
+
+Incoming reporter access and GitHub-generated report notification delivery are
+**unverified**; no separate reporter was available. On October 16 the owner
+requested that this limitation be documented and tagging/prerelease completed.
+The scoped exception is recorded in [the protection review](repository-protections.md).
+It does not mark the incoming test passed. Preserve the single-test limit and keep
+experimental runtime/cloud/image/package automation disabled.
+
+Refreeze the disclosure changes, pass the existing four required jobs on the
+resulting commit, rebuild/check the three source-only release assets, and publish
+`v0.1.0-preview.1` as a prerelease at that exact SHA through the protected workflow.
+Actual protections and source/secret/dependency gates remain required.
 
 **Done when:** the approved commit and preview release are publicly accessible
 with the intended refs, scope, and license information.
@@ -322,8 +328,10 @@ Clone/download anonymously and repeat the documented checks. Verify the release
 commit, rendered notices/links, private reporting and notifications, and ordinary
 feedback channels. Complete the public-only settings from Task 11. Confirm private
 artifacts and privileged workflows were not exposed during publication.
-Verify and record receipt of the same authorized private reporting test from
-Task 13; do not send an additional test without further authorization.
+Track the deferred incoming-report access/delivery test from Task 13. Complete
+it when a separate reporter is available, without treating the direct inbox test
+as GitHub verification or submitting duplicates. Anonymous verification can be
+completed while this explicitly disclosed follow-up remains open.
 
 **Done when:** anonymous verification passes and the release review records the
 final commit, results, and feedback channels. Then close this checklist.

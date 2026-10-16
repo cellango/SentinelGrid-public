@@ -1,7 +1,8 @@
 # Source-preview dependency review
 
 Task 8 is complete for the supported source checks; Task 12 refreshed its audit
-and reassessed both scoped exceptions on October 15, 2026, with no new findings.
+and reassessed both scoped exceptions on October 15, 2026. Task 13 repeated the
+full audits and upstream patch checks on October 16 with no new findings.
 The Python environment has no reported dependency advisories. The frontend retains
 two explicitly scoped development-tooling exceptions: `braces` and `sprintf-js`
 have no patched release. Raw `npm audit` still exits 1; this is not a clean-audit
@@ -71,7 +72,8 @@ The application, React, Jest, and Tailwind major versions were retained.
 | `sprintf-js` 1.0.3 — [GHSA-hp3w-g68c-fv3c](https://github.com/advisories/GHSA-hp3w-g68c-fv3c), moderate | Development-only formatting through argparse/js-yaml/coverage configuration tooling. The supported command accepts no externally supplied format string. No patched release is available. |
 
 These are the Task 8 technical assessment, maintained by `cellango`, rechecked
-at the Task 12 freeze on October 15 and still expiring November 14, 2026. The
+at the Task 12 freeze on October 15 and the Task 13 refreeze on October 16,
+still expiring November 14, 2026. The
 official registries/advisories still report no patch for either issue; supported
 inputs and commands are unchanged. Recheck if a patch/advisory appears or the
 command/input surface changes; never publish with an expired exception. This
@@ -142,4 +144,5 @@ until fixed or separately assessed. Keep raw reports private. After dependency
 changes, refresh hashes/license records and installation/tests. Task 12 reran
 the audit with fresh advisory data against the frozen inputs. Task 10
 rebuilt the independent repository from the reviewed source and verified private
-GitHub CI. Public visibility, tags, and releases remain pending.
+GitHub CI. Task 13 applied the actual public protections and refreezes only
+documentation/verification records before the source-preview tag and prerelease.

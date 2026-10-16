@@ -1,14 +1,15 @@
 # Public source preview review — October 15, 2026
 
-Decision: **publication pending**. Source cleanup and focused checks do not clear
-the existing Git history, third-party history, or externally retained artifacts.
-This is a dated pre-publication record. Frozen verification is in the separately
-prepared release manifest described by [the candidate record](candidate.md);
-public-only controls are verified during Tasks 13–14.
-The original repository's visibility and Git history are unchanged. Task 10
-rebuilt the independent snapshot after dependency/documentation review and created
-the approved **private** `cellango/SentinelGrid-public` repository for CI.
-No public visibility change, cloud deployment, release, or tag has occurred.
+Decision updated October 16: **public source preview approved; finalization in
+progress**. The independent repository is public and its actual protections and
+private-reporting settings are verified. The original repository/history remain
+private. Cloud/image/package deployment remains excluded. The owner authorized
+a documentation refreeze and completion of `v0.1.0-preview.1` with incoming-report
+access/notification delivery explicitly unverified. A private maintainer draft,
+checked delivery preferences and a received direct inbox test are separate
+observations. See [the protection record](repository-protections.md) and
+[the candidate record](candidate.md); the separately generated manifest binds the
+final commit and actual checks. Historical rows below retain their original scope.
 
 Work through the remaining gates using [Public Release Tasks](tasks.md).
 
@@ -82,7 +83,7 @@ the source-only preview.
 | Task 8 dependency compatibility | 22 Python tests and 13 frontend tests passed; parser override smoke checks and Python 3.13 Linux wheel resolution passed; actual Ubuntu execution remains Task 10 |
 | Task 9 documentation and claims | Passed: 415 classified Markdown files with valid local links, 28 Python tests/1,447 compiled files, 13 frontend tests, five TSX syntax checks, scanner canaries, and zero source secret findings; 320 retired/private docs preserved |
 | Task 10 clean clone and actual GitHub CI | Passed: rebuilt 3,231-file root; fresh clone checks; all four Ubuntu jobs passed after adding/auditing the Linux-specific Python pin; deliberate defects failed all four jobs, and the disposable branch was removed. See [commit-bound evidence](history-strategy.md#task-10-private-github-verification) |
-| Task 11 protections/reporting | Private preparation complete: Actions allowlist/SHA/read-only settings verified; configurable GitHub report form and issue routing prepared with no email address. Public-only settings, reporter access, and the single authorized notification test remain release gates in [the protection review](repository-protections.md) |
+| Tasks 11–13 protections/reporting | Actual public branch/Actions/secret/fork settings and private reporting enabled/read back. Custom security subscription and existing email preferences checked. Private owner draft and direct inbox delivery verified separately. Incoming reporter access/GitHub notification delivery remain unverified under the owner-authorized source-preview exception in [the protection review](repository-protections.md) |
 | Task 12 frozen candidate | The separately prepared manifest binds the exact commit, checks, dependency refresh, source-only archive, and checksums. Release notes/withdrawal are prepared; the two npm tooling exceptions remain scoped, dated, and nonzero in raw audit. See [candidate verification](candidate.md) |
 
 The Python test run reported existing Pydantic/SQLAlchemy/test-client deprecation
@@ -184,15 +185,15 @@ Task 10 rebuilt a fresh root from its reviewed 3,231 selected files before pushi
    third-party material retains its own terms. Task 8 audited resolved preview
    dependencies; refresh that audit and its two dated tooling exceptions for
    Task 12. Runtime bundles and package redistribution remain excluded.
-3. **Repository settings:** enable and test private vulnerability reporting with
-   monitored notifications; configure required source and secret checks, branch
-   protection, available secret protection, and read-only fork/PR workflows.
-   Task 11 applied and verified read-only token, exact-action allowlist, and SHA
-   restrictions. GitHub blocks private branch/native-secret/fork/form settings;
-   [public-activation steps](repository-protections.md) are prepared. The owner
-   selected configurable reporting without a committed email; enable the GitHub
-   form and verify the single authorized test's delivery after approved visibility
-   and before release/tag finalization. Actual delivery is not yet verified.
+3. **Repository settings:** the actual public branch, Actions, secret, fork and
+   private-reporting settings are applied/read back. The maintainer's custom
+   security-alert subscription and existing email preferences were checked.
+   Incoming reporter access and GitHub-generated report notification delivery
+   remain unverified. The owner accepted this documented limitation for the
+   source preview on October 16 and requested tagging/prerelease completion.
+   The private maintainer draft and confirmed direct inbox test are not an
+   end-to-end reporting test. Track the open check in Task 14.
+
 4. **Release identity:** Task 12 records the full commit, checks, dependency/asset
    digests and limitations in the prepared freeze manifest. Review that exact
    identity, repository visibility, and release contents before publication.
@@ -211,4 +212,4 @@ Task 10 rebuilt a fresh root from its reviewed 3,231 selected files before pushi
 | 07–16, 20–22, 25–26 | Experimental runtime work excluded from supported preview; security controls not marked fixed |
 | 17 | Current compilation/undefined-name gate repaired; service import/startup not certified |
 | 18 | Duplicate pending Flyway version resolved; fresh-install/upgrade/restore unverified |
-| 28 | Owner/repository publication gates remain open; no tag or visibility change |
+| 28 | Owner approved public source preview and documented reporting exception; controls are active. Final commit/tag/release are recorded by the release manifest and GitHub release; Task 14 tracks follow-up verification |

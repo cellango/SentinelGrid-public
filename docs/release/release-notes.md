@@ -36,14 +36,23 @@ Full frontend builds, service startup, database migration/upgrade/restore,
 two-tenant end-to-end isolation, cloud remediation, live scans, autonomous tools,
 enrollment, packaging, and compliance claims are not qualified. Experimental
 internal-token fallback behavior remains documented. Legacy deployment/package
-workflows remain disabled. Private reporting access and notification receipt
-must be verified as publication gates before this release is finalized.
+workflows remain disabled.
+
+Private vulnerability reporting is enabled. Repository security-alert
+subscriptions and the maintainer's email preferences were checked; a private
+synthetic draft was accessible to the maintainer, and a separate direct inbox
+test was received. Incoming reporter access and GitHub-generated report
+notification delivery remain **unverified** because a separate reporter was
+unavailable. The owner accepted this disclosed limitation for this source preview;
+the end-to-end reporting test remains follow-up work. Direct inbox delivery does
+not establish that GitHub report notifications arrive.
 
 Original code is Apache-2.0; AI Shield retains its existing Apache-2.0 license.
 Third-party material retains its own terms. See [LICENSING.md](https://github.com/cellango/SentinelGrid-public/blob/v0.1.0-preview.1/LICENSING.md)
 and [THIRD_PARTY_NOTICES.md](https://github.com/cellango/SentinelGrid-public/blob/v0.1.0-preview.1/THIRD_PARTY_NOTICES.md).
 
-The proposed assets are the frozen source archive, `release-manifest.json`, and
+The release assets are the frozen source archive, `release-manifest.json`, and
 `SHA256SUMS`. Verify the downloaded files with `shasum -a 256 -c SHA256SUMS`.
-The manifest is a freeze-time record; pending public-only controls are verified
-during publication. There are no installer, container, or dependency bundles.
+The manifest records the exact source and checks, verified repository controls,
+and the deferred reporting test. There are no installer, container, or dependency
+bundles.
