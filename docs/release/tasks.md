@@ -5,8 +5,11 @@ Apache-2.0 for original SentinelGrid code. A supported runnable beta is a separa
 milestone. Follow [RELEASE_SCOPE.md](../../RELEASE_SCOPE.md).
 
 Work through these tasks in order, one at a time. Check a task only when its
-acceptance check passes, and record evidence without secret values. **Task 14 is next.** History changes, account changes, and publication will be reviewed as
-concrete actions when their tasks are reached; this list does not execute them.
+acceptance check passes, and record evidence without secret values. **Tasks 1–14
+are complete for the published developer source preview.** The scoped incoming-report
+test remains open in [the protection review](repository-protections.md#follow-up-test).
+Runtime qualification is a separate milestone; this record does not authorize
+additional publication or account changes.
 
 ## Original preparation results
 
@@ -330,7 +333,23 @@ with the intended refs, scope, and license information.
 
 ## Task 14 Verify public access and feedback channels
 
-- [ ] Complete
+- [x] Complete
+
+Completed October 16, 2026: a fresh full anonymous clone checked out
+`v0.1.0-preview.1` at `7cf4a5766083533517ed3467858dd830ee540ed3`.
+All 3,239 source files matched the Git tree, downloaded manifest and source archive
+by path, bytes and executable mode. All three asset hashes matched. Fresh documented
+setup passed 28 Python and 13 frontend tests, compilation, source/documentation
+checks, Ruff, actionlint and both secret scans. Rendered release/license/security
+notices, read-only issue/PR routes, authentication gates and live protections were
+verified. The original repository and private synthetic draft remain inaccessible
+anonymously. See [the final verification](review.md#task-14-public-verification).
+
+The incoming-report test remains explicitly deferred under the owner-accepted
+exception. No additional report or email was submitted. Its protocol and open
+status remain in [the protection review](repository-protections.md#follow-up-test).
+This closes the source-preview publication checklist without marking that test
+passed. The release tag and assets remain fixed.
 
 Clone/download anonymously and repeat the documented checks. Verify the release
 commit, rendered notices/links, private reporting and notifications, and ordinary

@@ -1,4 +1,4 @@
-# Public source preview review — October 15, 2026
+# Public source preview review — October 16, 2026
 
 Decision updated October 16: **developer source preview published**. The independent repository is public and its actual protections and
 private-reporting settings are verified. The original repository/history remain
@@ -14,7 +14,43 @@ Published [v0.1.0-preview.1](https://github.com/cellango/SentinelGrid-public/rel
 checksums. Exact-commit local/hosted checks passed. The original repository remains
 private.
 
-Work through the remaining gates using [Public Release Tasks](tasks.md).
+The [publication checklist](tasks.md) is complete for the source preview. The
+incoming-report test remains a disclosed follow-up in
+[the protection review](repository-protections.md#follow-up-test).
+
+## Task 14 public verification
+
+Verified October 16, 2026 against release commit
+`7cf4a5766083533517ed3467858dd830ee540ed3`, tree
+`72221111ccc2247123abade3870dc8644983dade`. A fresh full clone used no Git
+credentials; HTTP downloads used no authentication or cookies. The tag has eight
+independent commits; later documentation tracking on `main` does not change it.
+
+| Check | Observed result |
+| --- | --- |
+| Source and downloads | All 3,239 paths, bytes and executable modes matched the committed tree, downloaded manifest and archive; all three published asset SHA-256 values matched |
+| Fresh documented setup | Python 3.13.9 hash-verified install and `pip check`; Node.js 22.23.3 `npm ci --ignore-scripts` succeeded |
+| Supported tests | 28 Python tests and 13 frontend tests in three suites passed |
+| Source checks | 1,447 Python files compiled; inventory, hygiene, 419 Markdown classifications/local links, Ruff and actionlint 1.7.12 passed |
+| Secrets and history | Gitleaks 8.30.1 snapshot and full fetched-history scans found zero matches; strict Git integrity and independent storage checks passed |
+| Rendered public pages | Repository, prerelease, security policy, issues and PR pages accessible; release scope, Apache-2.0 boundaries and reporting limitation visible; 13 raw tag documents/forms matched manifest hashes |
+| Feedback routes | Issue and private-report creation redirect anonymous visitors to GitHub sign-in; templates/configuration are present. No issue, PR review comment, email or private report was submitted as a route test |
+| Live protections | Branch, read-only/pinned Actions, native secrets, external-contributor approval and private reporting read back as configured; exact release/current-main hosted jobs passed |
+| Publication boundary | Original repository and unpublished maintainer draft inaccessible anonymously; one active source workflow and zero Actions artifacts, product secrets or environments; retained PR refs are the previously reviewed GitHub-managed heads |
+
+Ordinary feedback uses [Developer review or feedback](https://github.com/cellango/SentinelGrid-public/issues/new/choose)
+and proposed changes use [pull requests](https://github.com/cellango/SentinelGrid-public/pulls).
+Vulnerabilities use the [private report form](https://github.com/cellango/SentinelGrid-public/security/advisories/new)
+and [SECURITY.md](../../SECURITY.md). A sign-in redirect verifies the anonymous
+authentication boundary, not successful external-reporter access or delivery.
+Task 13's saved notification preferences and confirmed direct inbox receipt
+remain separate evidence. The incoming-report/notification test is still
+**unverified**, assigned to the maintainer when a separate reporter becomes
+available; follow [the single-test protocol](repository-protections.md#follow-up-test).
+
+The frozen release manifest retains its original pre-publication observations.
+This later record closes Task 14; it does not replace release assets, clear the
+two dated npm exceptions, or qualify the full runtime/frontend build.
 
 ## Scope and evidence
 
@@ -144,7 +180,7 @@ repository and hosted material remain private. Verified recovery copies cover
 all 41 local refs/359 reachable commits and the selected source. Task 7 completed
 local isolated preparation; Task 10 rebuilt the snapshot, created the approved
 private repository, and pushed its independent `main`. Final visibility/tag
-approval remains Task 13.
+approval was subsequently completed in Task 13.
 
 The [Task 7 record](history-strategy.md#task-7-local-verification)
 documents the verified independent root snapshot. Its first isolated test run
@@ -152,7 +188,7 @@ found application source hidden by generic ignore rules; 72 reviewed Python file
 were restored with source-only exceptions. The rebuilt copy passed the supported
 Python checks and both secret scans. Private original history, quarantines,
 installer blobs, and hosted material were not imported. The snapshot is local and
-preparatory; exact release identity remains open.
+preparatory; the final release identity is recorded above.
 
 The [Task 8 dependency review](dependencies.md) updates the supported Python
 and frontend inputs, requires exact Python artifact hashes, and records resolved
@@ -195,26 +231,27 @@ Task 10 rebuilt a fresh root from its reviewed 3,231 selected files before pushi
    remain unverified. The owner accepted this documented limitation for the
    source preview on October 16 and requested tagging/prerelease completion.
    The private maintainer draft and confirmed direct inbox test are not an
-   end-to-end reporting test. Track the open check in Task 14.
+   end-to-end reporting test. The open check remains in
+   [the protection review](repository-protections.md#follow-up-test).
 
 4. **Release identity:** Task 12 records the full commit, checks, dependency/asset
    digests and limitations in the prepared freeze manifest. Review that exact
    identity, repository visibility, and release contents before publication.
    The published `v0.1.0-preview.1` tag names the checked release commit; its three
-   release assets were uploaded and verified. Task 14 completes broader anonymous
-   clean-clone/feedback checks and tracks the deferred reporting test.
+   release assets were uploaded and verified. Task 14 completed the broader
+   anonymous clean-clone/feedback checks above; the reporting test stays deferred.
 
 ## Checklist disposition
 
 | Original checklist items | Current disposition |
 | --- | --- |
 | 01, 19, 27 | Source-only scope and review commands documented; no runnable-beta claim |
-| 02 | Logging and candidate-source cleanup performed; history/external-artifact gate open |
+| 02 | Logging/source cleanup complete; original private history/material retained, excluded from the verified independent public history |
 | 03 | Publication workflows disabled and AMIs private; credential-free first-boot enrollment remains unverified |
-| 04, 23 | Bundled binaries omitted and complete license text retained; history/provenance review still required |
+| 04, 23 | Bundled binaries omitted, complete license text retained, and provenance/history exclusions verified; runtime redistribution remains excluded |
 | 05, 24 | Replacement source/auth/secret checks; old deployment/integration gates disabled, not passed |
 | 06 | Direct-reset path removed; no replacement recovery implementation claimed |
 | 07–16, 20–22, 25–26 | Experimental runtime work excluded from supported preview; security controls not marked fixed |
 | 17 | Current compilation/undefined-name gate repaired; service import/startup not certified |
 | 18 | Duplicate pending Flyway version resolved; fresh-install/upgrade/restore unverified |
-| 28 | Owner approved public source preview and documented reporting exception; controls are active. Final commit/tag/release are recorded by the release manifest and GitHub release; Task 14 tracks follow-up verification |
+| 28 | Owner approved public source preview and documented reporting exception; controls are active. Final commit/tag/assets and anonymous verification are recorded; incoming-report delivery remains an open follow-up |

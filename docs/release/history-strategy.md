@@ -1,12 +1,15 @@
 # Publication history strategy
 
 Status: **owner selected and approved**, October 15, 2026. Task 6 is complete.
+Public source-preview publication and anonymous verification were completed in
+Tasks 13–14 on October 16. See [the final verification](review.md#task-14-public-verification).
+The preparation chronology below records the earlier private state.
 The owner approved an independent source snapshot at `cellango/SentinelGrid-public`,
 the GitHub noreply identity, and private repository creation/initial push in
 Task 10. The existing repository and all its hosted material stay private.
-Public visibility still requires the final Task 13 review.
-Task 10 rebuilt the reviewed source after Tasks 8–9 and created the approved
-private repository. See the verification records below; publication remains pending.
+Public visibility was authorized in the final Task 13 review.
+Task 10 rebuilt the reviewed source after Tasks 8–9 and initially created the
+approved repository privately. See the verification records below.
 
 ## Selected destination and history
 
@@ -226,4 +229,6 @@ owner accepted that documented exception and authorized prerelease completion.
 Private evidence, reporting addresses and the synthetic advisory remain private.
 The original repository, refs, remote and history were not changed. The release
 tag/assets remain fixed while later `main` commits may update tracking docs.
-Task 14 remains the follow-up verification step.
+Task 14 completed anonymous source/download, feedback-route and protection
+verification. The reporting test remains an explicit open follow-up in
+[the protection record](repository-protections.md#follow-up-test).

@@ -22,6 +22,8 @@ history remain private. The current policy is recorded in
 | Maintainer notifications | Custom Security alerts subscription saved; existing email destination and email preferences checked |
 
 API readback verified the repository controls after approved public activation.
+Task 14 repeated readback on October 16 and verified the public pages, source
+downloads and sign-in gates; see [the final results](review.md#task-14-public-verification).
 The GitHub UI verified the custom subscription and existing delivery preferences;
 no token scope or account-wide notification preference was changed. Custom-event
 subscriptions can return a null GraphQL `viewerSubscription`; that value does not
@@ -74,11 +76,17 @@ advisory URL, message contents or scanner evidence is published.
 
 ## Follow-up test
 
+**Open after Task 14:** maintainer `cellango` will arrange the incoming-report and
+notification-receipt check when a separate non-maintainer reporter is available.
+Anonymous verification and the publication checklist are complete; this scoped
+exception remains unverified. It is not a passed end-to-end reporting test.
+
 When a suitable reporter is available, use the single authorized clearly labeled
 synthetic private report. Confirm reporter/maintainer access, privacy, and actual
 notification receipt; a submission confirmation alone is not delivery. Preserve
 and inspect any existing report before considering a retry. Do not publish the
 test advisory or submit duplicates. Record the result without committing personal
-contact details. Task 14 tracks this open check alongside anonymous verification.
+contact details. Update this record with the result; the completed anonymous
+checks do not satisfy or consume the single incoming-test authorization.
 
 Follow [GitHub's private-reporting and notification guidance](https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository#configuring-notifications-for-private-vulnerability-reporting).

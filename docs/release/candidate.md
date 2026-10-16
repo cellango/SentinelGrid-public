@@ -15,9 +15,9 @@ public; the original repository remains private. See
 ## Exact identity and files
 
 The frozen identity is the full commit SHA in the prepared **release-manifest.json**.
-That manifest is generated after the source commit so it can name the exact SHA
-without a self-reference. It is supplied separately for owner review and proposed
-as a release asset. The commit contains these preparation instructions, release
+That manifest was generated after the source commit so it can name the exact SHA
+without a self-reference. It was reviewed separately and is a published release
+asset. The commit contains these preparation instructions, release
 notes, and the reviewed source; generated release assets are not committed.
 
 The manifest binds the commit/tree, every selected file's SHA-256 and executable
@@ -40,7 +40,15 @@ The checksum file applies to these prepared assets, not GitHub's separately
 generated ZIP/tar downloads. No binaries, dependency trees, images, installers,
 private evidence, or old repository history are release assets.
 
-## Verification and remaining gates
+## Verification and follow-up
+
+Task 14 completed anonymous full-clone/download verification on October 16, 2026.
+The 3,239 selected files matched Git, archive and manifest bytes/modes; all three
+asset hashes matched, and fresh documented source checks passed. Rendered notices,
+feedback/authentication routes and live protections were checked. See
+[the final verification results](review.md#task-14-public-verification).
+Incoming reporter access and GitHub notification receipt remain deferred in
+[the protection review](repository-protections.md#follow-up-test).
 
 The exact commit must pass documented setup, 28 Python tests, 13 frontend tests,
 source compilation, documentation/inventory checks, Ruff, actionlint, and both
@@ -61,8 +69,9 @@ security-alert subscription and existing email preferences were checked. The
 maintainer could access a private synthetic draft, and a separate direct email
 was received. Incoming reporter access and GitHub-generated report notification
 delivery remain unverified. The owner accepted that exception for this source
-preview on October 16; Task 14 tracks the remaining test when an independent
-reporter is available. No additional test is sent as part of this refreeze.
+preview on October 16; the protection review retains the remaining test when an
+independent reporter is available. No additional test was sent during finalization
+or anonymous verification.
 
 Any source, dependency, workflow, scope, or release-content change invalidates
 this freeze: create a new reviewed commit, rerun applicable checks, regenerate
