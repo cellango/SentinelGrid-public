@@ -180,7 +180,7 @@ Task 10 rebuilt a fresh root from the current 3,231 selected files before pushin
    Task 12. Runtime bundles and package redistribution remain excluded.
 3. **Repository settings:** enable and test private vulnerability reporting with
    monitored notifications; configure required source and secret checks, branch
-   protection, available secret protection, and read-only fork/PR workflows. These
+   protection, available secret protection, and read-only fork/PR workflows.
    The new repository's inherited read-only workflow permissions were verified in
    Task 10; branch protections and reporting still need Task 11 configuration.
 4. **Release identity:** review and commit the chosen changes, run all preview
