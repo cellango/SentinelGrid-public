@@ -8,7 +8,7 @@ Work through these tasks in order, one at a time. Check a task only when its
 acceptance check passes, and record evidence without secret values. **Task 14 is next.** History changes, account changes, and publication will be reviewed as
 concrete actions when their tasks are reached; this list does not execute them.
 
-## Preparation already completed
+## Original preparation results
 
 - [x] Add Apache-2.0 for original code and preserve component license boundaries.
 - [x] Retire direct password reset and remove secret logging.
@@ -18,9 +18,11 @@ concrete actions when their tasks are reached; this list does not execute them.
 - [x] Pass the current-source secret scan and focused local checks: 30 tests,
   Python compilation/undefined-name checks, and active workflow validation.
 
-These results describe the working tree. Final-commit and GitHub CI verification
-remain open. The history scan has **137 potential matches**, not 137 confirmed
-live credentials. See [the release review](review.md).
+These preliminary results are preserved as history. The published release
+manifest records the final commit and its passing local/GitHub checks. The original
+private-history scan had **137 potential matches**, not 137 confirmed live
+credentials; Task 1 classified them, and the independent public history passed
+its secret scan. See [the release review](review.md).
 
 ## Task 1 Review historical secret matches
 
