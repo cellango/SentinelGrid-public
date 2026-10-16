@@ -6,7 +6,7 @@ SentinelGrid is an experimental security operations platform combining detection
 
 ## Review the code
 
-Follow the [publication task checklist](docs/release/tasks.md) to work through the remaining release gates one at a time.
+The [publication task checklist](docs/release/tasks.md) records the completed source-preview preparation and the remaining reporting follow-up.
 
 | Directory | What to review |
 | --- | --- |
