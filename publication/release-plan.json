@@ -1,0 +1,81 @@
+{
+  "format_version": 1,
+  "review_date": "2026-10-15",
+  "preview": "v0.1.0-preview.1",
+  "title": "SentinelGrid v0.1.0-preview.1 \u2014 developer source preview",
+  "repository": "cellango/SentinelGrid-public",
+  "branch": "main",
+  "tag_created": false,
+  "release_created": false,
+  "visibility_at_freeze": "private",
+  "publication_approved": false,
+  "prerelease": true,
+  "make_latest": false,
+  "release_notes_file": "docs/release/release-notes.md",
+  "withdrawal_procedure": "docs/release/withdrawal.md",
+  "frozen_identity": "Full commit and tree SHA in separately generated release-manifest.json; not a moving branch name.",
+  "source_inventory": "publication/source-files.json",
+  "selected_files": 3239,
+  "classified_markdown_files": 419,
+  "source_artifact": "SentinelGrid-v0.1.0-preview.1-source.tar.gz",
+  "asset_allowlist": [
+    "SentinelGrid-v0.1.0-preview.1-source.tar.gz",
+    "release-manifest.json",
+    "SHA256SUMS"
+  ],
+  "asset_scope": "Source-only archive from exact committed tree plus sanitized manifest/checksums; no compiled/installable/runtime/dependency bundles or private review evidence.",
+  "supported_checks": {
+    "python_tests": 28,
+    "frontend_tests": 13,
+    "python_compiled_files": 1447,
+    "documentation_classes_links": "required",
+    "ruff": "required",
+    "actionlint": "1.7.12 required",
+    "gitleaks": "8.30.1 snapshot and full available history required",
+    "github_jobs": [
+      "source-checks",
+      "frontend-auth",
+      "secret-scan (snapshot)",
+      "secret-scan (history)"
+    ]
+  },
+  "dependency_review": {
+    "record": "publication/dependency-review.json",
+    "refreshed_in_task": 12,
+    "python_exact_pins": 43,
+    "python_artifact_hashes": 811,
+    "python_findings": 0,
+    "npm_affected_entries": 40,
+    "npm_unique_advisories": 2,
+    "npm_raw_exit_code": 1,
+    "exceptions_expire": "2026-11-14",
+    "runtime_graphs_cleared": false
+  },
+  "publication_sequence": [
+    "Verify frozen SHA, clean clone/CI, exact asset digests, dependency exceptions and current remote refs.",
+    "Present exact visibility/commit/tag/prerelease/body/assets/public-only operations for Task 13 owner approval.",
+    "After approval only, change cellango/SentinelGrid-public to public; preserve the original private repository.",
+    "Apply and read back prepared main, secret and fork protection settings from publication/repository-settings.json.",
+    "Enable configured GitHub private reporting and configure the intended maintainer notification preferences outside source.",
+    "Submit the single already-authorized labeled synthetic private report only after destination preparation; confirm privacy, reporter access and actual notification receipt.",
+    "Stop tag/release finalization if any required control, access check or receipt remains unverified.",
+    "After all gates pass, create the approved tag at the full frozen SHA and publish the reviewed prerelease body with exactly the three allowlisted assets.",
+    "Task 14 verifies anonymous access, assets and the same reporting test; do not send another report without further authorization."
+  ],
+  "notification_test": {
+    "reference": "SG-REPORTING-2026-10-15",
+    "maximum_submissions": 1,
+    "submitted_at_freeze": 0,
+    "already_authorized": true,
+    "visibility_approval_separate": true
+  },
+  "freeze_invalidation": "Any change to committed source, inputs, scope, workflow, notes or assets requires a new reviewed freeze and applicable checks before approval. Never publish with an expired or newly invalid exception.",
+  "not_authorized_by_task_12": [
+    "Public visibility change",
+    "Tag or release creation",
+    "Private test submission before destination preparation",
+    "Repository deletion, ref/history rewrite, withdrawal or external notice",
+    "Original repository modification",
+    "Cloud, image, installer, package publication or runtime execution"
+  ]
+}

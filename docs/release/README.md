@@ -11,6 +11,8 @@ signoffs in the archive have no authority over this release.
 - [Source provenance](provenance.md) and [resolved dependencies](dependencies.md)
 - [Documentation consolidation](documentation.md)
 - [Repository protections and private reporting](repository-protections.md)
+- [Frozen candidate and asset verification](candidate.md)
+- [Proposed release notes](release-notes.md) and [withdrawal procedure](withdrawal.md)
 
 The independent repository stays private through preparation and CI. Task 10
 completed the approved private creation/push and [CI verification](history-strategy.md#task-10-private-github-verification);

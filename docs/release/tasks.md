@@ -276,7 +276,17 @@ enabled form or delivered notification is not claimed by this completion.
 
 ## Task 12 Freeze the release candidate
 
-- [ ] Complete
+- [x] Complete
+
+Prepared October 15, 2026: refreshed all 43 Python pins and the full npm lock audit;
+no new advisories, with the same two scoped tooling exceptions and original expiry.
+The selected source, release notes, withdrawal procedure, and exact release plan
+are committed in the independent private candidate. Verification and generated
+source-only assets bind to its full SHA in the separately prepared release
+manifest, avoiding a commit self-reference. See [the candidate record](candidate.md).
+The manifest contains actual commit-bound CI/local results and asset digests.
+Public-only protections/reporting remain explicitly deferred Tasks 13–14 gates;
+no tag, release, visibility change, or reporting test is part of this freeze.
 
 Review and commit the selected changes. Run required checks on that exact commit.
 Prepare a public manifest with its SHA, modules, dependency/artifact digests, test

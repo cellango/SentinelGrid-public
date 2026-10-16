@@ -1,6 +1,6 @@
 # Selected public source-preview contents
 
-The current selection contains **3,235 files** for developer review and comments.
+The frozen selection contains **3,239 files** for developer review and comments.
 Task 5 originally selected 3,454 files; the later source restoration, dependency
 records, and documentation consolidation below explain subsequent changes.
 The owner chose to include the sanitized cloud-provider work as **experimental
@@ -11,8 +11,8 @@ change.
 The exact path inventory is [publication/source-files.json](../../publication/source-files.json).
 [publication/scope.json](../../publication/scope.json) records module dispositions,
 the cloud bundle, and exclusions. Content hashes and the starting diff are retained
-privately for this review; Task 12 will bind the selected bytes and verification
-to an immutable release commit. The inventory is a selection record, not a secret
+privately for this review; Task 12 binds the selected bytes and verification
+to the full SHA in the prepared release manifest. The inventory is a selection record, not a secret
 scan filter or a release tag.
 
 ## Included modules
@@ -128,3 +128,9 @@ the configured private-report form/issue chooser, bringing the selection to
 **3,235 files and 416 Markdown files**. Applied Actions controls and pending
 reporting/public-only controls are distinguished explicitly.
 See [the protection review](repository-protections.md). Publication remains pending.
+
+Task 12 adds the candidate/release/withdrawal guides and exact release plan,
+bringing the frozen selection to **3,239 files and 419 Markdown files**. Generated
+source-only release assets and their commit-bound manifest are prepared separately;
+they are not committed or included in the selected source tree. See
+[candidate verification](candidate.md).

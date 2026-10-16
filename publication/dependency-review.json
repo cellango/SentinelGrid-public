@@ -31,16 +31,18 @@
       "severity": "high",
       "source": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
       "disposition": "scoped_nonblocking_for_source_preview_only",
-      "reviewer": "Codex Task 8 technical assessment",
+      "reviewer": "Codex Task 8 technical assessment, rechecked at Task 12 freeze",
       "maintainer": "cellango",
       "reviewed": "2026-10-15",
       "expires": "2026-11-14",
-      "recheck": "Before Task 12 release freeze, or earlier if a patched release appears or the supported command/input surface changes.",
+      "recheck": "Before public approval if upstream fixes/advisories or supported inputs change; never publish with this exception expired (2026-11-14).",
       "patch_status": "No patched release reported by the upstream advisory and public registry on the review date.",
       "scope": "Development-only dependency in the frontend preview lock; npm run test:preview uses fixed checked-in test paths and repository-controlled patterns/format strings. No externally supplied glob or sprintf format is accepted by the supported command.",
       "control": "One-shot local mocked tests; CI job timeout 15 minutes, contents: read, no cloud credentials, deployments or server runtime.",
       "risk": "A malicious pattern/format can still stop a tooling process. Full builds, watch mode, externally supplied patterns and service runtime are outside this disposition.",
-      "review_boundary": "Any different package/version/advisory or changed input boundary needs fresh review; this is not a blanket devDependency exception."
+      "review_boundary": "Any different package/version/advisory or changed input boundary needs fresh review; this is not a blanket devDependency exception.",
+      "freeze_rechecked_task": 12,
+      "freeze_rechecked": "2026-10-15"
     },
     {
       "advisory": "GHSA-hp3w-g68c-fv3c",
@@ -49,18 +51,40 @@
       "severity": "moderate",
       "source": "https://github.com/advisories/GHSA-hp3w-g68c-fv3c",
       "disposition": "scoped_nonblocking_for_source_preview_only",
-      "reviewer": "Codex Task 8 technical assessment",
+      "reviewer": "Codex Task 8 technical assessment, rechecked at Task 12 freeze",
       "maintainer": "cellango",
       "reviewed": "2026-10-15",
       "expires": "2026-11-14",
-      "recheck": "Before Task 12 release freeze, or earlier if a patched release appears or the supported command/input surface changes.",
+      "recheck": "Before public approval if upstream fixes/advisories or supported inputs change; never publish with this exception expired (2026-11-14).",
       "patch_status": "No patched release reported by the upstream advisory and public registry on the review date.",
       "scope": "Development-only dependency in the frontend preview lock; npm run test:preview uses fixed checked-in test paths and repository-controlled patterns/format strings. No externally supplied glob or sprintf format is accepted by the supported command.",
       "control": "One-shot local mocked tests; CI job timeout 15 minutes, contents: read, no cloud credentials, deployments or server runtime.",
       "risk": "A malicious pattern/format can still stop a tooling process. Full builds, watch mode, externally supplied patterns and service runtime are outside this disposition.",
-      "review_boundary": "Any different package/version/advisory or changed input boundary needs fresh review; this is not a blanket devDependency exception."
+      "review_boundary": "Any different package/version/advisory or changed input boundary needs fresh review; this is not a blanket devDependency exception.",
+      "freeze_rechecked_task": 12,
+      "freeze_rechecked": "2026-10-15"
     }
   ],
   "runtime_disposition": "Experimental runtime dependency graphs are unresolved and not cleared. See dependency-manifests.json.",
-  "next_review": "Task 12 must refresh advisory data and reassess both scoped exceptions before publication; no perpetual clearance."
+  "next_review": "Recheck before publication if input scope/advisory or patch status changes. Exceptions expire 2026-11-14; an expired or changed candidate needs a new reviewed freeze.",
+  "freeze_refresh": {
+    "task": 12,
+    "date": "2026-10-15",
+    "python_pins": 43,
+    "python_findings": 0,
+    "npm_raw_exit_code": 1,
+    "npm_affected_entries": 40,
+    "npm_unique_advisories": 2,
+    "npm_critical": 0,
+    "new_advisories": 0,
+    "input_hashes_unchanged": true,
+    "registry_latest_checked": {
+      "braces": "3.0.3",
+      "sprintf-js": "1.1.3"
+    },
+    "patches_available_for_reviewed_advisories": false,
+    "supported_input_boundary_unchanged": true,
+    "license_inventory_inputs_unchanged": true,
+    "runtime_graphs_cleared": false
+  }
 }

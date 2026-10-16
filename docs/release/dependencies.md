@@ -1,6 +1,7 @@
 # Source-preview dependency review
 
-Task 8 is complete for the supported source checks, reviewed October 15, 2026.
+Task 8 is complete for the supported source checks; Task 12 refreshed its audit
+and reassessed both scoped exceptions on October 15, 2026, with no new findings.
 The Python environment has no reported dependency advisories. The frontend retains
 two explicitly scoped development-tooling exceptions: `braces` and `sprintf-js`
 have no patched release. Raw `npm audit` still exits 1; this is not a clean-audit
@@ -69,9 +70,11 @@ The application, React, Jest, and Tailwind major versions were retained.
 | `braces` 3.0.3 — [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm), high | Development-only glob parsing through micromatch/chokidar. The supported one-shot command uses fixed checked-in test paths and repository-controlled patterns. No patched release is available. |
 | `sprintf-js` 1.0.3 — [GHSA-hp3w-g68c-fv3c](https://github.com/advisories/GHSA-hp3w-g68c-fv3c), moderate | Development-only formatting through argparse/js-yaml/coverage configuration tooling. The supported command accepts no externally supplied format string. No patched release is available. |
 
-These are the Task 8 technical assessment, maintained by `cellango`, reviewed
-October 15 and expiring November 14, 2026. Recheck both before Task 12's release
-freeze, or sooner if a patch appears or the command/input surface changes. This
+These are the Task 8 technical assessment, maintained by `cellango`, rechecked
+at the Task 12 freeze on October 15 and still expiring November 14, 2026. The
+official registries/advisories still report no patch for either issue; supported
+inputs and commands are unchanged. Recheck if a patch/advisory appears or the
+command/input surface changes; never publish with an expired exception. This
 does not record a separate owner approval of runtime use.
 
 A crafted pattern or format can still stop a tooling process. The scope is local
@@ -136,7 +139,7 @@ The Python query must report no findings. The npm query currently exits 1; compa
 every direct advisory and affected version with the two exact scoped records,
 including expiry and input conditions. Any additional finding fails this review
 until fixed or separately assessed. Keep raw reports private. After dependency
-changes, refresh hashes/license records and installation/tests. Task 12 must rerun
-the audit with fresh advisory data against the final reviewed inputs. Task 10
+changes, refresh hashes/license records and installation/tests. Task 12 reran
+the audit with fresh advisory data against the frozen inputs. Task 10
 rebuilt the independent repository from the reviewed source and verified private
 GitHub CI. Public visibility, tags, and releases remain pending.

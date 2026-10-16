@@ -1,11 +1,12 @@
 # Developer source preview scope
 
-Status: **source review only; publication gates still open**. Reviewed October 15,
-2026. Preparation started at commit `efdca69` with existing uncommitted
-cloud-provider work. Validation describes the working tree, not a release tag.
-See [the review record](docs/release/review.md).
+Status: **developer source review only**. Reviewed October 15, 2026. The full
+commit and checks for the frozen candidate are recorded in its prepared release
+manifest; see [candidate verification](docs/release/candidate.md). The
+[pre-publication review](docs/release/review.md) records earlier preparation and
+the remaining public-activation gates; it is not a live repository-status API.
 The [selected contents](docs/release/contents.md) and
-[exact path inventory](publication/source-files.json) record the Task 5 selection,
+[exact path inventory](publication/source-files.json) record the reviewed selection,
 including owner-approved experimental cloud-provider source.
 
 Original SentinelGrid code is licensed under [Apache-2.0](LICENSE). Existing

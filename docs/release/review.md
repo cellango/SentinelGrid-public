@@ -2,6 +2,9 @@
 
 Decision: **publication pending**. Source cleanup and focused checks do not clear
 the existing Git history, third-party history, or externally retained artifacts.
+This is a dated pre-publication record. Frozen verification is in the separately
+prepared release manifest described by [the candidate record](candidate.md);
+public-only controls are verified during Tasks 13–14.
 The original repository's visibility and Git history are unchanged. Task 10
 rebuilt the independent snapshot after dependency/documentation review and created
 the approved **private** `cellango/SentinelGrid-public` repository for CI.
@@ -14,7 +17,8 @@ Work through the remaining gates using [Public Release Tasks](tasks.md).
 Preparation started at `efdca69` on `codex-test-suite-ci-hardening` with ongoing
 uncommitted cloud-provider work. Those changes were preserved. The new Hetzner
 migration was renamed from duplicate V012 to V013 without changing its SQL.
-There is no immutable release commit yet.
+Task 12 binds the selected independent source to an immutable commit identity;
+the prepared manifest records its full SHA and actual verification.
 
 The supplied HTML checklist described archive `641cd42`; it was treated as review
 input, and findings were checked against this newer working tree. Its instructions
@@ -79,6 +83,7 @@ the source-only preview.
 | Task 9 documentation and claims | Passed: 415 classified Markdown files with valid local links, 28 Python tests/1,447 compiled files, 13 frontend tests, five TSX syntax checks, scanner canaries, and zero source secret findings; 320 retired/private docs preserved |
 | Task 10 clean clone and actual GitHub CI | Passed: rebuilt 3,231-file root; fresh clone checks; all four Ubuntu jobs passed after adding/auditing the Linux-specific Python pin; deliberate defects failed all four jobs, and the disposable branch was removed. See [commit-bound evidence](history-strategy.md#task-10-private-github-verification) |
 | Task 11 protections/reporting | Private preparation complete: Actions allowlist/SHA/read-only settings verified; configurable GitHub report form and issue routing prepared with no email address. Public-only settings, reporter access, and the single authorized notification test remain release gates in [the protection review](repository-protections.md) |
+| Task 12 frozen candidate | The separately prepared manifest binds the exact commit, checks, dependency refresh, source-only archive, and checksums. Release notes/withdrawal are prepared; the two npm tooling exceptions remain scoped, dated, and nonzero in raw audit. See [candidate verification](candidate.md) |
 
 The Python test run reported existing Pydantic/SQLAlchemy/test-client deprecation
 warnings. The clean npm install reported deprecated transitive packages. These
@@ -188,9 +193,9 @@ Task 10 rebuilt a fresh root from its reviewed 3,231 selected files before pushi
    selected configurable reporting without a committed email; enable the GitHub
    form and verify the single authorized test's delivery after approved visibility
    and before release/tag finalization. Actual delivery is not yet verified.
-4. **Release identity:** review and commit the chosen changes, run all preview
-   gates on that exact commit, record dependency/artifact digests and limitations,
-   then review repository visibility and release contents before publication.
+4. **Release identity:** Task 12 records the full commit, checks, dependency/asset
+   digests and limitations in the prepared freeze manifest. Review that exact
+   identity, repository visibility, and release contents before publication.
    Verify anonymous clean-clone checks afterward. No release tag has been created.
 
 ## Checklist disposition

@@ -1875,6 +1875,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/release/candidate.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
       "path": "docs/release/contents.md",
       "class": "publication_review",
       "authority": "current_within_source_preview_scope"
@@ -1915,6 +1920,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/release/release-notes.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
       "path": "docs/release/repository-protections.md",
       "class": "publication_review",
       "authority": "current_within_source_preview_scope"
@@ -1926,6 +1936,11 @@
     },
     {
       "path": "docs/release/tasks.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/withdrawal.md",
       "class": "publication_review",
       "authority": "current_within_source_preview_scope"
     },

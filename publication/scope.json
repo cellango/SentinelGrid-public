@@ -85,7 +85,7 @@
         "docs/"
       ],
       "disposition": "Current code-linked architecture/developer/reference/release guides plus explicitly historical archives. Retired designs/progress reports and business documents remain private; see Task 9 classification.",
-      "selected_file_count": 311
+      "selected_file_count": 315
     },
     {
       "paths": [
@@ -108,7 +108,7 @@
         ".github/"
       ],
       "disposition": "Only documented source checks and the single read-only source-preview workflow are active; other scripts/disabled workflows are reference material.",
-      "selected_file_count": 206
+      "selected_file_count": 208
     },
     {
       "paths": [
@@ -148,7 +148,7 @@
         ".gitleaks.toml"
       ],
       "disposition": "Current review entrypoints, scope, licensing, selected paths, hygiene controls.",
-      "selected_file_count": 18
+      "selected_file_count": 20
     }
   ],
   "excluded_material": [
@@ -277,5 +277,19 @@
       13,
       14
     ]
+  },
+  "candidate_freeze": {
+    "task": 12,
+    "status": "frozen_candidate_prepared_for_owner_review",
+    "record": "docs/release/candidate.md",
+    "plan": "publication/release-plan.json",
+    "identity_and_results": "Separately generated release-manifest.json names full commit/tree and actual checks; source cannot contain its own SHA.",
+    "selected_files": 3239,
+    "markdown_files": 419,
+    "generated_release_assets_in_source": false,
+    "dependency_refresh": "43 Python pins with zero findings; unchanged two scoped npm advisories, no new findings; original expiry retained.",
+    "public_only_verification_pending": true,
+    "publication_approved": false,
+    "next_task": 13
   }
 }

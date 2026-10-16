@@ -14,10 +14,10 @@ The [private report form](https://github.com/cellango/SentinelGrid-public/securi
 routes reports through GitHub. Maintainers manage notification recipients and
 delivery preferences in GitHub settings; no reporting email is embedded in source.
 
-**Preparation status:** the repository is still private, so GitHub's reporting
-form is not enabled yet. Its form configuration and issue-routing link are
-prepared. Activation, reporter access, and notification delivery must be verified
-after the approved public visibility change and before release finalization. See
+**Publication gate:** GitHub's reporting form requires public visibility. During
+private preparation it is unavailable. Its configuration and issue-routing link
+are maintained here; activation, reporter access, and notification delivery must
+be verified after the approved visibility change and before release finalization. See
 [the reporting verification](docs/release/repository-protections.md#private-reporting-and-delivery).
 
 If the form is unavailable, open an ordinary issue asking maintainers to restore

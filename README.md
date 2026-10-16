@@ -2,7 +2,7 @@
 
 SentinelGrid is an experimental security operations platform combining detections, incidents, identity, cloud posture, endpoint telemetry, and AI-assisted workflows.
 
-**Developer source preview:** this repository is being prepared for architecture review and feedback. The full platform is not a supported runnable beta. Start with [release scope](RELEASE_SCOPE.md) and the [publication review](docs/release/review.md). Historical production, compliance, and phase-completion documents are development records, not a current release certification.
+**Developer source preview:** this repository provides source for architecture review and feedback. The full platform is not a supported runnable beta. Start with [release scope](RELEASE_SCOPE.md), the [candidate verification](docs/release/candidate.md), and the [pre-publication review](docs/release/review.md). Historical production, compliance, and phase-completion documents are development records, not a current release certification.
 
 ## Review the code
 
