@@ -5,6 +5,11 @@ change must pair SQLAlchemy model changes with a Flyway-managed migration in the
 same review. Do not use runtime table creation, startup scripts, or ad hoc SQL as
 a replacement migration mechanism.
 
+The [database compatibility plan](../architecture/database-compatibility.md) is the
+canonical target for physical case storage, existing-history reconciliation, tenant
+roles/session handling and install/upgrade/restore qualification. It is planning
+only; its proposed tables and migration slices are not implemented.
+
 ## Source locations
 
 - [Shared ORM](../../backend/libs/sg_core/models.py)

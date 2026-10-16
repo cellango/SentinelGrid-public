@@ -82,9 +82,10 @@ history/access/encryption/retention policy.
 
 Temporal's own persistence is vendor infrastructure with a separate lifecycle and
 storage boundary. Application tables and paired ORM/Flyway migrations remain under
-[the project database rules](../../development/database-changes.md). The database compatibility plan must
-define the physical application schema and vendor/application storage separation;
-this decision assigns no migration versions or table layout.
+[the project database rules](../../development/database-changes.md). The
+[database compatibility plan](../database-compatibility.md) defines the proposed
+physical application schema and vendor/application storage separation. Neither
+document assigns migration versions or implements that storage.
 
 ## Alternatives
 

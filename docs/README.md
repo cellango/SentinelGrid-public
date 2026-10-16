@@ -14,7 +14,8 @@ running commands. Original code uses [Apache-2.0](../LICENSING.md).
 
 For design review, read the [selected agentic target](architecture/agentic-platform.md),
 [authoritative runtime decision](architecture/decisions/0001-case-runtime.md),
-[logical contracts](reference/agentic-contracts.md), and
+[logical contracts](reference/agentic-contracts.md),
+[database compatibility plan](architecture/database-compatibility.md), and
 [proposed role catalog](reference/agent-registry.md). They are explicitly labeled
 as future design; names and accepted decisions do not establish implementation or enablement.
 

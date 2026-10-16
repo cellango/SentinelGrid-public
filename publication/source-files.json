@@ -1992,6 +1992,7 @@
     "docs/SentinelGrid.svg",
     "docs/architecture/agentic-platform.md",
     "docs/architecture/cloud-providers.md",
+    "docs/architecture/database-compatibility.md",
     "docs/architecture/decisions/0001-case-runtime.md",
     "docs/architecture/frontend.md",
     "docs/architecture/overview.md",

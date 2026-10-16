@@ -50,6 +50,7 @@ preview checks remain as described on this page.
 - [Agent categories](../reference/agent-components.md): service, runtime, and endpoint agents are different concepts.
 - [Cloud-provider source](cloud-providers.md): generic registry/types plus the concrete Hetzner adapter.
 - [Database changes](../development/database-changes.md): paired ORM/Flyway edits and globally unique versions.
+- [Database compatibility plan](database-compatibility.md): preserved lineage, proposed case storage, tenant controls and qualification gates.
 - [Frontend ownership](frontend.md): `frontend/` is canonical; other UI trees are legacy/experimental.
 
 ## Implemented, simulated, and excluded

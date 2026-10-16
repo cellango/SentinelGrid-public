@@ -151,6 +151,7 @@ Before these contracts become executable, require schema/contract validation,
 cross-tenant denial, changed/expired/forged approvals, unsupported tools, graph
 branch/join checks, duplicate/redelivered triggers, checkpoint/DB/model/provider
 failure, cancellation, worker replay/upgrades and independent-verification tests.
-Physical storage and authoritative/projection boundaries are mapped in the database
-plan; versions, callers and tools migrate together under the
+Physical storage and authoritative/projection boundaries are mapped in the
+[database compatibility plan](../architecture/database-compatibility.md); versions,
+callers and tools migrate together under the
 [runtime ADR](../architecture/decisions/0001-case-runtime.md).

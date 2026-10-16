@@ -400,6 +400,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/architecture/database-compatibility.md",
+      "class": "current_architecture",
+      "authority": "accepted_design_not_implemented"
+    },
+    {
       "path": "docs/architecture/decisions/0001-case-runtime.md",
       "class": "current_architecture",
       "authority": "accepted_design_not_implemented"
@@ -2126,7 +2131,7 @@
     "experimental_component_reference": 97,
     "contributor_instructions": 1,
     "documentation_index": 1,
-    "current_architecture": 5,
+    "current_architecture": 6,
     "historical_reference": 285,
     "developer_guidance": 3,
     "current_source_reference": 7,
