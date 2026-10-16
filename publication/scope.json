@@ -216,10 +216,11 @@
     "resolved_license_inventory": "third_party/preview-dependencies.json",
     "manifest_catalog": "publication/dependency-manifests.json",
     "exact_decisions": "publication/dependency-review.json",
-    "python_pins": 42,
+    "python_pins": 43,
     "npm_lock_entries": 828,
     "runtime_graphs_cleared": false,
-    "refresh_before_release_freeze_task": 12
+    "refresh_before_release_freeze_task": 12,
+    "platform_closure_followup_task": 10
   },
   "documentation_review": {
     "task": 9,

@@ -4,10 +4,10 @@
   "scope": "Dependencies referenced by the supported source-preview checks; installed implementations/binaries are not publication contents. License declarations do not relicense third-party code or certify generated bundles.",
   "python_input": {
     "path": "scripts/requirements-preview.txt",
-    "sha256": "febb7bd24b2e24c4c446d477ea77354ba56ecd0302205a3d46659556678244f5",
-    "packages": 42,
-    "upstream_artifact_hashes": 732,
-    "platforms": "Python 3.13 macOS arm64 installation and Linux x86_64 wheel resolution; Linux execution remains Task 10"
+    "sha256": "ac476e0c32f1987c2f1836f92a56c28c799e06716f087a67fdc18d4a1bc8f2bf",
+    "packages": 43,
+    "upstream_artifact_hashes": 811,
+    "platforms": "Python 3.13 macOS arm64 and Ubuntu x86_64 source-preview checks; Task 10 adds the SQLAlchemy platform-specific greenlet pin"
   },
   "npm_input": {
     "manifest": "frontend/package.json",
@@ -126,6 +126,27 @@
       "source": "https://pypi.org/project/fastapi/0.143.2/",
       "license_text_sha256": "4ec89ffc81485b97fec584b2d4a961032eeffe834453894fd9c1274906cc744e",
       "release_artifact_hash_count": 2
+    },
+    {
+      "name": "greenlet",
+      "version": "3.5.6",
+      "declared_license": "MIT AND PSF-2.0",
+      "pypi_license_expression": "MIT AND PSF-2.0",
+      "source": "https://pypi.org/project/greenlet/3.5.6/",
+      "license_text_sha256": "769831d6e5dfaf2c20802faccff1fafb4c2025dd8f6253dfa47fcad59d4d0979",
+      "license_files": [
+        {
+          "path": "greenlet-3.5.6.dist-info/licenses/LICENSE",
+          "sha256": "769831d6e5dfaf2c20802faccff1fafb4c2025dd8f6253dfa47fcad59d4d0979",
+          "bytes": 1434
+        },
+        {
+          "path": "greenlet-3.5.6.dist-info/licenses/LICENSE.PSF",
+          "sha256": "e5ff3c23c110e494cd7d736c10fd96d462457bafeca310840db6527298c7d46b",
+          "bytes": 2424
+        }
+      ],
+      "release_artifact_hash_count": 79
     },
     {
       "name": "h11",

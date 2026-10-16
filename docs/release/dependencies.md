@@ -16,8 +16,8 @@ The machine-readable records are:
 
 | Input | Reviewed result |
 | --- | --- |
-| `scripts/requirements-preview.txt` | 42 exact pins, including pip and all resolved transitives; hash checking required with 732 official PyPI artifact hashes |
-| Python vulnerability check | pip-audit 2.10.1 queried all 42 pins; zero findings and no ignored advisory IDs |
+| `scripts/requirements-preview.txt` | 43 exact pins, including pip and the Linux-specific SQLAlchemy dependency; hash checking required with 811 official PyPI artifact hashes |
+| Python vulnerability check | pip-audit 2.10.1 queried all 43 pins; zero findings and no ignored advisory IDs |
 | Python installation | Hash-verified macOS arm64 installation and `pip check` passed; hash-matching Python 3.13 Linux x86_64 wheels resolved without execution |
 | Python source checks | 22 tests, compilation of 1,445 Python files, and Ruff passed in the fresh patched environment |
 | `frontend/package.json` and lockfile | 828 locked package entries, all with official npm registry URLs and SHA-512 integrity; 772 installed on the review host |
@@ -38,6 +38,14 @@ framework/test environment. New transitive `opentelemetry-api` 1.45.1 and instal
 pip 26.2.1 are also explicitly pinned. The complete file enforces
 [pip hash checking](https://pip.pypa.io/en/stable/topics/secure-installs/#hash-checking-mode);
 no dependencies are supplied by an existing developer environment.
+
+Task 10's first actual Ubuntu run found that SQLAlchemy also requires `greenlet`
+on Linux x86_64. The earlier macOS arm64 resolution and cross-platform wheel
+download did not establish that platform's complete dependency closure. Added
+[`greenlet` 3.5.6](https://pypi.org/project/greenlet/3.5.6/) with all 79 unyanked
+release-artifact hashes, bringing the current list from 42 to 43 pins. Its MIT
+and PSF-2.0 license files are recorded in the resolved inventory. Hash enforcement
+remains enabled; the initial installation failure was not skipped or suppressed.
 
 Next.js and its ESLint configuration are pinned to 15.5.28, Axios to 1.20.0, and
 PostCSS to 8.5.30. The regenerated lock also resolves sharp 0.35.5. Targeted
@@ -75,7 +83,7 @@ they are not 40 distinct vulnerabilities.
 
 ## License boundaries
 
-All 42 Python packages and 828 npm lock entries have a license record. The one
+All 43 Python packages and 828 npm lock entries have a license record. The one
 missing npm lock license, `exit` 0.1.2, was resolved to MIT using the published
 package's `licenses` field and its installed `LICENSE-MIT`, with its hash recorded.
 Python package metadata and installed license/notice files were inspected with

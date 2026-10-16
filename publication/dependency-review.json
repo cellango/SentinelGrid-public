@@ -4,11 +4,12 @@
   "scope": "Supported source-preview dependency inputs only",
   "python": {
     "audit_tool": "pip-audit 2.10.1",
-    "audited_pins": 42,
+    "audited_pins": 43,
     "findings": 0,
     "hash_required": true,
     "manifest": "scripts/requirements-preview.txt",
-    "manifest_sha256": "febb7bd24b2e24c4c446d477ea77354ba56ecd0302205a3d46659556678244f5"
+    "manifest_sha256": "ac476e0c32f1987c2f1836f92a56c28c799e06716f087a67fdc18d4a1bc8f2bf",
+    "platform_closure_repair": "Task 10: pin greenlet 3.5.6 with official PyPI hashes for SQLAlchemy on Linux x86_64; MIT AND PSF-2.0 license files verified"
   },
   "frontend": {
     "audit_command": "npm audit --package-lock-only --json (full tree; no omit or severity filter)",
