@@ -1915,6 +1915,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/release/repository-protections.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
       "path": "docs/release/review.md",
       "class": "publication_review",
       "authority": "current_within_source_preview_scope"

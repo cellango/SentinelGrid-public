@@ -78,6 +78,7 @@ the source-only preview.
 | Task 8 dependency compatibility | 22 Python tests and 13 frontend tests passed; parser override smoke checks and Python 3.13 Linux wheel resolution passed; actual Ubuntu execution remains Task 10 |
 | Task 9 documentation and claims | Passed: 415 classified Markdown files with valid local links, 28 Python tests/1,447 compiled files, 13 frontend tests, five TSX syntax checks, scanner canaries, and zero source secret findings; 320 retired/private docs preserved |
 | Task 10 clean clone and actual GitHub CI | Passed: rebuilt 3,231-file root; fresh clone checks; all four Ubuntu jobs passed after adding/auditing the Linux-specific Python pin; deliberate defects failed all four jobs, and the disposable branch was removed. See [commit-bound evidence](history-strategy.md#task-10-private-github-verification) |
+| Task 11 protections/reporting | In progress: Actions allowlist/SHA/read-only settings applied and all four jobs passed. Private reporting contact/delivery is pending. Branch/native-secret/fork/form settings are unavailable while private; exact public-activation payloads are prepared in [the protection review](repository-protections.md) |
 
 The Python test run reported existing Pydantic/SQLAlchemy/test-client deprecation
 warnings. The clean npm install reported deprecated transitive packages. These
@@ -161,7 +162,7 @@ development, reference, and release folders. Earlier technical/validation record
 are explicitly historical; 307 obsolete/duplicate documents and 13 additional
 business documents are omitted with verified private recovery copies. The old
 Task 7 snapshot contains retired material and cannot be the pushed candidate.
-Task 10 rebuilt a fresh root from the current 3,231 selected files before pushing.
+Task 10 rebuilt a fresh root from its reviewed 3,231 selected files before pushing.
 
 ## Remaining publication gates
 
@@ -181,8 +182,10 @@ Task 10 rebuilt a fresh root from the current 3,231 selected files before pushin
 3. **Repository settings:** enable and test private vulnerability reporting with
    monitored notifications; configure required source and secret checks, branch
    protection, available secret protection, and read-only fork/PR workflows.
-   The new repository's inherited read-only workflow permissions were verified in
-   Task 10; branch protections and reporting still need Task 11 configuration.
+   Task 11 applied and verified read-only token, exact-action allowlist, and SHA
+   restrictions. GitHub blocks private branch/native-secret/fork/form settings;
+   [public-activation steps](repository-protections.md) are prepared. The monitored
+   fallback contact and delivery test remain required before Task 11 can close.
 4. **Release identity:** review and commit the chosen changes, run all preview
    gates on that exact commit, record dependency/artifact digests and limitations,
    then review repository visibility and release contents before publication.

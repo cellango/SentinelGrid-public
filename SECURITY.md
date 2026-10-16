@@ -9,10 +9,15 @@ including AI Shield's, describe their own scope.
 
 ## Report vulnerabilities privately
 
+**Preparation status:** the candidate is private and GitHub's private-reporting
+form is unavailable. A monitored reporting email and delivery confirmation are
+still pending. Publication remains gated on [the reporting verification](docs/release/repository-protections.md#private-reporting-and-delivery).
+
 Use this repository's **Security → Advisories → Report a vulnerability** form when
-available. Maintainers must enable private vulnerability reporting and verify
-notifications reach a monitored account before publication. This preparation has
-not verified that setting or monitoring.
+available. Before publication approval, maintainers must publish and test a
+monitored private contact. GitHub's form must be enabled after the approved public
+visibility change, with access and notification delivery verified in the release
+checks. Neither reporting route has been verified yet.
 
 If the form is unavailable, request a private reporting contact in a public issue
 without disclosing vulnerability details. Never include credentials, customer

@@ -254,5 +254,19 @@
     "disposable_branch_removed": true,
     "public_visibility_approved": false,
     "next_task": 11
+  },
+  "repository_protections": {
+    "task": 11,
+    "status": "in_progress_pending_monitored_private_contact_and_delivery",
+    "record": "docs/release/repository-protections.md",
+    "policy": "publication/repository-settings.json",
+    "actions_restrictions_applied_and_verified": true,
+    "policy_verification_run": 38847508895,
+    "public_only_protections_active": false,
+    "public_activation_requires_task_13_approval": true,
+    "reporting_contact_verified": false,
+    "delivery_test_confirmed": false,
+    "current_selected_files": 3233,
+    "current_markdown_files": 416
   }
 }

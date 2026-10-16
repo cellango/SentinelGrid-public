@@ -245,6 +245,17 @@ bound to a commit. Required failures cannot turn into successful skips.
 
 - [ ] Complete
 
+In progress October 15, 2026: applied/read back read-only Actions permissions,
+disabled automated PR approval, required full action SHAs, and restricted actions
+to the three reviewed immutable references. All four hosted jobs passed under
+that policy. GitHub rejects private branch/ruleset protection on the current plan,
+native secret protection for this private personal repository, and the public-only
+fork/reporting controls. Exact public-activation payloads and verification steps
+are prepared in [the protection review](repository-protections.md).
+**Still required:** owner-selected monitored private contact and confirmed test
+delivery. Public-only controls remain explicitly pending; no visibility change
+or test message has been performed.
+
 Configure available branch protections/rulesets, required checks/reviews, read-only
 Actions permissions, and secret scanning/push protection for the target repository
 and account plan. Establish a monitored private vulnerability contact and verify
@@ -277,6 +288,9 @@ Present the destination, commit, visibility change, proposed preview tag, and re
 contents for final owner approval. After approval, publish that candidate with
 source-review release notes. Keep experimental runtime automation and cloud,
 image, and package publication disabled.
+Include the [prepared public-only protections](repository-protections.md) in that
+approval. After the approved visibility change, apply and read back the required
+settings before finalizing a tag or release; stop finalization if verification fails.
 
 **Done when:** the approved commit and preview release are publicly accessible
 with the intended refs, scope, and license information.

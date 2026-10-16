@@ -1,0 +1,146 @@
+{
+  "format_version": 1,
+  "review_date": "2026-10-15",
+  "repository": "cellango/SentinelGrid-public",
+  "scope": "Repository settings for the independent developer source preview; original repository and account billing are outside these operations.",
+  "visibility": "private",
+  "task_11_status": "in_progress_pending_monitored_private_contact_and_delivery",
+  "applied_and_read_back": {
+    "actions_permissions": {
+      "enabled": true,
+      "allowed_actions": "selected",
+      "sha_pinning_required": true
+    },
+    "allowed_actions": {
+      "github_owned_allowed": false,
+      "verified_allowed": false,
+      "patterns_allowed": [
+        "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+        "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+        "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+      ]
+    },
+    "workflow_permissions": {
+      "default_workflow_permissions": "read",
+      "can_approve_pull_request_reviews": false
+    }
+  },
+  "actions_policy_validation": {
+    "commit": "bee44c19620e7ed783c9a9cd32d301145025cbd9",
+    "run": 38847508895,
+    "all_four_jobs": "success"
+  },
+  "prepared_public_only": {
+    "activation_gate": "Only after the exact Task 13 visibility operation is approved; apply and verify before a release/tag, then repeat public/fork/reporting checks in Task 14. Stop publication finalization if any required setting cannot be verified.",
+    "branch_protection": {
+      "method": "PUT",
+      "endpoint": "repos/cellango/SentinelGrid-public/branches/main/protection",
+      "private_availability": {
+        "get_status": 403,
+        "message": "Upgrade to GitHub Pro or make this repository public to enable this feature."
+      },
+      "state": "not_applied_or_enforced_while_private",
+      "payload": {
+        "required_status_checks": {
+          "strict": true,
+          "checks": [
+            {
+              "context": "source-checks",
+              "app_id": 15368
+            },
+            {
+              "context": "frontend-auth",
+              "app_id": 15368
+            },
+            {
+              "context": "secret-scan (snapshot)",
+              "app_id": 15368
+            },
+            {
+              "context": "secret-scan (history)",
+              "app_id": 15368
+            }
+          ],
+          "contexts": []
+        },
+        "enforce_admins": true,
+        "required_pull_request_reviews": {
+          "dismiss_stale_reviews": true,
+          "require_code_owner_reviews": false,
+          "required_approving_review_count": 0,
+          "require_last_push_approval": false
+        },
+        "restrictions": null,
+        "required_linear_history": true,
+        "allow_force_pushes": false,
+        "allow_deletions": false,
+        "required_conversation_resolution": true,
+        "lock_branch": false,
+        "allow_fork_syncing": false
+      },
+      "review_policy": "Pull requests and all four checks required, administrators included. Zero mandatory independent approvals while only cellango has maintainer access; no independent-review guarantee. Require at least one approval when a second trusted maintainer is explicitly authorized. No bypass actor or collaborator is added."
+    },
+    "secret_protection": {
+      "method": "PATCH",
+      "endpoint": "repos/cellango/SentinelGrid-public",
+      "private_availability": {
+        "enable_status": 422,
+        "message": "Secret scanning is not available for this repository."
+      },
+      "state": "not_enabled_while_private",
+      "payload": {
+        "security_and_analysis": {
+          "secret_scanning": {
+            "status": "enabled"
+          },
+          "secret_scanning_push_protection": {
+            "status": "enabled"
+          }
+        }
+      },
+      "limits": "Native supported-pattern protection complements Gitleaks and is not a guarantee that all credential formats are detected."
+    },
+    "fork_contributor_approval": {
+      "method": "PUT",
+      "endpoint": "repos/cellango/SentinelGrid-public/actions/permissions/fork-pr-contributor-approval",
+      "private_availability": {
+        "get_status": 422,
+        "message": "Fork PR approval is not allowed for private repositories."
+      },
+      "state": "pending_public_activation",
+      "payload": {
+        "approval_policy": "all_external_contributors"
+      }
+    },
+    "private_vulnerability_reporting": {
+      "method": "PUT",
+      "endpoint": "repos/cellango/SentinelGrid-public/private-vulnerability-reporting",
+      "private_availability": {
+        "get_status": 404
+      },
+      "state": "pending_public_activation_and_notification_test",
+      "report_form": "https://github.com/cellango/SentinelGrid-public/security/advisories/new",
+      "delivery_verification": "Enable after approved publication; owner must confirm a synthetic private test reaches the monitored account. Verify researcher-facing access in Task 14. No test report or notification has been sent."
+    }
+  },
+  "private_reporting_fallback": {
+    "contact": null,
+    "contact_selection": "awaiting_owner",
+    "monitoring_confirmation": "pending",
+    "delivery_confirmation": "pending",
+    "publication_blocker": true
+  },
+  "not_performed": [
+    "Public visibility change",
+    "Account plan or paid-feature purchase",
+    "Original repository modification",
+    "Collaborator invitation or external message",
+    "Release, tag, deployment, product-secret import"
+  ],
+  "sources": {
+    "branch_protection": "https://docs.github.com/en/rest/branches/branch-protection#update-branch-protection",
+    "actions_permissions": "https://docs.github.com/en/rest/actions/permissions",
+    "private_reporting": "https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository",
+    "secret_protection": "https://docs.github.com/en/code-security/getting-started/quickstart-for-securing-your-repository"
+  }
+}

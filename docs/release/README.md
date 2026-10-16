@@ -10,8 +10,10 @@ signoffs in the archive have no authority over this release.
 - [Private-data/artifact disposition](private-data.md)
 - [Source provenance](provenance.md) and [resolved dependencies](dependencies.md)
 - [Documentation consolidation](documentation.md)
+- [Repository protections and private reporting](repository-protections.md)
 
 The independent repository stays private through preparation and CI. Task 10
 completed the approved private creation/push and [CI verification](history-strategy.md#task-10-private-github-verification);
-Task 11 protections/reporting are next. Task 13 still requires final approval
+Task 11 Actions restrictions are verified; private contact/delivery confirmation
+and the public-only activation steps remain open. Task 13 still requires final approval
 of the exact candidate, tag, release contents, and public visibility.
