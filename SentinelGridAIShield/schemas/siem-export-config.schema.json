@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentinelgrid.example/schemas/siem-export-config.schema.json",
+  "title": "SentinelGridAIShield SIEM Export Config",
+  "type": "object",
+  "required": ["version", "destinations"],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "default_delivery": {
+      "type": "object",
+      "properties": {
+        "mode": { "type": "string", "enum": ["batch", "stream"] },
+        "batch_size": { "type": "integer", "minimum": 1 },
+        "flush_interval_seconds": { "type": "integer", "minimum": 1 },
+        "retry_max": { "type": "integer", "minimum": 0 },
+        "timeout_seconds": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "destinations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "enabled", "transport", "endpoint"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "type": {
+            "type": "string",
+            "enum": [
+              "splunk_hec",
+              "microsoft_sentinel_dcr",
+              "ibm_qradar_cef_syslog"
+            ]
+          },
+          "enabled": { "type": "boolean" },
+          "transport": {
+            "type": "string",
+            "enum": ["http_json", "syslog_tcp", "syslog_tls"]
+          },
+          "endpoint": { "type": "string", "minLength": 1 },
+          "auth": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "token_env": { "type": "string" },
+              "client_id_env": { "type": "string" },
+              "client_secret_env": { "type": "string" },
+              "tenant_id": { "type": "string" },
+              "certificate_file": { "type": "string" },
+              "private_key_file": { "type": "string" }
+            },
+            "additionalProperties": true
+          },
+          "routing": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "filters": {
+            "type": "object",
+            "properties": {
+              "include_event_types": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "exclude_event_types": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "minimum_severity": {
+                "type": "string",
+                "enum": ["info", "low", "medium", "high", "critical"]
+              },
+              "include_tenants": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "exclude_tenants": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "only_blocked": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          },
+          "format_options": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "delivery": {
+            "type": "object",
+            "properties": {
+              "batch_size": { "type": "integer", "minimum": 1 },
+              "flush_interval_seconds": { "type": "integer", "minimum": 1 },
+              "retry_max": { "type": "integer", "minimum": 0 },
+              "timeout_seconds": { "type": "integer", "minimum": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

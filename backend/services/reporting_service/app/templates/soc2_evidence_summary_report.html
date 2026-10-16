@@ -1,0 +1,78 @@
+{% extends "base_report.html" %}
+
+{% block executive_summary %}
+<div class="metric-card">
+    <h4>Controls Tracked</h4>
+    <div class="value">{{ summary.total_criteria|default(0) }}</div>
+    <div class="description">SOC 2 Common Criteria mapped for this tenant</div>
+</div>
+
+<div class="metric-card">
+    <h4>Open Findings</h4>
+    <div class="value">{{ summary.open_findings|default(0) }}</div>
+    <div class="description">Evidence required to close these gaps</div>
+</div>
+
+<div class="metric-card">
+    <h4>Status</h4>
+    <div class="value">{{ summary.status|default('unknown')|title }}</div>
+    <div class="description">Compliant if all tracked criteria have zero open findings</div>
+</div>
+
+<p style="margin-top: 1cm;">
+Evidence coverage is inferred from findings mapped to SOC 2 criteria. Each control lists the current finding counts so you can attach or collect evidence to close gaps before audit.
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h1>Evidence by Control</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Control</th>
+                <th>Status</th>
+                <th>Open Findings</th>
+                <th>Total Findings</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for control in controls %}
+            <tr>
+                <td><strong>{{ control.id }}</strong></td>
+                <td>
+                    {% if control.status == 'compliant' %}
+                    <span class="badge badge-success">Compliant</span>
+                    {% else %}
+                    <span class="badge badge-warning">Evidence Needed</span>
+                    {% endif %}
+                </td>
+                <td>{{ control.open_findings|default(0) }}</td>
+                <td>{{ control.total_findings|default(0) }}</td>
+            </tr>
+            {% endfor %}
+            {% if not controls %}
+            <tr>
+                <td colspan="4"><em>No controls available.</em></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Next Actions</h1>
+    {% if controls %}
+    <ol>
+        {% for control in controls if control.open_findings|default(0) > 0 %}
+        <li>Collect or attach evidence for {{ control.id }} to close {{ control.open_findings }} open finding(s).</li>
+        {% endfor %}
+        {% if controls|selectattr('open_findings','equalto',0)|list|length == controls|length %}
+        <li>All tracked criteria have evidence coverage; maintain evidence freshness before the audit window.</li>
+        {% endif %}
+    </ol>
+    {% else %}
+    <p><em>No control data to act on.</em></p>
+    {% endif %}
+</div>
+{% endblock %}

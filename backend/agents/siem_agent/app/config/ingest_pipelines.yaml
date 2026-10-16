@@ -1,0 +1,158 @@
+# OpenSearch Ingest Pipeline Definitions
+# These pipelines validate and enrich incoming logs with tenant context
+
+pipelines:
+  - id: sentinelgrid-tenant-validation
+    description: "Validates and enriches logs with SentinelGrid tenant context"
+    processors:
+      # Validate tenant_id exists
+      - script:
+          description: "Validate sg.tenant_id is present"
+          lang: "painless"
+          source: |
+            if (ctx.sg == null || ctx.sg.tenant_id == null) {
+              throw new Exception('Missing sg.tenant_id - rejecting document');
+            }
+      
+      # Validate realm exists
+      - script:
+          description: "Validate sg.realm is present"
+          lang: "painless"
+          source: |
+            if (ctx.sg == null || ctx.sg.realm == null) {
+              throw new Exception('Missing sg.realm - rejecting document');
+            }
+      
+      # Add processing timestamp
+      - set:
+          field: "sg.processed_at"
+          value: "{{_ingest.timestamp}}"
+      
+      # Add document version for schema evolution
+      - set:
+          field: "sg.doc_version"
+          value: "1.0"
+      
+      # Validate tenant_id format (UUID)
+      - script:
+          description: "Validate tenant_id is valid UUID format"
+          lang: "painless"
+          source: |
+            def tenantId = ctx.sg.tenant_id;
+            def uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+            if (!uuidPattern.matcher(tenantId.toLowerCase()).matches()) {
+              throw new Exception('Invalid tenant_id format - must be UUID');
+            }
+
+  - id: sentinelgrid-auth-enrichment
+    description: "Enriches authentication logs with additional context"
+    processors:
+      # Ensure tenant validation runs first
+      - pipeline:
+          name: "sentinelgrid-tenant-validation"
+      
+      # Set event category
+      - set:
+          field: "event.category"
+          value: "authentication"
+          override: false
+      
+      # Extract domain from email
+      - script:
+          description: "Extract domain from user email"
+          lang: "painless"
+          source: |
+            if (ctx.user != null && ctx.user.email != null) {
+              def email = ctx.user.email;
+              def atIndex = email.indexOf('@');
+              if (atIndex > 0 && atIndex < email.length() - 1) {
+                if (ctx.user.domain == null) {
+                  ctx.user.domain = email.substring(atIndex + 1);
+                }
+              }
+            }
+          ignore_failure: true
+      
+      # Geolocation enrichment (if geoip processor available)
+      - geoip:
+          field: "source.ip"
+          target_field: "source.geo"
+          ignore_missing: true
+          ignore_failure: true
+
+  - id: sentinelgrid-email-enrichment
+    description: "Enriches email logs with additional context"
+    processors:
+      # Ensure tenant validation runs first
+      - pipeline:
+          name: "sentinelgrid-tenant-validation"
+      
+      # Set event category
+      - set:
+          field: "event.category"
+          value: "email"
+          override: false
+      
+      # Extract domain from sender
+      - script:
+          description: "Extract sender domain"
+          lang: "painless"
+          source: |
+            if (ctx.email != null && ctx.email.from != null) {
+              def from = ctx.email.from;
+              def atIndex = from.indexOf('@');
+              if (atIndex > 0 && atIndex < from.length() - 1) {
+                ctx.email.sender_domain = from.substring(atIndex + 1);
+              }
+            }
+          ignore_failure: true
+
+  - id: sentinelgrid-endpoint-enrichment
+    description: "Enriches endpoint logs with additional context"
+    processors:
+      # Ensure tenant validation runs first
+      - pipeline:
+          name: "sentinelgrid-tenant-validation"
+      
+      # Set event category if malware
+      - set:
+          field: "event.category"
+          value: "malware"
+          if: "ctx.malware != null"
+          override: false
+      
+      # Set asset criticality default
+      - set:
+          field: "host.asset_criticality"
+          value: "medium"
+          override: false
+
+  - id: sentinelgrid-cloud-enrichment
+    description: "Enriches cloud posture logs"
+    processors:
+      # Ensure tenant validation runs first
+      - pipeline:
+          name: "sentinelgrid-tenant-validation"
+      
+      # Set event category
+      - set:
+          field: "event.category"
+          value: "posture"
+          override: false
+
+# Usage instructions:
+#
+# Create pipelines in OpenSearch:
+#   curl -X PUT 'http://localhost:9200/_ingest/pipeline/sentinelgrid-tenant-validation' \
+#     -H 'Content-Type: application/json' \
+#     -u ${SERVICE_USERNAME}:${SERVICE_PASSWORD} \
+#     -d @pipeline_definition.json
+#
+# Use in index template:
+#   "settings": {
+#     "index.default_pipeline": "sentinelgrid-auth-enrichment"
+#   }
+#
+# Or specify per-document:
+#   POST /sg-tenant-auth-*/_doc?pipeline=sentinelgrid-auth-enrichment
+

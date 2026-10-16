@@ -1,0 +1,62 @@
+[
+  {
+    "alarm_id": "ALM-AUTH-BruteForce",
+    "title": "Authentication brute force detected",
+    "category": "auth",
+    "severity": "HIGH",
+    "type": "detection",
+    "source": "siem",
+    "signal_refs": ["auth_failed_events"],
+    "entity": "user",
+    "triage_playbook": "PB-AUTH-BruteForce",
+    "tags": ["auth", "bruteforce", "anomaly"]
+  },
+  {
+    "alarm_id": "ALM-EDR-Tamper",
+    "title": "EDR agent tampering",
+    "category": "endpoint",
+    "severity": "CRIT",
+    "type": "detection",
+    "source": "edr",
+    "signal_refs": ["edr_agent_state_change"],
+    "entity": "host",
+    "triage_playbook": "PB-EDR-Tamper",
+    "tags": ["endpoint", "tamper"]
+  },
+  {
+    "alarm_id": "ALM-NET-RareEgress",
+    "title": "Rare egress destination",
+    "category": "network",
+    "severity": "MED",
+    "type": "detection",
+    "source": "siem",
+    "signal_refs": ["netflow_rare_dest"],
+    "entity": "host",
+    "triage_playbook": "PB-NET-RareEgress",
+    "tags": ["network", "egress", "anomaly"]
+  },
+  {
+    "alarm_id": "ALM-RAG-QueryAbuse",
+    "title": "RAG query abuse spike",
+    "category": "application",
+    "severity": "MED",
+    "type": "detection",
+    "source": "haystack",
+    "signal_refs": ["rag_query_volume"],
+    "entity": "user",
+    "triage_playbook": "PB-RAG-Abuse",
+    "tags": ["rag", "app", "abuse"]
+  },
+  {
+    "alarm_id": "ALM-SVC-HaystackIngest",
+    "title": "Haystack ingestion failures",
+    "category": "service",
+    "severity": "HIGH",
+    "type": "health",
+    "source": "haystack",
+    "signal_refs": ["haystack_ingest_errors"],
+    "entity": "service",
+    "triage_playbook": "PB-SVC-Health",
+    "tags": ["health", "ingest", "rag"]
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "index_patterns": ["*-alerts", "*-alerts-*"],
+  "priority": 52,
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "plugins.index_state_management.policy_id": "sg-ism-alerts"
+    },
+    "mappings": {
+      "dynamic": true,
+      "properties": {
+        "edr_source": { "type": "keyword" },
+        "sidecar_enabled": { "type": "boolean" },
+        "process": { "type": "object", "enabled": true },
+        "registry": { "type": "object", "enabled": true },
+        "file": { "type": "object", "enabled": true },
+        "driver": { "type": "object", "enabled": true },
+        "module": { "type": "object", "enabled": true },
+        "sensor": { "type": "object", "enabled": true },
+        "hunt": { "type": "object", "enabled": true },
+        "task": { "type": "object", "enabled": true },
+        "collection": { "type": "object", "enabled": true }
+      }
+    }
+  },
+  "_meta": {
+    "description": "Template for alert/finding documents (e.g., GuardDuty) ECS-aligned"
+  }
+}

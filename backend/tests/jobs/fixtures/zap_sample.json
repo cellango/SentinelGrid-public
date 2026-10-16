@@ -1,0 +1,17 @@
+{
+  "site": [
+    {
+      "alerts": [
+        {
+          "riskdesc": "High (High)",
+          "name": "SQL Injection",
+          "desc": "SQLi detected",
+          "solution": "Use parameterized queries",
+          "instances": [
+            {"uri": "http://example.com/login"}
+          ]
+        }
+      ]
+    }
+  ]
+}

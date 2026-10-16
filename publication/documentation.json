@@ -1,0 +1,2100 @@
+{
+  "format_version": 1,
+  "review_date": "2026-10-15",
+  "policy": "One current page per topic; archived references do not establish architecture or release approval. Component docs remain experimental. Root scope and security/licensing entrypoints govern the preview.",
+  "review_record": "docs/release/documentation.md",
+  "files": [
+    {
+      "path": ".github/disabled-workflows/README.md",
+      "class": "repository_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "class": "repository_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "class": "repository_entrypoint",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "LICENSING.md",
+      "class": "repository_entrypoint",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "README.md",
+      "class": "repository_entrypoint",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "RELEASE_SCOPE.md",
+      "class": "repository_entrypoint",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "SECURITY.md",
+      "class": "repository_entrypoint",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "SentinelGridAIShield/CONTRIBUTING.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/GETTING_STARTED.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/SECURITY.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/TESTING_GUIDE.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/docs/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/docs/architecture.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/docs/configuration.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/docs/gateway-integration.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/docs/installation.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/docs/operations.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/docs/siem-export.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/examples/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/gateway/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridAIShield/tests/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/START_HERE.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/beta/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/cortex/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/database/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/docs/API_REFERENCE.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/docs/ARCHITECTURE.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/docs/GETTING_STARTED.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/playbooks/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/services/mcp-server/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/tests/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/workflows/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/QUICKSTART.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/START_HERE.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/analyzers/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/database/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/docs/FRONTEND_IMPLEMENTATION.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/docs/GETTING_STARTED.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/docs/MCP_INTEGRATION_GUIDE.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/docs/architecture.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/frontend/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "SentinelGridPostureAgent/tests/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "class": "repository_entrypoint",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "agents/wazuh/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "arm-templates/sentinelgrid-integration-steps.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/agents/mcp_server/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/agents/mcp_server/tests/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/agents/siem_agent/README_DETECTION.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/agents/siem_agent/docs/INTEGRATION_GUIDE.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/agents/siem_agent/tests/README_HERO_FLOW_1.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/agents/soar_agent/tests/README_TENANT_ISOLATION.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/docker/base-images/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/migrations/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/migrations_consolidated/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/migrations_legacy/README_BASELINE_CLEANUP.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/scripts/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/scripts/README_BOOTSTRAP.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/services/compliance_service/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/services/detection_service/tests/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/services/model_gateway/db/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/services/model_gateway/scripts/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/services/model_gateway/tests/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/services/reporting_service/README_COMPLIANCE_REPORTS.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/services/wazuh_manager_service/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/tests/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/tests/README_AUTH_TESTS.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/tests/README_WELCOME_DASHBOARD_TEST.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/tests/SMOKETEST_README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "backend/tests/compliance/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "charts/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "deployment-manager/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "docker/agents/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "docs/AGENTS.md",
+      "class": "contributor_instructions",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/README.md",
+      "class": "documentation_index",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/architecture/cloud-providers.md",
+      "class": "current_architecture",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/architecture/frontend.md",
+      "class": "current_architecture",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/architecture/overview.md",
+      "class": "current_architecture",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/archive/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/operations/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/operations/backup-restore-and-dr.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/operations/compliance-operations.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/operations/database-migrations-and-bootstrap.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/operations/edr-feature-flags.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/operations/monitoring-and-alerting.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/operations/multi-tenancy-audit-execution.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/operations/production-release-and-deploy.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/operations/production-support-and-incident-response.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/ai/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/ai/ai-strategy.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/ai/embeddings-and-vector-db-process.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/ai/enrollment-protocols-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/ai/populate-vector-db-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/ai/task5-base-model-setup.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/certificates/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/certificates/cert-service-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/certificates/cert-service-quick-start.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/certificates/certificate-feature-location-and-tests.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/certificates/ejbca-implementation-clarification.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/certificates/ejbca-multi-tenant-security.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/certificates/ejbca-setup-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/certificates/ejbca-ui-placement.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/access-review-workflow-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/detection-deduplication-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/detection-tenant-model.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/detection-testing-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/detection-ui-testing-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/hardened-image-security-workflow.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/incident-pipeline-zammad.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/ootb-playbooks-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/ootb-playbooks-quick-start.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/phase3-workflow-productization-closeout-2026-04-15.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/playbook-editor-compatibility.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/playbook-nist-mitre-integration.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/siem-detection-deployment-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/siem-detection-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/siem-detection-overview.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/siem-detection-quickstart.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/soc-playbooks-sop.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/soc-playbooks-templates.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/wazuh-version-monitoring-workflow.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/detection-response/workflow-technology-evaluation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/compliance-api-reference.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/compliance-testing-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/dashboard-testing-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/development-standards.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/hero-flow-2-testing-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/legacy-color-migration-baseline.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/lint.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/navigation-label-migration-map.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/opa-input-schema.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/p0-test-capability-specs.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/quick-test-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/scan-type-field-schema.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/task2-migration-instructions.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/task4-e2e-testing-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/test-environment-setup.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/test-suite-overview.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/development/testing.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/api-reference-iam.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/auth-implementation-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/byo-app-auth-proxy.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/custom-keycloak-auth-strategy.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/entitlement-naming-convention.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/entitlements-database-schema.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/entitlements-database-setup.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/get-platform-admin-password.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-admin-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-deployment-runbook.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-developer-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-policy-editor.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-portal-ci-integration.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-portal-docker-setup.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-portal-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-portal-quick-start.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-portal-testing-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-ui-selenium-test-spec.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/iam-user-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/idp-onboarding-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-26-user-profile.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-account-activation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-admin-password-policy.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-attribute-bug-analysis.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-attribute-persistence-solution.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-bootstrap.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-certificate-setup.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-service-account-migration.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-strategy.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-test-strategy.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-troubleshooting.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-upgrade-26.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-user-profile-setup.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/keycloak-user-profile-solution.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/login-and-auth-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/master-admin-password-sync.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/onboarding-implementation-review.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/onboarding-quick-start.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/onboarding-tests.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/p0-accessibility-auth-verification-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/po-iam-requirements.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/realm-creation-api.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/realm-strategy-test-analysis.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/realm-strategy-test-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/resolve-keycloak-password-mismatch.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/seed-realms-vs-password-sync.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/sentinelgridiam-database.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/sync-keycloak-password.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/sync-keycloak-passwords.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/tenant-id-handling.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/test-tenant-id-attribute.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/user-profile-iac-configuration.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/vault-get-password.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/where-is-the-vault-password.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/identity/workaround-tenant-id.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/agent-build-process.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/agent-rebranding-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/backup-feature-added.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/build-notes-dec-3-2025.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/compliance-deployment-quickstart.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/customer-agent-installation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/customer-hardened-images.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/docker-audit-report.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/docker-kubernetes-readiness.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/docker-management-quickstart.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/docker-resource-management.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/ejbca-public-certificate-support.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/image-build-process.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/image-security-scanning.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/infra-provisioning-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/phase4-operations-deployment-closeout-2026-04-15.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/ports.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/production-deployment.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/production-launch-scope-deployment-matrix-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/quick-reference-init-script.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/quick-vault-commands.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/reporting-framework-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/run-with-vault.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/safety-features-init-script.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/terraform-module-spec.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/testing-agent-and-images.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/vault-dev-mode-with-tls.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/vault-https-configuration.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/vault-persistent-storage.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/vault-production-setup.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/infrastructure/vault-root-token-security.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/access-review-ui-integration.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/admin-account-setup.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/admin-user-seeding.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/async-jobs-and-tool-registry.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/break-glass-account.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/cis-controls-1-2-inventory-review.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/compliance-implementation-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/compliance-platform-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/create-repo-instructions.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/critical-technical-requirements.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/customer-cloud-account-setup.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/dashboard-phase1-5-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/demo-tenant-reset.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/dns-naming-convention.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/documentation-reorganization.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/endpoint-manager-quickstart.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/first-time-experience-tasks.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/git-data-ingestion-pipeline.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/hero-flow-1-readiness-check.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/ingest-endpoint-contract.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/multi-tenant-security.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/next-steps-detailed.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/open-source-tool-stack.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/opensearch-ingest-pipelines-aws.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/orchestrator-metrics.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/p0-tranche1-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase0-to-phase1-owner-review-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase0-truth-reset-checklist-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase2-platform-consolidation-closeout-2026-04-15.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase3-execution-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase4-execution-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase5-execution-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase5-first-value-dry-run-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase5-gated-feature-inventory-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase5-launch-readiness-closeout-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase5-launch-readiness-evidence-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase6-audit-evidence-pack-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase6-execution-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/phase6-release-candidate-signoff-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/platform-admin-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/posture-scoring.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/pr-draft-release-prod-clean.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/production-approved-exception-register-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/production-capacity-baseline-2026-04-15.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/production-go-acceptance-contract-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/production-launch-scope-decision-2026-04-15.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/production-risk-exception-policy-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/production-risk-register-2026-04-15.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/production-security-checklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/production-truth-baseline-2026-04-15.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/quickstart.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/remove-duplicate-marketing-pages.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/run-this-now.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/seed-demo-data-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/sentinelgrid-aishield-public-repo-sync.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/sentinelguard-packer-runbook.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/service-consolidation-strategy.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/services-health-check-dec-4-2025.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/slack-admin-alerts.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/task1-lora-training-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/task3-background-queue-implementation.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/task7-knowledge-base-population.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/third-party-dependency-strategy.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/today-accomplishments-dec-3-2025.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/token-validation-approach.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/user-guide.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/reference/platform/website-archival-decision.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/ai-agent-runtime-drift-remediation-closeout-2026-04-28.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/compliance/README.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/compliance/compliance-customer-guide-2026-04-28.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/compliance/compliance-gap-closure-closeout-2026-04-28.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/compliance/compliance-launch-readiness-signoff-2026-04-28.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/compliance/phase8-end-to-end-qa-scenarios-2026-04-28.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/compliance/runtime-truth-inventory-2026-04-27.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/multi-tenancy-audit-execution-spec.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/multi-tenancy-audit-implementation-backlog.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/multi-tenancy-defensible-remediation-worklist.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/multi-tenancy-remediation-status.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-phase7-launch-validation-runners-2026-04-20.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-phase7-live-closeout-2026-04-28.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-agent-audit-and-prompt-security-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-approval-actions-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-approval-objects-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-auth-boundary-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-ci-testing-and-release-gates-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-classification-routing-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-evidence-model-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-execution-copilot-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-findings-triage-and-report-drafting-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-friendly-customer-beta-progress-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-internal-pilot-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-mcp-launch-surface-closeout-2026-04-20.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-observability-and-audit-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-planner-agent-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-policy-engine-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-redaction-and-sensitive-data-handling-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-reporting-integrity-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-retest-and-delta-reporting-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-runtime-and-network-hardening-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-runtime-safety-controls-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-scanner-isolation-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-secrets-and-config-hardening-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-typed-playbook-model-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-verification-scope-and-launch-decisions-2026-04-20.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/pentest-slice-visual-editor-closeout-2026-04-19.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase1-slice-1a-unsigned-token-trust-closeout-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase1-slice-1b-bff-session-boundary-closeout-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase1-slice-1c-keycloak-admin-pattern-closeout-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase1-slice-1d-frontend-security-header-proxy-closeout-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase2-slice-2a-soar-tenant-trust-closeout-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase2-slice-2b-orchestrator-response-auth-closeout-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase2-slice-2c-ai-shield-auth-closeout-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase2-slice-2d-internal-token-standardization-closeout-2026-04-16.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase3-slice-3a-https-only-public-edge-closeout-2026-04-17.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase3-slice-3b-kubernetes-network-containment-closeout-2026-04-17.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase3-slice-3c-runtime-hardening-closeout-2026-04-17.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase3-slice-3d-secret-and-default-credential-elimination-closeout-2026-04-17.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase4-slice-4a-frontend-dependency-remediation-closeout-2026-04-17.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase4-slice-4b-model-gateway-dependency-remediation-closeout-2026-04-17.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase4-slice-4c-reproducible-dependency-policy-closeout-2026-04-17.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase4-slice-4d-base-image-and-image-scan-discipline-closeout-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase5-slice-5a-non-launch-surface-gate-closeout-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase5-slice-5b-workflow-truthfulness-closeout-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase6-slice-6a-readiness-metrics-alerting-closeout-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase6-slice-6b-backup-restore-rollback-drills-closeout-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase6-slice-6c-production-support-and-incident-rehearsal-closeout-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase6-slice-6d-final-pre-audit-dry-run-closeout-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/phase7-slice-7b-independent-security-review-closeout-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/production-go-recommendation-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/production-re-audit-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/archive/validation/release-candidate-go-signoff-2026-04-18.md",
+      "class": "historical_reference",
+      "authority": "historical_only"
+    },
+    {
+      "path": "docs/development/code-review.md",
+      "class": "developer_guidance",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/development/database-changes.md",
+      "class": "developer_guidance",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/development/documentation.md",
+      "class": "developer_guidance",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/reference/README.md",
+      "class": "current_source_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/reference/agent-components.md",
+      "class": "current_source_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/reference/entity-model.md",
+      "class": "current_source_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/reference/identity.md",
+      "class": "current_source_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/reference/product-catalog.md",
+      "class": "current_source_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/README.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/contents.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/credentials.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/dependencies.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/documentation.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/historical-secrets.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/history-strategy.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/private-data.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/provenance.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/review.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "docs/release/tasks.md",
+      "class": "publication_review",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "frontend/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "frontend/src/components/policy-builder/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "infra/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "infra/customers/agribotsai/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "infra/customers/agribotsai/keycloak/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "infra/keycloak/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "infra/nginx/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "infra/vault/QUICKSTART_PROD.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "infra/vault/README_PROD.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "infra/vault/certs/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "infra/wazuh/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "packer/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "packer/branding/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "scripts/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "scripts/audit/multi-tenancy/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "scripts/build-pipeline/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "scripts/cis-hardening/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "scripts/fixtures/ai/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "scripts/fixtures/auth/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "scripts/package-repos/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "scripts/rebrand-agents/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "scripts/wazuh/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "seeds/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "terraform/aws-sentinelgrid-integration/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "terraform/azure-sentinelgrid-integration/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "terraform/cdn/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "terraform/gcp-sentinelgrid-integration/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "third_party/README.md",
+      "class": "repository_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
+      "path": "website/DEV_SERVER.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "website/QUICK_START.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
+      "path": "website/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    }
+  ],
+  "counts_by_class": {
+    "repository_reference": 3,
+    "repository_entrypoint": 6,
+    "experimental_component_reference": 97,
+    "contributor_instructions": 1,
+    "documentation_index": 1,
+    "current_architecture": 3,
+    "historical_reference": 285,
+    "developer_guidance": 3,
+    "current_source_reference": 5,
+    "publication_review": 11
+  },
+  "retired_original_documents": {
+    "superseded_design_progress_or_duplicate": 307,
+    "additional_private_business": 13,
+    "recovery": "Verified owner-private copies retained outside publication; no original history imported."
+  }
+}

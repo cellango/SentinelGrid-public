@@ -1,0 +1,27 @@
+
+Welcome to SentinelGrid Hardened Debian 12
+
+╔═══════════════════════════════════════════════════════════╗
+║  Security Features                                        ║
+╚═══════════════════════════════════════════════════════════╝
+
+✓ CIS Level 1 Security Hardening Applied
+✓ SentinelGrid Endpoint Protection Agent Pre-Installed
+✓ AppArmor Enabled
+✓ UFW Firewall Configured
+✓ Security Updates Applied
+
+═══════════════════════════════════════════════════════════
+
+Quick Commands:
+  Agent status:   sudo systemctl status sentinelgrid-agent
+  View logs:      sudo tail -f /var/ossec/logs/ossec.log
+  System info:    cat /etc/sentinelgrid-image-info
+
+Documentation: https://docs.sentinelgrid.ai/images/debian-12
+Support: support@sentinelgrid.ai
+
+═══════════════════════════════════════════════════════════
+Built with ❤️  by SentinelGrid | Powered by Wazuh
+
+

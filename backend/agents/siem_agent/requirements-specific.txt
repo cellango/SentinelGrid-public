@@ -1,0 +1,7 @@
+# SIEM Agent - Service-Specific Dependencies
+# ===========================================
+# Common deps (FastAPI, SQLAlchemy, httpx, PyJWT, redis) already in sentinelgrid/api-base
+
+# OpenSearch client (unique to SIEM)
+opensearch-py>=2.4.0
+

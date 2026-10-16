@@ -1,0 +1,84 @@
+# Filebeat Configuration for SentinelGrid Endpoint Manager
+# Routes endpoint agent events to tenant-specific OpenSearch indices
+
+# Wazuh module configuration
+filebeat.modules:
+  - module: wazuh
+    alerts:
+      enabled: true
+      input:
+        type: log
+        paths:
+          - /var/ossec/logs/alerts/alerts.json
+    archives:
+      enabled: false  # Set to true for full event archive (requires more storage)
+
+# Processors to enrich events and enforce multi-tenancy
+processors:
+  # 1. Copy tenant_id from agent.labels to top level for easier querying
+  - copy_fields:
+      fields:
+        - from: agent.labels.tenant_id
+          to: tenant_id
+      fail_on_error: false
+      ignore_missing: true
+  
+  # 2. Add SentinelGrid metadata
+  - add_fields:
+      target: sentinelgrid
+      fields:
+        source: endpoint_manager
+        version: "1.0.0"
+  
+  # 3. CRITICAL: Drop events without tenant_id (should never happen, but safety check)
+  - drop_event:
+      when:
+        not:
+          has_fields: ['agent.labels.tenant_id']
+
+# Output to OpenSearch (SentinelGrid SIEM)
+output.elasticsearch:
+  hosts: ['http://opensearch:9200']
+  protocol: "http"
+  username: "admin"
+  password: "admin"
+  
+  # Dynamic index routing based on tenant_id
+  indices:
+    # Wazuh alerts - route to tenant-specific index
+    - index: "wazuh-alerts-%{[agent.labels.tenant_id]}-%{+yyyy.MM.dd}"
+      when:
+        or:
+          - equals:
+              event.module: "wazuh"
+          - contains:
+              data_stream.dataset: "wazuh.alerts"
+    
+    # Wazuh archives (if enabled) - also tenant-specific
+    - index: "wazuh-archives-%{[agent.labels.tenant_id]}-%{+yyyy.MM.dd}"
+      when:
+        contains:
+          data_stream.dataset: "wazuh.archives"
+  
+  # Index lifecycle management (disabled for dev)
+  ilm.enabled: false
+
+# Filebeat logging
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat.log
+  keepfiles: 7
+  permissions: 0644
+
+# Monitoring (optional)
+monitoring:
+  enabled: false
+
+# HTTP endpoint for health checks
+http:
+  enabled: true
+  host: 0.0.0.0
+  port: 5066
+

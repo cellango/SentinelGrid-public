@@ -1,0 +1,92 @@
+{
+  "register_status": "draft",
+  "last_reviewed": "2026-03-28",
+  "notes": [
+    "Initial shared-data register seeded from current code review findings.",
+    "Entries require service-owner review and formal classification approval."
+  ],
+  "entries": [
+    {
+      "id": "jobs_global_rows",
+      "classification": "system operational metadata",
+      "service": "api_gateway",
+      "storage_surface": "jobs table",
+      "pattern": "tenant_id = :tenant_id OR tenant_id IS NULL",
+      "business_justification": "System or unscoped jobs may need shared visibility, but the behavior is audit-sensitive and must be explicitly approved.",
+      "owner": "Platform Engineering",
+      "source_refs": [
+        "backend/services/api_gateway/app/api/routes_jobs.py:73",
+        "backend/services/api_gateway/app/api/routes_jobs.py:91"
+      ]
+    },
+    {
+      "id": "gateway_ingest_pipeline_metadata",
+      "classification": "system operational metadata",
+      "service": "api_gateway",
+      "storage_surface": "OpenSearch ingest pipeline and index template metadata",
+      "pattern": "GET /ingest/pipelines and GET /ingest/templates return shared platform configuration metadata",
+      "business_justification": "Pipeline and template metadata describe platform-managed ingest configuration and should not contain tenant customer data.",
+      "owner": "API Gateway",
+      "source_refs": [
+        "backend/services/api_gateway/app/api/routes_ingest.py:19",
+        "backend/services/api_gateway/app/api/routes_ingest.py:32"
+      ]
+    },
+    {
+      "id": "iam_product_catalog_metadata",
+      "classification": "shared product content",
+      "service": "iam_agent",
+      "storage_surface": "agent versions and hardened image catalog",
+      "pattern": "GET /api/v1/agents* and GET /api/v1/hardened-images* return platform-managed product catalog metadata",
+      "business_justification": "Agent version information and hardened image catalog entries are product-managed catalog content intended to be visible across tenants and should not contain tenant customer data.",
+      "owner": "IAM Agent",
+      "source_refs": [
+        "backend/agents/iam_agent/app/api/agents.py:58",
+        "backend/agents/iam_agent/app/api/hardened_images.py:74"
+      ]
+    },
+    {
+      "id": "iam_policy_templates_global_rows",
+      "classification": "shared product content",
+      "service": "iam_agent",
+      "storage_surface": "policy_templates",
+      "pattern": "tenant_id IS NULL or tenant_id = tenant / sg-admin tenant",
+      "business_justification": "Global policy templates are intended to be reusable starting points across tenants and should contain no tenant customer data.",
+      "owner": "IAM Agent",
+      "source_refs": [
+        "backend/agents/iam_agent/app/services/policy_service.py:412",
+        "backend/agents/iam_agent/app/services/policy_service.py:423"
+      ]
+    },
+    {
+      "id": "shared_knowledge_base_rows",
+      "classification": "shared product content",
+      "service": "model_gateway",
+      "storage_surface": "cybersecurity_knowledge_base",
+      "pattern": "tenant_id IS NULL rows are written only through superadmin-scoped framework loader routes, while generic RAG write APIs are tenant-owned",
+      "business_justification": "Shared cybersecurity knowledge is intended to be globally reusable, while tenant-specific knowledge must remain isolated. Mutable tenant writes should not be able to create or modify shared rows through generic tenant APIs.",
+      "owner": "AI Platform",
+      "source_refs": [
+        "backend/services/model_gateway/app/api/knowledge_base_loader.py:44",
+        "backend/services/model_gateway/app/api/rag.py:50",
+        "backend/services/model_gateway/app/services/rag_service.py:61",
+        "backend/migrations_consolidated/V001__initial_schema.sql:12132"
+      ]
+    },
+    {
+      "id": "report_template_system_rows",
+      "classification": "shared product content",
+      "service": "reporting_service",
+      "storage_surface": "report templates",
+      "pattern": "tenant_id IS NULL rows remain globally readable for browsing and on-demand generation, but schedule state is only allowed on tenant-owned templates",
+      "business_justification": "System report templates are seeded product content intended to be reusable across tenants and should not embed tenant-specific data. Mutable schedule state must remain tenant-owned to avoid cross-tenant coupling.",
+      "owner": "Reporting Service",
+      "source_refs": [
+        "backend/services/reporting_service/app/services/template_seeder.py:12",
+        "backend/services/reporting_service/app/api/templates.py:27",
+        "backend/services/reporting_service/app/api/scheduled_reports.py:27",
+        "backend/migrations_consolidated/V004__report_template_shared_select_policy.sql:1"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+version: 1
+
+destinations:
+  - name: splunk-primary
+    type: splunk_hec
+    enabled: true
+    transport: http_json
+    endpoint: https://splunk.example.com:8088/services/collector
+    auth:
+      type: bearer
+      token_env: SPLUNK_HEC_TOKEN
+    routing:
+      index: main
+      source: sentinelgrid_ai_shield
+      sourcetype: sentinelgrid:ai:event
+    filters:
+      minimum_severity: medium

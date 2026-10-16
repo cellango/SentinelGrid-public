@@ -1,0 +1,17 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+*.tfvars.backup
+
+# Sensitive files
+secrets/
+*.pem
+*.key
+
+# Customer-specific secrets (keep structure, ignore values)
+customers/*/terraform/terraform.tfvars
+

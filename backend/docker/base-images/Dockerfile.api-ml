@@ -1,0 +1,69 @@
+#
+# SentinelGrid Base Image - Tier 3: API ML
+# =========================================
+#
+# Purpose: AI/ML-enabled API services
+# Version: 1.0.0
+# Size: ~1.5 GB (large due to PyTorch and transformers)
+#
+# Contains:
+# - api-base (Tier 2) - FastAPI, SQLAlchemy, etc.
+# - transformers, torch
+# - presidio-analyzer (PII detection)
+# - sentence-transformers
+# - NLP libraries
+#
+# Used by: 3 services (model_gateway, ai_enrichment_agent, ai_shield_services)
+#
+
+ARG SENTINELGRID_API_BASE_IMAGE=sentinelgrid/api-base:latest
+FROM ${SENTINELGRID_API_BASE_IMAGE}
+
+LABEL maintainer="SentinelGrid <engineering@sentinelgrid.com>"
+LABEL org.sentinelgrid.image.tier="3-ml"
+LABEL org.sentinelgrid.image.name="api-ml"
+LABEL org.sentinelgrid.image.version="1.0.0"
+LABEL org.sentinelgrid.image.extends="api-base:latest"
+
+# Switch back to root for installations
+USER root
+
+# Copy requirements
+COPY requirements/api-ml.txt /tmp/requirements-ml.txt
+
+# Install ML dependencies
+# This will take 5-10 minutes due to PyTorch, but only once!
+RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
+    pip install --no-cache-dir -r /tmp/requirements-ml.txt && \
+    rm /tmp/requirements-ml.txt
+
+# Download spaCy model (optional - can be downloaded at runtime if needed)
+# RUN python -m spacy download en_core_web_sm
+# Note: Services can download specific models they need at startup
+
+# Create model cache directories
+RUN mkdir -p /models/base /models/cache /models/adapters && \
+    chown -R sentinelgrid:sentinelgrid /models
+
+# Verify ML packages installed
+RUN python -c "import torch; import transformers; import presidio_analyzer; print('✅ ML dependencies installed')"
+
+# Switch back to non-root user
+USER sentinelgrid
+
+WORKDIR /app
+
+# Environment variables for ML
+ENV TRANSFORMERS_CACHE=/models/cache \
+    TORCH_HOME=/models/cache \
+    HF_HOME=/models/cache
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD python -c "import torch; import transformers"
+
+# Default port
+EXPOSE 8000
+
+# Default command (services will override)
+CMD ["python", "-c", "print('SentinelGrid API ML Image - Ready')"]

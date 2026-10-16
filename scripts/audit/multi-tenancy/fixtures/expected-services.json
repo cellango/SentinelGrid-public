@@ -1,0 +1,22 @@
+{
+  "smoke": [
+    "api_gateway",
+    "iam_agent",
+    "postgres"
+  ],
+  "standard": [
+    "api_gateway",
+    "iam_agent",
+    "postgres",
+    "keycloak"
+  ],
+  "full": [
+    "api_gateway",
+    "iam_agent",
+    "postgres",
+    "keycloak",
+    "ticketing_service",
+    "orchestrator"
+  ]
+}
+

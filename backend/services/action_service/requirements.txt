@@ -1,0 +1,12 @@
+-r ../../libs/requirements.txt
+
+# Action execution
+requests>=2.31.0
+httpx>=0.25.0
+
+# LDAP for AD integration
+ldap3>=2.9.0
+
+# EDR/Firewall integrations (via REST API)
+# No specific library needed, using httpx
+

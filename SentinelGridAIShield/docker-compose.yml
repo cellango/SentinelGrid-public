@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sentinelgrid_ai_shield_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sentinelgrid_ai_shield}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-sentinelgrid_ai_shield}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  services:
+    build: ./services
+    container_name: sentinelgrid_ai_shield_services
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DB_URL: ${DB_URL:-postgresql://postgres:postgres@postgres:5432/sentinelgrid_ai_shield}
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      SIEM_EXPORT_ENABLED: ${SIEM_EXPORT_ENABLED:-false}
+      SIEM_EXPORT_CONFIG_FILE: ${SIEM_EXPORT_CONFIG_FILE:-/app/config/siem-destinations.yaml}
+      SIEM_EXPORT_BATCH_SIZE: ${SIEM_EXPORT_BATCH_SIZE:-100}
+      SIEM_EXPORT_TIMEOUT_SECONDS: ${SIEM_EXPORT_TIMEOUT_SECONDS:-10}
+      SIEM_EXPORT_RETRY_MAX: ${SIEM_EXPORT_RETRY_MAX:-3}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "8024:8000"
+    volumes:
+      - ./examples/config:/app/config:ro
+
+  gateway:
+    build: ./gateway
+    container_name: sentinelgrid_ai_shield_gateway
+    depends_on:
+      services:
+        condition: service_started
+    environment:
+      SERVICES_URL: http://services:8000
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      TELEMETRY_MODE: ${TELEMETRY_MODE:-http}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      PORT: 8080
+    ports:
+      - "8023:8080"
+
+volumes:
+  postgres_data:

@@ -1,0 +1,1664 @@
+# SentinelGrid Detection Catalog (source of truth)
+# This catalog aligns with the 100 seeded detections (V052) and maps each to incident_type,
+# default playbook, MITRE/NIST metadata, and a query template ref for the drag-and-drop alarm editor.
+# Status values: seeded_db, pending_monitor_def, ready, deprecated.
+
+detections:
+  # Identity (1–15)
+  - id: ID-NEW-ADMIN
+    name: New Admin/Privileged Role Granted
+    category: identity
+    severity: high
+    incident_type: identity_privilege_escalation
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_privilege_escalation
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: identity_role_assignment
+    parameters: {roles: ["admin", "realm-admin", "super-admin", "PowerUser", "OrganizationAdmin"], lookback: "10m", threshold: 1}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-PRIV-GROUP-OFFHRS
+    name: Privileged Group Change Off-hours
+    category: identity
+    severity: high
+    incident_type: identity_privilege_escalation
+    default_playbook_key: PRIV-GROUP-CHANGE
+    alert_type: identity_privilege_escalation
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: identity_group_change
+    parameters: {groups: ["admins", "security_admins"], lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-MFA-DISABLED
+    name: MFA Disabled/Downgraded
+    category: identity
+    severity: high
+    incident_type: identity_mfa_root_issue
+    default_playbook_key: MFA-BYPASS
+    alert_type: identity_mfa_root_issue
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1556"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: identity_mfa_change
+    parameters: {mfa_state: ["disabled", "bypass"], lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-NEW-ACCESS-KEY-ADMIN
+    name: New Access Key for Admin
+    category: identity
+    severity: high
+    incident_type: identity_privilege_escalation
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_privilege_escalation
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: identity_access_key_created
+    parameters: {role_scope: ["admin", "privileged"], lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-FAILED-LOGIN-BURST
+    name: Failed Login Burst (User)
+    category: identity
+    severity: medium
+    incident_type: identity_auth_anomaly
+    default_playbook_key: PASSWORD-SPRAY
+    alert_type: identity_auth_anomaly
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1110"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_failed_login_burst
+    parameters: {group_by: "username", threshold: 5, lookback: "5m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-PASSWORD-SPRAY
+    name: Password Spray Detected
+    category: identity
+    severity: high
+    incident_type: identity_auth_anomaly
+    default_playbook_key: PASSWORD-SPRAY
+    alert_type: identity_auth_anomaly
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1110.003"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_password_spray
+    parameters: {group_by: "source_ip", threshold: 10, user_threshold: 5, lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-IMPOSSIBLE-TRAVEL
+    name: Impossible Travel
+    category: identity
+    severity: high
+    incident_type: identity_auth_anomaly
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_auth_anomaly
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_geo_anomaly
+    parameters: {anomaly_type: "impossible_travel", lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-NEW-COUNTRY-ASN
+    name: Login from New Country/ASN
+    category: identity
+    severity: medium
+    incident_type: identity_auth_anomaly
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_auth_anomaly
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_geo_new_country
+    parameters: {anomaly_type: "new_country", lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-EXCESSIVE-STS-ASSUME
+    name: Excessive Role Assumption
+    category: identity
+    severity: medium
+    incident_type: identity_privilege_escalation
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_privilege_escalation
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_assumerole_burst
+    parameters: {group_by: "roleArn", threshold: 5, lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-INACTIVE-USER-ACTIVITY
+    name: Inactive User Activity
+    category: identity
+    severity: high
+    incident_type: identity_privilege_escalation
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_privilege_escalation
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_inactive_user_activity
+    parameters: {lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-SERVICE-ACCT-NEW-LOC
+    name: Service Account New Location
+    category: identity
+    severity: medium
+    incident_type: identity_auth_anomaly
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_auth_anomaly
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_service_account_geo
+    parameters: {anomaly_type: "new_location", lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-MASS-LOCKOUTS
+    name: Multiple Account Lockouts
+    category: identity
+    severity: medium
+    incident_type: identity_auth_anomaly
+    default_playbook_key: PASSWORD-SPRAY
+    alert_type: identity_auth_anomaly
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1110"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_lockout_burst
+    parameters: {threshold: 3, lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-TOKEN-MISISSUE
+    name: Token Audience/Expiry Anomaly
+    category: identity
+    severity: medium
+    incident_type: identity_mfa_root_issue
+    default_playbook_key: MFA-BYPASS
+    alert_type: identity_mfa_root_issue
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1550"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: identity_token_anomaly
+    parameters: {anomaly_type: "aud_or_expiry", lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-REALM-CONFIG-CHANGE
+    name: Realm Config Change
+    category: identity
+    severity: high
+    incident_type: identity_privilege_escalation
+    default_playbook_key: PRIV-GROUP-CHANGE
+    alert_type: identity_privilege_escalation
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: identity_realm_config_change
+    parameters: {environment: "prod", lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: ID-ADMIN-NO-MFA
+    name: Admin Login Without MFA
+    category: identity
+    severity: high
+    incident_type: identity_mfa_root_issue
+    default_playbook_key: MFA-BYPASS
+    alert_type: identity_mfa_root_issue
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1556"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: identity_admin_no_mfa
+    parameters: {role_scope: ["admin", "privileged"], lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  # Endpoint / Host (16–30)
+  - id: EP-AUTORUN-NEW
+    name: New Autorun/Persistence
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1547"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_persistence
+    parameters: {lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-LOLBIN-SUSPICIOUS
+    name: Suspicious LOLBin Execution
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0002"]
+    mitre_techniques: ["T1218"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_lolbin
+    parameters: {lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-PRIV-ESC-ATTEMPT
+    name: Privilege Escalation Attempt
+    category: endpoint
+    severity: high
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0004"]
+    mitre_techniques: ["T1068"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_priv_escalation
+    parameters: {lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-NEW-RISKY-LISTENER
+    name: New Listener on Risky Port
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1046", "T1105"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_new_listener
+    parameters: {ports: [22, 3389], lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-MALWARE-DETECTED
+    name: Malware Detected
+    category: endpoint
+    severity: high
+    incident_type: endpoint_malware_ransomware
+    default_playbook_key: MALWARE-CONTAIN
+    alert_type: endpoint_malware_ransomware
+    mitre_tactics: ["TA0002"]
+    mitre_techniques: ["T1059", "T1204"]
+    nist_controls: ["DE.CM", "RS.MI"]
+    query_template_ref: wazuh_malware
+    parameters: {severity: ["high", "critical"], lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-RANSOMWARE-PATTERN
+    name: Ransomware Pattern
+    category: endpoint
+    severity: critical
+    incident_type: endpoint_malware_ransomware
+    default_playbook_key: RANSOMWARE-IR
+    alert_type: endpoint_malware_ransomware
+    mitre_tactics: ["TA0040"]
+    mitre_techniques: ["T1486"]
+    nist_controls: ["DE.CM", "RS.MI"]
+    query_template_ref: wazuh_ransomware_pattern
+    parameters: {lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-SCRIPT-TMP-WEBROOT
+    name: Script Run from Temp/Webroot
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0002"]
+    mitre_techniques: ["T1059"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_suspicious_script_location
+    parameters: {paths: ["/tmp", "/var/www"], lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-FIM-SYSTEM-PATH
+    name: System File Change
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1565.001"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_fim_system_path
+    parameters: {paths: ["/etc", "C:\\Windows\\System32"], lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-NEW-LOCAL-USER
+    name: New Local User Created
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1136.001"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_new_local_user
+    parameters: {lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-FAILED-SUDO-BURST
+    name: Failed sudo/su Burst
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0004"]
+    mitre_techniques: ["T1110"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_privilege_burst
+    parameters: {threshold: 5, lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-AGENT-OFFLINE
+    name: Endpoint Agent Offline
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_monitoring_gap
+    default_playbook_key: AGENT-OFFLINE
+    alert_type: endpoint_monitoring_gap
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_agent_offline
+    parameters: {lookback: "10m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-KERNEL-TAMPER
+    name: Kernel/Driver Tampering
+    category: endpoint
+    severity: high
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1055", "T1562"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_kernel_tamper
+    parameters: {lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-UNAPPROVED-SOFTWARE
+    name: Unapproved Software Installed
+    category: endpoint
+    severity: low
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1195"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_unapproved_software
+    parameters: {lookback: "10m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-SENSITIVE-FILE-ACCESS
+    name: Sensitive File Access
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1005"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_sensitive_file_access
+    parameters: {lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: EP-REMOTE-ACCESS-TOOLS
+    name: Unapproved Remote Access Tool
+    category: endpoint
+    severity: medium
+    incident_type: endpoint_suspicious_activity
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: endpoint_suspicious_activity
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1219"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: wazuh_remote_access_tool
+    parameters: {lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  # Network / Perimeter (31–45)
+  - id: NW-INBOUND-SCAN
+    name: Inbound Port Scan
+    category: network
+    severity: medium
+    incident_type: network_recon_exploit
+    default_playbook_key: WAF-ATTACK
+    alert_type: network_recon_exploit
+    mitre_tactics: ["TA0007"]
+    mitre_techniques: ["T1046"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_scan_inbound
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-OUTBOUND-SCAN
+    name: Outbound Port Scan
+    category: network
+    severity: medium
+    incident_type: network_recon_exploit
+    default_playbook_key: EGRESS-ANOMALY
+    alert_type: network_recon_exploit
+    mitre_tactics: ["TA0007"]
+    mitre_techniques: ["T1046"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_scan_outbound
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-EXPLOIT-PUBLIC-SVC
+    name: Exploit Attempt on Public Service
+    category: network
+    severity: high
+    incident_type: network_recon_exploit
+    default_playbook_key: WAF-ATTACK
+    alert_type: network_recon_exploit
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1190"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_exploit_public
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-OUTBOUND-MALICIOUS
+    name: Outbound to Malicious Destination
+    category: network
+    severity: high
+    incident_type: network_c2_egress
+    default_playbook_key: C2/BEACON
+    alert_type: network_c2_egress
+    mitre_tactics: ["TA0011"]
+    mitre_techniques: ["T1071"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_malicious_egress
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-SUSPICIOUS-DNS
+    name: Suspicious DNS
+    category: network
+    severity: medium
+    incident_type: network_c2_egress
+    default_playbook_key: C2/BEACON
+    alert_type: network_c2_egress
+    mitre_tactics: ["TA0011"]
+    mitre_techniques: ["T1071.004"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_dns_anomaly
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-CLEARTEXT-PROD
+    name: Cleartext Protocol in Prod
+    category: network
+    severity: medium
+    incident_type: network_recon_exploit
+    default_playbook_key: EGRESS-ANOMALY
+    alert_type: network_recon_exploit
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1040"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_cleartext_prod
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-NEW-EXTERNAL-EXPOSURE
+    name: New External Exposure
+    category: network
+    severity: high
+    incident_type: network_recon_exploit
+    default_playbook_key: WAF-ATTACK
+    alert_type: network_recon_exploit
+    mitre_tactics: ["TA0007"]
+    mitre_techniques: ["T1046"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_new_exposure
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-LARGE-EGRESS-NEW-IP
+    name: Large Egress to New IP
+    category: network
+    severity: high
+    incident_type: network_c2_egress
+    default_playbook_key: EGRESS-ANOMALY
+    alert_type: network_c2_egress
+    mitre_tactics: ["TA0010"]
+    mitre_techniques: ["T1041"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: flow_egress_volume
+    parameters: {threshold_bytes: 1000000000, lookback: "10m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-MULTI-AUTH-FAIL-SRCIP
+    name: Multi-User Auth Failures
+    category: network
+    severity: medium
+    incident_type: identity_auth_anomaly
+    default_playbook_key: PASSWORD-SPRAY
+    alert_type: identity_auth_anomaly
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1110"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: network_multi_auth_fail
+    parameters: {threshold: 10, user_threshold: 5, lookback: "10m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-VPN-ANOMALY
+    name: VPN Anomaly
+    category: network
+    severity: medium
+    incident_type: identity_auth_anomaly
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_auth_anomaly
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: vpn_anomaly
+    parameters: {lookback: "10m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-C2-SIGNATURE
+    name: C2 Signature
+    category: network
+    severity: high
+    incident_type: network_c2_egress
+    default_playbook_key: C2/BEACON
+    alert_type: network_c2_egress
+    mitre_tactics: ["TA0011"]
+    mitre_techniques: ["T1071"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_c2_signature
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-TOR-PROXY
+    name: Tor/Proxy Usage
+    category: network
+    severity: medium
+    incident_type: network_c2_egress
+    default_playbook_key: C2/BEACON
+    alert_type: network_c2_egress
+    mitre_tactics: ["TA0011"]
+    mitre_techniques: ["T1090"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_tor_proxy
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-LATERAL-SMB-RDP
+    name: Lateral SMB/RDP
+    category: network
+    severity: high
+    incident_type: network_lateral_movement
+    default_playbook_key: ENDPOINT-ISOLATE
+    alert_type: network_lateral_movement
+    mitre_tactics: ["TA0008"]
+    mitre_techniques: ["T1021"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_lateral_movement
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-TLS-CERT-ANOMALY
+    name: TLS Certificate Anomaly
+    category: network
+    severity: medium
+    incident_type: network_recon_exploit
+    default_playbook_key: WAF-ATTACK
+    alert_type: network_recon_exploit
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1553"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: suricata_tls_cert_anomaly
+    parameters: {lookback: "5m"}
+    owner: network
+    status: seeded_db
+
+  - id: NW-SG-OPEN-CRITICAL
+    name: Open SG on Critical Ports
+    category: network
+    severity: high
+    incident_type: cloud_public_exposure
+    default_playbook_key: SG-OPEN-CRITICAL
+    alert_type: cloud_public_exposure
+    mitre_tactics: ["TA0007"]
+    mitre_techniques: ["T1046"]
+    nist_controls: ["PR.AC", "PR.DS"]
+    query_template_ref: cloud_sg_open_critical
+    parameters: {ports: [22, 3389, 1433, 3306], lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  # Cloud (46–60)
+  - id: CLD-PUBLIC-STORAGE
+    name: Public Storage
+    category: cloud
+    severity: high
+    incident_type: cloud_public_exposure
+    default_playbook_key: CLOUD-PUBLIC-STORAGE
+    alert_type: cloud_public_exposure
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.DS", "DE.CM"]
+    query_template_ref: posture_cloud_public_storage
+    parameters: {subtype: "s3_bucket_public", lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-STORAGE-PII-UNENCRYPTED
+    name: Storage PII Unencrypted/Public
+    category: cloud
+    severity: high
+    incident_type: cloud_public_exposure
+    default_playbook_key: CLOUD-PUBLIC-STORAGE
+    alert_type: cloud_public_exposure
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.DS", "DE.CM"]
+    query_template_ref: posture_cloud_pii_unencrypted
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-EXCESSIVE-GET-LIST
+    name: Excessive Storage Access
+    category: cloud
+    severity: high
+    incident_type: network_c2_egress
+    default_playbook_key: EGRESS-ANOMALY
+    alert_type: network_c2_egress
+    mitre_tactics: ["TA0010"]
+    mitre_techniques: ["T1041"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: s3_data_exfil
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-SG-OPEN-SENSITIVE
+    name: Open SG Sensitive
+    category: cloud
+    severity: high
+    incident_type: cloud_public_exposure
+    default_playbook_key: SG-OPEN-CRITICAL
+    alert_type: cloud_public_exposure
+    mitre_tactics: ["TA0007"]
+    mitre_techniques: ["T1046"]
+    nist_controls: ["PR.AC", "PR.DS"]
+    query_template_ref: cloud_sg_open_sensitive
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-ROOT-USE
+    name: Root/Break-glass Use
+    category: cloud
+    severity: high
+    incident_type: identity_mfa_root_issue
+    default_playbook_key: ROOT-USE
+    alert_type: identity_mfa_root_issue
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: cloud_root_use
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-NEW-PRIV-ROLE
+    name: New Privileged Role/Policy
+    category: cloud
+    severity: high
+    incident_type: identity_privilege_escalation
+    default_playbook_key: PRIV-GROUP-CHANGE
+    alert_type: identity_privilege_escalation
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.AC"]
+    query_template_ref: cloud_priv_role_created
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-CHANGE-NO-TICKET
+    name: Change Without Ticket
+    category: cloud
+    severity: medium
+    incident_type: monitoring_detection_integrity
+    default_playbook_key: DRIFT-DETECTED
+    alert_type: monitoring_detection_integrity
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.IP"]
+    query_template_ref: cloud_change_no_ticket
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-K8S-CLUSTER-ADMIN
+    name: K8s Cluster-Admin Binding
+    category: cloud
+    severity: high
+    incident_type: k8s_misconfiguration
+    default_playbook_key: K8S-PRIV-POD
+    alert_type: k8s_misconfiguration
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.AC"]
+    query_template_ref: k8s_cluster_admin_binding
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-K8S-PRIV-POD
+    name: K8s Privileged Pod
+    category: cloud
+    severity: high
+    incident_type: k8s_misconfiguration
+    default_playbook_key: K8S-PRIV-POD
+    alert_type: k8s_misconfiguration
+    mitre_tactics: ["TA0004"]
+    mitre_techniques: ["T1548"]
+    nist_controls: ["PR.AC"]
+    query_template_ref: k8s_privileged_pod
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-UNAPPROVED-REGISTRY
+    name: Unapproved Image Registry
+    category: cloud
+    severity: medium
+    incident_type: k8s_misconfiguration
+    default_playbook_key: K8S-PRIV-POD
+    alert_type: k8s_misconfiguration
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1195"]
+    nist_controls: ["PR.AC"]
+    query_template_ref: k8s_unapproved_registry
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-NEW-EXTERNAL-PRINCIPAL
+    name: New External Principal Granted
+    category: cloud
+    severity: medium
+    incident_type: identity_privilege_escalation
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_privilege_escalation
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["PR.AC"]
+    query_template_ref: cloud_external_principal
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-MASS-DELETE-STOP
+    name: Mass Delete/Stop Resources
+    category: cloud
+    severity: high
+    incident_type: cloud_logging_integrity
+    default_playbook_key: RANSOMWARE-IR
+    alert_type: cloud_logging_integrity
+    mitre_tactics: ["TA0040"]
+    mitre_techniques: ["T1529"]
+    nist_controls: ["RS.MI"]
+    query_template_ref: cloud_mass_delete_stop
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-CLOUDTRAIL-DISABLED
+    name: CloudTrail Disabled/Tampered
+    category: cloud
+    severity: high
+    incident_type: cloud_logging_integrity
+    default_playbook_key: LOGGING-DISABLED
+    alert_type: cloud_logging_integrity
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1562"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: cloud_logging_disabled
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-KMS-KEY-DISABLE-DELETE
+    name: KMS Key Disable/Delete
+    category: cloud
+    severity: high
+    incident_type: cloud_logging_integrity
+    default_playbook_key: KMS-KEY-DISABLED
+    alert_type: cloud_logging_integrity
+    mitre_tactics: ["TA0040"]
+    mitre_techniques: ["T1485"]
+    nist_controls: ["PR.DS"]
+    query_template_ref: cloud_kms_disable_delete
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: CLD-NEW-REGION-ACTIVITY
+    name: New Region Activity
+    category: cloud
+    severity: medium
+    incident_type: identity_privilege_escalation
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: identity_privilege_escalation
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: cloud_new_region
+    parameters: {lookback: "1h"}
+    owner: cloud
+    status: seeded_db
+
+  # DB & Data (61–70)
+  - id: DB-PUBLIC-PROD
+    name: DB Public in Prod
+    category: db
+    severity: high
+    incident_type: db_misconfiguration
+    default_playbook_key: DB-PUBLIC-EXPOSED
+    alert_type: db_misconfiguration
+    mitre_tactics: ["TA0009"]
+    mitre_techniques: ["T1530"]
+    nist_controls: ["PR.DS"]
+    query_template_ref: db_public_prod
+    parameters: {lookback: "10m"}
+    owner: db
+    status: seeded_db
+
+  - id: DB-UNENCRYPTED-STORAGE
+    name: DB Unencrypted Storage/Snapshots
+    category: db
+    severity: high
+    incident_type: db_misconfiguration
+    default_playbook_key: DB-PUBLIC-EXPOSED
+    alert_type: db_misconfiguration
+    mitre_tactics: ["TA0009"]
+    mitre_techniques: ["T1530"]
+    nist_controls: ["PR.DS"]
+    query_template_ref: db_unencrypted_storage
+    parameters: {lookback: "10m"}
+    owner: db
+    status: seeded_db
+
+  - id: DB-BULK-SELECT-SENSITIVE
+    name: Bulk SELECT Sensitive Table
+    category: db
+    severity: high
+    incident_type: db_data_exfil
+    default_playbook_key: DB-BULK-SELECT
+    alert_type: db_data_exfil
+    mitre_tactics: ["TA0009"]
+    mitre_techniques: ["T1005"]
+    nist_controls: ["DE.CM", "PR.DS"]
+    query_template_ref: db_bulk_select
+    parameters: {lookback: "10m"}
+    owner: db
+    status: seeded_db
+
+  - id: DB-SVC-ACCOUNT-ANOMALY
+    name: Service Account DB Anomaly
+    category: db
+    severity: medium
+    incident_type: db_data_exfil
+    default_playbook_key: DB-BULK-SELECT
+    alert_type: db_data_exfil
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: db_service_account_anomaly
+    parameters: {lookback: "10m"}
+    owner: db
+    status: seeded_db
+
+  - id: DB-SCHEMA-CHANGE-NONDBA
+    name: Schema Change by Non-DBA
+    category: db
+    severity: high
+    incident_type: db_misconfiguration
+    default_playbook_key: DB-BULK-SELECT
+    alert_type: db_misconfiguration
+    mitre_tactics: ["TA0040"]
+    mitre_techniques: ["T1491"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: db_schema_change_non_dba
+    parameters: {lookback: "10m"}
+    owner: db
+    status: seeded_db
+
+  - id: DB-MASS-DELETE-UPDATE
+    name: Mass Delete/Update Sensitive
+    category: db
+    severity: high
+    incident_type: db_data_exfil
+    default_playbook_key: DB-BULK-SELECT
+    alert_type: db_data_exfil
+    mitre_tactics: ["TA0040"]
+    mitre_techniques: ["T1499"]
+    nist_controls: ["DE.CM", "RS.MI"]
+    query_template_ref: db_mass_delete_update
+    parameters: {lookback: "10m"}
+    owner: db
+    status: seeded_db
+
+  - id: DB-FAILED-LOGINS-BURST
+    name: DB Failed Logins Burst
+    category: db
+    severity: medium
+    incident_type: db_auth_anomaly
+    default_playbook_key: DB-BULK-SELECT
+    alert_type: db_auth_anomaly
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1110"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: db_failed_logins_burst
+    parameters: {threshold: 5, lookback: "5m"}
+    owner: db
+    status: seeded_db
+
+  - id: DB-ACCOUNT-CREATED-PROD
+    name: DB Account Created in Prod
+    category: db
+    severity: high
+    incident_type: db_auth_anomaly
+    default_playbook_key: DB-BULK-SELECT
+    alert_type: db_auth_anomaly
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.AC"]
+    query_template_ref: db_account_created
+    parameters: {lookback: "10m"}
+    owner: db
+    status: seeded_db
+
+  - id: DB-AUDIT-LOG-OFF
+    name: DB Audit Logging Off
+    category: db
+    severity: high
+    incident_type: db_misconfiguration
+    default_playbook_key: DB-AUDIT-OFF
+    alert_type: db_misconfiguration
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1562"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: db_audit_disabled
+    parameters: {lookback: "10m"}
+    owner: db
+    status: seeded_db
+
+  - id: DB-NEW-HOST-ACCESS
+    name: DB Access from New Host/IP
+    category: db
+    severity: medium
+    incident_type: db_auth_anomaly
+    default_playbook_key: DB-BULK-SELECT
+    alert_type: db_auth_anomaly
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1078"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: db_new_client_host
+    parameters: {lookback: "10m"}
+    owner: db
+    status: seeded_db
+
+  # Git / Code / CI (71–80)
+  - id: GIT-SECRET-FOUND
+    name: Secrets Found in Code
+    category: code
+    severity: high
+    incident_type: git_secret_exposure
+    default_playbook_key: SECRET-EXPOSURE
+    alert_type: git_secret_exposure
+    mitre_tactics: ["TA0009"]
+    mitre_techniques: ["T1552.001"]
+    nist_controls: ["PR.DS", "DE.CM"]
+    query_template_ref: git_secret_finding
+    parameters: {state: "new"}
+    owner: code
+    status: seeded_db
+
+  - id: GIT-IAC-HIGH-RISK
+    name: High-Risk IaC Misconfig
+    category: code
+    severity: high
+    incident_type: git_iac_misconfiguration
+    default_playbook_key: IAC-HIGH-RISK
+    alert_type: git_iac_misconfiguration
+    mitre_tactics: ["TA0042"]
+    mitre_techniques: ["T1587"]
+    nist_controls: ["PR.IP", "PR.AC"]
+    query_template_ref: git_iac_high_risk
+    parameters: {state: "new"}
+    owner: code
+    status: seeded_db
+
+  - id: GIT-HARD-CODED-KEYS
+    name: Hard-coded Keys
+    category: code
+    severity: high
+    incident_type: git_secret_exposure
+    default_playbook_key: SECRET-EXPOSURE
+    alert_type: git_secret_exposure
+    mitre_tactics: ["TA0009"]
+    mitre_techniques: ["T1552.001"]
+    nist_controls: ["PR.DS"]
+    query_template_ref: git_hardcoded_keys
+    parameters: {state: "new"}
+    owner: code
+    status: seeded_db
+
+  - id: GIT-PRIV-IAM-IAC
+    name: Privileged IAM in IaC
+    category: code
+    severity: high
+    incident_type: git_iac_misconfiguration
+    default_playbook_key: IAC-HIGH-RISK
+    alert_type: git_iac_misconfiguration
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.AC"]
+    query_template_ref: git_priv_iam_iac
+    parameters: {state: "new"}
+    owner: code
+    status: seeded_db
+
+  - id: CI-TOKEN-LEAK-LOGS
+    name: CI Token/Secret in Logs
+    category: code
+    severity: high
+    incident_type: git_secret_exposure
+    default_playbook_key: SECRET-EXPOSURE
+    alert_type: git_secret_exposure
+    mitre_tactics: ["TA0009"]
+    mitre_techniques: ["T1552.001"]
+    nist_controls: ["PR.DS"]
+    query_template_ref: ci_secret_in_logs
+    parameters: {state: "new"}
+    owner: code
+    status: seeded_db
+
+  - id: GIT-K8S-MANIFEST-RISK
+    name: Insecure K8s Manifest
+    category: code
+    severity: medium
+    incident_type: git_iac_misconfiguration
+    default_playbook_key: IAC-HIGH-RISK
+    alert_type: git_iac_misconfiguration
+    mitre_tactics: ["TA0042"]
+    mitre_techniques: ["T1609"]
+    nist_controls: ["PR.IP"]
+    query_template_ref: git_k8s_manifest_risk
+    parameters: {state: "new"}
+    owner: code
+    status: seeded_db
+
+  - id: GIT-SAST-HIGH
+    name: High-Severity SAST Finding
+    category: code
+    severity: high
+    incident_type: git_app_vulnerability
+    default_playbook_key: SAST-HIGH
+    alert_type: git_app_vulnerability
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.IP"]
+    query_template_ref: git_sast_high
+    parameters: {state: "new"}
+    owner: code
+    status: seeded_db
+
+  - id: GIT-SENSITIVE-FILE
+    name: Sensitive File Committed
+    category: code
+    severity: medium
+    incident_type: git_secret_exposure
+    default_playbook_key: SECRET-EXPOSURE
+    alert_type: git_secret_exposure
+    mitre_tactics: ["TA0009"]
+    mitre_techniques: ["T1552.001"]
+    nist_controls: ["PR.DS"]
+    query_template_ref: git_sensitive_file
+    parameters: {state: "new"}
+    owner: code
+    status: seeded_db
+
+  - id: GIT-NO-BRANCH-PROTECTION
+    name: No Branch Protection
+    category: code
+    severity: low
+    incident_type: monitoring_detection_integrity
+    default_playbook_key: DRIFT-DETECTED
+    alert_type: monitoring_detection_integrity
+    mitre_tactics: ["TA0042"]
+    mitre_techniques: ["T1609"]
+    nist_controls: ["PR.AC"]
+    query_template_ref: scm_branch_protection_missing
+    parameters: {}
+    owner: code
+    status: seeded_db
+
+  - id: CI-BYPASS-CHECKS
+    name: CI Bypass Checks
+    category: code
+    severity: medium
+    incident_type: monitoring_detection_integrity
+    default_playbook_key: DRIFT-DETECTED
+    alert_type: monitoring_detection_integrity
+    mitre_tactics: ["TA0005"]
+    mitre_techniques: ["T1553"]
+    nist_controls: ["PR.IP"]
+    query_template_ref: ci_bypass_checks
+    parameters: {}
+    owner: code
+    status: seeded_db
+
+  # AI Shield (81–90)
+  - id: AI-PROMPT-INJECTION-DET
+    name: AI Prompt Injection Detected
+    category: ai
+    severity: high
+    incident_type: ai_prompt_injection
+    default_playbook_key: AI-PROMPT-INJECTION
+    alert_type: ai_prompt_injection
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["prompt_injection"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: ai_prompt_injection
+    parameters: {lookback: "10m"}
+    owner: ai
+    status: seeded_db
+
+  - id: AI-DATA-LEAKAGE
+    name: AI Data Leakage
+    category: ai
+    severity: high
+    incident_type: ai_data_leak
+    default_playbook_key: AI-DATA-LEAK
+    alert_type: ai_data_leak
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["data_leak"]
+    nist_controls: ["PR.DS", "DE.CM"]
+    query_template_ref: ai_pii_secret_outbound
+    parameters: {destination_type: "external", actions: ["allow", "redact"], lookback: "5m"}
+    owner: ai
+    status: seeded_db
+
+  - id: AI-POLICY-VIOLATION
+    name: AI Policy Violation
+    category: ai
+    severity: medium
+    incident_type: ai_usage_anomaly
+    default_playbook_key: AI-POLICY-VIOLATION
+    alert_type: ai_usage_anomaly
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["policy_violation"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: ai_policy_violation
+    parameters: {lookback: "15m"}
+    owner: ai
+    status: seeded_db
+
+  - id: AI-TOOL-CALL-ANOMALY
+    name: AI Tool Call Anomaly
+    category: ai
+    severity: medium
+    incident_type: ai_tool_misuse
+    default_playbook_key: AI-POLICY-VIOLATION
+    alert_type: ai_tool_misuse
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["tool_anomaly"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: ai_tool_call_anomaly
+    parameters: {lookback: "15m"}
+    owner: ai
+    status: seeded_db
+
+  - id: AI-EXCESSIVE-TOKENS
+    name: AI Excessive Tokens/Requests
+    category: ai
+    severity: medium
+    incident_type: ai_usage_anomaly
+    default_playbook_key: AI-POLICY-VIOLATION
+    alert_type: ai_usage_anomaly
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["usage_anomaly"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: ai_usage_spike
+    parameters: {lookback: "15m"}
+    owner: ai
+    status: seeded_db
+
+  - id: AI-NEW-APP-UNREGISTERED
+    name: Unregistered AI App
+    category: ai
+    severity: medium
+    incident_type: ai_usage_anomaly
+    default_playbook_key: AI-POLICY-VIOLATION
+    alert_type: ai_usage_anomaly
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["unauthorized_app"]
+    nist_controls: ["PR.AC"]
+    query_template_ref: ai_unregistered_app
+    parameters: {lookback: "15m"}
+    owner: ai
+    status: seeded_db
+
+  - id: AI-ENDPOINT-NEW-REGION
+    name: AI Endpoint New Region/IP
+    category: ai
+    severity: medium
+    incident_type: ai_usage_anomaly
+    default_playbook_key: AI-POLICY-VIOLATION
+    alert_type: ai_usage_anomaly
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["geo_anomaly"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: ai_endpoint_geo
+    parameters: {lookback: "15m"}
+    owner: ai
+    status: seeded_db
+
+  - id: AI-JAILBREAK-BURST
+    name: AI Jailbreak Burst
+    category: ai
+    severity: high
+    incident_type: ai_prompt_injection
+    default_playbook_key: AI-PROMPT-INJECTION
+    alert_type: ai_prompt_injection
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["prompt_injection"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: ai_prompt_injection_burst
+    parameters: {threshold: 3, lookback: "10m"}
+    owner: ai
+    status: seeded_db
+
+  - id: AI-UNSAFE-TOOL-ACTION
+    name: Unsafe Tool Action
+    category: ai
+    severity: high
+    incident_type: ai_tool_misuse
+    default_playbook_key: AI-POLICY-VIOLATION
+    alert_type: ai_tool_misuse
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["unsafe_tool"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: ai_unsafe_tool_action
+    parameters: {lookback: "10m"}
+    owner: ai
+    status: seeded_db
+
+  - id: AI-GATEWAY-CONFIG-CHANGE
+    name: AI Gateway Config Change
+    category: ai
+    severity: medium
+    incident_type: monitoring_detection_integrity
+    default_playbook_key: DRIFT-DETECTED
+    alert_type: monitoring_detection_integrity
+    mitre_tactics: ["custom"]
+    mitre_techniques: ["config_change"]
+    nist_controls: ["PR.IP", "DE.CM"]
+    query_template_ref: ai_gateway_config_change
+    parameters: {lookback: "10m"}
+    owner: ai
+    status: seeded_db
+
+  # Hygiene / Monitoring (91–100)
+  - id: HG-LOGGING-DISABLED
+    name: Logging Disabled
+    category: hygiene
+    severity: high
+    incident_type: monitoring_detection_integrity
+    default_playbook_key: LOGGING-DISABLED
+    alert_type: monitoring_detection_integrity
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["DE.CM"]
+    query_template_ref: config_logging_disabled
+    parameters: {lookback: "10m"}
+    owner: hygiene
+    status: seeded_db
+
+  - id: HG-SIEM-PIPELINE-STALLED
+    name: SIEM Pipeline Stalled
+    category: hygiene
+    severity: medium
+    incident_type: monitoring_gap
+    default_playbook_key: LOGGING-DISABLED
+    alert_type: monitoring_gap
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["DE.CM"]
+    query_template_ref: siem_pipeline_stalled
+    parameters: {lookback: "30m"}
+    owner: hygiene
+    status: seeded_db
+
+  - id: HG-AGENT-OUTDATED
+    name: Agent Outdated
+    category: hygiene
+    severity: medium
+    incident_type: monitoring_gap
+    default_playbook_key: AGENT-OFFLINE
+    alert_type: monitoring_gap
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["DE.CM"]
+    query_template_ref: agent_outdated
+    parameters: {lookback: "1d"}
+    owner: hygiene
+    status: seeded_db
+
+  - id: HG-BACKUP-FAILURES
+    name: Backup Failures
+    category: hygiene
+    severity: medium
+    incident_type: monitoring_job_failure
+    default_playbook_key: DRIFT-DETECTED
+    alert_type: monitoring_job_failure
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.IP"]
+    query_template_ref: backup_failures
+    parameters: {lookback: "1d"}
+    owner: hygiene
+    status: seeded_db
+
+  - id: HG-CERT-EXPIRING
+    name: Certificate Expiring
+    category: hygiene
+    severity: low
+    incident_type: monitoring_detection_integrity
+    default_playbook_key: DRIFT-DETECTED
+    alert_type: monitoring_detection_integrity
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.DS"]
+    query_template_ref: cert_expiring
+    parameters: {lookback: "1d"}
+    owner: hygiene
+    status: seeded_db
+
+  - id: HG-TIME-DRIFT
+    name: Time Drift
+    category: hygiene
+    severity: low
+    incident_type: monitoring_detection_integrity
+    default_playbook_key: DRIFT-DETECTED
+    alert_type: monitoring_detection_integrity
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.IP"]
+    query_template_ref: time_drift
+    parameters: {lookback: "1h"}
+    owner: hygiene
+    status: seeded_db
+
+  - id: HG-POLICY-DRIFT
+    name: Policy/Config Drift
+    category: hygiene
+    severity: medium
+    incident_type: monitoring_detection_integrity
+    default_playbook_key: DRIFT-DETECTED
+    alert_type: monitoring_detection_integrity
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.IP", "DE.CM"]
+    query_template_ref: policy_drift
+    parameters: {lookback: "1h"}
+    owner: hygiene
+    status: seeded_db
+
+  - id: HG-NO-DETECTIONS-LONG
+    name: No Detections Long Window
+    category: hygiene
+    severity: low
+    incident_type: monitoring_gap
+    default_playbook_key: LOGGING-DISABLED
+    alert_type: monitoring_gap
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["DE.CM"]
+    query_template_ref: no_detections_long
+    parameters: {lookback: "1h"}
+    owner: hygiene
+    status: seeded_db
+
+  - id: HG-TICKETING-WEBHOOK-FAIL
+    name: Ticketing/Webhook Failures
+    category: hygiene
+    severity: medium
+    incident_type: monitoring_job_failure
+    default_playbook_key: EXEC-NOTIFY
+    alert_type: monitoring_job_failure
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["RS.CO"]
+    query_template_ref: ticketing_webhook_fail
+    parameters: {lookback: "1h"}
+    owner: hygiene
+    status: seeded_db
+
+  - id: HG-CONNECTOR-MISSING
+    name: Missing Required Connector
+    category: hygiene
+    severity: medium
+    incident_type: monitoring_detection_integrity
+    default_playbook_key: DRIFT-DETECTED
+    alert_type: monitoring_detection_integrity
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.IP"]
+    query_template_ref: connector_missing
+    parameters: {}
+    owner: hygiene
+    status: seeded_db
+
+  # Legacy core templates (10) from original seed set
+  - id: SG-DET-001
+    name: Suspicious Login / Account Takeover
+    category: identity
+    severity: high
+    incident_type: identity_auth_anomaly
+    default_playbook_key: ACCOUNT-COMPROMISE
+    alert_type: suspicious_login
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1110"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_suspicious_login
+    parameters: {lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: SG-DET-002
+    name: User-Reported Phishing
+    category: email
+    severity: medium
+    incident_type: phishing_user_report
+    default_playbook_key: PHISH-USER
+    alert_type: phishing_user_report
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1566"]
+    nist_controls: ["DE.CM", "RS.MI"]
+    query_template_ref: email_user_report
+    parameters: {lookback: "10m"}
+    owner: phishing
+    status: seeded_db
+
+  - id: SG-DET-003
+    name: Email Security Phishing Campaign
+    category: email
+    severity: high
+    incident_type: phishing_gateway_alert
+    default_playbook_key: PHISH-GATEWAY
+    alert_type: phishing_campaign
+    mitre_tactics: ["TA0001"]
+    mitre_techniques: ["T1566"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: email_gateway_phish
+    parameters: {lookback: "10m"}
+    owner: phishing
+    status: seeded_db
+
+  - id: SG-DET-004
+    name: Endpoint Malware Detection
+    category: endpoint
+    severity: high
+    incident_type: endpoint_malware
+    default_playbook_key: MALWARE-CONTAIN
+    alert_type: endpoint_malware
+    mitre_tactics: ["TA0002"]
+    mitre_techniques: ["T1059", "T1204"]
+    nist_controls: ["DE.CM", "RS.MI"]
+    query_template_ref: endpoint_malware_hit
+    parameters: {lookback: "10m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: SG-DET-005
+    name: Ransomware Suspected
+    category: endpoint
+    severity: critical
+    incident_type: endpoint_ransomware
+    default_playbook_key: RANSOMWARE-IR
+    alert_type: ransomware_suspected
+    mitre_tactics: ["TA0040"]
+    mitre_techniques: ["T1486"]
+    nist_controls: ["DE.CM", "RS.MI"]
+    query_template_ref: endpoint_ransomware_pattern
+    parameters: {lookback: "5m"}
+    owner: endpoint
+    status: seeded_db
+
+  - id: SG-DET-006
+    name: Public Cloud Storage Misconfiguration
+    category: cloud
+    severity: high
+    incident_type: cloud_public_storage
+    default_playbook_key: CLOUD-PUBLIC-STORAGE
+    alert_type: public_bucket
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.DS"]
+    query_template_ref: cloud_public_storage
+    parameters: {lookback: "10m"}
+    owner: cloud
+    status: seeded_db
+
+  - id: SG-DET-007
+    name: Privilege Escalation
+    category: identity
+    severity: high
+    incident_type: identity_privilege_escalation
+    default_playbook_key: PRIV-GROUP-CHANGE
+    alert_type: privilege_escalation
+    mitre_tactics: ["TA0003"]
+    mitre_techniques: ["T1098"]
+    nist_controls: ["PR.AC", "DE.CM"]
+    query_template_ref: identity_role_escalation
+    parameters: {lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: SG-DET-008
+    name: Password Spray
+    category: identity
+    severity: high
+    incident_type: identity_auth_anomaly
+    default_playbook_key: PASSWORD-SPRAY
+    alert_type: password_spray
+    mitre_tactics: ["TA0006"]
+    mitre_techniques: ["T1110.003"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: identity_password_spray
+    parameters: {group_by: "source_ip", threshold: 10, user_threshold: 5, lookback: "10m"}
+    owner: identity
+    status: seeded_db
+
+  - id: SG-DET-009
+    name: Data Exfiltration
+    category: network
+    severity: critical
+    incident_type: network_data_exfiltration
+    default_playbook_key: EGRESS-ANOMALY
+    alert_type: data_exfil
+    mitre_tactics: ["TA0010"]
+    mitre_techniques: ["T1041"]
+    nist_controls: ["DE.CM"]
+    query_template_ref: network_data_exfil
+    parameters: {lookback: "10m"}
+    owner: network
+    status: seeded_db
+
+  - id: SG-DET-010
+    name: Lost Device
+    category: device
+    severity: medium
+    incident_type: device_loss
+    default_playbook_key: EXEC-NOTIFY
+    alert_type: lost_device
+    mitre_tactics: []
+    mitre_techniques: []
+    nist_controls: ["PR.AC"]
+    query_template_ref: device_lost
+    parameters: {lookback: "15m"}
+    owner: endpoint
+    status: seeded_db

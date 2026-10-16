@@ -1,0 +1,384 @@
+# Example provider registry and pilot target manifest.
+# This file is intentionally non-secret. Tenant credentials belong in Vault via onboarding.
+
+providers:
+  hetzner:
+    display_name: Hetzner Cloud
+    aliases:
+      - hcloud
+      - hetzner_cloud
+    adapter: hcloud
+    onboarding:
+      enabled: true
+      default: true
+      badge: Pilot
+      order: 1
+      target_mode: single_server
+      integration_method: terraform
+      description: Validate onboarding, baseline scan, approval, remediation, and re-scan against websites-prod.
+    auth:
+      methods:
+        - type: api_token
+          secret_ref_required: true
+    resources:
+      compute_instance:
+        vendor_types:
+          - server
+        relationships:
+          - firewall_policy
+      firewall_policy:
+        vendor_types:
+          - firewall
+    capabilities:
+      discover_resources: true
+      read_firewall_policy: true
+      plan_network_change: true
+      apply_iac_patch: true
+      apply_direct_api: false
+    controls:
+      - network.admin_port_open_to_world
+      - network.expected_public_ports
+      - resilience.backups_disabled
+      - edge.public_tls_proxy_local_apps
+    onboarding_fields:
+      - name: api_token
+        type: secret
+        label: Hetzner API Token
+        placeholder: hcloud API token
+        required: true
+      - name: server_id
+        type: string
+        label: Server ID
+        default: "123456789"
+        required: true
+      - name: server_name
+        type: string
+        label: Server Name
+        default: websites-prod
+        required: true
+      - name: firewall_id
+        type: string
+        label: Firewall ID
+        default: "98765432"
+        required: true
+      - name: admin_ssh_cidrs
+        type: csv
+        label: Admin SSH CIDRs
+        placeholder: 203.0.113.10/32, 2001:db8::/64
+        required: false
+        help_text: Required before remediation apply.
+      - name: iac_workspace
+        type: string
+        label: Terraform Workspace
+        default: websites-prod
+        required: false
+
+  aws:
+    display_name: AWS
+    aliases:
+      - amazon
+      - amazon_web_services
+    adapter: aws
+    onboarding:
+      enabled: true
+      badge: Recommended
+      order: 2
+      target_mode: account
+      integration_method: terraform
+      description: Connect an AWS account or organization through a read-only monitoring role.
+    auth:
+      methods:
+        - type: role_assumption
+          external_id_required: true
+    resources:
+      account:
+        vendor_types:
+          - account
+      compute_instance:
+        vendor_types:
+          - ec2_instance
+      firewall_policy:
+        vendor_types:
+          - security_group
+          - network_acl
+    capabilities:
+      discover_resources: true
+      read_firewall_policy: true
+      plan_network_change: true
+      apply_iac_patch: true
+      apply_direct_api: false
+    controls:
+      - network.admin_port_open_to_world
+      - network.expected_public_ports
+      - resilience.backups_disabled
+    onboarding_fields:
+      - name: account_id
+        type: string
+        label: AWS Account ID
+        placeholder: "123456789012"
+        required: true
+      - name: iam_role_arn
+        type: string
+        label: IAM Role ARN
+        placeholder: arn:aws:iam::123456789012:role/SentinelGridMonitorRole
+        required: false
+        help_text: Use the Terraform module or CloudFormation template to create this role.
+      - name: org_mode
+        type: checkbox
+        label: Org / StackSet rollout
+        default: false
+        required: false
+      - name: regions
+        type: csv
+        label: Regions
+        default: us-east-1,us-west-2
+        placeholder: us-east-1,us-west-2
+        required: false
+      - name: additional_log_group_arns
+        type: csv
+        label: Extra CloudWatch Log Group ARNs
+        placeholder: arn:aws:logs:us-east-1:123456789012:log-group:/aws/vpc/flow-logs:*
+        required: false
+      - name: additional_s3_log_bucket_arns
+        type: csv
+        label: Extra S3 Log Bucket ARNs
+        placeholder: arn:aws:s3:::my-flow-logs-bucket
+        required: false
+      - name: create_flow_logs_log_group
+        type: checkbox
+        label: Create helper Flow Logs log group
+        default: false
+        required: false
+      - name: create_db_audit_log_group
+        type: checkbox
+        label: Create helper DB audit log group
+        default: false
+        required: false
+
+  azure:
+    display_name: Microsoft Azure
+    adapter: azure
+    onboarding:
+      enabled: true
+      order: 3
+      target_mode: subscription
+      integration_method: terraform
+      description: Connect an Azure subscription through a service principal.
+    auth:
+      methods:
+        - type: service_principal
+          secret_ref_required: true
+    resources:
+      subscription:
+        vendor_types:
+          - subscription
+      compute_instance:
+        vendor_types:
+          - virtual_machine
+      firewall_policy:
+        vendor_types:
+          - network_security_group
+    capabilities:
+      discover_resources: true
+      read_firewall_policy: true
+      plan_network_change: true
+      apply_iac_patch: true
+      apply_direct_api: false
+    controls:
+      - network.admin_port_open_to_world
+      - network.expected_public_ports
+      - resilience.backups_disabled
+    onboarding_fields:
+      - name: tenant_id
+        type: string
+        label: Tenant ID
+        placeholder: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        required: true
+      - name: client_id
+        type: string
+        label: Client ID
+        placeholder: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        required: true
+      - name: client_secret
+        type: secret
+        label: Client Secret
+        placeholder: client secret
+        required: true
+      - name: subscription_id
+        type: string
+        label: Subscription ID
+        placeholder: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        required: true
+
+  gcp:
+    display_name: Google Cloud
+    aliases:
+      - google
+      - google_cloud
+      - google_cloud_platform
+    adapter: gcp
+    onboarding:
+      enabled: true
+      order: 4
+      target_mode: project
+      integration_method: terraform
+      description: Connect a Google Cloud project through a service account.
+    auth:
+      methods:
+        - type: service_account
+          secret_ref_required: true
+    resources:
+      project:
+        vendor_types:
+          - project
+      compute_instance:
+        vendor_types:
+          - compute_instance
+      firewall_policy:
+        vendor_types:
+          - firewall_rule
+    capabilities:
+      discover_resources: true
+      read_firewall_policy: true
+      plan_network_change: true
+      apply_iac_patch: true
+      apply_direct_api: false
+    controls:
+      - network.admin_port_open_to_world
+      - network.expected_public_ports
+      - resilience.backups_disabled
+    onboarding_fields:
+      - name: project_id
+        type: string
+        label: Project ID
+        placeholder: my-project-12345
+        required: true
+      - name: service_account_email
+        type: string
+        label: Service Account Email
+        placeholder: sentinelgrid-monitor@my-project.iam.gserviceaccount.com
+        required: true
+      - name: service_account_key
+        type: textarea
+        format: json
+        label: Service Account JSON Key
+        placeholder: '{"type": "service_account", ...}'
+        required: true
+
+  oracle:
+    display_name: Oracle Cloud Infrastructure
+    aliases:
+      - oci
+      - oracle_cloud
+    adapter: oci
+    onboarding:
+      enabled: false
+      badge: Planned
+      order: 5
+      target_mode: compartment
+      integration_method: terraform
+      description: Provider registry entry is ready; adapter implementation is planned.
+    auth:
+      methods:
+        - type: api_key
+          secret_ref_required: true
+    resources:
+      compartment:
+        vendor_types:
+          - compartment
+      compute_instance:
+        vendor_types:
+          - instance
+      firewall_policy:
+        vendor_types:
+          - security_list
+          - network_security_group
+    capabilities:
+      discover_resources: true
+      read_firewall_policy: true
+      plan_network_change: true
+      apply_iac_patch: true
+      apply_direct_api: false
+    controls:
+      - network.admin_port_open_to_world
+      - network.expected_public_ports
+      - resilience.backups_disabled
+    onboarding_fields:
+      - name: tenancy_ocid
+        type: string
+        label: Tenancy OCID
+        required: true
+      - name: compartment_ocid
+        type: string
+        label: Compartment OCID
+        required: true
+      - name: user_ocid
+        type: string
+        label: User OCID
+        required: true
+      - name: private_key
+        type: secret
+        label: API Private Key
+        required: true
+
+targets:
+  websites-prod:
+    provider: hetzner
+    environment: prod
+    mode: single_resource
+    resource:
+      type: compute_instance
+      external_id: "123456789"
+      name: websites-prod
+      expected_ipv4: 203.0.113.42
+      labels:
+        project: websites
+        role: web
+    relationships:
+      firewall_policy:
+        external_id: "98765432"
+        name: websites-prod-firewall
+    expected_exposure:
+      public:
+        - protocol: icmp
+          source_cidrs:
+            - 0.0.0.0/0
+            - ::/0
+        - protocol: tcp
+          port: 80
+          source_cidrs:
+            - 0.0.0.0/0
+            - ::/0
+        - protocol: tcp
+          port: 443
+          source_cidrs:
+            - 0.0.0.0/0
+            - ::/0
+      admin:
+        - protocol: tcp
+          port: 22
+          source_cidrs_config_key: admin_ssh_cidrs
+    edge:
+      tls_proxy:
+        service: caddy
+        public_ports:
+          - 80
+          - 443
+        expected_local_app_ports:
+          - 3000
+          - 3001
+    iac:
+      managed: true
+      tool: terraform
+      project: websites
+      workspace: websites-prod
+      desired_state_inputs:
+        admin_ssh_cidrs: []
+      preferred_apply_mode: iac_patch
+      direct_api_apply_allowed: false
+
+scanner_aliases:
+  hetzner-single-server-baseline:
+    scanner: cloud-resource-baseline
+    target: websites-prod
+    lifecycle: temporary_pilot_alias

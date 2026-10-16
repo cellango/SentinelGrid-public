@@ -1,0 +1,165 @@
+{% extends "base_report.html" %}
+
+{% block executive_summary %}
+<div class="metric-card">
+    <h4>Overall NIST CSF Coverage</h4>
+    <div class="value">{{ overall_coverage|format_percent }}</div>
+    <div class="description">Across 5 functions</div>
+</div>
+
+<div class="metric-card">
+    <h4>Controls Implemented</h4>
+    <div class="value">{{ controls_implemented }}</div>
+    <div class="description">of {{ total_controls }} controls</div>
+</div>
+
+<div class="metric-card">
+    <h4>Maturity Level</h4>
+    <div class="value">Tier {{ maturity_tier }}</div>
+    <div class="description">{{ maturity_level_name }}</div>
+</div>
+
+<p style="margin-top: 1cm;">
+This NIST Cybersecurity Framework Coverage Summary demonstrates {{ tenant_name }}'s alignment with the NIST CSF for the period {{ period_start }} to {{ period_end }}. The organization has achieved {{ overall_coverage|format_percent }} coverage across the five CSF functions, reaching Tier {{ maturity_tier }} ({{ maturity_level_name }}) maturity.
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h1>NIST CSF Function Coverage</h1>
+    
+    {% if function_coverage_chart %}
+    <img src="{{ function_coverage_chart }}" alt="Function Coverage" class="chart">
+    {% endif %}
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Function</th>
+                <th>Coverage %</th>
+                <th>SentinelGrid Features</th>
+                <th>Key Metrics</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for function in csf_functions %}
+            <tr>
+                <td><strong>{{ function.name }}</strong><br><small>{{ function.code }}</small></td>
+                <td>{{ function.coverage_percentage|format_percent }}</td>
+                <td>
+                    <ul style="margin: 0; padding-left: 1em;">
+                        {% for feature in function.features %}
+                        <li>{{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    <ul style="margin: 0; padding-left: 1em;">
+                        {% for metric in function.metrics %}
+                        <li>{{ metric.name }}: {{ metric.value }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Per-Function Analysis</h1>
+    
+    {% for function in csf_functions %}
+    <h2>{{ function.name }} ({{ function.code }})</h2>
+    <p>{{ function.description }}</p>
+    
+    <div class="metric-card">
+        <h4>Coverage</h4>
+        <div class="value">{{ function.coverage_percentage|format_percent }}</div>
+    </div>
+    
+    <h3>Key Metrics</h3>
+    <ul>
+        {% for metric in function.metrics %}
+        <li><strong>{{ metric.name }}:</strong> {{ metric.value }}</li>
+        {% endfor %}
+    </ul>
+    
+    <h3>SentinelGrid Implementation</h3>
+    <ul>
+        {% for feature in function.features %}
+        <li>{{ feature }}</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+</div>
+
+<div class="section">
+    <h1>Maturity Assessment</h1>
+    
+    <p>Current maturity tier: <strong>Tier {{ maturity_tier }} - {{ maturity_level_name }}</strong></p>
+    
+    <h3>NIST CSF Implementation Tiers</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Tier</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Tier 1</td>
+                <td>Partial</td>
+                <td>Risk management is ad hoc</td>
+                <td>
+                    {% if maturity_tier >= 1 %}
+                    <span class="badge badge-success">Achieved</span>
+                    {% else %}
+                    <span class="badge badge-info">Not Achieved</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Tier 2</td>
+                <td>Risk-Informed</td>
+                <td>Risk management practices approved but not organization-wide</td>
+                <td>
+                    {% if maturity_tier >= 2 %}
+                    <span class="badge badge-success">Achieved</span>
+                    {% else %}
+                    <span class="badge badge-warning">In Progress</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Tier 3</td>
+                <td>Repeatable</td>
+                <td>Risk management practices are formally approved</td>
+                <td>
+                    {% if maturity_tier >= 3 %}
+                    <span class="badge badge-success">Achieved</span>
+                    {% else %}
+                    <span class="badge badge-info">Target</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Tier 4</td>
+                <td>Adaptive</td>
+                <td>Organization adapts based on lessons learned</td>
+                <td>
+                    {% if maturity_tier >= 4 %}
+                    <span class="badge badge-success">Achieved</span>
+                    {% else %}
+                    <span class="badge badge-info">Future Goal</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

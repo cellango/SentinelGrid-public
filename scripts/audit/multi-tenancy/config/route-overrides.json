@@ -1,0 +1,751 @@
+{
+  "api_gateway:POST:/login": {
+    "primary_tenant_source": "proxy:pre_auth_tenant_hint",
+    "tenant_sources": [
+      "proxy:pre_auth_tenant_hint",
+      "header:X-Tenant-ID",
+      "header:X-Realm"
+    ],
+    "override_inputs": [
+      "header:X-Tenant-ID",
+      "header:X-Realm"
+    ],
+    "risk_flags": [
+      "pre_auth_header_passthrough"
+    ],
+    "status": "baseline",
+    "notes": "Login is an approved pre-auth hint boundary. The gateway allowlists only X-Tenant-ID and X-Realm for realm discovery before identity is established."
+  },
+  "api_gateway:POST:/refresh": {
+    "primary_tenant_source": "proxy:pre_auth_tenant_hint",
+    "tenant_sources": [
+      "proxy:pre_auth_tenant_hint",
+      "header:X-Tenant-ID",
+      "header:X-Realm"
+    ],
+    "override_inputs": [
+      "header:X-Tenant-ID",
+      "header:X-Realm"
+    ],
+    "risk_flags": [
+      "pre_auth_header_passthrough"
+    ],
+    "status": "baseline",
+    "notes": "Refresh is an approved pre-auth hint boundary. The gateway allowlists only X-Tenant-ID and X-Realm for realm continuity before a new access token is minted."
+  },
+  "api_gateway:GET:/ingest/pipelines": {
+    "primary_tenant_source": "shared:platform_metadata",
+    "tenant_sources": [
+      "shared:platform_metadata"
+    ],
+    "override_inputs": [],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Returns platform pipeline metadata from OpenSearch and is expected to remain non-tenant customer content."
+  },
+  "api_gateway:GET:/ingest/templates": {
+    "primary_tenant_source": "shared:platform_metadata",
+    "tenant_sources": [
+      "shared:platform_metadata"
+    ],
+    "override_inputs": [],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Returns platform index-template metadata from OpenSearch and is expected to remain non-tenant customer content."
+  },
+  "api_gateway:POST:/ingest/test-pipeline": {
+    "primary_tenant_source": "shared:platform_diagnostic",
+    "tenant_sources": [
+      "shared:platform_diagnostic"
+    ],
+    "override_inputs": [],
+    "risk_flags": [
+      "diagnostic_endpoint_shared_pipeline_context"
+    ],
+    "status": "baseline",
+    "notes": "Approved shared diagnostic surface for platform ingest pipeline simulation. The route exercises shared OpenSearch ingest pipelines against caller-provided sample events and does not derive tenant scope."
+  },
+  "api_gateway:GET:/detection-rules/{rule_id}": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "SIEM detail proxies derive tenant from the validated bearer token and forward only the authenticated tenant plus optional same-tenant realm hint."
+  },
+  "api_gateway:GET:/entity-timeline": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "SIEM timeline proxies derive tenant from the validated bearer token and forward only the authenticated tenant plus optional same-tenant realm hint."
+  },
+  "api_gateway:POST:/logs/search": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "SIEM search proxies derive tenant from the validated bearer token and forward only the authenticated tenant plus optional same-tenant realm hint."
+  },
+  "api_gateway:GET:/logs/search/simple": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "SIEM search proxies derive tenant from the validated bearer token and forward only the authenticated tenant plus optional same-tenant realm hint."
+  },
+  "api_gateway:GET:/dashboard": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Compliance dashboard proxy derives tenant from the validated bearer token and forwards only the authenticated tenant."
+  },
+  "api_gateway:POST:/evidence/collect": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "body:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Compliance evidence collection derives tenant from the validated bearer token and treats any body tenant_id as a same-tenant assertion that is rejected on mismatch."
+  },
+  "api_gateway:GET:/soc2/coverage": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "SOC 2 coverage proxy derives tenant from the validated bearer token and forwards only the authenticated tenant."
+  },
+  "api_gateway:GET:/audit/ai-activity": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "query:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "AI activity read proxy derives tenant from the validated bearer token and treats any query tenant_id as a same-tenant assertion that is rejected on mismatch."
+  },
+  "api_gateway:POST:/audit/ai-activity": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "body:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "AI activity write proxy derives tenant from the validated bearer token and treats any body tenant_id as a same-tenant assertion that is rejected on mismatch."
+  },
+  "api_gateway:GET:/status": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Tenant-ID"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Onboarding status derives tenant from the validated bearer token and ignores any caller-supplied X-Tenant-ID hint."
+  },
+  "api_gateway:POST:/complete": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Tenant-ID"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Onboarding completion derives tenant from the validated bearer token and ignores any caller-supplied X-Tenant-ID hint for both IAM completion and initial scan enqueue."
+  },
+  "api_gateway:POST:/vuln": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Tenant-ID",
+      "body:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Vulnerability chat derives tenant from the validated bearer token and treats any header or body tenant override as non-authoritative, rejecting body tenant_id on mismatch."
+  },
+  "api_gateway:POST:/dashboard": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Tenant-ID",
+      "body:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Dashboard chat derives tenant from the validated bearer token and treats any header or body tenant override as non-authoritative, rejecting body tenant_id on mismatch."
+  },
+  "api_gateway:GET:/dashboard-snapshot": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Tenant-ID"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "IAM dashboard snapshot derives tenant from the validated bearer token and ignores any caller-supplied X-Tenant-ID hint."
+  },
+  "api_gateway:PATCH:/{incident_id}": {
+    "primary_tenant_source": "dependency:get_current_tenant",
+    "tenant_sources": [
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "header:X-Tenant-ID"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Incident updates derive tenant from the validated bearer token and ignore any caller-supplied X-Tenant-ID hint."
+  },
+  "api_gateway:POST:/internal/ai-shield/events": {
+    "primary_tenant_source": "authz:verify_internal_token",
+    "tenant_sources": [
+      "authz:verify_internal_token",
+      "header:X-Tenant-ID",
+      "body:org_id"
+    ],
+    "override_inputs": [
+      "header:X-Tenant-ID",
+      "body:org_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "AI Shield ingest is an internal service-token boundary. The dispatch tenant comes from the trusted internal caller, and any body org_id must match that tenant or the request is rejected."
+  },
+  "api_gateway:POST:/scans": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "query:tenant_slug",
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway scan-enqueue route derives tenant from the validated bearer token and only accepts optional realm or slug hints after same-tenant resolution."
+  },
+  "api_gateway:GET:/scans/status": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "query:tenant_slug",
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway scan-status route derives tenant from the validated bearer token and only accepts optional realm or slug hints after same-tenant resolution."
+  },
+  "api_gateway:GET:/scans/{scan_id}": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "query:tenant_slug",
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway scan-detail route derives tenant from the validated bearer token and only accepts optional realm or slug hints after same-tenant resolution."
+  },
+  "api_gateway:GET:/scans/{scan_id}/fix-groups": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "query:tenant_slug",
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway FixGroup lookup derives tenant from the validated bearer token and only accepts optional realm or slug hints after same-tenant resolution."
+  },
+  "api_gateway:POST:/scans/{scan_id}/rescore": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "query:tenant_slug",
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway rescore trigger derives tenant from the validated bearer token and only accepts optional realm or slug hints after same-tenant resolution."
+  },
+  "api_gateway:POST:/scans/{scan_id}/tickets": {
+    "primary_tenant_source": "proxy:authenticated_tenant_gateway",
+    "tenant_sources": [
+      "proxy:authenticated_tenant_gateway",
+      "dependency:get_current_tenant"
+    ],
+    "override_inputs": [
+      "query:tenant_slug",
+      "header:X-Realm"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway scan-ticket creation derives tenant from the validated bearer token and only accepts optional realm or slug hints after same-tenant resolution."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/ai-risk-summary": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before proxying to orchestrator."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/dashboard-health": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before proxying to orchestrator."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/dashboard-snapshot": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before proxying to orchestrator."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/now-queue": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before proxying to orchestrator."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/now-queue/stream": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path SSE routes require the path tenant to exactly match the authenticated tenant before opening the orchestrator stream."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/operator-overview": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before proxying to orchestrator."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/operator-overview/stream": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path SSE routes require the path tenant to exactly match the authenticated tenant before opening the orchestrator stream."
+  },
+  "api_gateway:POST:/tenant/{tenant_id}/posture-rescore": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before proxying to orchestrator."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/posture-score": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before proxying to orchestrator."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/posture-score/history": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before proxying to orchestrator."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/recommendations": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before proxying to orchestrator."
+  },
+  "api_gateway:GET:/tenant/{tenant_id}/security-snapshot": {
+    "primary_tenant_source": "proxy:authenticated_same_tenant_path",
+    "tenant_sources": [
+      "proxy:authenticated_same_tenant_path",
+      "dependency:get_current_tenant",
+      "path:tenant_id"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Gateway tenant-path routes require the path tenant to exactly match the authenticated tenant before querying or proxying tenant-scoped security data."
+  },
+  "iam_agent:POST:/api/iam-portal/organizations": {
+    "primary_tenant_source": "platform:provisioning_boundary",
+    "tenant_sources": [
+      "platform:provisioning_boundary",
+      "dependency:get_current_request_context"
+    ],
+    "override_inputs": [],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved platform-admin provisioning boundary. Organization creation now requires authenticated PLATFORM_ADMIN context and executes through the explicit superadmin DB path."
+  },
+  "iam_agent:POST:/api/iam-portal/organizations/{org_id}/tenants": {
+    "primary_tenant_source": "platform:provisioning_boundary",
+    "tenant_sources": [
+      "platform:provisioning_boundary",
+      "dependency:get_current_request_context"
+    ],
+    "override_inputs": [
+      "path:org_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved platform-admin provisioning boundary. Tenant creation under an organization now requires authenticated PLATFORM_ADMIN context and executes through the explicit superadmin DB path."
+  },
+  "iam_agent:POST:/api/v1/payment/create-checkout-session": {
+    "visibility": "public",
+    "primary_tenant_source": "public:approved_pre_tenant_checkout_flow",
+    "tenant_sources": [
+      "public:approved_pre_tenant_checkout_flow",
+      "body:lead_id",
+      "body:provisioning_token"
+    ],
+    "override_inputs": [
+      "body:lead_id",
+      "body:provisioning_token"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved pre-tenant commercial conversion boundary. Checkout creation is gated by an opaque lead identifier, backend-issued provisioning token, and lead-expiry validation."
+  },
+  "iam_agent:POST:/api/v1/payment/success": {
+    "visibility": "public",
+    "primary_tenant_source": "public:approved_payment_completion_flow",
+    "tenant_sources": [
+      "public:approved_payment_completion_flow",
+      "body:lead_id",
+      "body:provisioning_token",
+      "body:session_id"
+    ],
+    "override_inputs": [
+      "body:lead_id",
+      "body:provisioning_token",
+      "body:session_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved pre-tenant payment completion boundary. Account creation is gated by the opaque lead identifier, backend-issued provisioning token, stored checkout-session match, and lead-expiry validation."
+  },
+  "iam_agent:GET:/api/v1/leads/{lead_id}": {
+    "visibility": "public",
+    "primary_tenant_source": "public:approved_pre_tenant_lead_lookup",
+    "tenant_sources": [
+      "public:approved_pre_tenant_lead_lookup",
+      "path:lead_id",
+      "header:authorization"
+    ],
+    "override_inputs": [
+      "path:lead_id",
+      "header:authorization"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved pre-tenant lead lookup boundary. Lead retrieval is gated by the opaque lead identifier, a backend-issued provisioning token presented as a bearer token, and lead-expiry validation, and it returns only minimized commercial state."
+  },
+  "iam_agent:POST:/api/v1/payment/webhook": {
+    "visibility": "public",
+    "primary_tenant_source": "external:stripe_signed_webhook",
+    "tenant_sources": [
+      "external:stripe_signed_webhook"
+    ],
+    "override_inputs": [],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved Stripe billing callback. Caller identity is established by Stripe webhook signature verification rather than any tenant selector."
+  },
+  "iam_agent:GET:/auth/oidc/state": {
+    "visibility": "public",
+    "primary_tenant_source": "public:auth_state_issuance_boundary",
+    "tenant_sources": [
+      "public:auth_state_issuance_boundary"
+    ],
+    "override_inputs": [
+      "query:tenant_id",
+      "query:idp",
+      "query:redirect_to"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved pre-auth OIDC state issuance boundary. The route returns opaque server-side state bound to the requested tenant, IdP alias, and redirect target for later callback validation."
+  },
+  "iam_agent:GET:/auth/oidc/callback": {
+    "visibility": "public",
+    "primary_tenant_source": "external:idp_callback_state_binding",
+    "tenant_sources": [
+      "external:idp_callback_state_binding"
+    ],
+    "override_inputs": [
+      "query:tenant_id",
+      "query:idp",
+      "query:redirect_to"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved OIDC callback boundary. Effective tenant, IdP, and redirect bindings are derived from previously issued state and compatibility query parameters are only accepted when they exactly match the stored state metadata."
+  },
+  "iam_agent:POST:/auth/saml/acs": {
+    "visibility": "public",
+    "primary_tenant_source": "external:idp_callback_state_binding",
+    "tenant_sources": [
+      "external:idp_callback_state_binding"
+    ],
+    "override_inputs": [
+      "query:tenant_id",
+      "query:idp",
+      "query:redirect_to",
+      "form:RelayState"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved SAML ACS boundary. RelayState is validated against pre-issued state when available and legacy callback compatibility is limited to exact configured query bindings that are re-issued into server-side state before the downstream broker code exchange."
+  },
+  "iam_agent:GET:/internal/iam/stats/{tenant_id}": {
+    "visibility": "internal",
+    "primary_tenant_source": "internal:business_analytics_boundary",
+    "tenant_sources": [
+      "internal:business_analytics_boundary",
+      "authz:verify_internal_token"
+    ],
+    "override_inputs": [
+      "path:tenant_id"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved internal orchestrator analytics boundary. Tenant identity is supplied by the internal caller through the path after internal service-token verification, and the handler derives counts only from users bound to that tenant."
+  },
+  "iam_agent:GET:/internal/iam/marketing/funnel/summary": {
+    "visibility": "internal",
+    "primary_tenant_source": "internal:business_analytics_boundary",
+    "tenant_sources": [
+      "internal:business_analytics_boundary",
+      "authz:verify_internal_token"
+    ],
+    "override_inputs": [],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved internal marketing analytics boundary. Funnel summary is available only to internal callers presenting the service token and is not a customer-facing tenant-selection surface."
+  },
+  "iam_agent:POST:/api/v1/realms": {
+    "visibility": "public",
+    "primary_tenant_source": "platform:provisioning_boundary",
+    "tenant_sources": [
+      "platform:provisioning_boundary",
+      "dependency:get_current_request_context"
+    ],
+    "override_inputs": [],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved platform-admin realm provisioning boundary. Realm creation now requires authenticated PLATFORM_ADMIN request context before invoking master-realm admin operations."
+  },
+  "iam_agent:GET:/api/v1/realms/{realm_name}/status": {
+    "visibility": "public",
+    "primary_tenant_source": "platform:provisioning_boundary",
+    "tenant_sources": [
+      "platform:provisioning_boundary",
+      "dependency:get_current_request_context"
+    ],
+    "override_inputs": [
+      "path:realm_name"
+    ],
+    "risk_flags": [],
+    "status": "baseline",
+    "notes": "Approved platform-admin realm status boundary. Realm inspection now requires authenticated PLATFORM_ADMIN request context before invoking master-realm admin operations."
+  },
+  "tenant_service:POST:/api/v1/tenants/provision": {
+    "primary_tenant_source": "platform:provisioning_boundary",
+    "tenant_sources": [
+      "platform:provisioning_boundary"
+    ],
+    "override_inputs": [],
+    "risk_flags": [
+      "platform_admin_boundary_requires_authz"
+    ],
+    "status": "review_required",
+    "notes": "Tenant creation is a platform provisioning boundary. It must stay explicitly reviewed rather than being treated as a tenant-scoped customer route."
+  },
+  "tenant_service:POST:/api/v1/signup/": {
+    "primary_tenant_source": "public:pre_tenant_signup_boundary",
+    "tenant_sources": [
+      "public:pre_tenant_signup_boundary"
+    ],
+    "override_inputs": [
+      "body:tenant_slug",
+      "body:company_name"
+    ],
+    "risk_flags": [
+      "public_pre_tenant_boundary"
+    ],
+    "status": "review_required",
+    "notes": "Customer signup executes before tenant creation and must remain an explicit reviewed public boundary."
+  },
+  "tenant_service:GET:/api/v1/signup/check-availability/{slug}": {
+    "primary_tenant_source": "public:pre_tenant_signup_boundary",
+    "tenant_sources": [
+      "public:pre_tenant_signup_boundary"
+    ],
+    "override_inputs": [
+      "path:slug"
+    ],
+    "risk_flags": [
+      "public_pre_tenant_boundary"
+    ],
+    "status": "review_required",
+    "notes": "Slug availability is a public pre-tenant uniqueness check and should remain explicitly reviewed as a shared onboarding surface."
+  }
+}

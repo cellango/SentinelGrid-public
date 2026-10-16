@@ -1,0 +1,1323 @@
+version: "3.9"
+
+# DEVELOPMENT ONLY.
+# This manifest intentionally contains local-service defaults and placeholder credentials for repo-local bootstrapping.
+# Do not reuse it for production deployment, production Helm values, or release automation.
+
+services:
+  # Base Images - Must be built before services
+  # These are build-only services (no ports, no startup)
+  runtime-python:
+    build:
+      context: ./backend/docker/base-images
+      dockerfile: Dockerfile.runtime-python
+    image: sentinelgrid/runtime-python:3.11
+    pull_policy: build   # prefer building locally over pulling a non-public image
+    # Base image - no need to run as a service
+    command: ["echo", "Base image built"]
+
+  api-base:
+    build:
+      context: ./backend/docker/base-images
+      dockerfile: Dockerfile.api-base
+    image: sentinelgrid/api-base:latest
+    pull_policy: build   # build from source; not published
+    depends_on:
+      - runtime-python
+    # Base image - no need to run as a service
+    command: ["echo", "Base image built"]
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - NEXT_PUBLIC_API_URL=https://localhost:3443
+        - NEXT_PUBLIC_API_BASE=https://localhost:3443
+        - NEXT_PUBLIC_IAM_AGENT_URL=http://iam_agent:8000
+        - NEXT_PUBLIC_FORCE_HTTPS=true
+        - NEXT_PUBLIC_HTTPS_PORT=3443
+        - N8N_PENTEST_WEBHOOK_URL=${N8N_PENTEST_WEBHOOK_URL:-http://n8n:5678/webhook/pentest}
+    environment:
+      - NEXT_PUBLIC_API_BASE=https://localhost:3443
+      - NEXT_PUBLIC_API_URL=https://localhost:3443
+      - NEXT_PUBLIC_IAM_AGENT_URL=http://iam_agent:8000
+      - NEXT_PUBLIC_FORCE_HTTPS=true
+      - NEXT_PUBLIC_HTTPS_PORT=3443
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - API_GATEWAY_URL=http://api_gateway:8000
+      - N8N_PENTEST_WEBHOOK_URL=${N8N_PENTEST_WEBHOOK_URL:-http://n8n:5678/webhook/pentest}
+    ports:
+      - "3443:3443"  # HTTPS - serves frontend with SSL
+    volumes:
+      - ./infra/nginx/certs:/etc/nginx/certs:ro
+      - ./cfg:/app/cfg:ro
+    depends_on:
+      - api_gateway
+      - iam_agent
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('https').get('https://localhost:3443', {rejectUnauthorized: false}, (r) => {process.exit([200, 301, 302].includes(r.statusCode) ? 0 : 1)}).on('error', () => process.exit(1))\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # Website service removed - merged into frontend app
+  # All marketing pages (/, /login, /signup) and dashboard (/dashboard/*) are now in frontend
+  # website:
+  #   build: ./website
+  #   environment:
+  #     - NEXT_PUBLIC_IAM_AGENT_URL=https://nginx:8443
+  #     - NEXT_PUBLIC_API_BASE=http://localhost:8080
+  #     - NEXT_PUBLIC_FORCE_HTTPS=true
+  #     - NEXT_PUBLIC_HTTPS_PORT=3443
+  #   expose:
+  #     - "3000"
+  #   depends_on:
+  #     - iam_agent
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3000', (r) => {process.exit([200, 301, 302].includes(r.statusCode) ? 0 : 1)}).on('error', () => process.exit(1))\" || exit 1"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 3
+  #     start_period: 15s
+
+  api_gateway:
+    build:
+      context: ./backend
+      dockerfile: services/api_gateway/Dockerfile
+    command: ["/bin/sh", "-c", "/bin/sh /app/app/wait_for_keycloak.sh && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    environment:
+      - PYTHONPATH=/app/backend:/app/libs
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg?options=-csearch_path=public,security_ops
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_REALM=demo
+      - KEYCLOAK_CLIENT_ID=demo-web
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - SIEM_AGENT_URL=http://siem_agent:8000
+      - ORCHESTRATOR_URL=http://orchestrator:8000
+      - TICKETING_SERVICE_URL=http://ticketing_service:8000
+      - OPENSEARCH_URL=http://opensearch:9200
+      - MODEL_GATEWAY_URL=http://model_gateway:8000
+      - AGENT_RUNTIME_URL=http://agent_runtime:8000
+      - COMPLIANCE_SERVICE_URL=http://compliance_service:8000
+      - REPORTING_SERVICE_URL=http://reporting_service:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - CORS_ORIGINS=https://localhost:3443
+      - SYSTEM_TENANT_ID=9c7df7a9-5a0b-4412-a41c-0c0ea777b2f0
+    volumes:
+      # Mount codebase for live development (overwrites container code)
+      - ./backend:/app/backend
+      - ./backend/libs:/app/libs
+      - ./backend/services/api_gateway/app:/app/app
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+      iam_agent:
+        condition: service_started
+      agent_runtime:
+        condition: service_started
+    ports:
+      - "8082:8000"  # Changed from 8080 to avoid conflict with Traefik
+
+  orchestrator:
+    build:
+      context: ./backend
+      dockerfile: services/orchestrator/Dockerfile
+    environment:
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg?options=-csearch_path=orchestration,public
+      - MODEL_GATEWAY_URL=http://model_gateway:8000
+      - SIEM_AGENT_URL=http://siem_agent:8000
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - SOAR_AGENT_URL=http://soar_agent:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+    depends_on:
+      - postgres
+
+  opa:
+    image: openpolicyagent/opa:latest
+    command:
+      - "run"
+      - "--server"
+      - "--addr=0.0.0.0:8181"
+      - "--set=decision_logs.console=true"
+      - "/policies/rules.rego"
+    ports:
+      - "8181:8181"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8181/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./policies/demo/rules.rego:/policies/rules.rego:ro
+      - ./policies/demo/tests:/policies/tests:ro
+    depends_on:
+      - api_gateway
+      - model_gateway
+      - siem_agent
+      - iam_agent
+      - soar_agent
+
+  model_gateway:
+    build: ./backend/services/model_gateway
+    environment:
+      - MODEL_SERVER_URL=http://llm_server:8000
+      - EMBEDDING_MODEL_NAME=all-MiniLM-L6-v2
+      - KB_EMBEDDING_MODEL=all-MiniLM-L6-v2
+      - MODEL_GATEWAY_DATABASE_URL=postgresql://sg:sg@postgres:5432/sg
+      - DATABASE_URL=postgresql://sg:sg@postgres:5432/sg
+      - BASE_MODEL_NAME=tinyllama-1.1b-chat-v1.0
+      - BASE_MODEL_PATH=/models/base
+      - LLM_RUNTIME=llama_cpp
+      - LLM_MAX_TOKENS=32
+      - LLM_CONTEXT_LENGTH=768
+      - LLM_N_THREADS=1
+      - HF_HOME=/models/cache
+      - SENTENCE_TRANSFORMERS_HOME=/models/cache
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./models:/models
+      - ./backend/libs/sg_core:/app/sg_core:ro
+
+  agent_runtime:
+    build:
+      context: ./backend
+      dockerfile: services/agent_runtime/Dockerfile
+    environment:
+      - PYTHONPATH=/app/libs
+      - REDIS_URL=redis://redis:6379
+      - MODEL_GATEWAY_URL=http://model_gateway:8000
+      - COMPLIANCE_AGENT_ENABLED=${COMPLIANCE_AGENT_ENABLED:-false}
+      - COMPLIANCE_SERVICE_URL=http://compliance_service:8000
+      - REPORTING_SERVICE_URL=http://reporting_service:8000
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - SIEM_AGENT_URL=http://siem_agent:8000
+      - API_GATEWAY_URL=http://api_gateway:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+    ports:
+      - "8029:8000"
+    volumes:
+      - ./backend/libs:/app/libs
+    depends_on:
+      - redis
+      - model_gateway
+
+  opensearch:
+    image: opensearchproject/opensearch:2.11.0
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true    # Skip security plugin to reduce startup cost
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      # Heap tuned for stability (reduced to 512m to avoid OOM on dev machines).
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "9200:9200"
+      - "9600:9600"  # Performance Analyzer
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.11.0
+    profiles:
+      - opensearch
+    ports:
+      - "5601:5601"
+    environment:
+      - 'OPENSEARCH_HOSTS=["http://opensearch:9200"]'
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true  # Dev only
+    depends_on:
+      - opensearch
+
+  siem_agent:
+    build:
+      context: ./backend
+      dockerfile: agents/siem_agent/Dockerfile
+    container_name: siem_agent
+    environment:
+      - OPENSEARCH_URL=http://opensearch:9200
+      - OPENSEARCH_USE_SSL=false
+      - OPENSEARCH_VERIFY_CERTS=false
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg?options=-csearch_path=security_ops,public
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - SYSTEM_TENANT_ID=9c7df7a9-5a0b-4412-a41c-0c0ea777b2f0
+      - REDIS_URL=redis://redis:6379
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - OBSERVABLES_SERVICE_URL=http://observables_service:8000
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_REALM=demo
+      - AGENT_RUNTIME_URL=http://agent_runtime:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - LOG_LEVEL=INFO
+      - DEBUG_MODE=${DEBUG_MODE:-false}
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./cfg:/app/cfg:ro
+    depends_on:
+      opensearch:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+
+  soar_agent:
+    build:
+      context: ./backend
+      dockerfile: agents/soar_agent/Dockerfile
+    command: ["/bin/sh", "-c", "/bin/sh /app/app/wait_for_keycloak.sh && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg?options=-csearch_path=security_ops,public
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - STACKSTORM_URL=http://stackstorm:9101
+      - STACKSTORM_API_KEY=${STACKSTORM_API_KEY}
+      - CORTEX_URL=http://cortex:9001
+      - CORTEX_API_KEY=${CORTEX_API_KEY}
+      - WORKFLOW_ENGINE_URL=http://n8n:5678
+      - N8N_URL=http://n8n:5678
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_REALM=demo
+      - AGENT_RUNTIME_URL=http://agent_runtime:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - LOG_LEVEL=INFO
+    ports:
+      - "8004:8000"
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+      stackstorm:
+        condition: service_started
+      cortex:
+        condition: service_started
+      agent_runtime:
+        condition: service_started
+
+  iam_agent:
+    build:
+      context: ./backend
+      dockerfile: agents/iam_agent/Dockerfile
+    command: ["/bin/sh", "-c", "/bin/sh /app/app/wait_for_keycloak.sh && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    environment:
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_REALM=demo
+      - KEYCLOAK_ADMIN_USER=${KEYCLOAK_ADMIN_USER:-admin}  # Use default admin for initial setup, will switch to service account
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      - KEYCLOAK_CLIENT_ID=demo-api
+      - KEYCLOAK_CLIENT_SECRET=
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - ENABLE_RATE_LIMITING=false
+      - REDIS_URL=redis://redis:6379
+      - CERT_SERVICE_URL=http://cert_service:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - KEYCLOAK_CERT_DIR=/opt/keycloak/certs
+      - PAYMENT_DEV_MODE=true
+      - PUBLIC_AUTH_BASE_URL=${PUBLIC_AUTH_BASE_URL:-https://localhost:3443}
+      # Vault configuration (tenant-scoped secrets)
+      - VAULT_ADDR=https://vault:8200
+      - VAULT_SKIP_VERIFY=true
+      - VAULT_TOKEN=${VAULT_TOKEN:-hvs.LldX2Dc5EZtqsNAtSxStREsC}
+      - VAULT_MOUNT=sentinelgrid
+    ports:
+      - "8005:8000"
+    volumes:
+      - keycloak_certs:/opt/keycloak/certs
+      # Mount codebase for live development (overwrites container code)
+      - ./backend/libs:/app/libs
+      - ./backend/agents/iam_agent/app:/app/app
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+      cert_service:
+        condition: service_started
+
+  # entitlement_agent retired from the active dev stack.
+  # Canonical IAM entitlement functionality lives in backend/agents/iam_agent.
+
+  tenant_service:
+    build:
+      context: ./backend
+      dockerfile: services/tenant_service/Dockerfile
+    command: ["/bin/sh", "-c", "/bin/sh /app/app/wait_for_keycloak.sh && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - KEYCLOAK_URL=http://identity.sentinelgrid.ai:8080
+      - KEYCLOAK_ADMIN_USER=${KEYCLOAK_ADMIN_USER:-admin}  # Use default admin for initial setup, will switch to service account
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      - LOG_LEVEL=INFO
+      - DEBUG_MODE=${DEBUG_MODE:-false}
+    ports:
+      - "8008:8000"
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+
+  ingestion_service:
+    build:
+      context: ./backend
+      dockerfile: services/ingestion_service/Dockerfile
+    environment:
+      - SIEM_AGENT_URL=http://siem_agent:8000
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - MODEL_GATEWAY_URL=http://model_gateway:8000
+      - AUDIT_SERVICE_URL=http://audit_service:8000
+      - AUDIT_SERVICE_URL=http://audit_service:8000
+      - ENABLE_EMBEDDINGS=true
+      - EMBEDDINGS_MAX_PER_TENANT_PER_DAY=200
+      - BATCH_SIZE=500
+      - BATCH_TIMEOUT_SECONDS=10
+      - LOG_LEVEL=INFO
+      - DEBUG_MODE=${DEBUG_MODE:-false}
+    ports:
+      - "8009:8000"
+    depends_on:
+      - siem_agent
+      - iam_agent
+      - opensearch
+
+  connector_service:
+    build:
+      context: ./backend
+      dockerfile: services/connector_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - INGESTION_SERVICE_URL=http://ingestion_service:8000
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - SYNC_INTERVAL_MINUTES=15
+      - LOG_LEVEL=INFO
+      - DEBUG_MODE=${DEBUG_MODE:-false}
+    ports:
+      - "8027:8000"
+    depends_on:
+      - postgres
+      - ingestion_service
+      - iam_agent
+
+  detection_service:
+    build:
+      context: ./backend
+      dockerfile: services/detection_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg?options=-csearch_path=security_ops,public
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - SIEM_AGENT_URL=http://siem_agent:8000
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - OBSERVABLES_SERVICE_URL=http://observables_service:8000
+      - TICKETING_SERVICE_URL=http://ticketing_service:8000
+      - FRAMEWORK_SERVICE_URL=http://framework_service:8000
+      - AGENT_RUNTIME_URL=http://agent_runtime:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - AUTO_CREATE_INCIDENTS=${AUTO_CREATE_INCIDENTS:-true}
+      - EVALUATION_INTERVAL_SECONDS=60
+      - LOG_LEVEL=INFO
+      - DEBUG_MODE=${DEBUG_MODE:-false}
+    ports:
+      - "8010:8000"
+    depends_on:
+      - postgres
+      - siem_agent
+      - iam_agent
+      - ticketing_service
+      - framework_service
+      - agent_runtime
+
+  automated_response_service:
+    build:
+      context: ./backend
+      dockerfile: services/automated_response_service/Dockerfile
+    environment:
+      - PYTHONPATH=/app/backend:/app/libs
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - SOAR_AGENT_URL=http://soar_agent:8000
+      - DETECTION_SERVICE_URL=http://detection_service:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - ENABLE_AUTO_TRIGGER=${ENABLE_AUTO_TRIGGER:-true}
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./backend:/app/backend
+      - ./backend/libs:/app/libs
+    ports:
+      - "8013:8000"
+    depends_on:
+      - postgres
+      - soar_agent
+
+  compliance_service:
+    build:
+      context: ./backend
+      dockerfile: services/compliance_service/Dockerfile
+    environment:
+      - PYTHONPATH=/app/backend:/app/libs
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - SOAR_AGENT_URL=http://soar_agent:8000
+      - FRAMEWORK_SERVICE_URL=http://framework_service:8000
+      - AGENT_RUNTIME_URL=http://agent_runtime:8000
+      - COMPLIANCE_AGENT_ENABLED=${COMPLIANCE_AGENT_ENABLED:-false}
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - AUTO_REMEDIATE_ENABLED=${AUTO_REMEDIATE_ENABLED:-false}
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./backend:/app/backend
+      - ./backend/libs:/app/libs
+    ports:
+      - "8017:8000"
+    depends_on:
+      - postgres
+      - soar_agent
+      - framework_service
+      - agent_runtime
+
+  # SentinelGrid Posture Agent services (see SentinelGridPostureAgent/docker-compose.yml)
+  analyzer-orchestrator:
+    build:
+      context: ./SentinelGridPostureAgent
+      dockerfile: services/analyzer-orchestrator/Dockerfile
+    environment:
+      - LOG_LEVEL=INFO
+    ports:
+      - "8103:8000"
+    depends_on:
+      - redis
+
+  ticketing_service:
+    build:
+      context: ./backend
+      dockerfile: services/ticketing_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg?options=-csearch_path=security_ops,public
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - OBSERVABLES_SERVICE_URL=http://observables_service:8000
+      - AI_ENRICHMENT_AGENT_URL=http://soar_agent:8000  # enrichment merged into soar
+      - FRAMEWORK_SERVICE_URL=http://framework_service:8000
+      - VULNERABILITY_SERVICE_URL=http://vulnerability_service:8000
+      - AGENT_RUNTIME_URL=http://agent_runtime:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - LOG_LEVEL=INFO
+    ports:
+      - "8011:8000"
+    depends_on:
+      - postgres
+      - soar_agent  # ai_enrichment merged into soar
+      - framework_service
+      - vulnerability_service
+      - agent_runtime
+
+  action_service:
+    build:
+      context: ./backend
+      dockerfile: services/action_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - TICKETING_SERVICE_URL=http://ticketing_service:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - REQUIRE_APPROVAL=${REQUIRE_APPROVAL:-true}
+      - ACTION_TIMEOUT_SECONDS=300
+      - EDR_API_URL=${EDR_API_URL}
+      - FIREWALL_API_URL=${FIREWALL_API_URL}
+      - LOG_LEVEL=INFO
+    ports:
+      - "8028:8000"
+    depends_on:
+      - postgres
+      - iam_agent
+      - ticketing_service
+
+  reporting_service:
+    build:
+      context: ./backend
+      dockerfile: services/reporting_service/Dockerfile
+    environment:
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg?options=-csearch_path=reporting,public
+      - REPORT_STORAGE_PATH=/tmp/reports
+      - REPORT_STORAGE_URL=http://localhost:8014/reports
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SENDER_EMAIL=${SENDER_EMAIL}
+      - EMAIL_ENABLED=${EMAIL_ENABLED:-false}
+      - AGENT_RUNTIME_URL=http://agent_runtime:8000
+      - COMPLIANCE_SERVICE_URL=http://compliance_service:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - COMPLIANCE_AGENT_ENABLED=${COMPLIANCE_AGENT_ENABLED:-false}
+    ports:
+      - "8014:8000"
+    depends_on:
+      - postgres
+      - agent_runtime
+    volumes:
+      - reports_data:/tmp/reports
+
+  audit_service:
+    build:
+      context: ./backend
+      dockerfile: services/audit_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg?options=-csearch_path=audit,public
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - LOG_LEVEL=INFO
+    ports:
+      - "8016:8000"
+    depends_on:
+      - postgres
+
+  vulnerability_service:
+    build:
+      context: ./backend
+      dockerfile: services/vulnerability_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - NVD_API_KEY=${NVD_API_KEY}
+      - NVD_RATE_LIMIT=5
+      - CVE_SYNC_BATCH_SIZE=100
+      - CVE_SYNC_INTERVAL_HOURS=24
+      - LOG_LEVEL=INFO
+    ports:
+      - "8030:8000"
+    depends_on:
+      - postgres
+
+  cmdb_service:
+    build:
+      context: ./backend
+      dockerfile: services/cmdb_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - CLOUDQUERY_ENABLED=${CLOUDQUERY_ENABLED:-false}
+      - CLOUDQUERY_DB_URL=${CLOUDQUERY_DB_URL}
+      - ASSET_SYNC_INTERVAL_HOURS=24
+      - LOG_LEVEL=INFO
+    ports:
+      - "8026:8000"
+    depends_on:
+      - postgres
+
+  # ai_enrichment_agent:
+  #   REMOVED - AI enrichment merged into soar_agent (Dec 3, 2025)
+  #   Enrichment functionality now at /api/v1/enrichment via soar_agent
+  #   Use soar_agent for enrichment operations
+
+  framework_service:
+    build:
+      context: ./backend
+      dockerfile: services/framework_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - MODEL_GATEWAY_URL=http://model_gateway:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - KNOWLEDGE_BASE_PATH=${KNOWLEDGE_BASE_PATH}
+      - LOG_LEVEL=INFO
+    ports:
+      - "8018:8000"
+    depends_on:
+      - postgres
+      - model_gateway
+
+  incident_service:
+    build:
+      context: ./backend
+      dockerfile: services/incident_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg?options=-csearch_path=security_ops,public
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - LOG_LEVEL=INFO
+    ports:
+      - "8019:8000"
+    depends_on:
+      - postgres
+
+  email_ingestion_service:
+    build:
+      context: ./backend
+      dockerfile: services/email_ingestion_service/Dockerfile
+    environment:
+      - PYTHONPATH=/app:/app/libs
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - EMAIL_PROVIDER=${EMAIL_PROVIDER:-imap}
+      - IMAP_HOST=${IMAP_HOST}
+      - IMAP_PORT=${IMAP_PORT:-993}
+      - IMAP_USER=${IMAP_USER}
+      - IMAP_PASSWORD=${IMAP_PASSWORD}
+      - IMAP_USE_SSL=${IMAP_USE_SSL:-true}
+      - IMAP_MAILBOX=${IMAP_MAILBOX:-INBOX}
+      - IMAP_POLL_INTERVAL_SECONDS=${IMAP_POLL_INTERVAL_SECONDS:-300}
+      - ORCHESTRATOR_URL=http://orchestrator:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - LOG_LEVEL=INFO
+    ports:
+      - "8020:8000"
+    depends_on:
+      - postgres
+      - orchestrator
+
+  observables_service:
+    build:
+      context: ./backend
+      dockerfile: services/observables_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - CORTEX_URL=http://cortex:9001
+      - CORTEX_API_KEY=${CORTEX_API_KEY}
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - ENRICHMENT_TTL_HOURS=${ENRICHMENT_TTL_HOURS:-24}
+      - LOG_LEVEL=INFO
+    ports:
+      - "8021:8000"
+    depends_on:
+      - postgres
+      - cortex
+      - iam_agent
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mcp_server:
+    build:
+      context: ./backend
+      dockerfile: agents/mcp_server/Dockerfile
+    environment:
+      - PYTHONPATH=/app:/app/libs
+      - SIEM_AGENT_URL=http://siem_agent:8000
+      - SOAR_AGENT_URL=http://soar_agent:8000
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - ANALYZER_ORCHESTRATOR_URL=http://analyzer-orchestrator:8000
+      - OBSERVABLES_SERVICE_URL=http://observables_service:8000
+      - DETECTION_SERVICE_URL=http://detection_service:8000
+      - COMPLIANCE_SERVICE_URL=http://compliance_service:8000
+      - VULNERABILITY_SERVICE_URL=http://vulnerability_service:8000
+      - TICKETING_AGENT_URL=http://ticketing_service:8000
+      - FRAMEWORK_SERVICE_URL=http://framework_service:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - MCP_AUDIT_ENABLED=true
+      - LOG_LEVEL=INFO
+    ports:
+      - "8022:8000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - siem_agent
+      - soar_agent
+      - iam_agent
+      - observables_service
+
+  job_runner:
+    image: python:3.11-slim
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app/backend/libs:/app/backend
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - SCANNER_ORCHESTRATOR_URL=http://scanner_orchestrator:8000
+    volumes:
+      - ./backend:/app/backend
+    command: bash -c "pip install -r /app/backend/docker/base-images/requirements/api-base.txt && while true; do python /app/backend/scripts/job_runner.py; sleep 5; done"
+
+  job_scheduler:
+    image: python:3.11-slim
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - PYTHONPATH=/app/backend/libs:/app/backend
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - SCHEDULER_INTERVAL_SECONDS=900
+      - SCHEDULER_CYCLES=1000000
+      # Comma-separated tenant UUIDs for daily jobs
+      - SCHEDULER_CLOUD_TENANTS=
+      - SCHEDULER_GIT_TENANTS=
+      - SCHEDULER_AI_TENANTS=
+      - SCHEDULER_GLOBAL_JOBS=golden_image_build
+      - SCANNER_ORCHESTRATOR_URL=http://scanner_orchestrator:8000
+      - SCHEDULER_RUN_INITIAL_SCANS=true
+    volumes:
+      - ./backend:/app/backend
+    command: bash -c "pip install -r /app/backend/docker/base-images/requirements/api-base.txt && python /app/backend/scripts/job_scheduler.py"
+
+  scanner_orchestrator:
+    build:
+      context: ./backend
+      dockerfile: services/scanner_orchestrator/Dockerfile
+    environment:
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - REDIS_URL=redis://redis:6379
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "8025:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import requests; requests.get(\"http://localhost:8000/health\")' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      - POSTGRES_DB=sg
+      - POSTGRES_USER=sg
+      - POSTGRES_PASSWORD=sg
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sg"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default
+    # Create n8n database for workflow engine
+    command: >
+      postgres
+      -c shared_preload_libraries=vector
+      -c max_connections=200
+    # Note: n8n database will be created via init script or manually
+
+  # Flyway migration runner for Model Gateway
+  # Runs migrations and exits (restart: no)
+  model_gateway_migrations:
+    build:
+      context: ./backend/services/model_gateway/db
+      dockerfile: Dockerfile.flyway
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://postgres:5432/sg
+      - FLYWAY_USER=sg
+      - FLYWAY_PASSWORD=sg
+      - FLYWAY_LOCATIONS=filesystem:/flyway/sql
+      - FLYWAY_SCHEMA=public
+      - FLYWAY_TABLE=flyway_schema_history_model_gateway
+      - FLYWAY_BASELINE_ON_MIGRATE=true
+      - FLYWAY_BASELINE_VERSION=0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"  # Run once and exit
+    networks:
+      - default
+
+  # Data migrations runner for Model Gateway
+  # Runs Python-based data migrations (e.g., knowledge base with embeddings)
+  # Runs after schema migrations and exits (restart: no)
+  model_gateway_data_migrations:
+    build:
+      context: ./backend/services/model_gateway
+      dockerfile: db/Dockerfile.data-migrations
+    environment:
+      - MODEL_GATEWAY_DATABASE_URL=postgresql://sg:sg@postgres:5432/sg
+      - DATABASE_URL=postgresql://sg:sg@postgres:5432/sg
+      - PYTHONPATH=/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      model_gateway_migrations:
+        condition: service_completed_successfully
+    restart: "no"  # Run once and exit
+    networks:
+      - default
+
+  # Keycloak PostgreSQL (separate from app DB)
+  keycloak_db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=${KEYCLOAK_DB_PASSWORD:-keycloak}
+    volumes:
+      - keycloak_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.5  # Lower footprint for dev; 26.x was OOM/killed
+    command: 
+      - start
+      - --https-port=8443
+      - --https-certificate-file=/opt/keycloak/certs/keycloak.crt
+      - --https-certificate-key-file=/opt/keycloak/certs/keycloak.key
+      - --http-enabled=true
+      - --http-port=8080
+      - --hostname=identity.sentinelgrid.ai
+      - --hostname-strict=false
+      # --import-realm  # Temporarily disabled - seeder will create realm
+      - --proxy-headers=xforwarded
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://keycloak_db:5432/keycloak
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD:-keycloak}
+      - KC_HEALTH_ENABLED=true
+      - KC_METRICS_ENABLED=true
+      - KC_HTTP_RELATIVE_PATH=/
+      - KC_PROXY=edge
+      - KC_HOSTNAME=identity.sentinelgrid.ai
+      - KC_HOSTNAME_STRICT=false
+      - KC_HOSTNAME_STRICT_HTTPS=false
+      # Keep heap small to avoid OOM kills in dev
+      - KC_HEAP_INITIAL=256m
+      - KC_HEAP_MAX=1024m
+      # Debug logging for troubleshooting attribute persistence
+      - KC_LOG_LEVEL=info,org.keycloak.services:debug,org.keycloak.models:debug,org.keycloak.storage:debug
+    ports:
+      - "8080:8080"  # HTTP
+      - "8443:8443"  # HTTPS
+    hostname: identity.sentinelgrid.ai
+    networks:
+      default:
+        aliases:
+          - identity
+          - identity.sentinelgrid.ai
+    volumes:
+      # - ./infra/keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro  # Temporarily disabled - seeder will create realm
+      - keycloak_data:/opt/keycloak/data
+      - ./infra/nginx/certs:/opt/keycloak/certs:ro
+    depends_on:
+      keycloak_db:
+        condition: service_healthy
+    healthcheck:
+      # Check if Keycloak is responding by accessing the master realm endpoint
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /realms/master HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && head -1 <&3 | grep -q '200 OK' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Nginx is now bundled with the frontend container
+  # Removed separate nginx service for simplicity
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # Vault (persistent storage, TLS enabled)
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    ports:
+      - "8210:8200"
+    environment:
+      - VAULT_ADDR=https://vault:8200
+      - VAULT_SKIP_VERIFY=false
+      - VAULT_CACERT=/vault/certs/sentinelgridca.pem
+      - VAULT_CLIENT_CERT=/vault/certs/automation.crt
+      - VAULT_CLIENT_KEY=/vault/certs/automation.key
+      - VAULT_ROOT_TOKEN=${VAULT_PROD_ROOT_TOKEN:-sentinelgrid-prod-root-token-change-me}
+      - VAULT_LOG_LEVEL=info
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault_prod_data:/vault/file
+      - vault_prod_logs:/vault/logs
+      - ./infra/vault/certs:/vault/certs:ro
+      - ./infra/vault/config/vault-prod.hcl:/vault/config/vault.hcl:ro
+      - ./infra/vault/scripts/vault-prod-entrypoint.sh:/vault/entrypoint.sh:ro
+    entrypoint: ["/bin/sh", "/vault/entrypoint.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "VAULT_ADDR=https://vault:8200 VAULT_SKIP_VERIFY=false VAULT_CACERT=/vault/certs/sentinelgridca.pem VAULT_CLIENT_CERT=/vault/certs/automation.crt VAULT_CLIENT_KEY=/vault/certs/automation.key vault status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # entitlement_agent_flyway:
+  #   REMOVED - Entitlement merged into iam_agent (Dec 3, 2025)
+  #   Migrations now managed by iam_agent
+  #   Use iam_agent flyway if needed
+
+  # Core Flyway for shared schema migrations (including cert_service)
+  migrations_flyway:
+    image: flyway/flyway:10
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://postgres:5432/sg
+      - FLYWAY_USER=sg
+      - FLYWAY_PASSWORD=sg
+      - FLYWAY_LOCATIONS=filesystem:/flyway/model_gateway,filesystem:/flyway/sql
+      - FLYWAY_SCHEMAS=public,security_ops,orchestration,audit,reporting,llm_training
+      - FLYWAY_TABLE=flyway_schema_history_core
+      - FLYWAY_BASELINE_ON_MIGRATE=true
+      - FLYWAY_BASELINE_VERSION=0
+      - FLYWAY_OUT_OF_ORDER=false
+      - FLYWAY_IGNORE_MIGRATION_PATTERNS=*:missing
+      - FLYWAY_VALIDATE_ON_MIGRATE=false
+    volumes:
+      - ./backend/services/model_gateway/db/migrations:/flyway/model_gateway:ro
+      - ./backend/migrations:/flyway/sql:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: migrate
+    restart: "no"  # Run once, exit after migration
+
+  # SOAR Agent Flyway - Playbook schema management
+  # Database: sentinelgrid (main database)
+  soar_agent_flyway:
+    build:
+      context: ./backend/agents/soar_agent  # moved to agents/
+      dockerfile: Dockerfile.flyway
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://postgres:5432/sg
+      - FLYWAY_USER=sg
+      - FLYWAY_PASSWORD=sg
+      - FLYWAY_LOCATIONS=filesystem:/flyway/sql
+      - FLYWAY_SCHEMA=public
+      - FLYWAY_TABLE=flyway_schema_history_soar
+      - FLYWAY_BASELINE_ON_MIGRATE=true
+      - FLYWAY_BASELINE_VERSION=0
+    volumes:
+      - ./backend/agents/soar_agent/db/migrations:/flyway/sql  # moved to agents/
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: migrate
+    restart: "no"  # Run once, exit after migration
+
+  # External services - SOAR & Enrichment
+  stackstorm:
+    image: stackstorm/stackstorm:latest
+    environment:
+      - ST2_USER=admin
+      - ST2_PASSWORD=${STACKSTORM_PASSWORD:-admin}
+      - ST2_HOSTNAME=stackstorm
+    ports:
+      - "9100:443"  # ST2 Web UI
+      - "9101:9101"  # ST2 API
+    volumes:
+      - stackstorm_packs:/opt/stackstorm/packs
+      - stackstorm_configs:/opt/stackstorm/configs
+    depends_on:
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD-SHELL", "st2ctl status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  cortex:
+    # NOTE: Cortex requires Elasticsearch which was removed from core compose
+    # If you need Cortex, use docker-compose.optional.yml which includes both
+    image: thehiveproject/cortex:latest
+    environment:
+      - job_directory=/tmp/cortex-jobs
+    ports:
+      - "9001:9001"  # Cortex API
+    volumes:
+      - cortex_data:/var/lib/cortex
+      - cortex_jobs:/tmp/cortex-jobs
+    # depends_on:
+    #   - elasticsearch  # REMOVED: Elasticsearch no longer in core compose
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9001/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # elasticsearch:
+  #   REMOVED (Dec 3, 2025) - Duplicate of OpenSearch
+  #   Only used by Cortex (TheHive analysis)
+  #   If you need Cortex+Elasticsearch, use docker-compose.optional.yml
+  #   Savings: 1.27 GB disk, faster pulls
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+
+  n8n:
+    image: n8nio/n8n:latest
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER:-admin}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-admin}
+      - N8N_HOST=n8n
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8n
+      - DB_POSTGRESDB_PASSWORD=${N8N_DB_PASSWORD:-n8n}
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5678/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  llm_server:
+    image: vllm/vllm-openai:latest
+    environment:
+      - MODEL_NAME=${LLM_MODEL_NAME:-mistralai/Mistral-7B-Instruct-v0.2}
+      - HOST=0.0.0.0
+      - PORT=8000
+    ports:
+      - "8001:8000"
+    # Note: GPU support requires nvidia-docker or nvidia-container-toolkit
+    # For CPU-only testing, comment out deploy section
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    volumes:
+      - model_cache:/root/.cache/huggingface
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+
+  cert_service:
+    build:
+      context: ./backend
+      dockerfile: services/cert_service/Dockerfile
+    environment:
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - CA_BACKEND_TYPE=${CA_BACKEND_TYPE:-ejbca}  # 'ejbca', 'step-ca', or 'aws-acm-pca'
+      - EJBCA_URL=https://ejbca:8443
+      - EJBCA_USERNAME=${EJBCA_USERNAME:-admin}
+      - EJBCA_PASSWORD=${EJBCA_PASSWORD:-admin}
+      - EJBCA_CA_NAME=${EJBCA_CA_NAME:-SentinelGrid-Issuing-CA}
+      - EJBCA_CERTIFICATE_PROFILE=${EJBCA_CERTIFICATE_PROFILE:-service-tls}
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+    ports:
+      - "8015:8000"
+    depends_on:
+      - postgres
+      - ejbca
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ejbca:
+    image: keyfactor/ejbca-ce:latest  # Community Edition
+    container_name: ejbca
+    platform: linux/amd64  # Ensure correct architecture on arm64 hosts
+    environment:
+      - EJBCA_DB_HOST=ejbca_db
+      - EJBCA_DB_PORT=5432
+      - EJBCA_DB_NAME=ejbca
+      - EJBCA_DB_USER=ejbca
+      - EJBCA_DB_PASSWORD=${EJBCA_DB_PASSWORD:-ejbca}
+      - EJBCA_HTTP_PORT=8080
+      - EJBCA_HTTPS_PORT=8443
+      - EJBCA_ADMIN_USERNAME=${EJBCA_USERNAME:-admin}
+      - EJBCA_ADMIN_PASSWORD=${EJBCA_PASSWORD:-admin}
+      - JAVA_OPTS=-Xms512m -Xmx1024m
+    ports:
+      - "9443:8443"  # HTTPS admin UI (moved from 8443 to avoid conflicts)
+      - "9080:8080"  # HTTP (redirects to HTTPS) - moved from 8080 to avoid conflicts
+    volumes:
+      - ejbca_data:/opt/ejbca
+      - ejbca_certs:/opt/ejbca/p12
+    depends_on:
+      - ejbca_db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -k -f https://localhost:8443/ejbca/adminweb/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s  # EJBCA takes time to start
+
+  ejbca_db:
+    image: postgres:16-alpine
+    container_name: ejbca_db
+    environment:
+      - POSTGRES_DB=ejbca
+      - POSTGRES_USER=ejbca
+      - POSTGRES_PASSWORD=${EJBCA_DB_PASSWORD:-ejbca}
+    volumes:
+      - ejbca_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ejbca"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  # SentinelGridAIShield Services
+  sentinelgrid_ai_shield_gateway:
+    build: ./SentinelGridAIShield/gateway
+    container_name: ai_shield_gateway
+    ports:
+      - "8023:8080"
+    environment:
+      - SERVICES_URL=http://ai_shield_services:8000
+      - TELEMETRY_MODE=stdout
+      - LOG_LEVEL=INFO
+      - PORT=8080
+    depends_on:
+      - ai_shield_services
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ai_shield_services:
+    build: ./SentinelGridAIShield/services
+    container_name: ai_shield_services
+    ports:
+      - "8024:8000"
+    environment:
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - OPENSEARCH_URL=http://opensearch:9200
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - MODEL_GATEWAY_URL=http://model_gateway:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - opensearch
+      - iam_agent
+      - model_gateway
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import requests; requests.get(\"http://localhost:8000/health\")' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  pgdata:
+  vault_prod_data:
+  vault_prod_logs:
+  keycloak_db_data:
+  model_adapters:
+  keycloak_data:
+  keycloak_certs:
+  redis_data:
+  opensearch_data:
+  # elasticsearch_data:  # REMOVED: Elasticsearch no longer used (Dec 3, 2025)
+  n8n_data:
+  model_cache:
+  reports_data:
+  step_ca_data:
+  stackstorm_packs:
+  stackstorm_configs:
+  cortex_data:
+  cortex_jobs:
+  ejbca_data:
+  ejbca_db_data:
+  ejbca_certs:

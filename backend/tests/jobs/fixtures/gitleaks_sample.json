@@ -1,0 +1,8 @@
+[
+  {
+    "Description": "Hardcoded AWS key",
+    "RuleID": "aws-access-key",
+    "File": "main.py",
+    "Secret": "AKIA..."
+  }
+]

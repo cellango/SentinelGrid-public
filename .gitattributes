@@ -1,0 +1,5 @@
+# Preserve upstream license text verbatim, including its original trailing spaces.
+agents/wazuh/LICENSE_WAZUH.txt whitespace=-blank-at-eol
+scripts/rebrand-agents/LICENSE_WAZUH.txt whitespace=-blank-at-eol
+third_party/licenses/dm-sans-OFL.txt whitespace=-blank-at-eol
+third_party/licenses/ibm-plex-sans-OFL.txt whitespace=-blank-at-eol

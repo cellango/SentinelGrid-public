@@ -1,0 +1,22 @@
+{
+  "description": "Route53 Resolver DNS → ECS",
+  "processors": [
+    { "script": { "lang": "painless", "source": "if (ctx.containsKey('raw_data')) { ctx.dnslog = ctx.raw_data; }" } },
+    { "script": { "lang": "painless", "source": "if (!(ctx.source instanceof Map)) { def name = ctx.source != null ? ctx.source.toString() : 'dns'; ctx.source = ['name': name, 'type': 'dns']; }" } },
+    { "script": { "lang": "painless", "source": "if (!(ctx.cloud instanceof Map)) { ctx.cloud = new HashMap(); } if (!(ctx.cloud.account instanceof Map)) { ctx.cloud.account = new HashMap(); }" } },
+    { "set": { "field": "@timestamp", "value": "{{dnslog.query_timestamp}}" } },
+    { "set": { "field": "dns.question.name", "value": "{{dnslog.query_name}}" } },
+    { "set": { "field": "dns.question.type", "value": "{{dnslog.query_type}}" } },
+    { "set": { "field": "source.ip", "value": "{{dnslog.srcaddr}}" } },
+    { "set": { "field": "cloud.account.id", "value": "{{dnslog.account_id}}" } },
+    { "remove": { "field": "message", "ignore_missing": true } }
+  ],
+  "on_failure": [
+    {
+      "script": {
+        "lang": "painless",
+        "source": "ctx.tags = ['_ingest_failure']; if (ctx._ingest != null) { def t = ctx._ingest.on_failure_processor_type; def msg = ctx._ingest.on_failure_message; ctx.ingest_error = (t != null ? t + ': ' : '') + (msg != null ? msg : 'pipeline-dns failure'); } else { ctx.ingest_error = 'pipeline-dns failure'; }"
+      }
+    }
+  ]
+}

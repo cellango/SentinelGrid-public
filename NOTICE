@@ -1,0 +1,16 @@
+SentinelGrid
+
+Original SentinelGrid code is licensed under the Apache License, Version 2.0.
+See LICENSE for the complete license text and LICENSING.md for its scope.
+
+Third-party components retain their respective licenses and copyright notices.
+See THIRD_PARTY_NOTICES.md and component-specific license and notice files.
+
+Next.js starter assets and derived scaffolding include MIT-licensed material
+from Vercel, Inc. See third_party/licenses/nextjs-14-MIT.txt and
+third_party/licenses/nextjs-15-MIT.txt for the complete upstream notices.
+
+Wazuh upstream notices, including Trend Micro attribution and component/linking
+terms, are preserved in agents/wazuh/LICENSE_WAZUH.txt and
+scripts/rebrand-agents/LICENSE_WAZUH.txt. No Wazuh installer is distributed in
+this source preview.

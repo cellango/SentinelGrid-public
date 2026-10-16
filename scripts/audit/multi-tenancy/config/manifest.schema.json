@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SentinelGrid Multi-Tenancy Audit Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "timestamp_utc",
+    "git_sha",
+    "environment",
+    "profile",
+    "operator",
+    "tenant_pair",
+    "step_results",
+    "overall_status"
+  ],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "run_id": { "type": "string" },
+    "timestamp_utc": { "type": "string" },
+    "git_sha": { "type": "string" },
+    "git_branch_or_tag": { "type": "string" },
+    "environment": { "type": "string" },
+    "profile": { "type": "string", "enum": ["smoke", "standard", "full"] },
+    "operator": { "type": "string" },
+    "tenant_pair": {
+      "type": "object",
+      "properties": {
+        "tenant_a_id": { "type": "string" },
+        "tenant_b_id": { "type": "string" },
+        "tenant_a_realm": { "type": "string" },
+        "tenant_b_realm": { "type": "string" }
+      }
+    },
+    "command_sequence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "step_results": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["running", "passed", "warning", "failed", "skipped"]
+      }
+    },
+    "artifact_root": { "type": "string" },
+    "overall_status": {
+      "type": "string",
+      "enum": ["running", "passed", "warning", "failed"]
+    }
+  }
+}
+

@@ -1,0 +1,345 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'SentinelGrid AWS Integration - Creates IAM role and optional security services for SentinelGrid monitoring'
+
+Parameters:
+  SentinelGridExternalId:
+    Type: String
+    Description: External ID provided by SentinelGrid (get this from the SentinelGrid UI)
+    NoEcho: true
+    MinLength: 1
+  
+  SentinelGridAccountId:
+    Type: String
+    Description: SentinelGrid's AWS account ID
+    Default: '987654321098'
+    AllowedPattern: '^[0-9]{12}$'
+  
+  RoleName:
+    Type: String
+    Description: Name for the IAM role
+    Default: 'SentinelGridMonitorRole'
+  
+  EnableCloudTrail:
+    Type: String
+    Description: Enable CloudTrail trail creation
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+  
+  EnableGuardDuty:
+    Type: String
+    Description: Enable GuardDuty detector
+    Default: 'true'
+    AllowedValues: ['true', 'false']
+  
+  EnableConfig:
+    Type: String
+    Description: Enable AWS Config
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+  
+  EnableSecurityHub:
+    Type: String
+    Description: Enable Security Hub
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+
+  AdditionalLogGroupArn1:
+    Type: String
+    Description: (Optional) CloudWatch Log Group ARN (e.g., VPC Flow Logs, ALB/WAF/Lambda, DB audit) to allow read access.
+    Default: ''
+  AdditionalLogGroupArn2:
+    Type: String
+    Description: (Optional) CloudWatch Log Group ARN (second)
+    Default: ''
+  AdditionalLogGroupArn3:
+    Type: String
+    Description: (Optional) CloudWatch Log Group ARN (third)
+    Default: ''
+
+  AdditionalS3LogBucketArn1:
+    Type: String
+    Description: (Optional) S3 bucket ARN containing logs to allow read access.
+    Default: ''
+  AdditionalS3LogBucketArn2:
+    Type: String
+    Description: (Optional) S3 bucket ARN containing logs (second).
+    Default: ''
+  AdditionalS3LogBucketArn3:
+    Type: String
+    Description: (Optional) S3 bucket ARN containing logs (third).
+    Default: ''
+
+Conditions:
+  HasAdditionalLogGroupArn1: !Not [!Equals [!Ref AdditionalLogGroupArn1, ""]]
+  HasAdditionalLogGroupArn2: !Not [!Equals [!Ref AdditionalLogGroupArn2, ""]]
+  HasAdditionalLogGroupArn3: !Not [!Equals [!Ref AdditionalLogGroupArn3, ""]]
+  HasAdditionalS3LogBucketArn1: !Not [!Equals [!Ref AdditionalS3LogBucketArn1, ""]]
+  HasAdditionalS3LogBucketArn2: !Not [!Equals [!Ref AdditionalS3LogBucketArn2, ""]]
+  HasAdditionalS3LogBucketArn3: !Not [!Equals [!Ref AdditionalS3LogBucketArn3, ""]]
+
+Resources:
+  # IAM Role for SentinelGrid Monitoring
+  SentinelGridMonitorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref RoleName
+      Description: 'IAM role for SentinelGrid to monitor AWS account (read-only access)'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${SentinelGridAccountId}:root'
+            Action: 'sts:AssumeRole'
+            Condition:
+              StringEquals:
+                'sts:ExternalId': !Ref SentinelGridExternalId
+      ManagedPolicyArns: []
+      Policies:
+        - PolicyName: SentinelGridMonitorPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              # CloudTrail read access
+              - Effect: Allow
+                Action:
+                  - 'cloudtrail:DescribeTrails'
+                  - 'cloudtrail:GetTrailStatus'
+                  - 'cloudtrail:GetEventSelectors'
+                  - 'cloudtrail:LookupEvents'
+                  - 'cloudtrail:GetTrail'
+                  - 'cloudtrail:ListTrails'
+                  - 'cloudtrail:GetInsightSelectors'
+                  - 'cloudtrail:ListInsights'
+                Resource: '*'
+              
+              # GuardDuty read access
+              - Effect: Allow
+                Action:
+                  - 'guardduty:GetFindings'
+                  - 'guardduty:ListDetectors'
+                  - 'guardduty:ListFindings'
+                  - 'guardduty:GetDetector'
+                  - 'guardduty:DescribeOrganizationConfiguration'
+                  - 'guardduty:ListMembers'
+                  - 'guardduty:GetMembers'
+                Resource: '*'
+              
+              # AWS Config read access
+              - Effect: Allow
+                Action:
+                  - 'config:Describe*'
+                  - 'config:Get*'
+                  - 'config:List*'
+                  - 'config:SelectResourceConfig'
+                Resource: '*'
+              
+              # Security Hub read access
+              - Effect: Allow
+                Action:
+                  - 'securityhub:GetFindings'
+                  - 'securityhub:GetEnabledStandards'
+                  - 'securityhub:DescribeHub'
+                  - 'securityhub:ListFindings'
+                  - 'securityhub:BatchGetFindings'
+                  - 'securityhub:GetInsights'
+                  - 'securityhub:ListInsights'
+                Resource: '*'
+              
+              # IAM read access (for context)
+              - Effect: Allow
+                Action:
+                  - 'iam:GetRole'
+                  - 'iam:ListRoles'
+                  - 'iam:GetUser'
+                  - 'iam:ListUsers'
+                  - 'iam:ListAccountAliases'
+                  - 'iam:GetAccountSummary'
+                  - 'iam:ListPolicies'
+                  - 'iam:GetPolicy'
+                  - 'iam:ListPolicyVersions'
+                Resource: '*'
+
+              # Additional CloudWatch Log Group read access (optional)
+              - !If
+                - HasAdditionalLogGroupArn1
+                - Effect: Allow
+                  Action:
+                    - 'logs:DescribeLogGroups'
+                    - 'logs:DescribeLogStreams'
+                    - 'logs:GetLogEvents'
+                    - 'logs:FilterLogEvents'
+                  Resource: !Ref AdditionalLogGroupArn1
+                - !Ref "AWS::NoValue"
+              - !If
+                - HasAdditionalLogGroupArn2
+                - Effect: Allow
+                  Action:
+                    - 'logs:DescribeLogGroups'
+                    - 'logs:DescribeLogStreams'
+                    - 'logs:GetLogEvents'
+                    - 'logs:FilterLogEvents'
+                  Resource: !Ref AdditionalLogGroupArn2
+                - !Ref "AWS::NoValue"
+              - !If
+                - HasAdditionalLogGroupArn3
+                - Effect: Allow
+                  Action:
+                    - 'logs:DescribeLogGroups'
+                    - 'logs:DescribeLogStreams'
+                    - 'logs:GetLogEvents'
+                    - 'logs:FilterLogEvents'
+                  Resource: !Ref AdditionalLogGroupArn3
+                - !Ref "AWS::NoValue"
+
+              # Additional S3 log bucket read access (optional)
+              - !If
+                - HasAdditionalS3LogBucketArn1
+                - Effect: Allow
+                  Action:
+                    - 's3:GetObject'
+                    - 's3:ListBucket'
+                  Resource:
+                    - !Ref AdditionalS3LogBucketArn1
+                    - !Sub '${AdditionalS3LogBucketArn1}/*'
+                - !Ref "AWS::NoValue"
+              - !If
+                - HasAdditionalS3LogBucketArn2
+                - Effect: Allow
+                  Action:
+                    - 's3:GetObject'
+                    - 's3:ListBucket'
+                  Resource:
+                    - !Ref AdditionalS3LogBucketArn2
+                    - !Sub '${AdditionalS3LogBucketArn2}/*'
+                - !Ref "AWS::NoValue"
+              - !If
+                - HasAdditionalS3LogBucketArn3
+                - Effect: Allow
+                  Action:
+                    - 's3:GetObject'
+                    - 's3:ListBucket'
+                  Resource:
+                    - !Ref AdditionalS3LogBucketArn3
+                    - !Sub '${AdditionalS3LogBucketArn3}/*'
+                - !Ref "AWS::NoValue"
+              
+              # VPC Flow Logs read access
+              - Effect: Allow
+                Action:
+                  - 'logs:DescribeLogGroups'
+                  - 'logs:DescribeLogStreams'
+                  - 'logs:GetLogEvents'
+                  - 'logs:FilterLogEvents'
+                Resource: '*'
+              
+              # CloudWatch read access
+              - Effect: Allow
+                Action:
+                  - 'cloudwatch:DescribeAlarms'
+                  - 'cloudwatch:GetMetricData'
+                  - 'cloudwatch:ListMetrics'
+                Resource: '*'
+              
+              # EC2 read access (for asset inventory)
+              - Effect: Allow
+                Action:
+                  - 'ec2:DescribeInstances'
+                  - 'ec2:DescribeSecurityGroups'
+                  - 'ec2:DescribeVpcs'
+                  - 'ec2:DescribeSubnets'
+                  - 'ec2:DescribeVolumes'
+                  - 'ec2:DescribeSnapshots'
+                Resource: '*'
+              
+              # S3 bucket listing (for asset inventory)
+              - Effect: Allow
+                Action:
+                  - 's3:ListAllMyBuckets'
+                  - 's3:GetBucketLocation'
+                  - 's3:GetBucketAcl'
+                  - 's3:GetBucketVersioning'
+                Resource: '*'
+              
+              # S3 access for CloudTrail log buckets (limited)
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:ListBucket'
+                Resource:
+                  - !Sub 'arn:aws:s3:::aws-cloudtrail-logs-*'
+                  - !Sub 'arn:aws:s3:::aws-cloudtrail-logs-*/*'
+      Tags:
+        - Key: ManagedBy
+          Value: SentinelGrid
+        - Key: Description
+          Value: Read-only monitoring role for SentinelGrid security platform
+
+  # GuardDuty Detector (if enabled)
+  GuardDutyDetector:
+    Type: AWS::GuardDuty::Detector
+    Condition: EnableGuardDutyCondition
+    Properties:
+      Enable: true
+      FindingPublishingFrequency: FIFTEEN_MINUTES
+      DataSources:
+        S3Logs:
+          Enable: true
+        Kubernetes:
+          AuditLogs:
+            Enable: true
+        MalwareProtection:
+          ScanEc2InstanceWithFindings:
+            EbsVolumes:
+              Enable: true
+
+  # Security Hub (if enabled)
+  SecurityHubAccount:
+    Type: AWS::SecurityHub::Account
+    Condition: EnableSecurityHubCondition
+    Properties:
+      EnableDefaultStandards: true
+
+  # Security Hub CIS Benchmark (if enabled)
+  SecurityHubCISBenchmark:
+    Type: AWS::SecurityHub::StandardsSubscription
+    Condition: EnableSecurityHubCondition
+    Properties:
+      StandardsArn: 'arn:aws:securityhub:::ruleset/cis-aws-foundations-benchmark/v/1.2.0'
+
+Conditions:
+  EnableGuardDutyCondition: !Equals [!Ref EnableGuardDuty, 'true']
+  EnableSecurityHubCondition: !Equals [!Ref EnableSecurityHub, 'true']
+
+Outputs:
+  SentinelGridMonitorRoleArn:
+    Description: 'ARN of the IAM role for SentinelGrid monitoring (REQUIRED - paste this into SentinelGrid UI)'
+    Value: !GetAtt SentinelGridMonitorRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-SentinelGridMonitorRoleArn'
+  
+  SentinelGridMonitorRoleName:
+    Description: 'Name of the IAM role'
+    Value: !Ref SentinelGridMonitorRole
+  
+  GuardDutyDetectorId:
+    Description: 'ID of the GuardDuty detector (if enabled)'
+    Condition: EnableGuardDutyCondition
+    Value: !Ref GuardDutyDetector
+  
+  SecurityHubArn:
+    Description: 'ARN of the Security Hub (if enabled)'
+    Condition: EnableSecurityHubCondition
+    Value: !GetAtt SecurityHubAccount.Arn
+  
+  AWSAccountId:
+    Description: 'Current AWS account ID'
+    Value: !Ref AWS::AccountId
+
+  ExtraLogGroupArns:
+    Description: 'Extra CloudWatch Log Group ARNs passed to this template (up to 3)'
+    Value: !Join [",", [!If [HasAdditionalLogGroupArn1, !Ref AdditionalLogGroupArn1, ""], !If [HasAdditionalLogGroupArn2, !Ref AdditionalLogGroupArn2, ""], !If [HasAdditionalLogGroupArn3, !Ref AdditionalLogGroupArn3, ""]]]
+
+  ExtraS3LogBucketArns:
+    Description: 'Extra S3 log bucket ARNs passed to this template (up to 3)'
+    Value: !Join [",", [!If [HasAdditionalS3LogBucketArn1, !Ref AdditionalS3LogBucketArn1, ""], !If [HasAdditionalS3LogBucketArn2, !Ref AdditionalS3LogBucketArn2, ""], !If [HasAdditionalS3LogBucketArn3, !Ref AdditionalS3LogBucketArn3, ""]]]

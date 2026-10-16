@@ -1,0 +1,236 @@
+{% extends "base_report.html" %}
+
+{% block executive_summary %}
+<div class="metric-card">
+    <h4>Total Incidents</h4>
+    <div class="value">{{ total_incidents|format_number }}</div>
+    <div class="description">{{ critical_incidents }} critical, {{ high_incidents }} high</div>
+</div>
+
+<div class="metric-card">
+    <h4>Mean Time to Respond</h4>
+    <div class="value">{{ mttr_minutes|format_number }}</div>
+    <div class="description">minutes average MTTR</div>
+</div>
+
+<div class="metric-card">
+    <h4>Playbooks Executed</h4>
+    <div class="value">{{ playbooks_executed|format_number }}</div>
+    <div class="description">{{ playbook_success_rate|format_percent }} success rate</div>
+</div>
+
+<p style="margin-top: 1cm;">
+This Incident & Response Effectiveness Report analyzes {{ tenant_name }}'s security incident handling for the period {{ period_start }} to {{ period_end }}. During this period, {{ total_incidents }} incidents were detected and handled with an average response time of {{ mttr_minutes }} minutes.
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h1>Incident Statistics</h1>
+    
+    {% if incident_trend_chart %}
+    <h3>Incidents Over Time</h3>
+    <img src="{{ incident_trend_chart }}" alt="Incident Trend" class="chart">
+    {% endif %}
+    
+    <h3>Incidents by Severity</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Severity</th>
+                <th>Count</th>
+                <th>Percentage</th>
+                <th>Avg Response Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for severity in incidents_by_severity %}
+            <tr>
+                <td>
+                    <span class="badge badge-{{ severity.badge_class }}">{{ severity.severity }}</span>
+                </td>
+                <td>{{ severity.count|format_number }}</td>
+                <td>{{ severity.percentage|format_percent }}</td>
+                <td>{{ severity.avg_response_minutes }} min</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h3>Incidents by Type</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Incident Type</th>
+                <th>Count</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for incident_type in incidents_by_type %}
+            <tr>
+                <td>{{ incident_type.type_name }}</td>
+                <td>{{ incident_type.count|format_number }}</td>
+                <td>{{ incident_type.percentage|format_percent }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Response Metrics</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+                <th>Target</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Mean Time to Detect (MTTD)</td>
+                <td>{{ mttd_minutes }} minutes</td>
+                <td>< 10 minutes</td>
+                <td>
+                    {% if mttd_minutes < 10 %}
+                    <span class="badge badge-success">Met</span>
+                    {% else %}
+                    <span class="badge badge-warning">Above Target</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Mean Time to Respond (MTTR)</td>
+                <td>{{ mttr_minutes }} minutes</td>
+                <td>< 30 minutes</td>
+                <td>
+                    {% if mttr_minutes < 30 %}
+                    <span class="badge badge-success">Met</span>
+                    {% else %}
+                    <span class="badge badge-warning">Above Target</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Mean Time to Contain (MTTC)</td>
+                <td>{{ mttc_minutes }} minutes</td>
+                <td>< 60 minutes</td>
+                <td>
+                    {% if mttc_minutes < 60 %}
+                    <span class="badge badge-success">Met</span>
+                    {% else %}
+                    <span class="badge badge-warning">Above Target</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Mean Time to Resolve</td>
+                <td>{{ mttr_hours|format_number(1) }} hours</td>
+                <td>< 24 hours</td>
+                <td>
+                    {% if mttr_hours < 24 %}
+                    <span class="badge badge-success">Met</span>
+                    {% else %}
+                    <span class="badge badge-warning">Above Target</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Playbook Usage</h1>
+    
+    <p>Total playbooks executed: <strong>{{ playbooks_executed }}</strong></p>
+    <p>Success rate: <strong>{{ playbook_success_rate|format_percent }}</strong></p>
+    
+    <h3>Top Playbooks by Usage</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Playbook Name</th>
+                <th>Executions</th>
+                <th>Success Rate</th>
+                <th>Avg Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for playbook in top_playbooks %}
+            <tr>
+                <td>{{ playbook.name }}</td>
+                <td>{{ playbook.executions|format_number }}</td>
+                <td>{{ playbook.success_rate|format_percent }}</td>
+                <td>{{ playbook.avg_duration_seconds }} seconds</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Top Incident Categories</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Incidents</th>
+                <th>% of Total</th>
+                <th>Trend</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in top_categories %}
+            <tr>
+                <td>{{ category.name }}</td>
+                <td>{{ category.count|format_number }}</td>
+                <td>{{ category.percentage|format_percent }}</td>
+                <td>{{ category.trend }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Actions Taken</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Action Type</th>
+                <th>Count</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>User Accounts Disabled</td>
+                <td>{{ users_disabled|format_number }}</td>
+                <td>Accounts disabled due to suspicious activity</td>
+            </tr>
+            <tr>
+                <td>Emails Quarantined</td>
+                <td>{{ emails_quarantined|format_number }}</td>
+                <td>Phishing emails quarantined</td>
+            </tr>
+            <tr>
+                <td>Hosts Isolated</td>
+                <td>{{ hosts_isolated|format_number }}</td>
+                <td>Endpoints isolated due to malware</td>
+            </tr>
+            <tr>
+                <td>Passwords Reset</td>
+                <td>{{ passwords_reset|format_number }}</td>
+                <td>Forced password resets</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

@@ -1,0 +1,456 @@
+version: "3.9"
+
+# Minimal development setup - core services only
+# Use this for faster startup and testing without heavy dependencies
+# DEVELOPMENT ONLY.
+# This manifest intentionally contains local-service defaults and placeholder credentials for local iteration.
+# Do not reuse it for production deployment, production Helm values, or release automation.
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_BASE: /api
+        NEXT_PUBLIC_API_URL: /api
+    environment:
+      - NEXT_PUBLIC_API_BASE=/api
+      - NEXT_PUBLIC_API_URL=/api
+      - NEXT_PUBLIC_IAM_AGENT_URL=http://iam_agent:8000
+      - NEXT_PUBLIC_FORCE_HTTPS=true
+      - NEXT_PUBLIC_HTTPS_PORT=3443
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - API_GATEWAY_URL=http://api_gateway:8000
+    ports:
+      - "3443:3443"
+    volumes:
+      - ./infra/nginx/certs:/etc/nginx/certs:ro
+      - ./cfg:/app/cfg:ro
+    depends_on:
+      - api_gateway
+      - iam_agent
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('https').get('https://localhost:3443', {rejectUnauthorized: false}, (r) => {process.exit([200, 301, 302].includes(r.statusCode) ? 0 : 1)}).on('error', () => process.exit(1))\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  api_gateway:
+    build:
+      context: ./backend
+      dockerfile: services/api_gateway/Dockerfile
+    environment:
+      - PYTHONPATH=/app/backend:/app/libs
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - KEYCLOAK_URL=https://identity.sentinelgrid.ai:8443
+      - KEYCLOAK_REALM=sentinelgrid
+      - KEYCLOAK_CLIENT_ID=sentinelgrid-api
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - ORCHESTRATOR_URL=http://orchestrator:8000
+      - SYSTEM_TENANT_ID=61ac5aac-811c-47f3-93db-78e5af88bb87
+    depends_on:
+      - postgres
+      - iam_agent
+    ports:
+      - "8082:8000"
+
+  orchestrator:
+    build:
+      context: ./backend
+      dockerfile: services/orchestrator/Dockerfile
+    environment:
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - MODEL_GATEWAY_URL=http://model_gateway:8000
+      - SIEM_AGENT_URL=http://siem_agent:8000
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - SOAR_AGENT_URL=http://soar_agent:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+    depends_on:
+      - postgres
+      - model_gateway
+      - siem_agent
+      - iam_agent
+      - soar_agent
+    ports:
+      - "8012:8000"
+
+  model_gateway:
+    build: ./backend/services/model_gateway
+    environment:
+      - MODEL_SERVER_URL=http://llm_server_mock:8000
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./models:/models
+      - ./backend/libs/sg_core:/app/sg_core:ro
+    depends_on:
+      - postgres
+
+  # Mock LLM server for testing without downloading large models
+  llm_server_mock:
+    image: python:3.11-slim
+    command: |
+      sh -c "set -e;
+      pip install fastapi uvicorn;
+      cat <<'PY' > main.py
+      from fastapi import FastAPI
+      app = FastAPI()
+      
+      @app.get('/health')
+      def health():
+          return {'status': 'ok'}
+      
+      @app.post('/v1/completions')
+      def completions():
+          return {'choices': [{'text': 'Mock AI response'}]}
+      PY
+      uvicorn main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8001:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  opensearch:
+    image: opensearchproject/opensearch:2.11.0
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  siem_agent:
+    build:
+      context: ./backend
+      dockerfile: agents/siem_agent/Dockerfile
+    environment:
+      - OPENSEARCH_URL=http://opensearch:9200
+      - OPENSEARCH_USE_SSL=false
+      - OPENSEARCH_VERIFY_CERTS=false
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - REDIS_URL=redis://redis:6379
+      - IAM_AGENT_URL=http://iam_agent:8000
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_REALM=sentinelgrid
+      - LOG_LEVEL=INFO
+      - DEBUG_MODE=${DEBUG_MODE:-false}
+      - SYSTEM_TENANT_ID=61ac5aac-811c-47f3-93db-78e5af88bb87
+    ports:
+      - "8003:8000"
+    depends_on:
+      opensearch:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  soar_agent:
+    build:
+      context: ./backend
+      dockerfile: agents/soar_agent/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - THEHIVE_URL=${THEHIVE_URL:-http://mock}
+      - THEHIVE_API_KEY=${THEHIVE_API_KEY:-mock}
+      - WORKFLOW_ENGINE_URL=${WORKFLOW_ENGINE_URL:-http://mock}
+      - N8N_URL=${N8N_URL:-http://mock}
+      - KEYCLOAK_URL=https://identity.sentinelgrid.ai:8443
+      - KEYCLOAK_REALM=sentinelgrid
+      - LOG_LEVEL=INFO
+    ports:
+      - "8004:8000"
+    depends_on:
+      - postgres
+
+  iam_agent:
+    build:
+      context: ./backend
+      dockerfile: agents/iam_agent/Dockerfile
+    environment:
+      - KEYCLOAK_URL=https://identity.sentinelgrid.ai:8443
+      - KEYCLOAK_REALM=sentinelgrid
+      - KEYCLOAK_ADMIN_USER=${KEYCLOAK_ADMIN_USER:-admin}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      - KEYCLOAK_ADMIN_PASSWORD_SEED=${KEYCLOAK_ADMIN_PASSWORD_SEED:-Admin123!@#SentinelGrid}
+      - KEYCLOAK_CLIENT_ID=sentinelgrid-iam-agent
+      - KEYCLOAK_CLIENT_SECRET=${IAM_AGENT_CLIENT_SECRET:-U1Yi4RDmu6RyXrt5xqhwrEhYXFgIPSlN}
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - ENABLE_RATE_LIMITING=false
+      - REDIS_URL=redis://redis:6379
+      - CERT_SERVICE_URL=http://cert_service:8000
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+      - KEYCLOAK_CERT_DIR=/opt/keycloak/certs
+      - PAYMENT_DEV_MODE=true
+    ports:
+      - "8005:8000"
+    volumes:
+      - keycloak_certs:/opt/keycloak/certs
+      - ./backend/libs:/app/libs
+      - ./backend/agents/iam_agent/app:/app/app
+    depends_on:
+      - keycloak
+      - postgres
+      - redis
+      - cert_service
+
+  tenant_service:
+    build:
+      context: ./backend
+      dockerfile: services/tenant_service/Dockerfile
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=sg
+      - DB_USER=sg
+      - DB_PASSWORD=${DB_PASSWORD:-sg}
+      - KEYCLOAK_URL=https://identity.sentinelgrid.ai:8443
+      - KEYCLOAK_ADMIN_USER=${KEYCLOAK_ADMIN_USER:-admin}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      - LOG_LEVEL=INFO
+      - DEBUG_MODE=${DEBUG_MODE:-false}
+    ports:
+      - "8008:8000"
+    depends_on:
+      - postgres
+      - keycloak
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      - POSTGRES_DB=sg
+      - POSTGRES_USER=sg
+      - POSTGRES_PASSWORD=sg
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/agents/iam_agent/init-iam-db.sh:/docker-entrypoint-initdb.d/01-init-iam-db.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sg"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: >
+      postgres
+      -c shared_preload_libraries=vector
+      -c max_connections=200
+
+  keycloak_db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=${KEYCLOAK_DB_PASSWORD:-keycloak}
+    volumes:
+      - keycloak_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.6
+    user: root
+    entrypoint: ["/bin/bash", "-lc"]
+    command:
+      - >
+        set -e;
+        mkdir -p /opt/keycloak/certs;
+        if [ ! -f /opt/keycloak/certs/keycloak.p12 ]; then
+          echo "Generating self-signed TLS keystore for Keycloak (dev)...";
+          keytool -genkeypair -storetype PKCS12 \
+            -keystore /opt/keycloak/certs/keycloak.p12 \
+            -storepass changeit \
+            -keypass changeit \
+            -alias keycloak \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 365 \
+            -dname "CN=${KC_HOSTNAME:-localhost}";
+        fi;
+        exec /opt/keycloak/bin/kc.sh start
+          --http-port=8080
+          --https-port=8443
+          --hostname=${KC_HOSTNAME:-localhost}
+          --hostname-strict=false
+          --hostname-strict-https=false
+          --proxy-headers=xforwarded
+          --https-key-store-file=/opt/keycloak/certs/keycloak.p12
+          --https-key-store-password=changeit
+          --https-key-store-type=PKCS12
+    hostname: identity.sentinelgrid.ai
+    networks:
+      default:
+        aliases:
+          - identity.sentinelgrid.ai
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://keycloak_db:5432/keycloak
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD:-keycloak}
+      - KC_HEALTH_ENABLED=true
+      - KC_METRICS_ENABLED=true
+      - KC_HTTP_RELATIVE_PATH=/
+      - KC_PROXY=edge
+      - KC_HOSTNAME=identity.sentinelgrid.ai
+      - KC_HOSTNAME_STRICT=false
+      - KC_HOSTNAME_STRICT_HTTPS=false
+      - KC_HTTPS_KEY_STORE_FILE=/opt/keycloak/certs/keycloak.p12
+      - KC_HTTPS_KEY_STORE_PASSWORD=changeit
+      - KC_HTTPS_KEY_STORE_TYPE=PKCS12
+      - KC_HTTPS_PORT=8443
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    expose:
+      - "8080"
+      - "8443"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - keycloak_certs:/opt/keycloak/certs
+    depends_on:
+      keycloak_db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8443 && exit 0 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cert_service:
+    build:
+      context: ./backend
+      dockerfile: services/cert_service/Dockerfile
+    environment:
+      - DB_URL=postgresql://sg:sg@postgres:5432/sg
+      - CA_BACKEND_TYPE=step-ca
+      - STEP_CA_URL=http://step-ca:9000
+      - STEP_CA_PROVISIONER_NAME=sentinelgrid
+      - STEP_CA_PROVISIONER_PASSWORD=${STEP_CA_PROVISIONER_PASSWORD:-change-me-in-production}
+      - INTERNAL_SERVICE_TOKEN=${INTERNAL_SERVICE_TOKEN:-internal-service-token-change-in-production}
+    ports:
+      - "8015:8000"
+    depends_on:
+      - postgres
+      - step-ca
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  step-ca:
+    image: smallstep/step-ca:latest
+    environment:
+      - STEP_CA_NAME=SentinelGrid Internal CA
+      - STEP_CA_ADDRESS=:9000
+      - STEP_CA_DNS=step-ca
+      - STEP_CA_PROVISIONER_NAME=sentinelgrid
+      - STEP_CA_PROVISIONER_PASSWORD=${STEP_CA_PROVISIONER_PASSWORD:-change-me-in-production}
+      - STEPPATH=/home/step
+    ports:
+      - "9000:9000"
+    volumes:
+      - step_ca_data:/home/step
+    command: >
+      sh -c "echo ${STEP_CA_PROVISIONER_PASSWORD:-change-me-in-production} | step-ca --password-file /dev/stdin"
+    stdin_open: true
+    tty: true
+    healthcheck:
+      test: ["CMD-SHELL", "curl -kf https://localhost:9000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  model_gateway_migrations:
+    build:
+      context: ./backend/services/model_gateway/db
+      dockerfile: Dockerfile.flyway
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://postgres:5432/sg
+      - FLYWAY_USER=sg
+      - FLYWAY_PASSWORD=sg
+      - FLYWAY_LOCATIONS=filesystem:/flyway/sql
+      - FLYWAY_SCHEMA=public
+      - FLYWAY_BASELINE_ON_MIGRATE=true
+      - FLYWAY_BASELINE_VERSION=0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  soar_agent_flyway:
+    build:
+      context: ./backend/agents/soar_agent
+      dockerfile: Dockerfile.flyway
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://postgres:5432/sg
+      - FLYWAY_USER=sg
+      - FLYWAY_PASSWORD=sg
+      - FLYWAY_LOCATIONS=filesystem:/flyway/sql
+      - FLYWAY_SCHEMA=public
+      - FLYWAY_BASELINE_ON_MIGRATE=true
+      - FLYWAY_BASELINE_VERSION=0
+    volumes:
+      - ./backend/services/soar_agent/db/migrations:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: migrate
+    restart: "no"
+
+volumes:
+  pgdata:
+  keycloak_db_data:
+  keycloak_data:
+  keycloak_certs:
+  redis_data:
+  opensearch_data:
+  step_ca_data:

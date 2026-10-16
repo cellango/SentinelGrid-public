@@ -1,0 +1,279 @@
+aliases:
+  - action_ref: connector:email:fetch_message
+    executor_binding_id: email.fetch_message
+    executor_type: service_operation
+    target_ref: connector:email:fetch_message
+    action_type: investigate
+    execution_mode: read_only_tooling
+    risk_level: investigative
+    requires_approval: false
+    default_owner_role: L1
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 120
+    audit_fields:
+      - incident_id
+      - message_id
+    expected_outcome: Collect the original message and metadata for analyst review.
+    rollback_expectation: No rollback required.
+    success_signal: The source message and headers are attached to the case.
+  - action_ref: ai:classify_phishing
+    executor_binding_id: ai.classify_phishing
+    executor_type: service_operation
+    target_ref: ai:classify_phishing
+    action_type: validation
+    execution_mode: read_only_tooling
+    risk_level: investigative
+    requires_approval: false
+    default_owner_role: L1
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 120
+    audit_fields:
+      - incident_id
+      - classification
+    expected_outcome: Produce an analyst-reviewable phishing classification.
+    rollback_expectation: No rollback required.
+    success_signal: The classification result is stored for analyst review.
+  - action_ref: connector:email:search
+    executor_binding_id: email.search
+    executor_type: service_operation
+    target_ref: connector:email:search
+    action_type: investigate
+    execution_mode: read_only_tooling
+    risk_level: investigative
+    requires_approval: false
+    default_owner_role: L1
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 180
+    audit_fields:
+      - incident_id
+      - query
+    expected_outcome: Identify related emails and impacted recipients.
+    rollback_expectation: No rollback required.
+    success_signal: Similar messages and recipients are listed in the case.
+  - action_ref: workflow:phishing_bulk_delete
+    executor_binding_id: email.bulk_delete
+    executor_type: playbook_executor
+    target_ref: workflow:phishing_bulk_delete
+    action_type: containment_review
+    execution_mode: human_approved_executor
+    risk_level: high
+    requires_approval: true
+    default_owner_role: L2
+    approval_policy_id: reversible_containment
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 300
+    audit_fields:
+      - incident_id
+      - mailbox_ids
+    expected_outcome: Remove known malicious emails from impacted mailboxes.
+    rollback_expectation: Verify quarantine or restore path before execution.
+    success_signal: Malicious messages are removed or quarantined.
+  - action_ref: workflow:block_iocs_email_web
+    executor_binding_id: network.block_iocs_email_web
+    executor_type: playbook_executor
+    target_ref: workflow:block_iocs_email_web
+    action_type: containment_review
+    execution_mode: human_approved_executor
+    risk_level: high
+    requires_approval: true
+    default_owner_role: L2
+    approval_policy_id: reversible_containment
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 300
+    audit_fields:
+      - incident_id
+      - indicators
+    expected_outcome: Block malicious sender domains and URLs across controls.
+    rollback_expectation: Record the unblock path before execution.
+    success_signal: Blocking controls are updated with campaign indicators.
+  - action_ref: connector:email:link_clicks
+    executor_binding_id: email.link_clicks
+    executor_type: service_operation
+    target_ref: connector:email:link_clicks
+    action_type: investigate
+    execution_mode: read_only_tooling
+    risk_level: investigative
+    requires_approval: false
+    default_owner_role: L1
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 180
+    audit_fields:
+      - incident_id
+      - clicked_users
+    expected_outcome: Identify users who clicked links or opened attachments.
+    rollback_expectation: No rollback required.
+    success_signal: Affected users are identified for follow-up.
+  - action_ref: workflow:account_protection
+    executor_binding_id: identity.account_protection
+    executor_type: playbook_executor
+    target_ref: workflow:account_protection
+    action_type: containment_review
+    execution_mode: human_approved_executor
+    risk_level: high
+    requires_approval: true
+    default_owner_role: L2
+    approval_policy_id: reversible_containment
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 300
+    audit_fields:
+      - incident_id
+      - user_ids
+    expected_outcome: Protect exposed user accounts by resetting credentials and sessions.
+    rollback_expectation: Validate rollback steps for credential or session changes.
+    success_signal: Exposed user accounts are protected and session risk is reduced.
+  - action_ref: connector:ticketing:create
+    executor_binding_id: ticketing.create
+    executor_type: manual_step
+    target_ref: connector:ticketing:create
+    action_type: document
+    execution_mode: manual_only
+    risk_level: informational
+    requires_approval: false
+    default_owner_role: L1
+    dry_run_supported: false
+    reversible: false
+    timeout_seconds: 120
+    audit_fields:
+      - incident_id
+      - ticket_id
+    expected_outcome: Ensure the incident is tracked in the downstream ticketing system.
+    rollback_expectation: No rollback required.
+    success_signal: The downstream ticket exists or is updated.
+  - action_ref: ai:login_anomaly_explain
+    executor_binding_id: identity.login_anomaly_explain
+    executor_type: service_operation
+    target_ref: ai:login_anomaly_explain
+    action_type: validation
+    execution_mode: read_only_tooling
+    risk_level: investigative
+    requires_approval: false
+    default_owner_role: L1
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 120
+    audit_fields:
+      - incident_id
+      - user_id
+    expected_outcome: Explain why the login pattern is anomalous.
+    rollback_expectation: No rollback required.
+    success_signal: The anomaly explanation is attached to the case.
+  - action_ref: iam:terminate_sessions
+    executor_binding_id: identity.terminate_sessions
+    executor_type: service_operation
+    target_ref: iam:terminate_sessions
+    action_type: containment_review
+    execution_mode: human_approved_executor
+    risk_level: high
+    requires_approval: true
+    default_owner_role: L2
+    approval_policy_id: reversible_containment
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 180
+    audit_fields:
+      - incident_id
+      - user_id
+    expected_outcome: Terminate active sessions for the compromised account.
+    rollback_expectation: Record how sessions can be restored or users reconnected.
+    success_signal: Active sessions are invalidated.
+  - action_ref: iam:lock_account
+    executor_binding_id: identity.lock_account
+    executor_type: service_operation
+    target_ref: iam:lock_account
+    action_type: containment_review
+    execution_mode: human_approved_executor
+    risk_level: high
+    requires_approval: true
+    default_owner_role: L2
+    approval_policy_id: reversible_containment
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 180
+    audit_fields:
+      - incident_id
+      - user_id
+    expected_outcome: Prevent further logins while investigation continues.
+    rollback_expectation: Record the unlock path before execution.
+    success_signal: The account is locked pending investigation.
+  - action_ref: iam:reset_password_mfa
+    executor_binding_id: identity.reset_password_mfa
+    executor_type: service_operation
+    target_ref: iam:reset_password_mfa
+    action_type: containment_review
+    execution_mode: human_approved_executor
+    risk_level: high
+    requires_approval: true
+    default_owner_role: L2
+    approval_policy_id: reversible_containment
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 240
+    audit_fields:
+      - incident_id
+      - user_id
+    expected_outcome: Reset credentials and enforce MFA for the impacted account.
+    rollback_expectation: Record the user recovery path before execution.
+    success_signal: Credentials are rotated and MFA is enforced.
+  - action_ref: siem:search_password_spray
+    executor_binding_id: siem.search_password_spray
+    executor_type: service_operation
+    target_ref: siem:search_password_spray
+    action_type: investigate
+    execution_mode: read_only_tooling
+    risk_level: investigative
+    requires_approval: false
+    default_owner_role: L1
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 180
+    audit_fields:
+      - incident_id
+      - source_ip
+    expected_outcome: Confirm whether the login pattern matches password spray behavior.
+    rollback_expectation: No rollback required.
+    success_signal: Spray pattern evidence is attached to the case.
+  - action_ref: workflow:block_ips
+    executor_binding_id: network.block_ips
+    executor_type: playbook_executor
+    target_ref: workflow:block_ips
+    action_type: containment_review
+    execution_mode: human_approved_executor
+    risk_level: high
+    requires_approval: true
+    default_owner_role: L2
+    approval_policy_id: reversible_containment
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 180
+    audit_fields:
+      - incident_id
+      - source_ip
+    expected_outcome: Block attacker IPs or ranges across applicable controls.
+    rollback_expectation: Record the unblock path before execution.
+    success_signal: Malicious IPs are blocked in the targeted controls.
+  - action_ref: iam:enforce_mfa_admins
+    executor_binding_id: identity.enforce_mfa_admins
+    executor_type: service_operation
+    target_ref: iam:enforce_mfa_admins
+    action_type: containment_review
+    execution_mode: human_approved_executor
+    risk_level: medium
+    requires_approval: true
+    default_owner_role: L2
+    approval_policy_id: reversible_containment
+    dry_run_supported: true
+    reversible: true
+    timeout_seconds: 180
+    audit_fields:
+      - incident_id
+      - user_ids
+    expected_outcome: Enforce MFA on high-value accounts and reduce takeover risk.
+    rollback_expectation: Record exceptions or temporary bypass handling before execution.
+    success_signal: MFA enforcement is confirmed for targeted accounts.

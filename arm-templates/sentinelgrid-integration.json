@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "applicationName": {
+      "type": "string",
+      "defaultValue": "SentinelGrid Monitoring",
+      "metadata": {
+        "description": "Display name for the Azure AD application"
+      }
+    },
+    "logAnalyticsWorkspaceId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional: Log Analytics workspace ID for additional access"
+      }
+    }
+  },
+  "variables": {
+    "applicationId": "[guid(resourceGroup().id, parameters('applicationName'))]",
+    "servicePrincipalId": "[guid(resourceGroup().id, concat(parameters('applicationName'), '-sp'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(subscription().id, 'SentinelGrid-Reader')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+        "principalId": "[variables('servicePrincipalId')]",
+        "principalType": "ServicePrincipal",
+        "scope": "[subscription().id]"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(subscription().id, 'SentinelGrid-SecurityReader')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '39bc4728-0917-49c7-9d2c-d95416bc178b')]",
+        "principalId": "[variables('servicePrincipalId')]",
+        "principalType": "ServicePrincipal",
+        "scope": "[subscription().id]"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(subscription().id, 'SentinelGrid-LogAnalyticsReader')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '73c42c96-874c-492b-b04d-ab87d138a893')]",
+        "principalId": "[variables('servicePrincipalId')]",
+        "principalType": "ServicePrincipal",
+        "scope": "[subscription().id]"
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(subscription().id, 'SentinelGrid-MonitoringReader')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '43d0d8ad-25c7-4714-9337-8ba259e9fe22')]",
+        "principalId": "[variables('servicePrincipalId')]",
+        "principalType": "ServicePrincipal",
+        "scope": "[subscription().id]"
+      }
+    }
+  ],
+  "outputs": {
+    "instructions": {
+      "type": "string",
+      "value": "This ARM template creates role assignments. You must manually create the Azure AD application and service principal first, then assign the service principal object ID to the role assignments. See documentation for step-by-step instructions."
+    },
+    "subscriptionId": {
+      "type": "string",
+      "value": "[subscription().subscriptionId]"
+    },
+    "tenantId": {
+      "type": "string",
+      "value": "[subscription().tenantId]"
+    }
+  }
+}
+

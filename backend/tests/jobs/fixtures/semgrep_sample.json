@@ -1,0 +1,12 @@
+{
+  "results": [
+    {
+      "check_id": "python.lang.correctness",
+      "path": "app.py",
+      "extra": {
+        "severity": "WARNING",
+        "message": "Use of eval"
+      }
+    }
+  ]
+}

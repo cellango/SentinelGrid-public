@@ -1,0 +1,174 @@
+{% extends "base_report.html" %}
+
+{% block executive_summary %}
+<div class="metric-card">
+    <h4>Log Sources</h4>
+    <div class="value">{{ total_sources|format_number }}</div>
+    <div class="description">{{ active_sources }} active, {{ inactive_sources }} inactive</div>
+</div>
+
+<div class="metric-card">
+    <h4>Events Per Day</h4>
+    <div class="value">{{ avg_events_per_day|format_number }}</div>
+    <div class="description">Average volume</div>
+</div>
+
+<div class="metric-card">
+    <h4>Retention Period</h4>
+    <div class="value">{{ total_retention_days }}</div>
+    <div class="description">days total retention</div>
+</div>
+
+<p style="margin-top: 1cm;">
+This Log Coverage & Retention Report demonstrates {{ tenant_name }}'s logging capabilities and retention policies for the period {{ period_start }} to {{ period_end }}. The organization has {{ total_sources }} configured log sources with an average volume of {{ avg_events_per_day|format_number }} events per day.
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h1>Connected Log Sources</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Source Type</th>
+                <th>Source Name</th>
+                <th>Status</th>
+                <th>Last Event</th>
+                <th>Events/Day</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for source in log_sources %}
+            <tr>
+                <td>{{ source.type }}</td>
+                <td>{{ source.name }}</td>
+                <td>
+                    {% if source.status == 'active' %}
+                    <span class="badge badge-success">Active</span>
+                    {% else %}
+                    <span class="badge badge-danger">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ source.last_event|format_date('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ source.events_per_day|format_number }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Retention Configuration</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Storage Tier</th>
+                <th>Retention (Days)</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Hot Storage</td>
+                <td>{{ hot_retention_days }}</td>
+                <td>Real-time queryable in OpenSearch</td>
+            </tr>
+            <tr>
+                <td>Cold Storage</td>
+                <td>{{ cold_retention_days }}</td>
+                <td>Archived in S3 Glacier</td>
+            </tr>
+            <tr>
+                <td><strong>Total Retention</strong></td>
+                <td><strong>{{ total_retention_days }}</strong></td>
+                <td>Compliance requirement met (SOC 2: 7 years)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Coverage Gaps</h1>
+    
+    {% if coverage_gaps %}
+    <div class="callout callout-warning">
+        <strong>{{ coverage_gaps|length }} coverage gap(s) identified</strong>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Expected Source</th>
+                <th>Issue</th>
+                <th>Recommendation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gap in coverage_gaps %}
+            <tr>
+                <td>{{ gap.expected_source }}</td>
+                <td>{{ gap.issue }}</td>
+                <td>{{ gap.recommendation }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="callout">
+        <strong>No gaps detected.</strong> All expected log sources are reporting normally.
+    </div>
+    {% endif %}
+</div>
+
+<div class="section">
+    <h1>Log Integrity & Immutability</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Log Hashing</td>
+                <td>
+                    {% if log_hashing_enabled %}
+                    <span class="badge badge-success">Enabled</span>
+                    {% else %}
+                    <span class="badge badge-warning">Disabled</span>
+                    {% endif %}
+                </td>
+                <td>{{ log_hashing_details }}</td>
+            </tr>
+            <tr>
+                <td>Tamper Detection</td>
+                <td>
+                    {% if tamper_detection_enabled %}
+                    <span class="badge badge-success">Enabled</span>
+                    {% else %}
+                    <span class="badge badge-warning">Disabled</span>
+                    {% endif %}
+                </td>
+                <td>{{ tamper_detection_details }}</td>
+            </tr>
+            <tr>
+                <td>Append-Only Mode</td>
+                <td>
+                    {% if append_only_mode %}
+                    <span class="badge badge-success">Enabled</span>
+                    {% else %}
+                    <span class="badge badge-info">Not Configured</span>
+                    {% endif %}
+                </td>
+                <td>{{ append_only_details }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

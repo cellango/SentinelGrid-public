@@ -1,0 +1,92 @@
+# SentinelGrid GCP Integration - Deployment Manager Template
+# This template creates a service account and IAM bindings for SentinelGrid monitoring
+
+imports:
+  - path: sentinelgrid-service-account.py
+    name: sentinelgrid-service-account.py
+
+resources:
+  # Service Account
+  - name: sentinelgrid-service-account
+    type: sentinelgrid-service-account.py
+    properties:
+      serviceAccountId: sentinelgrid-monitor
+      displayName: SentinelGrid Monitoring
+      description: Service account for SentinelGrid to monitor GCP project (read-only access)
+
+  # IAM Bindings
+  - name: sentinelgrid-viewer-binding
+    type: gcp-types/cloudresourcemanager-v1:projects.iamMember
+    properties:
+      resource: $(ref.project.projectNumber)
+      role: roles/viewer
+      member: serviceAccount:$(ref.sentinelgrid-service-account.email)
+
+  - name: sentinelgrid-security-reviewer-binding
+    type: gcp-types/cloudresourcemanager-v1:projects.iamMember
+    properties:
+      resource: $(ref.project.projectNumber)
+      role: roles/iam.securityReviewer
+      member: serviceAccount:$(ref.sentinelgrid-service-account.email)
+
+  - name: sentinelgrid-cloud-asset-viewer-binding
+    type: gcp-types/cloudresourcemanager-v1:projects.iamMember
+    properties:
+      resource: $(ref.project.projectNumber)
+      role: roles/cloudasset.viewer
+      member: serviceAccount:$(ref.sentinelgrid-service-account.email)
+
+  - name: sentinelgrid-logs-viewer-binding
+    type: gcp-types/cloudresourcemanager-v1:projects.iamMember
+    properties:
+      resource: $(ref.project.projectNumber)
+      role: roles/logging.viewer
+      member: serviceAccount:$(ref.sentinelgrid-service-account.email)
+
+  - name: sentinelgrid-monitoring-viewer-binding
+    type: gcp-types/cloudresourcemanager-v1:projects.iamMember
+    properties:
+      resource: $(ref.project.projectNumber)
+      role: roles/monitoring.viewer
+      member: serviceAccount:$(ref.sentinelgrid-service-account.email)
+
+  - name: sentinelgrid-security-center-admin-viewer-binding
+    type: gcp-types/cloudresourcemanager-v1:projects.iamMember
+    properties:
+      resource: $(ref.project.projectNumber)
+      role: roles/securitycenter.adminViewer
+      member: serviceAccount:$(ref.sentinelgrid-service-account.email)
+
+  - name: sentinelgrid-compute-viewer-binding
+    type: gcp-types/cloudresourcemanager-v1:projects.iamMember
+    properties:
+      resource: $(ref.project.projectNumber)
+      role: roles/compute.viewer
+      member: serviceAccount:$(ref.sentinelgrid-service-account.email)
+
+  - name: sentinelgrid-storage-object-viewer-binding
+    type: gcp-types/cloudresourcemanager-v1:projects.iamMember
+    properties:
+      resource: $(ref.project.projectNumber)
+      role: roles/storage.objectViewer
+      member: serviceAccount:$(ref.sentinelgrid-service-account.email)
+
+outputs:
+  - name: projectId
+    value: $(ref.project.projectId)
+  - name: serviceAccountEmail
+    value: $(ref.sentinelgrid-service-account.email)
+  - name: instructions
+    value: |
+      Service account created successfully!
+      
+      Next steps:
+      1. Create a service account key:
+         gcloud iam service-accounts keys create key.json \
+           --iam-account=$(ref.sentinelgrid-service-account.email)
+      
+      2. Copy the following values to SentinelGrid UI:
+         - Project ID: $(ref.project.projectId)
+         - Service Account Email: $(ref.sentinelgrid-service-account.email)
+         - Service Account JSON Key: (from key.json file)
+

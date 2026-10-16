@@ -1,0 +1,61 @@
+#
+# SentinelGrid Base Image - Tier 2: API Base
+# ===========================================
+#
+# Purpose: REST API services (FastAPI + SQLAlchemy pattern)
+# Version: 1.0.0
+# Size: ~450 MB
+#
+# Contains:
+# - runtime-python (Tier 1)
+# - FastAPI, Pydantic, Uvicorn
+# - SQLAlchemy, psycopg2
+# - httpx, python-jose
+# - Common API service dependencies
+#
+# Used by: 23+ services (api_gateway, iam_agent, siem_agent, soar_agent, etc.)
+#
+
+ARG SENTINELGRID_RUNTIME_PYTHON_IMAGE=sentinelgrid/runtime-python:3.11
+FROM ${SENTINELGRID_RUNTIME_PYTHON_IMAGE}
+
+LABEL maintainer="SentinelGrid <engineering@sentinelgrid.com>"
+LABEL org.sentinelgrid.image.tier="2-api"
+LABEL org.sentinelgrid.image.name="api-base"
+LABEL org.sentinelgrid.image.version="1.0.0"
+LABEL org.sentinelgrid.image.extends="runtime-python:3.11"
+
+# Switch back to root for installations
+USER root
+
+# Copy requirements
+COPY requirements/api-base.txt /tmp/requirements.txt
+
+# Install Python dependencies (force PyPI index to avoid mirror/version drift)
+# Using --mount for build cache (BuildKit feature)
+ENV PIP_INDEX_URL=https://pypi.org/simple
+RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
+    python -m pip install --no-cache-dir -r /tmp/requirements.txt && \
+    rm /tmp/requirements.txt
+
+# Verify critical packages installed
+RUN python -c "import fastapi; import sqlalchemy; import pydantic; import uvicorn; print('✅ All dependencies installed')"
+
+# Create common directories
+RUN mkdir -p /app/logs /app/tmp && \
+    chown -R sentinelgrid:sentinelgrid /app
+
+# Switch back to non-root user
+USER sentinelgrid
+
+WORKDIR /app
+
+# Health check (services will override)
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD python -c "import fastapi; import sqlalchemy"
+
+# Default port (services can override)
+EXPOSE 8000
+
+# Default command (services will override)
+CMD ["python", "-c", "print('SentinelGrid API Base Image - Ready')"]

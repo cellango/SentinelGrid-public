@@ -1,0 +1,18 @@
+# Keycloak Configuration
+keycloak_url          = "http://localhost:8081"
+keycloak_client_id    = "admin-cli"
+keycloak_client_secret = ""
+keycloak_username     = "admin"
+keycloak_password     = "admin"  # Change this!
+keycloak_tls_insecure = true
+
+# Customer Configuration
+customer_name         = "agribotsai"
+customer_display_name = "AgribotsAI"
+
+# Frontend URLs
+frontend_urls = [
+  "http://localhost:3000/*",
+  "https://app.agribotsai.com/*"
+]
+

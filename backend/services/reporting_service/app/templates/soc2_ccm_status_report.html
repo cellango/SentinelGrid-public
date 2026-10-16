@@ -1,0 +1,80 @@
+{% extends "base_report.html" %}
+
+{% block executive_summary %}
+<div class="metric-card">
+    <h4>Overall SOC 2 Status</h4>
+    <div class="value">{{ summary.status|default('unknown')|title }}</div>
+    <div class="description">Open criteria: {{ summary.open_criteria|default(0) }} / {{ summary.total_criteria|default(0) }}</div>
+</div>
+
+<div class="metric-card">
+    <h4>Open Findings</h4>
+    <div class="value">{{ summary.open_findings|default(0) }}</div>
+    <div class="description">Across all mapped controls</div>
+</div>
+
+<div class="metric-card">
+    <h4>Total Controls</h4>
+    <div class="value">{{ summary.total_criteria|default(0) }}</div>
+    <div class="description">Common Criteria tracked for this tenant</div>
+</div>
+
+<p style="margin-top: 1cm;">
+This SOC 2 CCM status report summarizes Common Criteria coverage, highlighting which controls are compliant and which require remediation based on SentinelGrid findings and mappings.
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h1>Common Criteria Status</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Criterion</th>
+                <th>Status</th>
+                <th>Open Findings</th>
+                <th>Total Findings</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for control in controls %}
+            <tr>
+                <td><strong>{{ control.id }}</strong></td>
+                <td>
+                    {% if control.status == 'compliant' %}
+                    <span class="badge badge-success">Compliant</span>
+                    {% else %}
+                    <span class="badge badge-danger">Non-Compliant</span>
+                    {% endif %}
+                </td>
+                <td>{{ control.open_findings|default(0) }}</td>
+                <td>{{ control.total_findings|default(0) }}</td>
+                <td>{{ control.description }}</td>
+            </tr>
+            {% endfor %}
+            {% if not controls %}
+            <tr>
+                <td colspan="5"><em>No controls available.</em></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Priorities</h1>
+    {% if controls %}
+    <ul>
+        {% for control in controls if control.open_findings|default(0) > 0 %}
+        <li><strong>{{ control.id }}</strong>: Address {{ control.open_findings }} open finding(s) to restore compliance.</li>
+        {% endfor %}
+        {% if controls|selectattr('open_findings','equalto',0)|list|length == controls|length %}
+        <li>All tracked criteria are currently compliant.</li>
+        {% endif %}
+    </ul>
+    {% else %}
+    <p><em>No control data to prioritize.</em></p>
+    {% endif %}
+</div>
+{% endblock %}

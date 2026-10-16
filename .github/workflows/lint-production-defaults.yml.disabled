@@ -1,0 +1,17 @@
+name: Lint Production Default Guards
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  lint-production-defaults:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint production secret and default guards
+        run: bash ./scripts/lint_production_default_secrets.sh

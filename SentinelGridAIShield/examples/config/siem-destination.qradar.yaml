@@ -1,0 +1,16 @@
+version: 1
+
+destinations:
+  - name: qradar-primary
+    type: ibm_qradar_cef_syslog
+    enabled: false
+    transport: syslog_tls
+    endpoint: qradar.example.com:6514
+    auth:
+      type: mtls
+      certificate_file: /etc/sentinelgrid/tls/client.crt
+      private_key_file: /etc/sentinelgrid/tls/client.key
+    format_options:
+      cef_device_vendor: SentinelGrid
+      cef_device_product: AIShield
+      cef_device_version: "1.0"

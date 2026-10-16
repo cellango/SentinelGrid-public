@@ -1,0 +1,271 @@
+#
+# Kubernetes NetworkPolicy - Block Direct AI Provider Access
+# ===========================================================
+#
+# Purpose: Prevent pods from bypassing SentinelGrid AI Shield gateway
+#          by blocking direct egress to OpenAI, Anthropic, and other AI providers
+#
+# Usage:
+#   kubectl apply -f kubernetes-network-policy.yaml
+#
+# Requirements:
+#   - Kubernetes cluster with NetworkPolicy support (e.g., Calico, Cilium)
+#   - Label your AI application pods with: app.sentinelgrid.com/uses-ai: "true"
+#   - Deploy SentinelGrid gateway with label: app.sentinelgrid.com/component: gateway
+#
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sentinelgrid-ai-gateway
+  labels:
+    name: sentinelgrid-ai-gateway
+    app.sentinelgrid.com/managed: "true"
+
+---
+#
+# NetworkPolicy: Block All AI Apps From External AI Providers
+# ============================================================
+# Applies to all pods with label: app.sentinelgrid.com/uses-ai: "true"
+#
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-direct-ai-providers
+  namespace: default  # Apply to your application namespace
+  labels:
+    app.sentinelgrid.com/policy: ai-gateway-enforcement
+spec:
+  # Apply to pods that use AI
+  podSelector:
+    matchLabels:
+      app.sentinelgrid.com/uses-ai: "true"
+  
+  policyTypes:
+  - Egress
+  
+  egress:
+  # 1. Allow DNS (required for all network operations)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  
+  # 2. Allow traffic to SentinelGrid gateway ONLY
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: sentinelgrid-ai-gateway
+    - podSelector:
+        matchLabels:
+          app.sentinelgrid.com/component: gateway
+    ports:
+    - protocol: TCP
+      port: 8023
+  
+  # 3. Allow traffic to internal Kubernetes services
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+  
+  # 4. Block all other egress (including direct AI provider access)
+  # This is implicit - K8s NetworkPolicies are default-deny once a policy is applied
+
+---
+#
+# NetworkPolicy: SentinelGrid Gateway - Allow Outbound to AI Providers
+# ====================================================================
+# Gateway needs to reach actual AI providers
+#
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-gateway-to-ai-providers
+  namespace: sentinelgrid-ai-gateway
+spec:
+  podSelector:
+    matchLabels:
+      app.sentinelgrid.com/component: gateway
+  
+  policyTypes:
+  - Egress
+  
+  egress:
+  # Allow ALL egress for gateway (it needs to reach OpenAI, Anthropic, etc.)
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+
+---
+#
+# ConfigMap: AI Provider IP Ranges (for reference/logging)
+# =========================================================
+# OpenAI and Anthropic don't publish official IP ranges
+# We rely on DNS-based blocking + endpoint detection
+#
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-provider-endpoints
+  namespace: sentinelgrid-ai-gateway
+  labels:
+    app.sentinelgrid.com/resource: config
+data:
+  openai-endpoints: |
+    api.openai.com
+    *.openai.com
+  anthropic-endpoints: |
+    api.anthropic.com
+    *.anthropic.com
+  cohere-endpoints: |
+    api.cohere.ai
+    *.cohere.ai
+  azure-openai-pattern: |
+    *.openai.azure.com
+
+---
+#
+# NetworkPolicy: Global Egress Monitoring (Optional - Very Restrictive)
+# =====================================================================
+# Deny all egress by default, require explicit allows
+# WARNING: This will break applications that don't have explicit NetworkPolicies
+#
+
+# apiVersion: networking.k8s.io/v1
+# kind: NetworkPolicy
+# metadata:
+#   name: default-deny-all-egress
+#   namespace: default
+# spec:
+#   podSelector: {}
+#   policyTypes:
+#   - Egress
+#   egress: []  # Empty = deny all
+
+---
+#
+# Example: Application Deployment with AI Gateway Enforcement
+# ===========================================================
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-ai-app
+  namespace: default
+  labels:
+    app: my-ai-app
+    app.sentinelgrid.com/uses-ai: "true"  # REQUIRED for NetworkPolicy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-ai-app
+  template:
+    metadata:
+      labels:
+        app: my-ai-app
+        app.sentinelgrid.com/uses-ai: "true"  # REQUIRED
+    spec:
+      containers:
+      - name: app
+        image: my-company/my-ai-app:latest
+        env:
+        # Point OpenAI SDK at gateway
+        - name: OPENAI_BASE_URL
+          value: "http://sentinelgrid-gateway.sentinelgrid-ai-gateway.svc.cluster.local:8023/v1"
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: sentinelgrid-api-keys
+              key: app-key
+        ports:
+        - containerPort: 8080
+
+---
+#
+# Verification Job: Test Network Policy Enforcement
+# =================================================
+# Run this to verify policies are working
+#
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-ai-gateway-enforcement
+  namespace: default
+spec:
+  template:
+    metadata:
+      labels:
+        app.sentinelgrid.com/uses-ai: "true"
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: test
+        image: curlimages/curl:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "=== Testing AI Gateway Enforcement ==="
+          
+          echo "\n1. Testing direct OpenAI access (should FAIL):"
+          if curl -m 5 https://api.openai.com/v1/models 2>&1; then
+            echo "❌ FAIL: OpenAI is accessible (policy not working)"
+            exit 1
+          else
+            echo "✅ PASS: OpenAI blocked as expected"
+          fi
+          
+          echo "\n2. Testing gateway access (should SUCCEED):"
+          if curl -m 5 http://sentinelgrid-gateway.sentinelgrid-ai-gateway.svc.cluster.local:8023/health; then
+            echo "✅ PASS: Gateway is accessible"
+          else
+            echo "❌ FAIL: Gateway not accessible (check gateway deployment)"
+            exit 1
+          fi
+          
+          echo "\n3. Testing DNS resolution (should SUCCEED):"
+          if nslookup api.openai.com; then
+            echo "✅ PASS: DNS works (good - we block at network layer, not DNS)"
+          else
+            echo "❌ WARN: DNS not working"
+          fi
+          
+          echo "\n=== All tests passed! AI gateway enforcement is active ==="
+
+---
+#
+# Installation Instructions
+# =========================
+#
+# 1. Deploy this manifest:
+#    kubectl apply -f kubernetes-network-policy.yaml
+#
+# 2. Label your AI applications:
+#    kubectl label pod <pod-name> app.sentinelgrid.com/uses-ai=true
+#
+# 3. Run verification test:
+#    kubectl logs job/test-ai-gateway-enforcement
+#
+# 4. Monitor policy violations:
+#    kubectl get networkpolicies -A
+#    kubectl describe networkpolicy block-direct-ai-providers
+#
+# 5. Deploy SentinelGrid Endpoint Protection for detection
+#
+

@@ -1,0 +1,36 @@
+-- Repeatable seed for app_catalog defaults (idempotent, explicit IDs).
+
+INSERT INTO app_catalog (id, name, display_name, description, app_type, protocol, category, required_fields, optional_fields, default_config, setup_guide, is_active)
+VALUES
+ (uuid_generate_v4(), 'microsoft_365', 'Microsoft 365', 'Connect Microsoft 365 for SSO with Azure AD', 'SaaS', 'SAML', 'Productivity',
+  '["redirect_uri", "entity_id"]'::jsonb, '["name_id_format", "sign_assertions"]'::jsonb, '{"nameIdFormat": "email"}'::jsonb,
+  '## Microsoft 365 SAML Setup\n1) Azure AD > Enterprise Apps\n2) Add SAML app\n3) Configure ACS/Entity ID\n4) Map email as NameID', true),
+ (uuid_generate_v4(), 'google_workspace', 'Google Workspace', 'Connect Google Workspace for SSO', 'SaaS', 'SAML', 'Productivity',
+  '["redirect_uri", "entity_id"]'::jsonb, '["name_id_format"]'::jsonb, '{"nameIdFormat": "email"}'::jsonb,
+  '## Google Workspace SAML Setup\n1) Admin Console > Apps > SAML\n2) Add custom SAML app\n3) Configure SSO URL/Entity ID\n4) Map email as NameID', true),
+ (uuid_generate_v4(), 'slack', 'Slack', 'Connect Slack workspace for SSO', 'SaaS', 'SAML', 'Communication',
+  '["redirect_uri"]'::jsonb, '["entity_id", "sign_assertions"]'::jsonb, '{}'::jsonb,
+  '## Slack SAML Setup\n1) Workspace Settings > Authentication\n2) Configure SAML SSO\n3) Copy SSO URL\n4) Enter in SentinelGrid', true),
+ (uuid_generate_v4(), 'zoom', 'Zoom', 'Connect Zoom for SSO', 'SaaS', 'SAML', 'Communication',
+  '["redirect_uri", "entity_id"]'::jsonb, '["name_id_format"]'::jsonb, '{}'::jsonb,
+  '## Zoom SAML Setup\n1) Advanced > Single Sign-On\n2) Configure SAML\n3) Copy SSO URL/Entity ID', true),
+ (uuid_generate_v4(), 'github', 'GitHub', 'Connect GitHub organization for SSO', 'SaaS', 'SAML', 'Development',
+  '["redirect_uri"]'::jsonb, '["entity_id", "sign_assertions"]'::jsonb, '{}'::jsonb,
+  '## GitHub SAML Setup\n1) Org Settings > Security\n2) Enable SAML SSO\n3) Copy SSO URL\n4) Enter in SentinelGrid', true),
+ (uuid_generate_v4(), 'gitlab', 'GitLab', 'Connect GitLab for SSO', 'SaaS', 'SAML', 'Development',
+  '["redirect_uri", "entity_id"]'::jsonb, '["name_id_format"]'::jsonb, '{}'::jsonb,
+  '## GitLab SAML Setup\n1) Settings > General > Sign-in restrictions\n2) Configure SAML\n3) Copy SSO URL/Entity ID', true),
+ (uuid_generate_v4(), 'salesforce', 'Salesforce', 'Connect Salesforce for SSO', 'SaaS', 'SAML', 'CRM',
+  '["redirect_uri", "entity_id"]'::jsonb, '["name_id_format", "sign_assertions"]'::jsonb, '{"nameIdFormat": "email"}'::jsonb,
+  '## Salesforce SAML Setup\n1) Setup > Single Sign-On Settings\n2) Create SAML config\n3) Copy Login URL/Entity ID', true),
+ (uuid_generate_v4(), 'quickbooks', 'QuickBooks', 'Connect QuickBooks for SSO', 'SaaS', 'SAML', 'Finance',
+  '["redirect_uri", "entity_id"]'::jsonb, '["name_id_format"]'::jsonb, '{}'::jsonb,
+  '## QuickBooks SAML Setup\n1) Company Settings > Security\n2) Configure SAML SSO\n3) Copy SSO URL/Entity ID', true),
+ (uuid_generate_v4(), 'dropbox', 'Dropbox', 'Connect Dropbox for SSO', 'SaaS', 'SAML', 'Storage',
+  '["redirect_uri"]'::jsonb, '["entity_id", "sign_assertions"]'::jsonb, '{}'::jsonb,
+  '## Dropbox SAML Setup\n1) Admin Console > Authentication\n2) Configure SAML SSO\n3) Copy SSO URL', true),
+ (uuid_generate_v4(), 'custom_byo_proxy', 'Bring Your Own App (Auth Proxy)', 'Front any homegrown app with an auth proxy (OIDC) and inject headers.', 'Custom', 'OIDC', 'Custom',
+  '["redirect_uri"]'::jsonb, '["entitlements", "assign_groups", "assign_users"]'::jsonb,
+  '{"entitlements": "admin, user", "activation_mode": "draft", "redirect_uris": "https://app.example.com/oauth2/callback"}'::jsonb,
+  '## Custom App via Auth Proxy\nUse oauth2-proxy or nginx auth_request; pass X-User/X-Email/X-Roles headers.', true)
+ON CONFLICT (name) DO NOTHING;

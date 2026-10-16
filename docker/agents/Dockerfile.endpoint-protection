@@ -1,0 +1,69 @@
+# SentinelGrid Endpoint Protection Agent (Docker)
+# Based on Wazuh agent, rebranded for SentinelGrid
+
+FROM ubuntu:22.04
+
+LABEL maintainer="SentinelGrid <support@sentinelgrid.ai>"
+LABEL description="SentinelGrid Endpoint Protection Agent"
+LABEL version="1.0.0"
+LABEL upstream="wazuh-4.8.0"
+
+# Environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV SENTINELGRID_MANAGER_HOST=manager.sentinelgrid.ai
+ENV SENTINELGRID_MANAGER_PORT=1514
+ENV SENTINELGRID_TENANT_TOKEN=""
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    curl \
+    wget \
+    gnupg \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add SentinelGrid repository
+RUN curl -fsSL https://agents.sentinelgrid.ai/apt/gpg.key | gpg --dearmor -o /usr/share/keyrings/sentinelgrid-archive-keyring.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/sentinelgrid-archive-keyring.gpg] https://agents.sentinelgrid.ai/apt stable main" | \
+    tee /etc/apt/sources.list.d/sentinelgrid.list
+
+# Install SentinelGrid agent
+RUN apt-get update && \
+    apt-get install -y sentinelgrid-agent && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create entrypoint script
+RUN cat > /entrypoint.sh <<'EOF'
+#!/bin/bash
+set -e
+
+# Configure agent if tenant token provided
+if [ -n "$SENTINELGRID_TENANT_TOKEN" ]; then
+    echo "Configuring SentinelGrid agent..."
+    /var/ossec/bin/agent-auth \
+        -m "${SENTINELGRID_MANAGER_HOST}" \
+        -p "${SENTINELGRID_MANAGER_PORT}" \
+        -A "${SENTINELGRID_TENANT_TOKEN}"
+fi
+
+# Start agent
+echo "Starting SentinelGrid agent..."
+exec /var/ossec/bin/ossec-agentd
+EOF
+
+RUN chmod +x /entrypoint.sh
+
+# Expose agent port (if needed)
+# EXPOSE 1514
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD /var/ossec/bin/agent_control -l | grep -q "Status: Active" || exit 1
+
+# Entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Default command
+CMD ["/var/ossec/bin/ossec-agentd"]
+

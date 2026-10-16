@@ -1,0 +1,61 @@
+# Go
+gateway/bin/
+gateway/*.exe
+gateway/*.dll
+gateway/*.so
+gateway/*.dylib
+gateway/*.test
+gateway/*.out
+gateway/go.work
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+services/__pycache__/
+services/*.py[cod]
+services/*$py.class
+services/*.so
+services/.Python
+services/env/
+services/venv/
+services/ENV/
+services/build/
+services/develop-eggs/
+services/dist/
+services/downloads/
+services/eggs/
+services/.eggs/
+services/lib/
+services/lib64/
+services/parts/
+services/sdist/
+services/var/
+services/wheels/
+services/*.egg-info/
+services/.installed.cfg
+services/*.egg
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+*.key
+*.pem
+
+# Docker
+*.log
+
+# Models cache
+services/.cache/
+services/models/

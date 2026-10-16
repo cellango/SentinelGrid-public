@@ -1,0 +1,42 @@
+{
+  "python": {
+    "pinned_exact": [
+      "backend/docker/base-images/requirements/api-base.txt",
+      "backend/docker/base-images/requirements/api-ml.txt",
+      "backend/services/model_gateway/requirements-specific.txt"
+    ],
+    "ranged_allowed": [
+      "backend/libs/requirements.txt",
+      "backend/services/orchestrator/requirements.txt",
+      "backend/agents/iam_agent/requirements-specific.txt",
+      "backend/agents/siem_agent/requirements-specific.txt"
+    ],
+    "effective_install_plans": {
+      "api-gateway": [
+        "backend/docker/base-images/requirements/api-base.txt"
+      ],
+      "iam-agent": [
+        "backend/docker/base-images/requirements/api-base.txt",
+        "backend/agents/iam_agent/requirements-specific.txt"
+      ],
+      "siem-agent": [
+        "backend/docker/base-images/requirements/api-base.txt",
+        "backend/agents/siem_agent/requirements-specific.txt"
+      ],
+      "orchestrator": [
+        "backend/libs/requirements.txt",
+        "backend/services/orchestrator/requirements.txt"
+      ],
+      "model-gateway": [
+        "backend/docker/base-images/requirements/api-base.txt",
+        "backend/docker/base-images/requirements/api-ml.txt",
+        "backend/services/model_gateway/requirements-specific.txt"
+      ]
+    }
+  },
+  "node": {
+    "lockfiles": [
+      "frontend/package-lock.json"
+    ]
+  }
+}

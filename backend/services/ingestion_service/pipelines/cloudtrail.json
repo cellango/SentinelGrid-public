@@ -1,0 +1,31 @@
+{
+  "description": "CloudTrail → ECS",
+  "processors": [
+    { "script": { "lang": "painless", "source": "if (ctx.containsKey('raw_data')) { ctx.cloudtrail = ctx.raw_data; }" } },
+    { "script": { "lang": "painless", "source": "if (!(ctx.source instanceof Map)) { def name = ctx.source != null ? ctx.source.toString() : 'cloudtrail'; ctx.source = ['name': name, 'type': 'cloud']; }" } },
+    { "script": { "lang": "painless", "source": "if (!(ctx.user instanceof Map)) { ctx.user = new HashMap(); } if (!(ctx.cloud instanceof Map)) { ctx.cloud = new HashMap(); } if (!(ctx.cloud.account instanceof Map)) { ctx.cloud.account = new HashMap(); }" } },
+    { "set": { "field": "@timestamp", "value": "{{cloudtrail.eventTime}}" } },
+    { "set": { "field": "event.action", "value": "{{cloudtrail.eventName}}" } },
+    { "set": { "field": "event.provider", "value": "{{cloudtrail.eventSource}}" } },
+    {
+      "set": {
+        "field": "event.outcome",
+        "value": "{{cloudtrail.errorCode}}",
+        "on_failure": [ { "set": { "field": "event.outcome", "value": "success" } } ]
+      }
+    },
+    { "set": { "field": "user.name", "value": "{{cloudtrail.userIdentity.userName}}" } },
+    { "set": { "field": "user.id", "value": "{{cloudtrail.userIdentity.arn}}" } },
+    { "set": { "field": "source.ip", "value": "{{cloudtrail.sourceIPAddress}}" } },
+    { "set": { "field": "cloud.account.id", "value": "{{cloudtrail.userIdentity.accountId}}" } },
+    { "set": { "field": "cloud.region", "value": "{{cloudtrail.awsRegion}}" } }
+  ],
+  "on_failure": [
+    {
+      "script": {
+        "lang": "painless",
+        "source": "ctx.tags = ['_ingest_failure']; ctx.ingest_debug = ctx._ingest; if (ctx._ingest != null) { def t = ctx._ingest.on_failure_processor_type; def msg = ctx._ingest.on_failure_message; ctx.ingest_error = (t != null ? t + ': ' : '') + (msg != null ? msg : 'pipeline-cloudtrail failure'); } else { ctx.ingest_error = 'pipeline-cloudtrail failure'; }"
+      }
+    }
+  ]
+}

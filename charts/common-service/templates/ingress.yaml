@@ -1,0 +1,72 @@
+{{- if .Values.ingress.enabled }}
+{{- if and .Values.ingress.alb.requireCertificate (not .Values.ingress.alb.certificateArn) }}
+{{- fail "ingress.alb.certificateArn is required when ingress.alb.requireCertificate=true" }}
+{{- end }}
+{{- $annotations := dict -}}
+{{- with .Values.ingress.annotations }}
+{{- $annotations = mergeOverwrite $annotations . -}}
+{{- end }}
+{{- with .Values.ingress.alb }}
+  {{- if .scheme }}
+  {{- $_ := set $annotations "alb.ingress.kubernetes.io/scheme" .scheme -}}
+  {{- end }}
+  {{- if .listenPorts }}
+  {{- $_ := set $annotations "alb.ingress.kubernetes.io/listen-ports" .listenPorts -}}
+  {{- end }}
+  {{- if .certificateArn }}
+  {{- $_ := set $annotations "alb.ingress.kubernetes.io/certificate-arn" .certificateArn -}}
+  {{- end }}
+  {{- if .sslRedirect }}
+  {{- $_ := set $annotations "alb.ingress.kubernetes.io/ssl-redirect" .sslRedirect -}}
+  {{- end }}
+  {{- if .backendProtocol }}
+  {{- $_ := set $annotations "alb.ingress.kubernetes.io/backend-protocol" .backendProtocol -}}
+  {{- end }}
+  {{- if .healthcheckPath }}
+  {{- $_ := set $annotations "alb.ingress.kubernetes.io/healthcheck-path" .healthcheckPath -}}
+  {{- end }}
+  {{- if .healthcheckProtocol }}
+  {{- $_ := set $annotations "alb.ingress.kubernetes.io/healthcheck-protocol" .healthcheckProtocol -}}
+  {{- end }}
+  {{- if .healthcheckPort }}
+  {{- $_ := set $annotations "alb.ingress.kubernetes.io/healthcheck-port" .healthcheckPort -}}
+  {{- end }}
+  {{- if .successCodes }}
+  {{- $_ := set $annotations "alb.ingress.kubernetes.io/success-codes" .successCodes -}}
+  {{- end }}
+{{- end }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "common-service.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "common-service.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- if $annotations }}
+  annotations:
+{{ toYaml $annotations | indent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: {{ .host }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ include "common-service.fullname" $ }}
+                port:
+                  number: {{ $.Values.service.port }}
+        {{- end }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
+  tls:
+{{ toYaml .Values.ingress.tls | indent 4 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,21 @@
+═══════════════════════════════════════════════════════════════
+   Welcome to SentinelGrid Hardened Windows Server 2022
+═══════════════════════════════════════════════════════════════
+
+Security Features:
+  ✓ CIS Level 1 Security Hardening Applied
+  ✓ SentinelGrid Endpoint Protection Pre-Installed
+  ✓ Windows Defender Configured
+  ✓ Firewall Configured
+  ✓ Security Updates Applied
+
+Quick Commands:
+  Agent Status:  Get-Service "SentinelGridAgent"
+  View Logs:     Get-Content "C:\Program Files\ossec-agent\ossec.log" -Tail 50
+
+Documentation: https://docs.sentinelgrid.ai/images/windows-server-2022
+Support: support@sentinelgrid.ai
+
+═══════════════════════════════════════════════════════════════
+Built with ❤️  by SentinelGrid | Powered by Wazuh
+

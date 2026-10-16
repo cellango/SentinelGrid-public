@@ -1,0 +1,40 @@
+# FastAPI and core dependencies
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0  # For BaseSettings
+
+# Database (if needed)
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+
+# LLM Runtime Support
+# Launch uses the transformers path. llama-cpp-python remains optional and must be
+# installed manually for non-production experimentation because its diskcache
+# dependency currently has no upstream security fix.
+transformers==5.5.4  # Launch-approved inference runtime
+torch>=2.0.0  # PyTorch for transformers
+accelerate==1.13.0  # Model loading optimization
+huggingface_hub==1.11.0  # For downloading models from Hugging Face
+
+# LoRA/Adapter Support
+peft==0.19.1  # Parameter-Efficient Fine-Tuning (LoRA)
+datasets==4.8.4  # HuggingFace datasets for training
+
+# Optional: vLLM for high-performance GPU serving
+# vllm>=0.2.0
+
+# Vector Database (for RAG)
+sentence-transformers==5.4.1  # Embeddings
+pgvector>=0.2.0  # PostgreSQL vector extension
+sqlalchemy[asyncio]>=2.0.0  # For pgvector support
+
+# Job Queue
+redis>=5.0.0
+rq>=1.15.0
+
+# Utilities
+httpx>=0.25.0
+
+# Git Integration (for data ingestion)
+GitPython>=3.1.0  # For git repository operations

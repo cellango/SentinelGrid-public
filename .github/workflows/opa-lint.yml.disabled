@@ -1,0 +1,33 @@
+name: OPA Lint/Test
+
+on:
+  pull_request:
+    paths:
+      - 'policies/**'
+      - 'docs/OPA_INTEGRATION_PLAN.md'
+      - 'docs/OPA_INPUT_SCHEMA.md'
+      - 'scripts/opa_build_demo_bundle.sh'
+      - 'scripts/opa_clone_to_tenant.sh'
+  push:
+    branches:
+      - main
+    paths:
+      - 'policies/**'
+      - 'docs/OPA_INTEGRATION_PLAN.md'
+      - 'docs/OPA_INPUT_SCHEMA.md'
+      - 'scripts/opa_build_demo_bundle.sh'
+      - 'scripts/opa_clone_to_tenant.sh'
+
+jobs:
+  opa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: OPA fmt
+        uses: open-policy-agent/setup-opa@v1
+        with:
+          version: latest
+      - name: Run OPA fmt
+        run: opa fmt -l policies || (echo "Formatting issues found"; exit 1)
+      - name: Run OPA tests (demo)
+        run: opa test policies/demo

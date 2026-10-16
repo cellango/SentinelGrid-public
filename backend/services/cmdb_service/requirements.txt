@@ -1,0 +1,5 @@
+-r ../../libs/requirements.txt
+
+# HTTP client for CloudQuery integration
+httpx>=0.25.0
+

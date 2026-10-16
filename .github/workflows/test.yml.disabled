@@ -1,0 +1,444 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run nightly at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  agent-module-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check agent module drift
+        run: bash ./scripts/check_agent_module_drift.sh
+
+      - name: Check agent legacy cleanup readiness
+        run: python ./scripts/check_agent_legacy_cleanup_readiness.py
+
+      - name: Check agent runtime compose wiring
+        run: python ./scripts/check_agent_runtime_compose_wiring.py
+
+      - name: Check launch-scope agent build targets
+        run: python ./scripts/supply_chain/verify_launch_scope_agent_targets.py
+
+  bootstrap-seeds:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg15
+        env:
+          POSTGRES_USER: sg
+          POSTGRES_PASSWORD: sg
+          POSTGRES_DB: sg
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U sg" --health-interval=10s --health-timeout=5s --health-retries=5
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Postgres client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Lint migrations are schema-only
+        run: ./scripts/lint_migrations_schema_only.sh
+
+      - name: Bootstrap fresh env (schema-only migrations + seeds + validation)
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_NAME: sg
+          DB_USER: sg
+          DB_PASSWORD: sg
+          BOOTSTRAP_LOG_SEED: never
+          SCHEMA_MIGRATION_MODE: psql
+        run: ./scripts/bootstrap_fresh_env.sh
+
+  frontend-p0-auth-activation-and-shell-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Verify frontend production dependency audit
+        working-directory: frontend
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Run frontend P0 auth, activation, and shell tests
+        working-directory: frontend
+        run: |
+          npx jest --runInBand --watch=false --runTestsByPath \
+            "src/app/(marketing)/login/__tests__/page.test.tsx" \
+            "src/app/api/auth/login/__tests__/route.test.ts" \
+            "src/components/onboarding/__tests__/OnboardingWizard.test.tsx" \
+            "src/components/dashboard/__tests__/OnboardingBanner.test.tsx" \
+            "src/components/onboarding/__tests__/StepTicketing.test.tsx" \
+            "src/app/(dashboard)/__tests__/layout.test.tsx" \
+            "src/components/layout/__tests__/DashboardSidebar.test.tsx" \
+            "src/components/layout/__tests__/DashboardHeader.test.tsx" \
+            "src/components/ui/__tests__/Breadcrumbs.test.tsx" \
+            "src/components/ai-chat/__tests__/CommandPalette.test.tsx" \
+            "src/components/layout/__tests__/NowQueueDock.test.tsx"
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r backend/libs/requirements.txt
+          pip install -r backend/tests/requirements.txt
+      
+      - name: Run API Gateway P0 auth, tenant, and onboarding tests
+        run: |
+          PYTHONPATH=backend/services/api_gateway:backend/libs \
+          pytest \
+            backend/services/api_gateway/tests/test_auth_middleware.py \
+            backend/services/api_gateway/tests/test_agents_routes.py \
+            backend/services/api_gateway/tests/test_auth_proxy_routes.py \
+            backend/services/api_gateway/tests/test_onboarding_proxy_routes.py \
+            backend/services/api_gateway/tests/test_tenant_resolution.py \
+            backend/services/api_gateway/tests/test_tenant_isolation_contracts.py \
+            -q
+
+      - name: Run agent runtime contract tests
+        run: |
+          PYTHONPATH=backend/libs \
+          pytest \
+            backend/tests/test_agent_llm_client_model_gateway_contract.py \
+            backend/tests/test_agent_runtime_status_readiness.py \
+            backend/tests/test_compliance_agent_tools.py \
+            backend/tests/test_soc_case_runtime_client.py \
+            backend/tests/test_soc_agent_runtime_contracts.py \
+            -q
+
+      - name: Run detection-service SOC case-agent wiring tests
+        run: |
+          PYTHONPATH=backend/services/detection_service:backend/libs \
+          pytest backend/services/detection_service/tests/test_soc_case_agent_wiring.py -q
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./backend/coverage.xml
+        continue-on-error: true
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/libs/requirements.txt
+          pip install -r backend/services/model_gateway/tests/requirements.txt
+          pip install pgvector
+
+      - name: Run model_gateway smokes (sqlite, no-LLM)
+        env:
+          TEST_DATABASE_URL: "sqlite:///./test_model_gateway.db"
+          ADAPTER_STORAGE_PATH: "/tmp/models/adapters"
+          BASE_MODEL_PATH: "/tmp/models/base"
+          MODEL_CACHE: "/tmp/models/cache"
+          DISABLE_RAG_ROUTES: "true"
+          DISABLE_TRAINING_ROUTES: "true"
+          PYTHONPATH: "backend/services/model_gateway:backend/libs"
+        run: |
+          pytest backend/services/model_gateway/tests/test_embedding_seed_service.py \
+                backend/services/model_gateway/tests/test_guardrails_api.py \
+                backend/services/model_gateway/tests/test_openai_compat_api.py \
+                backend/services/model_gateway/tests/test_rag_service_smoke.py -q
+
+      - name: Run orchestrator activation prioritization tests
+        run: |
+          PYTHONPATH=backend/services/orchestrator:backend/libs \
+          pytest backend/services/orchestrator/tests/test_welcome_prioritization.py -q
+
+      - name: Run IAM model gateway provider contract tests
+        run: |
+          PYTHONPATH=backend/agents/iam_agent:backend/libs \
+          pytest backend/agents/iam_agent/tests/test_model_provider_metrics.py -q
+
+  security-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r backend/libs/requirements.txt
+          pip install -r backend/tests/requirements.txt
+          pip install python-keycloak==4.0.0 pydantic-settings==2.13.1 "PyJWT[cryptography]==2.12.0"
+      
+      - name: Run IAM Agent P0 auth and activation tests
+        run: |
+          cd backend/agents/iam_agent
+          PYTHONPATH=.:../../libs \
+          python -m pytest \
+            tests/test_auth_api.py \
+            tests/test_onboarding_status_api.py \
+            tests/test_onboarding_ticketing_connection.py \
+            tests/test_onboarding_ticketing_lookup.py \
+            tests/test_security_service.py \
+            tests/test_pricing_service.py \
+            tests/test_realm_manager.py \
+            tests/test_tenant_isolation_contracts.py \
+            -q
+
+  performance-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r backend/libs/requirements.txt
+          pip install -r backend/tests/requirements.txt
+      
+      - name: Run ingestion P0 tenant isolation tests
+        run: |
+          cd backend/services/ingestion_service
+          PYTHONPATH=.:../../libs \
+          python -m pytest tests/test_multi_tenant_isolation.py -q
+
+  ticketing-service-p0-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/libs/requirements.txt
+          pip install -r backend/tests/requirements.txt
+          pip install pydantic-settings==2.13.1
+
+      - name: Run ticketing-service customer-managed handoff tests
+        run: |
+          PYTHONPATH=backend/services/ticketing_service:backend/libs \
+          pytest \
+            backend/services/ticketing_service/app/tests/test_customer_managed_handoff.py \
+            backend/services/ticketing_service/tests/test_soc_case_refresh_routes.py \
+            -q
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    env:
+      WEBSITE_URL: "https://localhost:3443"
+      API_GATEWAY_URL: "http://localhost:8082"
+      SIEM_AGENT_URL: "http://localhost:8003"
+      IAM_AGENT_URL: "http://localhost:8005"
+      TENANT_SERVICE_URL: "http://localhost:8008"
+      TEST_EMAIL: "admin@demo.sentinelgrid.ai"
+      TEST_PASSWORD: "DemoPassword123!"
+      HEADLESS: "true"
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install Postgres client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r backend/libs/requirements.txt
+          pip install -r backend/tests/requirements.txt
+          pip install python-keycloak==4.0.0 pydantic-settings==2.13.1
+
+      - name: Add local host aliases for Keycloak/frontend
+        run: |
+          echo "127.0.0.1 identity.sentinelgrid.ai" | sudo tee -a /etc/hosts
+
+      - name: Collect selected smoke E2E tests
+        run: |
+          pytest --collect-only -q \
+            backend/tests/test_auth_selenium.py::TestSimpleLogin::test_simple_login_to_dashboard \
+            backend/tests/test_onboarding_flow.py::TestOnboardingSmoke::test_onboarding_happy_path \
+            backend/tests/test_onboarding_flow.py::TestOnboardingSmoke::test_onboarding_config_variants \
+            backend/tests/test_siem_smoke.py::TestSIEMSmoke::test_siem_pages_load \
+            backend/tests/test_siem_depth_smoke.py::TestSIEMDepth::test_alerts_and_incidents_tables \
+            backend/tests/test_siem_depth_smoke.py::TestSIEMDepth::test_detection_links_to_playbook_preview \
+            backend/tests/test_siem_depth_smoke.py::TestSIEMDepth::test_log_management_loads \
+            backend/tests/test_iam_ui_smoke.py::TestIAMUISmoke::test_my_account_tabs \
+            backend/tests/test_iam_ui_smoke.py::TestIAMUISmoke::test_identity_providers_page \
+            backend/tests/test_security_inabox_smoke.py::TestSecurityInABoxNav::test_cards_link_to_pages \
+            backend/tests/siem/test_detection_ui_selenium.py::TestSIEMDetectionPlaybookUI::test_detection_rules_page_loads \
+            backend/tests/siem/test_detection_ui_selenium.py::TestSIEMDetectionPlaybookUI::test_playbooks_page_loads \
+            backend/tests/test_payment_smoke.py::TestPaymentSmoke::test_payment_progression_dev_mode
+
+      - name: Build shared base images
+        env:
+          DOCKER_BUILDKIT: "1"
+        run: |
+          docker build \
+            -f backend/docker/base-images/Dockerfile.runtime-python \
+            -t sentinelgrid/runtime-python:3.11 \
+            backend/docker/base-images
+          docker build \
+            -f backend/docker/base-images/Dockerfile.api-base \
+            -t sentinelgrid/api-base:latest \
+            backend/docker/base-images
+
+      - name: Start minimal infrastructure services
+        env:
+          DOCKER_BUILDKIT: "1"
+          COMPOSE_DOCKER_CLI_BUILD: "1"
+        run: |
+          docker compose -f docker-compose.minimal.yml up -d postgres keycloak keycloak_db redis opensearch
+
+      - name: Wait for Postgres to be ready
+        run: |
+          set +e
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U sg; then
+              echo "Postgres is up"; exit 0
+            fi
+            echo "Waiting for Postgres... ($i/30)"
+            sleep 5
+          done
+          echo "Postgres did not become ready in time."
+          docker compose -f docker-compose.minimal.yml ps
+          docker compose -f docker-compose.minimal.yml logs postgres keycloak_db || true
+          exit 1
+
+      - name: Apply schema-only migrations for E2E
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: sg
+          DB_USER: sg
+          DB_PASSWORD: sg
+          SCHEMA_MIGRATION_MODE: psql
+        run: ./scripts/flyway_schema_only.sh
+
+      - name: Seed demo realms/users
+        run: |
+          DB_URL=postgresql://sg:sg@localhost:5432/sg \
+          KEYCLOAK_URL=https://localhost:8443 \
+          KEYCLOAK_ADMIN_USER=admin \
+          KEYCLOAK_ADMIN_PASSWORD=admin \
+          COMPOSE_FILE=docker-compose.minimal.yml \
+          bash backend/scripts/reset_and_init_realms.sh -y
+          COMPOSE_FILE=docker-compose.minimal.yml \
+          KEYCLOAK_ADMIN_PASSWORD=admin \
+          bash scripts/run-seed-demo.sh
+
+      - name: Start app services after schema and seeding
+        env:
+          DOCKER_BUILDKIT: "1"
+          COMPOSE_DOCKER_CLI_BUILD: "1"
+        run: |
+          docker compose -f docker-compose.minimal.yml up -d frontend api_gateway siem_agent soar_agent iam_agent tenant_service cert_service step-ca
+
+      - name: Wait for auth and SIEM-facing services to be ready
+        run: |
+          set +e
+          for i in {1..30}; do
+            IAM_OK=0
+            API_OK=0
+            SIEM_OK=0
+            UI_OK=0
+            curl -fsS --max-time 5 http://localhost:8005/health >/dev/null 2>&1 && IAM_OK=1
+            curl -fsS --max-time 5 http://localhost:8082/health >/dev/null 2>&1 && API_OK=1
+            curl -fsS --max-time 5 http://localhost:8003/health >/dev/null 2>&1 && SIEM_OK=1
+            curl -kfsS --max-time 5 https://localhost:3443 >/dev/null 2>&1 && UI_OK=1
+            if [ "$IAM_OK" -eq 1 ] && [ "$API_OK" -eq 1 ] && [ "$SIEM_OK" -eq 1 ] && [ "$UI_OK" -eq 1 ]; then
+              echo "IAM, API gateway, SIEM agent, and frontend are up"
+              exit 0
+            fi
+            echo "Waiting for auth and SIEM-facing services... ($i/30)"
+            sleep 5
+          done
+          echo "Auth and SIEM-facing services did not become ready in time."
+          docker compose -f docker-compose.minimal.yml ps
+          docker compose -f docker-compose.minimal.yml logs iam_agent api_gateway siem_agent frontend || true
+          exit 1
+
+      - name: Preflight website availability
+        id: preflight
+        run: |
+          set +e
+          if curl -k --retry 3 --max-time 5 "$WEBSITE_URL" >/dev/null 2>&1; then
+            echo "reachable=true" >> $GITHUB_OUTPUT
+          else
+            echo "reachable=false" >> $GITHUB_OUTPUT
+            echo "Website not reachable; skipping e2e smokes."
+          fi
+
+      - name: Run smoke E2E tests (login + onboarding + SIEM + nav)
+        if: steps.preflight.outputs.reachable == 'true'
+        run: |
+          TEST_USERNAME=admin@sentinelgrid.ai \
+          TEST_PASSWORD=Admin123!@#SentinelGrid \
+          pytest backend/tests/test_auth_selenium.py::TestSimpleLogin::test_simple_login_to_dashboard -v
+          pytest backend/tests/test_onboarding_flow.py::TestOnboardingSmoke::test_onboarding_happy_path \
+                backend/tests/test_onboarding_flow.py::TestOnboardingSmoke::test_onboarding_config_variants \
+                backend/tests/test_siem_smoke.py::TestSIEMSmoke::test_siem_pages_load \
+                backend/tests/test_siem_depth_smoke.py::TestSIEMDepth::test_alerts_and_incidents_tables \
+                backend/tests/test_siem_depth_smoke.py::TestSIEMDepth::test_detection_links_to_playbook_preview \
+                backend/tests/test_siem_depth_smoke.py::TestSIEMDepth::test_log_management_loads \
+                backend/tests/test_iam_ui_smoke.py::TestIAMUISmoke::test_my_account_tabs \
+                backend/tests/test_iam_ui_smoke.py::TestIAMUISmoke::test_identity_providers_page \
+                backend/tests/test_security_inabox_smoke.py::TestSecurityInABoxNav::test_cards_link_to_pages \
+                backend/tests/siem/test_detection_ui_selenium.py::TestSIEMDetectionPlaybookUI::test_detection_rules_page_loads \
+                backend/tests/siem/test_detection_ui_selenium.py::TestSIEMDetectionPlaybookUI::test_playbooks_page_loads \
+                backend/tests/test_payment_smoke.py::TestPaymentSmoke::test_payment_progression_dev_mode -v
+
+      - name: Note skipped e2e smokes
+        if: steps.preflight.outputs.reachable != 'true'
+        run: echo "Skipping e2e smokes because $WEBSITE_URL is not reachable in CI."

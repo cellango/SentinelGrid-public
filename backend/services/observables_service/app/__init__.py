@@ -1,0 +1,2 @@
+"""Observables Service application."""
+

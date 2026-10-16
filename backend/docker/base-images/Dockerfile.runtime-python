@@ -1,0 +1,60 @@
+#
+# SentinelGrid Base Image - Tier 1: Runtime Python
+# =================================================
+#
+# Purpose: Foundation runtime for all Python services
+# Version: 1.0.0
+# Python: 3.11
+# Size: ~300 MB
+#
+# Contains:
+# - Python 3.11 runtime
+# - System build tools (gcc, make, etc.)
+# - Common system libraries (libpq, curl, etc.)
+# - Security updates applied
+#
+# Used by: All SentinelGrid Python services (as foundation for higher tiers)
+#
+
+FROM python:3.11-slim AS base
+
+LABEL maintainer="SentinelGrid <engineering@sentinelgrid.com>"
+LABEL org.sentinelgrid.image.tier="1-runtime"
+LABEL org.sentinelgrid.image.name="runtime-python"
+LABEL org.sentinelgrid.image.version="1.0.0"
+LABEL org.sentinelgrid.python.version="3.11"
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Install runtime-only system dependencies and apply current distro patches.
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    libpq5 \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+# Upgrade pip, setuptools, wheel
+RUN pip install --upgrade pip setuptools wheel
+
+# Create non-root user for security
+RUN useradd -m -u 1000 -s /bin/bash sentinelgrid && \
+    mkdir -p /app && \
+    chown -R sentinelgrid:sentinelgrid /app
+
+# Set working directory
+WORKDIR /app
+
+# Switch to non-root user
+USER sentinelgrid
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD python -c "import sys; sys.exit(0)"
+
+# Default command (will be overridden by services)
+CMD ["python", "--version"]

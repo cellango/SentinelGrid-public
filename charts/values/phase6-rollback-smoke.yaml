@@ -1,0 +1,38 @@
+fullnameOverride: phase6-rollback-smoke
+
+image:
+  repository: nginx
+  tag: "1.27.5-alpine"
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: false
+  name: default
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 2
+  periodSeconds: 2
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi

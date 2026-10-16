@@ -1,0 +1,55 @@
+version: 1
+
+# Splunk HEC is the runtime-enabled adapter in the current standalone release.
+# Sentinel and QRadar remain disabled templates on the same config contract.
+default_delivery:
+  mode: batch
+  batch_size: 100
+  flush_interval_seconds: 5
+  retry_max: 3
+  timeout_seconds: 10
+
+destinations:
+  - name: splunk-primary
+    type: splunk_hec
+    enabled: true
+    transport: http_json
+    endpoint: https://splunk.example.com:8088/services/collector
+    auth:
+      type: bearer
+      token_env: SPLUNK_HEC_TOKEN
+    routing:
+      index: main
+      source: sentinelgrid_ai_shield
+      sourcetype: sentinelgrid:ai:event
+    filters:
+      minimum_severity: medium
+
+  - name: sentinel-primary
+    type: microsoft_sentinel_dcr
+    enabled: false
+    transport: http_json
+    endpoint: https://example-dce.eastus-1.ingest.monitor.azure.com
+    auth:
+      type: azure_client_secret
+      tenant_id: 00000000-0000-0000-0000-000000000000
+      client_id_env: AZURE_CLIENT_ID
+      client_secret_env: AZURE_CLIENT_SECRET
+    routing:
+      dcr_immutable_id: dcr-00000000000000000000000000000000
+      stream_name: Custom-SentinelGridAIShield_CL
+      table_name: SentinelGridAIShield_CL
+
+  - name: qradar-primary
+    type: ibm_qradar_cef_syslog
+    enabled: false
+    transport: syslog_tls
+    endpoint: qradar.example.com:6514
+    auth:
+      type: mtls
+      certificate_file: /etc/sentinelgrid/tls/client.crt
+      private_key_file: /etc/sentinelgrid/tls/client.key
+    format_options:
+      cef_device_vendor: SentinelGrid
+      cef_device_product: AIShield
+      cef_device_version: "1.0"

@@ -1,0 +1,87 @@
+tools:
+  - id: prowler
+    name: Prowler
+    category: cloud_security
+    job_types: [cloud_initial_scan, cloud_daily_scan]
+    image: sentinelgrid/cloud-scanner:latest
+    command_template:
+      args: ["cloud-scanner", "--tool", "prowler", "--format", "json", "--role", "{{cloud_connector_arn}}"]
+    parser_key: prowler_json
+    severity_map: {Critical: critical, High: high, Medium: medium, Low: low}
+    tags: [cspm, misconfiguration]
+    status: active
+    notes: "Supports AWS; enable DB/storage checks when include_db_security=true in payload."
+
+  - id: trivy
+    name: Trivy
+    category: image_security
+    job_types: [cloud_initial_scan, cloud_daily_scan]
+    image: sentinelgrid/cloud-scanner:latest
+    command_template:
+      args: ["cloud-scanner", "--tool", "trivy", "--format", "json", "--image-ref", "{{image_ref}}"]
+    parser_key: trivy_image_json
+    severity_map: {CRITICAL: critical, HIGH: high, MEDIUM: medium, LOW: low}
+    tags: [vuln, sbom]
+    status: active
+    notes: "Scan ECR images discovered during cloud scans."
+
+  - id: gitleaks
+    name: Gitleaks
+    category: git_security
+    job_types: [git_initial_scan, git_daily_scan]
+    image: zricethezav/gitleaks:latest
+    command_template:
+      args: ["gitleaks", "detect", "-s", "{{repo_path}}", "-f", "json"]
+    parser_key: gitleaks_json
+    severity_map: {default: high}
+    tags: [secrets]
+    status: active
+
+  - id: checkov
+    name: Checkov
+    category: git_security
+    job_types: [git_initial_scan, git_daily_scan]
+    image: bridgecrew/checkov:latest
+    command_template:
+      args: ["checkov", "-d", "{{repo_path}}", "--output", "json"]
+    parser_key: checkov_json
+    severity_map: {HIGH: high, MEDIUM: medium, LOW: low}
+    tags: [iac, misconfiguration]
+    status: active
+
+  - id: zap
+    name: OWASP ZAP
+    category: app_security
+    job_types: [app_scan]
+    image: ghcr.io/zaproxy/zaproxy:stable
+    command_template:
+      args: ["zap-baseline.py", "-t", "{{target_url}}", "-J", "/zap/wrk/zap.json"]
+    parser_key: zap_json
+    severity_map: {High: high, Medium: medium, Low: low, Informational: info}
+    tags: [dast]
+    status: experimental
+
+  - id: semgrep
+    name: Semgrep
+    category: app_security
+    job_types: [app_scan]
+    image: returntocorp/semgrep:latest
+    command_template:
+      args: ["semgrep", "scan", "--config", "p/owasp-top-ten", "--json", "--quiet", "{{repo_path}}"]
+    parser_key: semgrep_json
+    severity_map: {ERROR: high, WARNING: medium, INFO: low}
+    tags: [sast]
+    status: active
+
+  - id: ai_daily_summary
+    name: AI Shield Daily Summary
+    category: ai
+    job_types: [ai_daily_summary]
+    image: sentinelgrid/ai-summary-job:latest
+    command_template:
+      args: ["python", "main.py", "--tenant", "{{tenant_id}}", "--lookback-hours", "24"]
+    parser_key: ai_summary_json
+    severity_map: {}
+    tags: [analytics]
+    status: active
+    notes: "Reads sg-ai-events-* from OpenSearch and writes summary rows."

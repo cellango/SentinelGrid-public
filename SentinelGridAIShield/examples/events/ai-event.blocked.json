@@ -1,0 +1,31 @@
+{
+  "event_id": "5aa5a9aa-8a4c-4df9-a0c9-52d2cb32f001",
+  "event_type": "ai.request.blocked",
+  "occurred_at": "2026-03-25T22:15:00Z",
+  "tenant_id": "11111111-1111-1111-1111-111111111111",
+  "realm": "demo",
+  "ai_app_id": "demo-app",
+  "user_id": "alice@example.com",
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "policy_decision": "blocked",
+  "severity": "high",
+  "risk_flags": {
+    "has_pii": false,
+    "has_secrets": true,
+    "prompt_injection_suspected": false
+  },
+  "metrics": {
+    "tokens_in": 42,
+    "tokens_out": 0
+  },
+  "previews": {
+    "prompt_preview": "My production API key is sk-live-redacted"
+  },
+  "labels": {
+    "adapter_hint": "splunk_hec"
+  },
+  "raw": {
+    "violation_reason": "Secrets detected in prompt"
+  }
+}

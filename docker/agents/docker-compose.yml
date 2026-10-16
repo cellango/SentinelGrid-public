@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  sentinelgrid-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.endpoint-protection
+    image: sentinelgrid/endpoint-protection-agent:latest
+    container_name: sentinelgrid-agent
+    environment:
+      - SENTINELGRID_MANAGER_HOST=manager.sentinelgrid.ai
+      - SENTINELGRID_MANAGER_PORT=1514
+      - SENTINELGRID_TENANT_TOKEN=${SENTINELGRID_TENANT_TOKEN:-}
+    volumes:
+      # Mount host filesystem for monitoring (optional)
+      - /:/host:ro
+      # Agent configuration
+      - agent-config:/var/ossec/etc
+      - agent-logs:/var/ossec/logs
+      - agent-queue:/var/ossec/queue
+    restart: unless-stopped
+    network_mode: host  # Required for proper network monitoring
+    privileged: true   # Required for file integrity monitoring
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+      - AUDIT_CONTROL
+      - AUDIT_READ
+
+volumes:
+  agent-config:
+  agent-logs:
+  agent-queue:
+

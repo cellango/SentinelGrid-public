@@ -1,0 +1,27 @@
+# Model Gateway - Service-Specific Dependencies
+# ===============================================
+# Common deps (FastAPI, SQLAlchemy) are already in sentinelgrid/api-ml base image.
+# Override the stale ML pins from that image here so the final model-gateway image
+# runs on a launch-approved Hugging Face stack without known high-risk findings.
+
+# Launch-scope LLM runtime support
+transformers==5.5.4
+accelerate==1.13.0
+huggingface-hub==1.11.0
+# llama-cpp-python is intentionally excluded from launch-scope dependencies because
+# it pulls in diskcache, which currently carries an unpatched pickle-based RCE path.
+# Install it manually only for non-production local experiments.
+
+# LoRA/Adapter Support
+peft==0.19.1  # Parameter-Efficient Fine-Tuning (LoRA)
+datasets==4.8.4  # HuggingFace datasets for training
+
+# Vector Database
+pgvector==0.4.2  # PostgreSQL vector extension
+sentence-transformers==5.4.1  # Embeddings for pgvector/RAG
+
+# Job Queue
+rq==2.8.0  # Redis Queue
+
+# Git Integration
+GitPython==3.1.46  # For git repository operations

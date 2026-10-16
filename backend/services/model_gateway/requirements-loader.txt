@@ -1,0 +1,7 @@
+# Minimal requirements for knowledge base loader (no LLM dependencies)
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+sentence-transformers>=2.2.0
+pgvector>=0.2.0
+numpy>=1.24.0
+

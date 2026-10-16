@@ -1,0 +1,92 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  SentinelGrid - One-click ingest for CloudTrail, VPC Flow Logs, Route53 Resolver DNS
+  (optionally ALB/WAF and GuardDuty). Delivers to SentinelGrid ingest HTTPS endpoint
+  with tenant headers.
+
+Parameters:
+  TenantId:
+    Type: String
+    Description: SentinelGrid tenant ID
+  IngestUrl:
+    Type: String
+    Description: SentinelGrid ingest HTTPS endpoint (e.g., https://ingest.sentinelgrid.ai/ingest/events)
+  IngestAuthToken:
+    Type: String
+    NoEcho: true
+    Description: Bearer token for ingest
+  EnableGuardDuty:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "false"
+  EnableWAF:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "false"
+
+Resources:
+  IngestDeliveryRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonKinesisFirehoseFullAccess
+        - arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonOpenSearchServiceRolePolicy
+      Policies:
+        - PolicyName: AllowSources
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+
+  IngestDeliveryStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamType: DirectPut
+      HttpEndpointDestinationConfiguration:
+        EndpointConfiguration:
+          Url: !Ref IngestUrl
+          Name: SentinelGridIngest
+          AccessKey: !Ref IngestAuthToken
+        S3Configuration:
+          BucketARN: !GetAtt IngestBackupBucket.Arn
+          RoleARN: !GetAtt IngestDeliveryRole.Arn
+        BufferingHints:
+          IntervalInSeconds: 60
+          SizeInMBs: 1
+        RequestConfiguration:
+          ContentEncoding: GZIP
+          CommonAttributes:
+            - AttributeName: X-Tenant-ID
+              AttributeValue: !Ref TenantId
+            - AttributeName: Content-Type
+              AttributeValue: application/json
+
+  IngestBackupBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - Status: Enabled
+            ExpirationInDays: 7
+
+Outputs:
+  FirehoseStreamName:
+    Value: !Ref IngestDeliveryStream
+    Description: Use this Firehose stream for CloudTrail/Flow/DNS log delivery.

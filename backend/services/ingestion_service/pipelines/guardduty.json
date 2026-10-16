@@ -1,0 +1,24 @@
+{
+  "description": "GuardDuty → ECS alerts",
+  "processors": [
+    { "script": { "lang": "painless", "source": "if (ctx.containsKey('raw_data')) { ctx.gd = ctx.raw_data; }" } },
+    { "script": { "lang": "painless", "source": "if (!(ctx.source instanceof Map)) { def name = ctx.source != null ? ctx.source.toString() : 'guardduty'; ctx.source = ['name': name, 'type': 'alert']; }" } },
+    { "script": { "lang": "painless", "source": "if (!(ctx.cloud instanceof Map)) { ctx.cloud = new HashMap(); } if (!(ctx.cloud.account instanceof Map)) { ctx.cloud.account = new HashMap(); }" } },
+    { "set": { "field": "@timestamp", "value": "{{gd.updatedAt}}" } },
+    { "set": { "field": "event.kind", "value": "alert" } },
+    { "set": { "field": "event.module", "value": "guardduty" } },
+    { "set": { "field": "event.category", "value": "threat" } },
+    { "set": { "field": "event.action", "value": "{{gd.type}}" } },
+    { "set": { "field": "cloud.account.id", "value": "{{gd.accountId}}" } },
+    { "set": { "field": "source.ip", "value": "{{gd.service.action.networkConnectionAction.remoteIpDetails.ipAddressV4}}" } },
+    { "remove": { "field": "message", "ignore_missing": true } }
+  ],
+  "on_failure": [
+    {
+      "script": {
+        "lang": "painless",
+        "source": "ctx.tags = ['_ingest_failure']; if (ctx._ingest != null) { def t = ctx._ingest.on_failure_processor_type; def msg = ctx._ingest.on_failure_message; ctx.ingest_error = (t != null ? t + ': ' : '') + (msg != null ? msg : 'pipeline-guardduty failure'); } else { ctx.ingest_error = 'pipeline-guardduty failure'; }"
+      }
+    }
+  ]
+}

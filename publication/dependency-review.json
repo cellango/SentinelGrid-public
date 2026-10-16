@@ -1,0 +1,65 @@
+{
+  "format_version": 1,
+  "date": "2026-10-15",
+  "scope": "Supported source-preview dependency inputs only",
+  "python": {
+    "audit_tool": "pip-audit 2.10.1",
+    "audited_pins": 42,
+    "findings": 0,
+    "hash_required": true,
+    "manifest": "scripts/requirements-preview.txt",
+    "manifest_sha256": "febb7bd24b2e24c4c446d477ea77354ba56ecd0302205a3d46659556678244f5"
+  },
+  "frontend": {
+    "audit_command": "npm audit --package-lock-only --json (full tree; no omit or severity filter)",
+    "lockfile": "frontend/package-lock.json",
+    "lockfile_sha256": "c94489d46fc970c5e56ebbd0d021cd95facae30259dbe41e54fd4b2da8a4dca0",
+    "observed_exit_code": 1,
+    "initial_affected_dependency_entries": 57,
+    "initial_distinct_advisory_sources": 117,
+    "remaining_affected_dependency_entries": 40,
+    "remaining_distinct_advisories": 2,
+    "remaining_critical": 0,
+    "raw_audit_still_nonzero": true
+  },
+  "scoped_exceptions": [
+    {
+      "advisory": "GHSA-vfj7-8cjw-p6xm",
+      "package": "braces",
+      "version": "3.0.3",
+      "severity": "high",
+      "source": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+      "disposition": "scoped_nonblocking_for_source_preview_only",
+      "reviewer": "Codex Task 8 technical assessment",
+      "maintainer": "cellango",
+      "reviewed": "2026-10-15",
+      "expires": "2026-11-14",
+      "recheck": "Before Task 12 release freeze, or earlier if a patched release appears or the supported command/input surface changes.",
+      "patch_status": "No patched release reported by the upstream advisory and public registry on the review date.",
+      "scope": "Development-only dependency in the frontend preview lock; npm run test:preview uses fixed checked-in test paths and repository-controlled patterns/format strings. No externally supplied glob or sprintf format is accepted by the supported command.",
+      "control": "One-shot local mocked tests; CI job timeout 15 minutes, contents: read, no cloud credentials, deployments or server runtime.",
+      "risk": "A malicious pattern/format can still stop a tooling process. Full builds, watch mode, externally supplied patterns and service runtime are outside this disposition.",
+      "review_boundary": "Any different package/version/advisory or changed input boundary needs fresh review; this is not a blanket devDependency exception."
+    },
+    {
+      "advisory": "GHSA-hp3w-g68c-fv3c",
+      "package": "sprintf-js",
+      "version": "1.0.3",
+      "severity": "moderate",
+      "source": "https://github.com/advisories/GHSA-hp3w-g68c-fv3c",
+      "disposition": "scoped_nonblocking_for_source_preview_only",
+      "reviewer": "Codex Task 8 technical assessment",
+      "maintainer": "cellango",
+      "reviewed": "2026-10-15",
+      "expires": "2026-11-14",
+      "recheck": "Before Task 12 release freeze, or earlier if a patched release appears or the supported command/input surface changes.",
+      "patch_status": "No patched release reported by the upstream advisory and public registry on the review date.",
+      "scope": "Development-only dependency in the frontend preview lock; npm run test:preview uses fixed checked-in test paths and repository-controlled patterns/format strings. No externally supplied glob or sprintf format is accepted by the supported command.",
+      "control": "One-shot local mocked tests; CI job timeout 15 minutes, contents: read, no cloud credentials, deployments or server runtime.",
+      "risk": "A malicious pattern/format can still stop a tooling process. Full builds, watch mode, externally supplied patterns and service runtime are outside this disposition.",
+      "review_boundary": "Any different package/version/advisory or changed input boundary needs fresh review; this is not a blanket devDependency exception."
+    }
+  ],
+  "runtime_disposition": "Experimental runtime dependency graphs are unresolved and not cleared. See dependency-manifests.json.",
+  "next_review": "Task 12 must refresh advisory data and reassess both scoped exceptions before publication; no perpetual clearance."
+}

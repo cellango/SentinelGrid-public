@@ -1,0 +1,278 @@
+name: Build, Push, Deploy Launch Scope
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to build and deploy (defaults to git sha)"
+        required: false
+      environment:
+        description: "Target environment"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - stage
+          - prod
+      deploy:
+        description: "Deploy to EKS after pushing images"
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+      ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
+      EKS_CLUSTER: ${{ vars.EKS_CLUSTER }}
+      K8S_NAMESPACE: ${{ vars.K8S_NAMESPACE || 'sg-core' }}
+      FRONTEND_HOST: ${{ vars.FRONTEND_HOST }}
+      API_HOST: ${{ vars.API_HOST }}
+      IAM_HOST: ${{ vars.IAM_HOST }}
+      FRONTEND_CERTIFICATE_ARN: ${{ vars.FRONTEND_CERTIFICATE_ARN }}
+      API_CERTIFICATE_ARN: ${{ vars.API_CERTIFICATE_ARN }}
+      IAM_CERTIFICATE_ARN: ${{ vars.IAM_CERTIFICATE_ARN }}
+      NEXT_PUBLIC_API_BASE: ${{ vars.NEXT_PUBLIC_API_BASE || '/api' }}
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || '/api' }}
+      NEXT_PUBLIC_IAM_AGENT_URL: ${{ vars.NEXT_PUBLIC_IAM_AGENT_URL }}
+      IMAGE_TAG: ${{ github.event.inputs.image_tag != '' && github.event.inputs.image_tag || github.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install release gate tooling
+        run: python -m pip install --upgrade pip pip-audit
+
+      - name: Validate release configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${ECR_REGISTRY}" ]]; then
+            echo "ECR_REGISTRY GitHub environment variable is required."
+            exit 1
+          fi
+          if [[ "${{ github.event.inputs.deploy }}" == "true" && -z "${EKS_CLUSTER}" ]]; then
+            echo "EKS_CLUSTER GitHub environment variable is required when deploy=true."
+            exit 1
+          fi
+          if [[ "${{ github.event.inputs.deploy }}" == "true" ]]; then
+            for required_var in FRONTEND_HOST API_HOST IAM_HOST FRONTEND_CERTIFICATE_ARN API_CERTIFICATE_ARN IAM_CERTIFICATE_ARN; do
+              if [[ -z "${!required_var:-}" ]]; then
+                echo "${required_var} GitHub environment variable is required when deploy=true."
+                exit 1
+              fi
+            done
+          fi
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ECR_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Lint migrations are schema-only
+        run: ./scripts/lint_migrations_schema_only.sh
+
+      - name: Lint production secret and default guards
+        run: bash ./scripts/lint_production_default_secrets.sh
+
+      - name: Check agent module drift
+        run: bash ./scripts/check_agent_module_drift.sh
+
+      - name: Check agent legacy cleanup readiness
+        run: python ./scripts/check_agent_legacy_cleanup_readiness.py
+
+      - name: Check agent runtime compose wiring
+        run: python ./scripts/check_agent_runtime_compose_wiring.py
+
+      - name: Check launch-scope agent build targets
+        run: python ./scripts/supply_chain/verify_launch_scope_agent_targets.py
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Verify frontend launch dependency audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/release
+          (
+            cd frontend
+            npm audit --omit=dev --audit-level=high --json
+          ) | tee artifacts/release/frontend-npm-audit.json
+
+      - name: Verify launch-scope dependency policy
+        run: python scripts/supply_chain/verify_launch_scope_dependency_policy.py --artifacts-dir artifacts/release
+
+      - name: Verify launch Python dependency gate
+        run: python scripts/supply_chain/run_launch_python_supply_chain_gate.py --artifacts-dir artifacts/release
+
+      - name: Stage launch-scope filesystem bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf artifacts/release/launch-scope-fs
+          bash ./scripts/supply_chain/stage_launch_scope_filesystem.sh artifacts/release/launch-scope-fs
+
+      - name: Generate launch-scope SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: artifacts/release/launch-scope-fs
+          format: cyclonedx-json
+          output-file: artifacts/release/launch-scope-sbom.cdx.json
+
+      - name: Run Trivy launch-scope filesystem scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: artifacts/release/launch-scope-fs
+          scanners: vuln
+          format: json
+          output: artifacts/release/trivy-fs-launch-scope.json
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+
+      - name: Build launch-scope images locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          resolved_iam_url="${NEXT_PUBLIC_IAM_AGENT_URL}"
+          if [[ -z "${resolved_iam_url}" && -n "${IAM_HOST}" ]]; then
+            resolved_iam_url="https://${IAM_HOST}"
+          fi
+          if [[ -z "${resolved_iam_url}" ]]; then
+            resolved_iam_url="/api/v1/iam"
+          fi
+          bash ./scripts/supply_chain/build_launch_scope_images.sh \
+            --artifacts-dir artifacts/release \
+            --image-tag "${IMAGE_TAG}" \
+            --frontend-api-base "${NEXT_PUBLIC_API_BASE}" \
+            --frontend-api-url "${NEXT_PUBLIC_API_URL}" \
+            --frontend-iam-url "${resolved_iam_url}"
+
+      - name: Run Trivy launch-image scan gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash ./scripts/supply_chain/scan_launch_scope_images.sh --artifacts-dir artifacts/release
+
+      - name: Push launch-scope images
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash ./scripts/supply_chain/build_launch_scope_images.sh \
+            --artifacts-dir artifacts/release \
+            --image-tag "${IMAGE_TAG}" \
+            --registry "${ECR_REGISTRY}" \
+            --push \
+            --skip-build
+
+      - name: Install kubectl
+        if: ${{ github.event.inputs.deploy == 'true' }}
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.30.0
+
+      - name: Install Helm
+        if: ${{ github.event.inputs.deploy == 'true' }}
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.15.0
+
+      - name: Update kubeconfig
+        if: ${{ github.event.inputs.deploy == 'true' }}
+        run: aws eks update-kubeconfig --name "${EKS_CLUSTER}" --region "${AWS_REGION}"
+
+      - name: Validate launch runtime secrets
+        if: ${{ github.event.inputs.deploy == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          kubectl get namespace "${K8S_NAMESPACE}" >/dev/null 2>&1 || kubectl create namespace "${K8S_NAMESPACE}"
+
+          for secret_name in \
+            api-gateway-runtime \
+            iam-agent-runtime \
+            model-gateway-runtime \
+            orchestrator-runtime \
+            siem-agent-runtime; do
+            if ! kubectl get secret "${secret_name}" -n "${K8S_NAMESPACE}" >/dev/null 2>&1; then
+              echo "Missing required runtime secret: ${secret_name}"
+              exit 1
+            fi
+          done
+
+      - name: Deploy launch-scope services
+        if: ${{ github.event.inputs.deploy == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          deploy_release() {
+            local release_name="$1"
+            local image_repo="$2"
+            local values_file="$3"
+            local ingress_host="${4:-}"
+            local certificate_arn="${5:-}"
+            local -a args=(
+              upgrade --install "${release_name}" charts/common-service
+              -n "${K8S_NAMESPACE}"
+              -f "${values_file}"
+              --set-string "image.repository=${ECR_REGISTRY}/${image_repo}"
+              --set-string "image.tag=${IMAGE_TAG}"
+            )
+
+            if [[ -n "${ingress_host}" ]]; then
+              args+=(--set-string "ingress.hosts[0].host=${ingress_host}")
+            fi
+            if [[ -n "${certificate_arn}" ]]; then
+              args+=(--set-string "ingress.alb.certificateArn=${certificate_arn}")
+            fi
+
+            helm "${args[@]}"
+            kubectl rollout status "deployment/${release_name}" -n "${K8S_NAMESPACE}" --timeout=180s
+          }
+
+          deploy_release "iam-agent" "iam_agent" "charts/values/iam-agent.yaml" "${IAM_HOST}" "${IAM_CERTIFICATE_ARN}"
+          deploy_release "model-gateway" "model_gateway" "charts/values/model-gateway.yaml"
+          deploy_release "siem-agent" "siem_agent" "charts/values/siem-agent.yaml"
+          deploy_release "orchestrator" "orchestrator" "charts/values/orchestrator.yaml"
+          deploy_release "api-gateway" "api_gateway" "charts/values/api-gateway.yaml" "${API_HOST}" "${API_CERTIFICATE_ARN}"
+          deploy_release "frontend" "frontend" "charts/values/frontend.yaml" "${FRONTEND_HOST}" "${FRONTEND_CERTIFICATE_ARN}"
+
+      - name: Upload release supply-chain artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-supply-chain-evidence
+          path: artifacts/release
+          retention-days: 30
+          if-no-files-found: warn

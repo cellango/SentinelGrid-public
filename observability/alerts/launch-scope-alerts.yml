@@ -1,0 +1,124 @@
+groups:
+  - name: sentinelgrid-launch-readiness
+    rules:
+      - alert: SentinelGridServiceReadyProbeFailing
+        expr: probe_success{job="blackbox-ready",service=~"api-gateway|iam-agent|model-gateway|orchestrator|siem-agent|ingestion-service"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: DevOps / Platform Lead
+        annotations:
+          summary: "SentinelGrid service readiness probe failing"
+          description: "{{ $labels.service }} has failed readiness probes for at least 5 minutes."
+
+  - name: sentinelgrid-launch-pipeline
+    rules:
+      - alert: SentinelGridCriticalDependencyUnhealthy
+        expr: max_over_time(dependency_critical_unhealthy{service=~"api-gateway|iam-agent|model-gateway|orchestrator|siem-agent|ingestion-service"}[10m]) > 0
+        for: 10m
+        labels:
+          severity: critical
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: DevOps / Platform Lead
+        annotations:
+          summary: "Critical upstream dependency unhealthy"
+          description: "{{ $labels.service }} has reported at least one critical unhealthy dependency in the last 10 minutes."
+
+      - alert: SentinelGridGatewayAuthFailuresSpike
+        expr: increase(auth_failures_total{service="api-gateway"}[10m]) >= 10
+        for: 10m
+        labels:
+          severity: warning
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: IAM / Identity Lead
+        annotations:
+          summary: "API gateway auth failures spiking"
+          description: "API gateway recorded at least 10 auth failures in the last 10 minutes."
+
+      - alert: SentinelGridGatewayTokenValidationFailuresSpike
+        expr: increase(token_validation_failures_total{service="api-gateway"}[10m]) >= 5
+        for: 10m
+        labels:
+          severity: warning
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: IAM / Identity Lead
+        annotations:
+          summary: "API gateway token validation failures spiking"
+          description: "The API gateway recorded at least 5 token validation failures in the last 10 minutes."
+
+      - alert: SentinelGridSourceHealthComponentDown
+        expr: max_over_time(source_health_component_up{service="api-gateway",component=~"ingestion_service|siem_agent|opensearch"}[10m]) < 1
+        for: 10m
+        labels:
+          severity: warning
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: Platform / Backend Lead
+        annotations:
+          summary: "Source-health component is down"
+          description: "{{ $labels.component }} has been unhealthy or unreachable for the last 10 minutes."
+
+      - alert: SentinelGridScannerOrchestratorUnavailable
+        expr: max_over_time(scanner_orchestrator_up{service="orchestrator"}[10m]) < 1
+        for: 10m
+        labels:
+          severity: critical
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: Platform / Backend Lead
+        annotations:
+          summary: "Scanner orchestrator unavailable"
+          description: "The orchestrator scanner health endpoint has not reported the scanner orchestrator as up for 10 minutes."
+
+      - alert: SentinelGridScanFailuresDetected
+        expr: max_over_time(scanner_jobs_last{service="orchestrator",status="failed"}[10m]) > 0
+        for: 10m
+        labels:
+          severity: warning
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: Platform / Backend Lead
+        annotations:
+          summary: "Scanner failures detected"
+          description: "The orchestrator reports failed scanner jobs in the current health snapshot."
+
+      - alert: SentinelGridLLMProviderFailures
+        expr: increase(llm_provider_failures_total{service="iam-agent"}[15m]) > 0
+        for: 15m
+        labels:
+          severity: warning
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: IAM / Identity Lead
+        annotations:
+          summary: "IAM model provider failures detected"
+          description: "The IAM agent has recorded model-provider failures in the last 15 minutes."
+
+      - alert: SentinelGridIngestionQueueBacklogHigh
+        expr: max_over_time(ingestion_pending_events{service="ingestion-service"}[15m]) > 500
+        for: 15m
+        labels:
+          severity: warning
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: Platform / Backend Lead
+        annotations:
+          summary: "Ingestion queue backlog high"
+          description: "The ingestion service has sustained more than 500 pending events for 15 minutes."
+
+      - alert: SentinelGridEmbeddingFailuresDetected
+        expr: increase(ingestion_embedding_summaries_total{service="ingestion-service",outcome="failed"}[15m]) > 0
+        for: 15m
+        labels:
+          severity: warning
+          scope: launch
+          owner_name: Clement Ellango
+          owner_role: Platform / Backend Lead
+        annotations:
+          summary: "Embedding fan-out failures detected"
+          description: "The ingestion service has recorded failed embedding fan-out attempts in the last 15 minutes."

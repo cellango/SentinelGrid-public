@@ -1,0 +1,197 @@
+{
+  "variables": {
+    "aws_region": "us-east-1",
+    "aws_instance_type": "t3.large",
+    "source_ami": "ami-0c02fb55956c7d316",
+    "winrm_username": "Administrator",
+    "sentinelgrid_agent_version": "1.0.0",
+    "sentinel_guard_enabled": "false",
+    "sentinel_guard_version": "0.1.0",
+    "sentinel_guard_package_url": "",
+    "sentinel_guard_tenant_id": "",
+    "sentinel_guard_agent_id": "",
+    "sentinel_guard_ingest_url": "",
+    "sentinel_guard_tls_verify": "true",
+    "sentinel_guard_auth_token": "",
+    "sentinel_guard_wazuh_alert_path": "C:\\ProgramData\\Wazuh\\logs\\alerts\\alerts.json",
+    "sentinelgrid_tenant_token": "",
+    "sentinelgrid_manager_host": "manager.sentinelgrid.ai",
+    "image_name": "sentinelgrid-windows-server-2022-hardened-{{timestamp}}",
+    "image_description": "SentinelGrid Hardened Windows Server 2022 with Endpoint Protection Agent"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "instance_type": "{{user `aws_instance_type`}}",
+      "source_ami_filter": {
+        "filters": {
+          "name": "Windows_Server-2022-English-Full-Base-*",
+          "root-device-type": "ebs",
+          "virtualization-type": "hvm"
+        },
+        "most_recent": true,
+        "owners": ["amazon"]
+      },
+      "communicator": "winrm",
+      "winrm_username": "{{user `winrm_username`}}",
+      "winrm_insecure": true,
+      "winrm_use_ssl": true,
+      "user_data_file": "windows-user-data.ps1",
+      "ami_name": "{{user `image_name`}}",
+      "ami_description": "{{user `image_description`}}",
+      "tags": {
+        "Name": "{{user `image_name`}}",
+        "OS": "Windows Server 2022",
+        "Hardening": "CIS Level 1",
+        "Agent": "SentinelGrid Endpoint Protection",
+        "ManagedBy": "Packer",
+        "Version": "{{user `sentinelgrid_agent_version`}}"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "Write-Host 'Installing prerequisites...'",
+        "Set-ExecutionPolicy Bypass -Scope Process -Force",
+        "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../../../scripts/cis-hardening/windows-server-2022/level1/harden.ps1",
+      "destination": "C:\\Windows\\Temp\\cis-harden.ps1"
+    },
+    {
+      "type": "file",
+      "source": "../../../scripts/install-sentinelgrid-agent.ps1",
+      "destination": "C:\\Windows\\Temp\\install-agent.ps1"
+    },
+    {
+      "type": "file",
+      "source": "../../../scripts/install-sentinelguard.ps1",
+      "destination": "C:\\Windows\\Temp\\install-sentinelguard.ps1"
+    },
+    {
+      "type": "file",
+      "source": "../../../scripts/sentinelguard.config.tmpl",
+      "destination": "C:\\Windows\\Temp\\sentinelguard.config.tmpl"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "Write-Host 'Running CIS hardening...'",
+        "C:\\Windows\\Temp\\cis-harden.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "environment_vars": [
+        "SENTINELGRID_TENANT_TOKEN={{user `sentinelgrid_tenant_token`}}",
+        "SENTINELGRID_MANAGER_HOST={{user `sentinelgrid_manager_host`}}",
+        "SENTINELGRID_AGENT_VERSION={{user `sentinelgrid_agent_version`}}"
+      ],
+      "inline": [
+        "Write-Host 'Installing SentinelGrid agent...'",
+        "C:\\Windows\\Temp\\install-agent.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "environment_vars": [
+        "SENTINEL_GUARD_ENABLED={{user `sentinel_guard_enabled`}}",
+        "SENTINEL_GUARD_PACKAGE_URL={{user `sentinel_guard_package_url`}}",
+        "SENTINEL_GUARD_TENANT_ID={{user `sentinel_guard_tenant_id`}}",
+        "SENTINEL_GUARD_AGENT_ID={{user `sentinel_guard_agent_id`}}",
+        "SENTINEL_GUARD_INGEST_URL={{user `sentinel_guard_ingest_url`}}",
+        "SENTINEL_GUARD_TLS_VERIFY={{user `sentinel_guard_tls_verify`}}",
+        "SENTINEL_GUARD_AUTH_TOKEN={{user `sentinel_guard_auth_token`}}",
+        "SENTINEL_GUARD_WAZUH_ALERT_PATH={{user `sentinel_guard_wazuh_alert_path`}}",
+        "SENTINEL_GUARD_VERSION={{user `sentinel_guard_version`}}",
+        "SENTINEL_GUARD_CONFIG_TEMPLATE=C:\\Windows\\Temp\\sentinelguard.config.tmpl"
+      ],
+      "inline": [
+        "Write-Host 'Installing SentinelGuard agent (optional toggle)...'",
+        "C:\\Windows\\Temp\\install-sentinelguard.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "Write-Host 'Installing SentinelGrid branding...'",
+        "",
+        "# Set Windows login message (appears before login)",
+        "$caption = 'SentinelGrid Hardened Windows Server 2022'",
+        "$text = @'",
+        "CIS Level 1 Hardened | Endpoint Protection Pre-Installed",
+        "",
+        "Authorized access only. All activity monitored and logged.",
+        "",
+        "Documentation: https://docs.sentinelgrid.ai",
+        "Support: support@sentinelgrid.ai",
+        "'@",
+        "",
+        "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System' -Name 'legalnoticecaption' -Value $caption -Force",
+        "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System' -Name 'legalnoticetext' -Value $text -Force",
+        "",
+        "# Create SentinelGrid image info file",
+        "$infoDir = 'C:\\ProgramData\\SentinelGrid'",
+        "New-Item -ItemType Directory -Path $infoDir -Force | Out-Null",
+        "",
+        "$infoContent = @'",
+        "SENTINELGRID_IMAGE=true",
+        "SENTINELGRID_VERSION={{user `sentinelgrid_agent_version`}}",
+        "SENTINELGRID_BUILD_DATE=$(Get-Date -Format 'yyyy-MM-dd')",
+        "OS_TYPE=windows-server-2022",
+        "HARDENING_LEVEL=cis-level1",
+        "CLOUD_PROVIDER=aws",
+        "AGENT_VERSION={{user `sentinelgrid_agent_version`}}",
+        "MANAGER_HOST={{user `sentinelgrid_manager_host`}}",
+        "'@",
+        "",
+        "$infoContent | Out-File -FilePath \"$infoDir\\image-info.txt\" -Encoding ASCII",
+        "",
+        "# Add registry entries for programmatic detection",
+        "New-Item -Path 'HKLM:\\SOFTWARE\\SentinelGrid' -Force | Out-Null",
+        "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\SentinelGrid' -Name 'ImageVersion' -Value '{{user `sentinelgrid_agent_version`}}' -Force",
+        "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\SentinelGrid' -Name 'HardenedImage' -Value 'true' -Force",
+        "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\SentinelGrid' -Name 'HardeningLevel' -Value 'cis-level1' -Force",
+        "Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\SentinelGrid' -Name 'BuildDate' -Value (Get-Date -Format 'yyyy-MM-dd') -Force",
+        "",
+        "Write-Host 'SentinelGrid branding installed successfully'"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "Write-Host 'Cleaning up...'",
+        "Remove-Item C:\\Windows\\Temp\\cis-harden.ps1 -Force",
+        "Remove-Item C:\\Windows\\Temp\\install-agent.ps1 -Force",
+        "Remove-Item C:\\Windows\\Temp\\install-sentinelguard.ps1 -Force",
+        "Remove-Item C:\\Windows\\Temp\\sentinelguard.config.tmpl -Force",
+        "Clear-EventLog -LogName Application, System, Security -ErrorAction SilentlyContinue",
+        "Get-ChildItem -Path C:\\Users\\Administrator\\AppData\\Local\\Temp -Recurse | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue"
+      ]
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "10m"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "Write-Host 'Running Sysprep...'",
+        "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /shutdown /quiet"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "manifest.json",
+      "strip_path": true
+    }
+  ]
+}

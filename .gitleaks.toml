@@ -1,0 +1,87 @@
+title = "SentinelGrid source preview"
+
+[extend]
+useDefault = true
+
+# Narrow exceptions: repository maintainers; reviewed 2026-10-15; recheck by 2026-12-31.
+# No path-only ignores, history baselines, credential exceptions, or disabled default rules.
+
+[[allowlists]]
+description = "fixed synthetic scanner/auth test inputs"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)SentinelGridAIShield/examples/curl/04\\-guardrails\\.sh$"]
+regexTarget = "secret"
+regexes = ["^sk\\-1234567890abcdefghij$"]
+
+[[allowlists]]
+description = "fixed synthetic scanner/auth test inputs"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)SentinelGridAIShield/services/tests/test_guardrails\\.py$"]
+regexTarget = "secret"
+regexes = ["^sk\\-1234567890abcdefghij$"]
+
+[[allowlists]]
+description = "fixed synthetic scanner/auth test inputs"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)SentinelGridPenTestAgent/tests/test_runtime_config\\.py$"]
+regexTarget = "secret"
+regexes = ["^approval\\-signing\\-secret\\-1234567890$", "^svc\\-secret\\-key\\-123456$"]
+
+[[allowlists]]
+description = "fixed synthetic scanner/auth test inputs"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)SentinelGridPenTestAgent/tests/test_scanner_orchestrator_internal_auth\\.py$"]
+regexTarget = "secret"
+regexes = ["^execution\\-secret\\-1234567890$"]
+
+[[allowlists]]
+description = "non-credential rule ID, database address, or historical image tag"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)backend/migrations_legacy/V057__update_detection_rule_versions_from_catalog\\.sql$"]
+regexTarget = "secret"
+regexes = ["^NW\\-C2\\-SIGNATURE$"]
+
+[[allowlists]]
+description = "fixed synthetic scanner/auth test inputs"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)backend/services/model_gateway/tests/test_guardrails_api\\.py$"]
+regexTarget = "secret"
+regexes = ["^SECRET1234567890$"]
+
+[[allowlists]]
+description = "non-credential rule ID, database address, or historical image tag"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)docker\\-compose\\.dev\\.yml$"]
+regexTarget = "secret"
+regexes = ["^5432/keycloak$"]
+
+[[allowlists]]
+description = "non-credential rule ID, database address, or historical image tag"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)docker\\-compose\\.minimal\\.yml$"]
+regexTarget = "secret"
+regexes = ["^5432/keycloak$"]
+
+[[allowlists]]
+description = "non-credential rule ID, database address, or historical image tag"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)docs/PHASE4_SLICE_4D_BASE_IMAGE_AND_IMAGE_SCAN_DISCIPLINE_CLOSEOUT_2026\\-04\\-18\\.md$", "(^|/)docs/archive/validation/phase4\\-slice\\-4d\\-base\\-image\\-and\\-image\\-scan\\-discipline\\-closeout\\-2026\\-04\\-18\\.md$"]
+regexTarget = "secret"
+regexes = ["^slice4d\\-pruned$"]
+
+[[allowlists]]
+description = "non-credential rule ID, database address, or historical image tag"
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ["(^|/)docs/runbooks/compliance_operations\\.md$", "(^|/)docs/archive/operations/compliance\\-operations\\.md$"]
+regexTarget = "secret"
+regexes = ["^8000/api/v1/compliance/capabilities$"]

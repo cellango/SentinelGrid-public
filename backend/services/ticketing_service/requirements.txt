@@ -1,0 +1,12 @@
+-r ../../libs/requirements.txt
+
+# Ticketing integrations
+requests>=2.31.0
+httpx>=0.25.0
+pydantic-settings>=2.0.0
+
+# Jira integration
+jira>=3.5.0
+
+# ServiceNow integration (via REST API)
+# No specific library needed, using httpx

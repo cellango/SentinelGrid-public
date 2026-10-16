@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # Separate PostgreSQL for posture platform
+  posture-postgres:
+    image: postgres:15
+    container_name: posture-postgres
+    environment:
+      POSTGRES_DB: posture_db
+      POSTGRES_USER: posture_user
+      POSTGRES_PASSWORD: ${POSTURE_DB_PASSWORD:-posture_pass}
+    volumes:
+      - posture-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U posture_user -d posture_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for job queues (shared with main SentinelGrid)
+  redis:
+    image: redis:7-alpine
+    container_name: posture-redis
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes
+
+  # Analyzer Orchestrator - orchestrates security analyzers
+  analyzer-orchestrator:
+    build:
+      context: .
+      dockerfile: services/analyzer-orchestrator/Dockerfile
+    container_name: analyzer-orchestrator
+    environment:
+      - POSTURE_SERVICE_URL=http://posture-service:8000
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    ports:
+      - "8103:8000"
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  # Posture Service - core REST + GraphQL API
+  posture-service:
+    build:
+      context: .
+      dockerfile: services/posture-service/Dockerfile
+    container_name: posture-service
+    environment:
+      - DATABASE_URL=postgresql://posture_user:${POSTURE_DB_PASSWORD:-posture_pass}@posture-postgres:5432/posture_db
+      - REDIS_URL=redis://redis:6379
+      - ANALYZER_ORCHESTRATOR_URL=http://analyzer-orchestrator:8000
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    ports:
+      - "8100:8000"
+    depends_on:
+      - posture-postgres
+      - redis
+    restart: unless-stopped
+
+  # MCP Server - for AI agent integration
+  posture-mcp-server:
+    build:
+      context: .
+      dockerfile: services/mcp-server/Dockerfile
+    container_name: posture-mcp-server
+    environment:
+      - POSTURE_SERVICE_URL=http://posture-service:8000
+      - ANALYZER_ORCHESTRATOR_URL=http://analyzer-orchestrator:8000
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    ports:
+      - "8102:8000"
+    depends_on:
+      - posture-service
+      - analyzer-orchestrator
+    restart: unless-stopped
+
+  # Frontend - Next.js UI with AI chat interface
+  posture-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: posture-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8100
+      - NEXT_PUBLIC_MCP_URL=http://localhost:8102
+      - POSTURE_SERVICE_URL=http://posture-service:8000
+      - MCP_URL=http://posture-mcp-server:8000
+    ports:
+      - "3001:3000"
+    depends_on:
+      - posture-service
+      - posture-mcp-server
+    restart: unless-stopped
+
+volumes:
+  posture-db-data:
+

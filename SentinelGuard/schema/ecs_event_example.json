@@ -1,0 +1,27 @@
+{
+  "@timestamp": "2024-01-01T00:00:00Z",
+  "agent": {
+    "id": "agent-id",
+    "type": "wazuh",
+    "version": "4.x"
+  },
+  "event": {
+    "dataset": "wazuh.alerts",
+    "type": ["alert"],
+    "severity": 5,
+    "reason": "Example alert"
+  },
+  "host": {
+    "hostname": "example-host",
+    "ip": "10.0.0.5"
+  },
+  "process": {
+    "name": "example.exe",
+    "pid": 1234
+  },
+  "tags": ["endpoint", "wazuh"],
+  "sentinelgrid": {
+    "fingerprint": "abc123",
+    "trace_id": "trace-xyz"
+  }
+}

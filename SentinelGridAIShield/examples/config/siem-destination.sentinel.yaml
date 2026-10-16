@@ -1,0 +1,17 @@
+version: 1
+
+destinations:
+  - name: sentinel-primary
+    type: microsoft_sentinel_dcr
+    enabled: false
+    transport: http_json
+    endpoint: https://example-dce.eastus-1.ingest.monitor.azure.com
+    auth:
+      type: azure_client_secret
+      tenant_id: 00000000-0000-0000-0000-000000000000
+      client_id_env: AZURE_CLIENT_ID
+      client_secret_env: AZURE_CLIENT_SECRET
+    routing:
+      dcr_immutable_id: dcr-00000000000000000000000000000000
+      stream_name: Custom-SentinelGridAIShield_CL
+      table_name: SentinelGridAIShield_CL

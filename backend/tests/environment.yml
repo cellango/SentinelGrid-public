@@ -1,0 +1,48 @@
+name: test
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  # Core testing
+  - pytest>=7.4.0
+  - pytest-asyncio>=0.21.0
+  - pytest-cov>=4.1.0
+  - pytest-mock>=3.12.0
+  # HTTP testing
+  - httpx>=0.25.0
+  # FastAPI testing
+  - fastapi>=0.104.0
+  - uvicorn>=0.24.0
+  # Database testing
+  - sqlalchemy>=2.0.0
+  - psycopg2-binary>=2.9.0
+  # Keycloak integration (for IAM Agent tests)
+  - pip:
+    # Keycloak client
+    - python-keycloak>=4.0.0
+    # JWT handling
+    - PyJWT[cryptography]>=2.8.0
+    # FastAPI testing utilities
+    - fastapi[test]>=0.104.0
+    # Selenium (for UI tests)
+    - selenium>=4.15.0
+    - webdriver-manager>=4.0.0
+    # Mocking and test utilities
+    - responses>=0.24.0
+    - faker>=20.0.0
+    # Model Gateway test dependencies
+    - sentence-transformers>=2.2.2
+    - numpy>=1.24.3
+    # Utilities
+    - python-dotenv>=1.0.0
+    - cachetools>=5.3.2
+    # LDAP/AD connector (for IAM tests)
+    - ldap3>=2.9.1
+    # Redis (for testing)
+    - redis>=5.0.0
+    # Git integration (for Git ingestion tests)
+    - GitPython>=3.1.0
+    # RQ (for job queue tests)
+    - rq>=1.15.0

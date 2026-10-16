@@ -1,0 +1,43 @@
+{
+  "realm": "sentinelgrid",
+  "enabled": true,
+  "displayName": "SentinelGrid",
+  "sslRequired": "none",
+  "clients": [],
+  "roles": {
+    "realm": [
+      {
+        "name": "TENANT_ADMIN",
+        "description": "Full control over tenant"
+      },
+      {
+        "name": "SOC_MANAGER",
+        "description": "Manage incidents, playbooks, team"
+      },
+      {
+        "name": "SOC_ANALYST",
+        "description": "View and triage alerts, manage incidents"
+      },
+      {
+        "name": "VIEW_ONLY",
+        "description": "Read-only access"
+      }
+    ]
+  },
+  "protocolMappers": [],
+  "users": [],
+  "components": {
+    "org.keycloak.userprofile.UserProfileProvider": [
+      {
+        "name": "declarative-user-profile",
+        "providerId": "declarative-user-profile",
+        "config": {
+          "kc.user.profile.config": [
+            "{\"attributes\":[],\"unmanagedAttributePolicy\":\"ENABLED\"}"
+          ]
+        }
+      }
+    ]
+  }
+}
+

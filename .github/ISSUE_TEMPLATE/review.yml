@@ -1,0 +1,24 @@
+name: Developer review or feedback
+description: Discuss architecture, clarity, reproducibility, or an ordinary bug.
+body:
+  - type: markdown
+    attributes:
+      value: "For vulnerabilities, follow SECURITY.md. Keep credentials, private scanner reports, and customer data out of issues."
+  - type: input
+    id: revision
+    attributes:
+      label: Commit or branch reviewed
+    validations:
+      required: true
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Feedback
+      description: Describe the component, observation, and suggested improvement. Use synthetic examples.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction and checks
+      description: For ordinary bugs, include commands, environment, and expected versus actual behavior.

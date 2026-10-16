@@ -1,0 +1,197 @@
+{
+  "description": "Parse Keycloak authentication events into normalized fields",
+  "processors": [
+    {
+      "grok": {
+        "field": "message",
+        "patterns": [
+          "%{TIMESTAMP_ISO8601:keycloak.timestamp}\\s+%{LOGLEVEL:keycloak.level}\\s+\\[%{DATA:keycloak.logger}\\]\\s+\\(%{DATA:keycloak.thread}\\)\\s+%{GREEDYDATA:keycloak.kv}"
+        ],
+        "ignore_failure": true
+      }
+    },
+    {
+      "date": {
+        "field": "keycloak.timestamp",
+        "formats": [
+          "yyyy-MM-dd HH:mm:ss,SSS",
+          "ISO8601"
+        ],
+        "ignore_failure": true
+      }
+    },
+    {
+      "kv": {
+        "field": "keycloak.kv",
+        "field_split": ", ",
+        "value_split": "=",
+        "trim_key": "\"",
+        "trim_value": "\"",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "type",
+        "target_field": "keycloak.event_type",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "realmId",
+        "target_field": "keycloak.realm_id",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "realmName",
+        "target_field": "keycloak.realm_name",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "clientId",
+        "target_field": "keycloak.client_id",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "userId",
+        "target_field": "user.id",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "ipAddress",
+        "target_field": "source.ip",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "username",
+        "target_field": "user.name",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "user.email",
+        "value": "{{{user.name}}}",
+        "ignore_empty_value": true
+      }
+    },
+    {
+      "rename": {
+        "field": "auth_method",
+        "target_field": "auth.method",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "grant_type",
+        "target_field": "auth.grant_type",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "client_auth_method",
+        "target_field": "auth.client_method",
+        "ignore_failure": true
+      }
+    },
+    {
+      "rename": {
+        "field": "error",
+        "target_field": "keycloak.error",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "identity.provider",
+        "value": "keycloak"
+      }
+    },
+    {
+      "set": {
+        "field": "event.action",
+        "value": "{{{keycloak.event_type}}}",
+        "ignore_empty_value": true
+      }
+    },
+    {
+      "set": {
+        "field": "event.category",
+        "value": [
+          "authentication"
+        ]
+      }
+    },
+    {
+      "set": {
+        "field": "event.type",
+        "value": [
+          "info"
+        ]
+      }
+    },
+    {
+      "set": {
+        "field": "event.outcome",
+        "value": "failure",
+        "if": "ctx?.keycloak?.error != null && ctx.keycloak.error != ''"
+      }
+    },
+    {
+      "set": {
+        "field": "event.outcome",
+        "value": "success",
+        "if": "ctx?.event != null && ctx.event.outcome == null"
+      }
+    },
+    {
+      "set": {
+        "field": "sg.tenant_id",
+        "value": "00000000-0000-0000-0000-000000000000",
+        "if": "ctx?.sg == null || ctx.sg.tenant_id == null"
+      }
+    },
+    {
+      "geoip": {
+        "field": "source.ip",
+        "target_field": "source.geo",
+        "ignore_failure": true
+      }
+    },
+    {
+      "remove": {
+        "field": [
+          "keycloak.kv",
+          "keycloak.timestamp",
+          "keycloak.level",
+          "keycloak.logger",
+          "keycloak.thread",
+          "keycloak.realm"
+        ],
+        "ignore_failure": true
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "field": "ingest_error",
+        "value": "keycloak-auth-pipeline failed",
+        "override": true
+      }
+    }
+  ]
+}

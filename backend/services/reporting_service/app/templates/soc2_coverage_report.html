@@ -1,0 +1,197 @@
+{% extends "base_report.html" %}
+
+{% block executive_summary %}
+<div class="metric-card">
+    <h4>Overall SOC 2 Coverage</h4>
+    <div class="value">{{ soc2_coverage_percentage|format_percent }}</div>
+    <div class="description">{{ controls_implemented }} of {{ total_controls }} controls implemented</div>
+</div>
+
+<div class="metric-card">
+    <h4>Evidence Collected</h4>
+    <div class="value">{{ evidence_collected_percentage|format_percent }}</div>
+    <div class="description">{{ evidence_count }} evidence items</div>
+</div>
+
+<div class="metric-card">
+    <h4>Gap Analysis</h4>
+    <div class="value">{{ gap_count }}</div>
+    <div class="description">Controls requiring attention</div>
+</div>
+
+<p style="margin-top: 1cm;">
+This report provides a comprehensive analysis of {{ tenant_name }}'s SOC 2 Trust Services Criteria coverage using the SentinelGrid platform. The organization has implemented {{ controls_implemented }} of {{ total_controls }} applicable controls, achieving {{ soc2_coverage_percentage|format_percent }} overall coverage.
+</p>
+
+{% if gap_count > 0 %}
+<div class="callout callout-warning">
+    <strong>Action Required:</strong> There are {{ gap_count }} controls that require attention to achieve full SOC 2 readiness.
+</div>
+{% else %}
+<div class="callout">
+    <strong>Excellent:</strong> All applicable SOC 2 controls have been implemented!
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Control Coverage by Category -->
+<div class="section">
+    <h1>Control Coverage by Category</h1>
+    
+    {% if coverage_by_category_chart %}
+    <img src="{{ coverage_by_category_chart }}" alt="Coverage by Category" class="chart">
+    {% endif %}
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Controls</th>
+                <th>Implemented</th>
+                <th>Coverage %</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr>
+                <td><strong>{{ category.name }}</strong></td>
+                <td>{{ category.total_controls }}</td>
+                <td>{{ category.implemented_controls }}</td>
+                <td>{{ category.coverage_percentage|format_percent }}</td>
+                <td>
+                    {% if category.coverage_percentage >= 90 %}
+                    <span class="badge badge-success">Excellent</span>
+                    {% elif category.coverage_percentage >= 70 %}
+                    <span class="badge badge-info">Good</span>
+                    {% elif category.coverage_percentage >= 50 %}
+                    <span class="badge badge-warning">Partial</span>
+                    {% else %}
+                    <span class="badge badge-danger">Needs Attention</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Per-Control Details -->
+{% for category in categories %}
+<div class="section">
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.description }}</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th width="15%">Control ID</th>
+                <th width="35%">Control Name</th>
+                <th width="20%">SentinelGrid Coverage</th>
+                <th width="15%">Status</th>
+                <th width="15%">Evidence</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for control in category.controls %}
+            <tr>
+                <td><strong>{{ control.control_id }}</strong></td>
+                <td>{{ control.control_name }}</td>
+                <td>
+                    {% if control.features %}
+                    <ul style="margin: 0; padding-left: 1em;">
+                        {% for feature in control.features %}
+                        <li>{{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <em>Not mapped</em>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if control.status == 'implemented' %}
+                    <span class="badge badge-success">Implemented</span>
+                    {% elif control.status == 'partially' %}
+                    <span class="badge badge-warning">Partial</span>
+                    {% elif control.status == 'not_implemented' %}
+                    <span class="badge badge-danger">Not Implemented</span>
+                    {% else %}
+                    <span class="badge badge-info">N/A</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if control.evidence_count > 0 %}
+                    {{ control.evidence_count }} items
+                    {% else %}
+                    No evidence
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endfor %}
+
+<!-- Gap Analysis -->
+<div class="section">
+    <h1>Gap Analysis</h1>
+    
+    {% if gaps %}
+    <p>The following controls require attention to achieve full SOC 2 compliance:</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Control ID</th>
+                <th>Control Name</th>
+                <th>Gap Description</th>
+                <th>Recommended Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gap in gaps %}
+            <tr>
+                <td><strong>{{ gap.control_id }}</strong></td>
+                <td>{{ gap.control_name }}</td>
+                <td>{{ gap.gap_description }}</td>
+                <td>{{ gap.recommended_action }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="callout">
+        <strong>No gaps identified.</strong> All applicable SOC 2 controls are implemented.
+    </div>
+    {% endif %}
+</div>
+
+<!-- Evidence Summary -->
+<div class="section">
+    <h1>Evidence Summary</h1>
+    
+    <p>Total evidence items collected: <strong>{{ evidence_count }}</strong></p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Evidence Type</th>
+                <th>Count</th>
+                <th>Controls Supported</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evidence_type in evidence_summary %}
+            <tr>
+                <td>{{ evidence_type.type_name }}</td>
+                <td>{{ evidence_type.count }}</td>
+                <td>{{ evidence_type.controls_supported }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

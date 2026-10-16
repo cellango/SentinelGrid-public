@@ -1,0 +1,4 @@
+# Scanner Orchestrator specific dependencies
+# Base deps (FastAPI, pydantic, uvicorn) come from sentinelgrid/api-base
+boto3>=1.34.0
+psycopg2-binary>=2.9.9

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentinelgrid.example/schemas/siem-event.schema.json",
+  "title": "SentinelGridAIShield Normalized SIEM Event",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "occurred_at",
+    "tenant_id",
+    "severity"
+  ],
+  "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
+    "event_type": { "type": "string", "minLength": 1 },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "tenant_id": { "type": "string", "minLength": 1 },
+    "realm": { "type": ["string", "null"] },
+    "ai_app_id": { "type": ["string", "null"] },
+    "user_id": { "type": ["string", "null"] },
+    "provider": { "type": ["string", "null"] },
+    "model": { "type": ["string", "null"] },
+    "policy_decision": { "type": ["string", "null"] },
+    "severity": {
+      "type": "string",
+      "enum": ["info", "low", "medium", "high", "critical"]
+    },
+    "risk_flags": {
+      "type": "object",
+      "additionalProperties": { "type": "boolean" }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["integer", "number"]
+      }
+    },
+    "previews": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "raw": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

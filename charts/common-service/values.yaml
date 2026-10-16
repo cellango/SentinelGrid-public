@@ -1,0 +1,118 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+
+image:
+  repository: "REPLACE_ME_ECR_REPO/service"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+podAnnotations: {}
+podLabels: {}
+
+vaultInjector:
+  enabled: false
+  annotations: {}
+
+# Pod-level security context.
+podSecurityContext: {}
+# Container-level security context.
+securityContext: {}
+
+command: []
+args: []
+
+env: []
+envFrom: []
+
+resources: {}
+
+livenessProbe: {}
+readinessProbe: {}
+startupProbe: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 8000
+  targetPort: 8000
+  annotations: {}
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  alb:
+    scheme: ""
+    listenPorts: ""
+    certificateArn: ""
+    requireCertificate: false
+    sslRedirect: ""
+    backendProtocol: ""
+    healthcheckPath: ""
+    healthcheckProtocol: ""
+    healthcheckPort: ""
+    successCodes: ""
+  hosts:
+    - host: example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  # Used by ingress controllers that terminate TLS from Kubernetes secrets.
+  # AWS ALB deployments should prefer ingress.alb.certificateArn.
+  tls: []
+
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: null
+
+keda:
+  enabled: false
+  minReplicas: 0
+  maxReplicas: 3
+  cooldownPeriod: 300
+  pollingInterval: 30
+  triggers: []
+  # Example trigger:
+  # triggers:
+  #   - type: prometheus
+  #     metadata:
+  #       serverAddress: http://prometheus:9090
+  #       metricName: http_requests_per_second
+  #       threshold: "5"
+
+networkPolicy:
+  enabled: false
+  # Legacy ingress-only fields. Prefer networkPolicy.ingress.* for new values.
+  allowNamespaces: []
+  allowPodSelectors: []
+  ingress:
+    public: false
+    ports: []
+    allowNamespaces: []
+    allowPodSelectors: []
+    allowServiceInstances: []
+  egress:
+    allowDNS: false
+    allowAnyPorts: []
+    allowNamespaces: []
+    allowPodSelectors: []
+    allowServiceInstances: []
+
+volumes: []
+volumeMounts: []
+
+sidecars: []

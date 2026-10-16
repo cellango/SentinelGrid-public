@@ -1,0 +1,186 @@
+{
+  "profiles": {
+    "smoke": [
+      "AUD-TI-GW-001",
+      "AUD-TI-IAM-001",
+      "AUD-TI-ING-001"
+    ],
+    "standard": [
+      "AUD-TI-GW-001",
+      "AUD-TI-IAM-001",
+      "AUD-TI-ING-001"
+    ],
+    "full": [
+      "AUD-TI-GW-001",
+      "AUD-TI-IAM-001",
+      "AUD-TI-ING-001"
+    ]
+  },
+  "targets": [
+    {
+      "id": "AUD-TI-GW-001",
+      "domain": "gateway",
+      "owner": "API Gateway",
+      "service": "api_gateway",
+      "description": "Authenticated tenants cannot override API Gateway alert scope with foreign tenant identifiers and cross-tenant lookups stay bounded.",
+      "test_file": "backend/services/api_gateway/tests/test_tenant_isolation_contracts.py",
+      "workdir": "backend/services/api_gateway",
+      "env": {
+        "PYTHONPATH": ".:../../libs"
+      },
+      "pytest_args": [
+        "tests/test_tenant_isolation_contracts.py",
+        "-q"
+      ],
+      "evidence_surfaces": [
+        "GET /api/v1/alerts/",
+        "GET /api/v1/alerts/{alert_id}"
+      ],
+      "blocked_violation_cases": [
+        {
+          "claim_id": "CLAIM-GW-001",
+          "testcase": "test_authenticated_tenant_cannot_override_scope_with_header_tenant_id",
+          "claim_type": "scope_enforcement",
+          "severity": "critical",
+          "control_id": "MT-GW-001",
+          "auditor_assertion": "An authenticated tenant cannot expand alert scope by sending a foreign X-Tenant-ID header.",
+          "expected_behavior": "The gateway must ignore the caller-supplied tenant header and scope the alert service to the authenticated tenant context.",
+          "evidence_surface": "GET /api/v1/alerts/ with foreign X-Tenant-ID header"
+        },
+        {
+          "claim_id": "CLAIM-GW-002",
+          "testcase": "test_authenticated_tenant_cannot_override_scope_with_query_tenant_id",
+          "claim_type": "scope_enforcement",
+          "severity": "critical",
+          "control_id": "MT-GW-002",
+          "auditor_assertion": "An authenticated tenant cannot expand alert scope by providing a foreign tenant identifier in query parameters.",
+          "expected_behavior": "The gateway must ignore caller-supplied tenant query parameters and preserve the authenticated tenant boundary.",
+          "evidence_surface": "GET /api/v1/alerts/?tenant_id=<foreign>"
+        },
+        {
+          "claim_id": "CLAIM-GW-003",
+          "testcase": "test_cross_tenant_resource_lookup_returns_bounded_error",
+          "claim_type": "bounded_error",
+          "severity": "high",
+          "control_id": "MT-GW-003",
+          "auditor_assertion": "Cross-tenant resource lookups must not disclose whether a foreign tenant object exists beyond a bounded not-found response.",
+          "expected_behavior": "The gateway returns a bounded 404 error rather than foreign-tenant data.",
+          "evidence_surface": "GET /api/v1/alerts/{alert_id}"
+        },
+        {
+          "claim_id": "CLAIM-GW-004",
+          "testcase": "test_cross_tenant_list_request_does_not_return_foreign_rows",
+          "claim_type": "bounded_result_set",
+          "severity": "high",
+          "control_id": "MT-GW-004",
+          "auditor_assertion": "Cross-tenant list requests must not return foreign rows.",
+          "expected_behavior": "The gateway returns an empty bounded result set when no in-tenant rows are visible.",
+          "evidence_surface": "GET /api/v1/alerts/"
+        }
+      ]
+    },
+    {
+      "id": "AUD-TI-IAM-001",
+      "domain": "iam",
+      "owner": "IAM Agent",
+      "service": "iam_agent",
+      "description": "IAM tenant isolation helpers reject mismatched tenant identifiers and avoid echoing foreign tenant data in denial paths.",
+      "test_file": "backend/agents/iam_agent/tests/test_tenant_isolation_contracts.py",
+      "workdir": "backend/agents/iam_agent",
+      "env": {
+        "PYTHONPATH": ".:../../libs"
+      },
+      "pytest_args": [
+        "tests/test_tenant_isolation_contracts.py",
+        "-q"
+      ],
+      "evidence_surfaces": [
+        "TenantIsolationValidator.enforce_tenant_isolation",
+        "TenantIsolationValidator.get_tenant_id_for_query"
+      ],
+      "blocked_violation_cases": [
+        {
+          "claim_id": "CLAIM-IAM-001",
+          "testcase": "test_enforce_tenant_isolation_accepts_matching_tenant_ids",
+          "claim_type": "scope_consistency",
+          "severity": "medium",
+          "control_id": "MT-IAM-001",
+          "auditor_assertion": "Tenant isolation helpers preserve access for the authenticated tenant when the requested tenant matches.",
+          "expected_behavior": "Matching tenant identifiers are allowed without raising an error.",
+          "evidence_surface": "TenantIsolationValidator.enforce_tenant_isolation"
+        },
+        {
+          "claim_id": "CLAIM-IAM-002",
+          "testcase": "test_enforce_tenant_isolation_rejects_mismatched_tenant_ids",
+          "claim_type": "blocked_violation",
+          "severity": "critical",
+          "control_id": "MT-IAM-002",
+          "auditor_assertion": "Tenant isolation helpers reject mismatched tenant identifiers.",
+          "expected_behavior": "A mismatched tenant request raises HTTP 403.",
+          "evidence_surface": "TenantIsolationValidator.enforce_tenant_isolation"
+        },
+        {
+          "claim_id": "CLAIM-IAM-003",
+          "testcase": "test_get_tenant_id_for_query_uses_provided_tenant_scope",
+          "claim_type": "scope_resolution",
+          "severity": "medium",
+          "control_id": "MT-IAM-003",
+          "auditor_assertion": "Tenant query helpers resolve to the provided authenticated tenant scope.",
+          "expected_behavior": "The query helper returns the authenticated tenant scope for downstream access checks.",
+          "evidence_surface": "TenantIsolationValidator.get_tenant_id_for_query"
+        },
+        {
+          "claim_id": "CLAIM-IAM-004",
+          "testcase": "test_foreign_tenant_identifier_is_not_echoed_in_error_paths",
+          "claim_type": "non_echo_denial",
+          "severity": "high",
+          "control_id": "MT-IAM-004",
+          "auditor_assertion": "Denial paths do not echo foreign tenant identifiers back to the caller.",
+          "expected_behavior": "The error detail remains a generic Access denied response.",
+          "evidence_surface": "TenantIsolationValidator.enforce_tenant_isolation denial path"
+        }
+      ]
+    },
+    {
+      "id": "AUD-TI-ING-001",
+      "domain": "ingestion",
+      "owner": "Ingestion Service",
+      "service": "ingestion_service",
+      "description": "Ingestion batch handling rejects cross-tenant event payloads and keeps batch processor calls scoped to the authenticated tenant.",
+      "test_file": "backend/services/ingestion_service/tests/test_multi_tenant_isolation.py",
+      "workdir": "backend/services/ingestion_service",
+      "env": {
+        "PYTHONPATH": ".:../../libs"
+      },
+      "pytest_args": [
+        "tests/test_multi_tenant_isolation.py",
+        "-q"
+      ],
+      "evidence_surfaces": [
+        "IngestionService.ingest_batch"
+      ],
+      "blocked_violation_cases": [
+        {
+          "claim_id": "CLAIM-ING-001",
+          "testcase": "test_rejects_cross_tenant_event",
+          "claim_type": "blocked_violation",
+          "severity": "critical",
+          "control_id": "MT-ING-001",
+          "auditor_assertion": "Cross-tenant event payloads are rejected before batch processing.",
+          "expected_behavior": "A foreign tenant event increments failed count, records a tenant mismatch error, and does not reach the batch processor.",
+          "evidence_surface": "IngestionService.ingest_batch cross-tenant payload path"
+        },
+        {
+          "claim_id": "CLAIM-ING-002",
+          "testcase": "test_batch_processor_scoped_per_tenant",
+          "claim_type": "processor_scoping",
+          "severity": "high",
+          "control_id": "MT-ING-002",
+          "auditor_assertion": "Batch processor invocations remain scoped to the authenticated tenant.",
+          "expected_behavior": "Every batch processor call uses the authenticated tenant identifier.",
+          "evidence_surface": "IngestionService.ingest_batch batch processor dispatch"
+        }
+      ]
+    }
+  ]
+}

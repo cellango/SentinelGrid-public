@@ -1,0 +1,335 @@
+{% extends "base_report.html" %}
+
+{% block executive_summary %}
+<div class="metric-card">
+    <h4>Total Users</h4>
+    <div class="value">{{ total_users|format_number }}</div>
+    <div class="description">{{ enabled_users }} active, {{ disabled_users }} disabled</div>
+</div>
+
+<div class="metric-card">
+    <h4>MFA Coverage</h4>
+    <div class="value">{{ mfa_coverage_percentage|format_percent }}</div>
+    <div class="description">{{ mfa_enabled_users }} of {{ total_users }} users</div>
+</div>
+
+<div class="metric-card">
+    <h4>Privileged Users</h4>
+    <div class="value">{{ privileged_users_count }}</div>
+    <div class="description">{{ privileged_mfa_percentage|format_percent }} with MFA</div>
+</div>
+
+<p style="margin-top: 1cm;">
+This IAM & MFA Hygiene Report provides a comprehensive analysis of identity and access management for {{ tenant_name }} for the period {{ period_start }} to {{ period_end }}. MFA coverage stands at {{ mfa_coverage_percentage|format_percent }} overall, with {{ privileged_mfa_percentage|format_percent }} of privileged users using MFA.
+</p>
+
+{% if dormant_accounts_count > 0 %}
+<div class="callout callout-warning">
+    <strong>Attention:</strong> {{ dormant_accounts_count }} dormant accounts detected (no login > 90 days).
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- User Statistics -->
+<div class="section">
+    <h1>User Statistics</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Count</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Total Users</td>
+                <td>{{ total_users|format_number }}</td>
+                <td>100%</td>
+            </tr>
+            <tr>
+                <td>Enabled Users</td>
+                <td>{{ enabled_users|format_number }}</td>
+                <td>{{ (enabled_users / total_users * 100)|format_percent }}</td>
+            </tr>
+            <tr>
+                <td>Disabled Users</td>
+                <td>{{ disabled_users|format_number }}</td>
+                <td>{{ (disabled_users / total_users * 100)|format_percent }}</td>
+            </tr>
+            <tr>
+                <td>Users Created This Period</td>
+                <td>{{ users_created_this_period|format_number }}</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Dormant Accounts (>90 days)</td>
+                <td>{{ dormant_accounts_count|format_number }}</td>
+                <td>{{ (dormant_accounts_count / total_users * 100)|format_percent }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- MFA Coverage -->
+<div class="section">
+    <h1>MFA Coverage</h1>
+    
+    {% if mfa_coverage_chart %}
+    <img src="{{ mfa_coverage_chart }}" alt="MFA Coverage" class="chart">
+    {% endif %}
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Total Users</th>
+                <th>MFA Enabled</th>
+                <th>Coverage %</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>All Users</strong></td>
+                <td>{{ total_users|format_number }}</td>
+                <td>{{ mfa_enabled_users|format_number }}</td>
+                <td><strong>{{ mfa_coverage_percentage|format_percent }}</strong></td>
+            </tr>
+            <tr>
+                <td><strong>Privileged Roles (Admins)</strong></td>
+                <td>{{ privileged_users_count|format_number }}</td>
+                <td>{{ privileged_mfa_enabled|format_number }}</td>
+                <td><strong>{{ privileged_mfa_percentage|format_percent }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h3>MFA Methods Breakdown</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>Users</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for method in mfa_methods %}
+            <tr>
+                <td>{{ method.name }}</td>
+                <td>{{ method.count|format_number }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% if non_compliant_users %}
+    <h3>Non-Compliant Users (MFA Required but Not Enabled)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>User Email</th>
+                <th>Roles</th>
+                <th>Last Login</th>
+                <th>Grace Period</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in non_compliant_users[:20] %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles|join(', ') }}</td>
+                <td>{{ user.last_login|format_date }}</td>
+                <td>{{ user.grace_period_expires|format_date if user.grace_period_expires else 'Expired' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if non_compliant_users|length > 20 %}
+    <p><em>Showing 20 of {{ non_compliant_users|length }} non-compliant users</em></p>
+    {% endif %}
+    {% endif %}
+</div>
+
+<!-- Privileged Access -->
+<div class="section">
+    <h1>Privileged Access Analysis</h1>
+    
+    <h3>Admin & Privileged Role Holders</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>User Email</th>
+                <th>Roles</th>
+                <th>MFA Status</th>
+                <th>Last Login</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in privileged_users[:30] %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles|join(', ') }}</td>
+                <td>
+                    {% if user.mfa_enabled %}
+                    <span class="badge badge-success">Enabled</span>
+                    {% else %}
+                    <span class="badge badge-danger">Not Enabled</span>
+                    {% endif %}
+                </td>
+                <td>{{ user.last_login|format_date if user.last_login else 'Never' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h3>Recently Granted Admin Privileges</h3>
+    {% if recent_privilege_grants %}
+    <table>
+        <thead>
+            <tr>
+                <th>User Email</th>
+                <th>Role Granted</th>
+                <th>Granted By</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grant in recent_privilege_grants %}
+            <tr>
+                <td>{{ grant.user_email }}</td>
+                <td>{{ grant.role_name }}</td>
+                <td>{{ grant.granted_by_email }}</td>
+                <td>{{ grant.granted_at|format_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p><em>No admin privileges granted during this period.</em></p>
+    {% endif %}
+    
+    <h3>Users with Excessive Privileges</h3>
+    {% if excessive_privilege_users %}
+    <table>
+        <thead>
+            <tr>
+                <th>User Email</th>
+                <th>Role Count</th>
+                <th>Roles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in excessive_privilege_users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role_count }}</td>
+                <td>{{ user.roles|join(', ') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p><em>No users with excessive privileges detected.</em></p>
+    {% endif %}
+</div>
+
+<!-- Access Reviews -->
+<div class="section">
+    <h1>Access Reviews</h1>
+    
+    {% if last_access_review %}
+    <p>
+        <strong>Last Access Review:</strong> {{ last_access_review.name }} completed on {{ last_access_review.completed_at|format_date }}
+    </p>
+    
+    <div class="metric-card">
+        <h4>Review Completion</h4>
+        <div class="value">{{ last_access_review.completion_percentage|format_percent }}</div>
+        <div class="description">{{ last_access_review.items_reviewed }} of {{ last_access_review.total_items }} reviewed</div>
+    </div>
+    
+    <div class="metric-card">
+        <h4>Approvals</h4>
+        <div class="value">{{ last_access_review.items_approved }}</div>
+        <div class="description">Access approvals</div>
+    </div>
+    
+    <div class="metric-card">
+        <h4>Revocations</h4>
+        <div class="value">{{ last_access_review.items_revoked }}</div>
+        <div class="description">Access revocations</div>
+    </div>
+    {% else %}
+    <div class="callout callout-warning">
+        <strong>No Access Reviews:</strong> No access review campaigns have been completed during this period. SOC 2 requires regular access reviews (quarterly recommended).
+    </div>
+    {% endif %}
+</div>
+
+<!-- Dormant & Shared Accounts -->
+<div class="section">
+    <h1>Dormant & Service Accounts</h1>
+    
+    <h3>Dormant Accounts (No login > 90 days)</h3>
+    {% if dormant_accounts %}
+    <table>
+        <thead>
+            <tr>
+                <th>User Email</th>
+                <th>Last Login</th>
+                <th>Days Inactive</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in dormant_accounts[:20] %}
+            <tr>
+                <td>{{ account.email }}</td>
+                <td>{{ account.last_login|format_date if account.last_login else 'Never' }}</td>
+                <td>{{ account.days_inactive }}</td>
+                <td>
+                    {% if account.enabled %}
+                    <span class="badge badge-warning">Active</span>
+                    {% else %}
+                    <span class="badge badge-info">Disabled</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if dormant_accounts|length > 20 %}
+    <p><em>Showing 20 of {{ dormant_accounts|length }} dormant accounts</em></p>
+    {% endif %}
+    {% else %}
+    <p><em>No dormant accounts detected.</em></p>
+    {% endif %}
+    
+    <h3>Service Accounts</h3>
+    {% if service_accounts %}
+    <table>
+        <thead>
+            <tr>
+                <th>Account Name</th>
+                <th>Purpose</th>
+                <th>Last Used</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in service_accounts %}
+            <tr>
+                <td>{{ account.name }}</td>
+                <td>{{ account.purpose }}</td>
+                <td>{{ account.last_used|format_date if account.last_used else 'Unknown' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p><em>No service accounts identified.</em></p>
+    {% endif %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,318 @@
+name: Build Hardened Images
+
+on:
+  schedule:
+    # Weekly build on Sunday at 2 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      os:
+        description: 'Operating System'
+        required: false
+        type: choice
+        options:
+          - all
+          - amazon-linux-2
+          - ubuntu-22.04
+          - rhel-8
+          - debian-12
+          - windows-server-2022
+      cloud:
+        description: 'Cloud Provider'
+        required: false
+        type: choice
+        options:
+          - all
+          - aws
+          - azure
+          - gcp
+      agent_version:
+        description: 'SentinelGrid Agent Version'
+        required: false
+        default: '1.0.0'
+
+env:
+  PACKER_VERSION: "1.9.4"
+  AGENT_VERSION: ${{ github.event.inputs.agent_version || '1.0.0' }}
+
+jobs:
+  build-aws:
+    name: Build AWS Images
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'schedule' || 
+      github.event.inputs.cloud == 'all' || 
+      github.event.inputs.cloud == 'aws' ||
+      (github.event.inputs.os == 'all' || github.event.inputs.os == 'amazon-linux-2' || github.event.inputs.os == 'ubuntu-22.04' || github.event.inputs.os == 'windows-server-2022')
+    strategy:
+      matrix:
+        os: 
+          - name: amazon-linux-2
+            source_ami: ami-0c02fb55956c7d316
+            ssh_user: ec2-user
+          - name: ubuntu-22.04
+            source_ami: ami-0c55b159cbfafe1f0
+            ssh_user: ubuntu
+          - name: windows-server-2022
+            source_ami: auto
+            ssh_user: Administrator
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: ${{ env.PACKER_VERSION }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Build AMI
+        working-directory: packer/${{ matrix.os.name }}/aws
+        env:
+          PACKER_LOG: 1
+          PACKER_LOG_PATH: packer-${{ matrix.os.name }}-aws.log
+        run: |
+          if [ "${{ matrix.os.name }}" = "windows-server-2022" ]; then
+            packer build \
+              -var "aws_region=us-east-1" \
+              -var "aws_instance_type=t3.large" \
+              -var "sentinelgrid_agent_version=${{ env.AGENT_VERSION }}" \
+              -var "sentinelgrid_tenant_token=${{ secrets.SENTINELGRID_TENANT_TOKEN }}" \
+              -var "sentinelgrid_manager_host=manager.sentinelgrid.ai" \
+              windows-server-2022.json
+          else
+            packer build \
+              -var "aws_region=us-east-1" \
+              -var "aws_instance_type=t3.medium" \
+              -var "source_ami=${{ matrix.os.source_ami }}" \
+              -var "ssh_username=${{ matrix.os.ssh_user }}" \
+              -var "sentinelgrid_agent_version=${{ env.AGENT_VERSION }}" \
+              -var "sentinelgrid_tenant_token=${{ secrets.SENTINELGRID_TENANT_TOKEN }}" \
+              -var "sentinelgrid_manager_host=manager.sentinelgrid.ai" \
+              ${{ matrix.os.name }}.json
+          fi
+
+      - name: Upload Packer logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: packer-logs-aws-${{ matrix.os.name }}
+          path: packer/${{ matrix.os.name }}/aws/*.log
+          retention-days: 30
+
+      - name: Upload manifest
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: manifest-aws-${{ matrix.os.name }}
+          path: packer/${{ matrix.os.name }}/aws/manifest.json
+          retention-days: 90
+
+      - name: Share AMI
+        if: success()
+        run: |
+          # Extract AMI ID from manifest
+          AMI_ID=$(jq -r '.builds[0].artifact_id' packer/${{ matrix.os.name }}/aws/manifest.json | cut -d: -f2)
+          echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
+          
+          # Share with specified AWS accounts (if configured)
+          if [ -n "${{ secrets.AWS_SHARE_ACCOUNTS }}" ]; then
+            echo "${{ secrets.AWS_SHARE_ACCOUNTS }}" | tr ',' '\n' | while read account; do
+              aws ec2 modify-image-attribute \
+                --image-id $AMI_ID \
+                --launch-permission "Add=[{UserId=$account}]" \
+                --region us-east-1
+            done
+          fi
+
+  build-azure:
+    name: Build Azure Images
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'schedule' || 
+      github.event.inputs.cloud == 'all' || 
+      github.event.inputs.cloud == 'azure' ||
+      (github.event.inputs.os == 'all' || github.event.inputs.os == 'amazon-linux-2' || github.event.inputs.os == 'ubuntu-22.04')
+    strategy:
+      matrix:
+        os:
+          - amazon-linux-2
+          - ubuntu-22.04
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: ${{ env.PACKER_VERSION }}
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build Azure Image
+        working-directory: packer/${{ matrix.os }}/azure
+        env:
+          PACKER_LOG: 1
+          PACKER_LOG_PATH: packer-${{ matrix.os }}-azure.log
+        run: |
+          packer build \
+            -var "azure_client_id=${{ secrets.AZURE_CLIENT_ID }}" \
+            -var "azure_client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
+            -var "azure_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+            -var "azure_tenant_id=${{ secrets.AZURE_TENANT_ID }}" \
+            -var "azure_resource_group=${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            -var "azure_location=East US" \
+            -var "sentinelgrid_agent_version=${{ env.AGENT_VERSION }}" \
+            -var "sentinelgrid_tenant_token=${{ secrets.SENTINELGRID_TENANT_TOKEN }}" \
+            -var "sentinelgrid_manager_host=manager.sentinelgrid.ai" \
+            ${{ matrix.os }}.json
+
+      - name: Upload Packer logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: packer-logs-azure-${{ matrix.os }}
+          path: packer/${{ matrix.os }}/azure/*.log
+          retention-days: 30
+
+      - name: Upload manifest
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: manifest-azure-${{ matrix.os }}
+          path: packer/${{ matrix.os }}/azure/manifest.json
+          retention-days: 90
+
+  build-gcp:
+    name: Build GCP Images
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'schedule' || 
+      github.event.inputs.cloud == 'all' || 
+      github.event.inputs.cloud == 'gcp' ||
+      (github.event.inputs.os == 'all' || github.event.inputs.os == 'ubuntu-22.04')
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: ${{ env.PACKER_VERSION }}
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Build GCP Image
+        working-directory: packer/${{ matrix.os }}/gcp
+        env:
+          PACKER_LOG: 1
+          PACKER_LOG_PATH: packer-${{ matrix.os }}-gcp.log
+        run: |
+          packer build \
+            -var "gcp_project_id=${{ secrets.GCP_PROJECT_ID }}" \
+            -var "gcp_account_file=${{ secrets.GCP_SA_KEY }}" \
+            -var "gcp_zone=us-east1-b" \
+            -var "sentinelgrid_agent_version=${{ env.AGENT_VERSION }}" \
+            -var "sentinelgrid_tenant_token=${{ secrets.SENTINELGRID_TENANT_TOKEN }}" \
+            -var "sentinelgrid_manager_host=manager.sentinelgrid.ai" \
+            ${{ matrix.os }}.json
+
+      - name: Upload Packer logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: packer-logs-gcp-${{ matrix.os }}
+          path: packer/${{ matrix.os }}/gcp/*.log
+          retention-days: 30
+
+      - name: Upload manifest
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: manifest-gcp-${{ matrix.os }}
+          path: packer/${{ matrix.os }}/gcp/manifest.json
+          retention-days: 90
+
+  update-registry:
+    name: Update Image Registry
+    runs-on: ubuntu-latest
+    needs: [build-aws, build-azure, build-gcp]
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download all manifests
+        uses: actions/download-artifact@v3
+        with:
+          pattern: manifest-*
+          merge-multiple: true
+
+      - name: Update database
+        run: |
+          # This would update the hardened_images table in the database
+          # For now, we'll create a summary JSON file
+          echo "Image registry update would happen here"
+          echo "Manifests downloaded for processing"
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+
+      - name: Create summary
+        run: |
+          echo "# Image Build Summary" > build-summary.md
+          echo "" >> build-summary.md
+          echo "Build Date: $(date -u +%Y-%m-%d)" >> build-summary.md
+          echo "Agent Version: ${{ env.AGENT_VERSION }}" >> build-summary.md
+          echo "" >> build-summary.md
+          echo "## Built Images" >> build-summary.md
+          find . -name "manifest.json" -exec echo "- {}" \; >> build-summary.md
+
+      - name: Upload summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-summary
+          path: build-summary.md
+          retention-days: 90
+
+  notify:
+    name: Notify Build Status
+    runs-on: ubuntu-latest
+    needs: [build-aws, build-azure, build-gcp, update-registry]
+    if: always()
+    steps:
+      - name: Send notification
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          text: |
+            Hardened image build completed
+            OS: ${{ github.event.inputs.os || 'all' }}
+            Cloud: ${{ github.event.inputs.cloud || 'all' }}
+            Agent Version: ${{ env.AGENT_VERSION }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: env.SLACK_WEBHOOK_URL != ''
+

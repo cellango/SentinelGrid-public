@@ -1,0 +1,1 @@
+export const MARKETING_LEGAL_LAST_UPDATED = "March 26, 2026";

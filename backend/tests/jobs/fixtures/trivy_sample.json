@@ -1,0 +1,16 @@
+{
+  "Results": [
+    {
+      "Target": "123456789012.dkr.ecr.us-east-1.amazonaws.com/demo:latest",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-0001",
+          "Severity": "CRITICAL",
+          "Title": "openssl vuln",
+          "Description": "Demo vuln",
+          "FixedVersion": "1.2.3"
+        }
+      ]
+    }
+  ]
+}

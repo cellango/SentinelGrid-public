@@ -1,0 +1,166 @@
+replicaCount: 1
+image:
+  repository: "REPLACE_ME_ECR_REPO/api_gateway"
+  tag: "latest"
+
+service:
+  port: 8000
+  targetPort: 8000
+
+env:
+  - name: ENVIRONMENT
+    value: production
+  - name: UPSTREAM_TLS_VERIFY
+    value: "true"
+
+envFrom:
+  - secretRef:
+      name: api-gateway-runtime
+
+ingress:
+  enabled: true
+  className: alb
+  annotations: {}
+  alb:
+    scheme: internet-facing
+    listenPorts: '[{"HTTPS":443}]'
+    certificateArn: ""
+    requireCertificate: true
+    backendProtocol: HTTP
+    healthcheckPath: /ready
+    healthcheckProtocol: HTTP
+    healthcheckPort: traffic-port
+  hosts:
+    - host: api.dev.sentinelgrid.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+volumes:
+  - name: tmp
+    emptyDir: {}
+
+volumeMounts:
+  - name: tmp
+    mountPath: /tmp
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: /metrics/prometheus
+  prometheus.io/port: "8000"
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 20
+  periodSeconds: 20
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: http
+  periodSeconds: 10
+
+startupProbe:
+  httpGet:
+    path: /health
+    port: http
+  periodSeconds: 10
+  failureThreshold: 30
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+
+networkPolicy:
+  enabled: true
+  ingress:
+    public: true
+    allowNamespaces:
+      - sg-ops
+  egress:
+    allowDNS: true
+    allowAnyPorts:
+      - port: 9200
+        protocol: TCP
+    allowServiceInstances:
+      - instance: iam-agent
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: orchestrator
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: siem-agent
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: model-gateway
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: reporting-service
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: compliance-service
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: audit-service
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: soar-agent
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: ticketing-service
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: agent-runtime
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: scanner-orchestrator
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: analyzer-orchestrator
+        ports:
+          - port: 8000
+            protocol: TCP
+      - instance: posture-service
+        ports:
+          - port: 8000
+            protocol: TCP

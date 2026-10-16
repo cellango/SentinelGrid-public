@@ -1,0 +1,53 @@
+mappings:
+  - canonical_playbook_key: ACCOUNT-COMPROMISE
+    catalog_id: ACCOUNT-COMPROMISE
+    catalog_runbook_ref: account-compromise-workflow
+    db_playbook_key: ACCOUNT-COMPROMISE
+    ootb_source_id: ID-ACCOUNT-COMPROMISE-v1
+    normalized_name: account compromise suspicious login
+    response_pack_ids:
+      - account_takeover
+    incident_families:
+      - identity_privilege_escalation
+    match_strategy: explicit_alias
+    match_confidence: 1.0
+    mapping_status: aliased
+  - canonical_playbook_key: PASSWORD-SPRAY
+    catalog_id: PASSWORD-SPRAY
+    catalog_runbook_ref: password-spray-workflow
+    db_playbook_key: PASSWORD-SPRAY
+    ootb_source_id: ID-PASSWORD-SPRAY-v1
+    normalized_name: password spray brute force attack
+    response_pack_ids:
+      - account_takeover
+    incident_families:
+      - identity_auth_anomaly
+    match_strategy: explicit_alias
+    match_confidence: 1.0
+    mapping_status: aliased
+  - canonical_playbook_key: PHISH-USER
+    catalog_id: PHISH-USER
+    catalog_runbook_ref: phish-user-reported-workflow
+    db_playbook_key: PHISH-USER
+    ootb_source_id: PHISH-USER-REPORTED-v1
+    normalized_name: phishing user reported
+    response_pack_ids:
+      - phishing_mailbox_compromise
+    incident_families:
+      - phishing_user_report
+    match_strategy: explicit_alias
+    match_confidence: 1.0
+    mapping_status: aliased
+  - canonical_playbook_key: PHISH-GATEWAY
+    catalog_id: PHISH-GATEWAY
+    catalog_runbook_ref: phish-gateway-workflow
+    db_playbook_key: PHISH-GATEWAY
+    ootb_source_id: PHISH-GATEWAY-ALERT-v1
+    normalized_name: phishing gateway alert
+    response_pack_ids:
+      - phishing_mailbox_compromise
+    incident_families:
+      - phishing_gateway_alert
+    match_strategy: explicit_alias
+    match_confidence: 1.0
+    mapping_status: aliased

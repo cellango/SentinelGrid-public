@@ -1,0 +1,2 @@
+-r ../../libs/requirements.txt
+

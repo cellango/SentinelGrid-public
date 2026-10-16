@@ -1,0 +1,62 @@
+{
+  "name": "sentinelgrid-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:no-cache": "rm -rf .next && NEXT_TELEMETRY_DISABLED=1 next build",
+    "start": "next start",
+    "lint": "next lint && npm run lint:tokens",
+    "lint:tokens": "node ./scripts/check-legacy-color-classes.mjs",
+    "test": "jest",
+    "test:preview": "jest --runInBand --watch=false --runTestsByPath 'src/app/(marketing)/login/__tests__/page.test.tsx' src/app/api/auth/login/__tests__/route.test.ts src/app/api/auth/reset-password-direct/__tests__/route.test.ts",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.2.0",
+    "@hookform/resolvers": "^3.3.3",
+    "@tanstack/react-query": "^5.17.0",
+    "@tanstack/react-virtual": "^3.13.23",
+    "@types/uuid": "^10.0.0",
+    "axios": "1.20.0",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.0.6",
+    "monaco-editor": "^0.45.0",
+    "next": "15.5.28",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.49.0",
+    "react-hot-toast": "^2.4.1",
+    "reactflow": "^11.11.4",
+    "recharts": "^3.8.1",
+    "swr": "^2.3.8",
+    "uuid": "^13.0.0",
+    "yaml": "^2.8.3",
+    "zod": "^3.22.4"
+  },
+  "overrides": {
+    "follow-redirects": "1.16.0",
+    "postcss-selector-parser": "7.1.6",
+    "postcss": "$postcss"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "15.5.28",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "8.5.30",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5.0.0"
+  }
+}

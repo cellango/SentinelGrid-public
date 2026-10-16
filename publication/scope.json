@@ -1,0 +1,238 @@
+{
+  "scope": "Developer source preview for review and comments; no supported application runtime.",
+  "selection_date": "2026-10-15",
+  "source_of_truth": "publication/source-files.json records exact selected paths. This policy is not a secret-scan allowlist.",
+  "cloud_work": {
+    "disposition": "included_as_experimental_review_source",
+    "basis": "Repository owner selected inclusion on 2026-10-15.",
+    "paths": [
+      "backend/agents/iam_agent/app/api/onboarding.py",
+      "backend/agents/iam_agent/app/main.py",
+      "backend/agents/iam_agent/tests/test_onboarding_cloud_registry.py",
+      "backend/agents/iam_agent/tests/test_onboarding_status_api.py",
+      "backend/config/cloud_provider_registry.example.yaml",
+      "backend/libs/requirements.txt",
+      "backend/libs/sg_core/cloud/__init__.py",
+      "backend/libs/sg_core/cloud/adapters/__init__.py",
+      "backend/libs/sg_core/cloud/adapters/factory.py",
+      "backend/libs/sg_core/cloud/adapters/hetzner.py",
+      "backend/libs/sg_core/cloud/baseline.py",
+      "backend/libs/sg_core/cloud/baseline_state.py",
+      "backend/libs/sg_core/cloud/change_requests.py",
+      "backend/libs/sg_core/cloud/controls.py",
+      "backend/libs/sg_core/cloud/onboarding.py",
+      "backend/libs/sg_core/cloud/registry.py",
+      "backend/libs/sg_core/cloud/remediation.py",
+      "backend/libs/sg_core/cloud/targets.py",
+      "backend/libs/sg_core/cloud/types.py",
+      "backend/libs/sg_core/jobs/handlers.py",
+      "backend/libs/sg_core/models.py",
+      "backend/migrations_consolidated/V013__public_hetzner_infrastructure_change_requests.sql",
+      "backend/services/api_gateway/app/api/routes_onboarding.py",
+      "backend/services/api_gateway/tests/test_onboarding_proxy_routes.py",
+      "backend/services/scanner_orchestrator/app/api_scans.py",
+      "backend/services/scanner_orchestrator/app/main.py",
+      "backend/services/scanner_orchestrator/tests/test_cloud_controls_remediation.py",
+      "backend/services/scanner_orchestrator/tests/test_hetzner_pilot_helpers.py",
+      "backend/services/scanner_orchestrator/tests/test_main.py",
+      "backend/tests/test_infrastructure_change_schema.py",
+      "docs/architecture/cloud-providers.md",
+      "frontend/src/components/onboarding/OnboardingWizard.tsx",
+      "frontend/src/components/onboarding/StepCloudConnection.tsx",
+      "frontend/src/lib/api/onboarding.ts"
+    ],
+    "migration": "backend/migrations_consolidated/V013__public_hetzner_infrastructure_change_requests.sql",
+    "runtime_limits": [
+      "No live account access, provisioning, firewall apply, or operational support is included.",
+      "Registry/UI declarations do not establish implemented adapters or supported providers.",
+      "No fresh migration, upgrade, restore, full frontend build, or end-to-end cloud workflow was certified."
+    ]
+  },
+  "module_dispositions": [
+    {
+      "paths": [
+        "backend/"
+      ],
+      "disposition": "Experimental services/libraries, tests, schemas, migrations. Documented isolated checks only.",
+      "selected_file_count": 1448
+    },
+    {
+      "paths": [
+        "frontend/"
+      ],
+      "disposition": "Main frontend source and focused auth tests; full build and service/cloud integration unqualified.",
+      "selected_file_count": 527
+    },
+    {
+      "paths": [
+        "website/"
+      ],
+      "disposition": "Secondary website and attributed starter assets; no supported website runtime/build.",
+      "selected_file_count": 80
+    },
+    {
+      "paths": [
+        "SentinelGridAIShield/",
+        "SentinelGridPenTestAgent/",
+        "SentinelGridPostureAgent/",
+        "SentinelGuard/"
+      ],
+      "disposition": "Experimental component source/tests with existing terms; no active scans, enrollment, telemetry, or packaging clearance.",
+      "selected_file_count": 463
+    },
+    {
+      "paths": [
+        "docs/"
+      ],
+      "disposition": "Current code-linked architecture/developer/reference/release guides plus explicitly historical archives. Retired designs/progress reports and business documents remain private; see Task 9 classification.",
+      "selected_file_count": 311
+    },
+    {
+      "paths": [
+        "infra/",
+        "terraform/",
+        "charts/",
+        "packer/",
+        "cloudformation/",
+        "arm-templates/",
+        "deployment-manager/",
+        "docker/",
+        "observability/"
+      ],
+      "disposition": "Infrastructure, packaging, configuration, operations references; no apply, image build, package publication, or deployment support.",
+      "selected_file_count": 142
+    },
+    {
+      "paths": [
+        "scripts/",
+        ".github/"
+      ],
+      "disposition": "Only documented source checks and the single read-only source-preview workflow are active; other scripts/disabled workflows are reference material.",
+      "selected_file_count": 206
+    },
+    {
+      "paths": [
+        "cfg/",
+        "policies/",
+        "alarms/",
+        "seeds/",
+        "docker-compose.*",
+        "run_realm_test.sh"
+      ],
+      "disposition": "Synthetic configurations, catalogs, rules, seed logic, Compose definitions, integration helpers; not supported preview entrypoints.",
+      "selected_file_count": 18
+    },
+    {
+      "paths": [
+        "agents/wazuh/",
+        "third_party/"
+      ],
+      "disposition": "Attribution, upstream licenses, provenance, checksum records; no installers or dependency implementation bundles.",
+      "selected_file_count": 18
+    },
+    {
+      "paths": [
+        "publication/",
+        "README.md",
+        "RELEASE_SCOPE.md",
+        "CONTRIBUTING.md",
+        "SECURITY.md",
+        "LICENSE",
+        "NOTICE",
+        "LICENSING.md",
+        "THIRD_PARTY_NOTICES.md",
+        "Makefile",
+        ".gitignore",
+        ".dockerignore",
+        ".gitattributes",
+        ".gitleaks.toml"
+      ],
+      "disposition": "Current review entrypoints, scope, licensing, selected paths, hygiene controls.",
+      "selected_file_count": 18
+    }
+  ],
+  "excluded_material": [
+    {
+      "kind": "private_evidence_and_business_documents",
+      "disposition": "Keep ignored evidence, backups, browser captures, and all owner-excluded business documents private; no source/archive/ref inclusion."
+    },
+    {
+      "kind": "secrets_and_local_state",
+      "disposition": "Exclude environment secrets, credential/scanner exports, databases, state/plans, certificate material, personal tool state, caches, bytecode, installed dependencies."
+    },
+    {
+      "kind": "installers_and_generated_bundles",
+      "disposition": "Exclude Wazuh installers and generated image/package/model/font/dependency bundles, including four installer blobs in history."
+    },
+    {
+      "kind": "existing_git_and_hosted_material",
+      "disposition": "No original .git history, refs, PR material, logs, attachments, or external stores are imported. Task 7 verified independent local storage/history. The original repository and retained hosted material stay private."
+    }
+  ],
+  "identity_limits": "Working-tree path selection only. Later reviewed additions/removals require a visible refresh. Task 12 will bind bytes, checks, and release contents to an immutable commit.",
+  "history_strategy": {
+    "status": "owner_approved",
+    "initial_visibility": "private",
+    "public_branch": "main",
+    "proposal_record": "docs/release/history-strategy.md",
+    "creation_and_initial_private_push_task": 10,
+    "public_visibility_task": 13,
+    "strategy": "independent_source_snapshot",
+    "destination": "cellango/SentinelGrid-public",
+    "decision_record": "docs/release/history-strategy.md",
+    "owner_approval_date": "2026-10-15",
+    "local_preparation": {
+      "task": 7,
+      "status": "verified_at_task_7",
+      "selected_files": 3527,
+      "commits": 1,
+      "branches": [
+        "main"
+      ],
+      "tags": 0,
+      "remotes": 0,
+      "source_and_history_scans": "passed; zero findings",
+      "release_frozen": false,
+      "verification_record": "docs/release/history-strategy.md#task-7-local-verification",
+      "matches_current_working_source": false,
+      "rebuild_required_before_task": 10,
+      "contains_now_retired_documentation": true
+    }
+  },
+  "selection_repairs": [
+    {
+      "task": 7,
+      "date": "2026-10-15",
+      "added_python_files": 72,
+      "reason": "The first isolated preview run exposed application models hidden by broad models/, secrets/, and data/ ignore rules. Reviewed source packages are restored with Python-only exceptions; payloads, bytecode, credentials and downloaded model trees stay excluded.",
+      "review_record": "docs/release/history-strategy.md"
+    }
+  ],
+  "dependency_review": {
+    "task": 8,
+    "date": "2026-10-15",
+    "status": "complete_for_source_preview_with_two_scoped_tooling_exceptions",
+    "record": "docs/release/dependencies.md",
+    "resolved_license_inventory": "third_party/preview-dependencies.json",
+    "manifest_catalog": "publication/dependency-manifests.json",
+    "exact_decisions": "publication/dependency-review.json",
+    "python_pins": 42,
+    "npm_lock_entries": 828,
+    "runtime_graphs_cleared": false,
+    "refresh_before_release_freeze_task": 12
+  },
+  "documentation_review": {
+    "task": 9,
+    "date": "2026-10-15",
+    "status": "complete",
+    "record": "docs/release/documentation.md",
+    "classification": "publication/documentation.json",
+    "retired_original_documents": 320,
+    "retired_business_documents": 13,
+    "moved_or_consolidated": 291,
+    "markdown_files": 415,
+    "old_preparation_snapshot_contains_retired_material": true,
+    "independent_snapshot_rebuild_required_before_task": 10,
+    "obsolete_or_duplicate_documents": 307
+  }
+}

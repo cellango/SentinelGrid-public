@@ -1,0 +1,19 @@
+{
+  "findings": [
+    {
+      "AccountId": "123456789012",
+      "Status": "FAIL",
+      "Severity": "HIGH",
+      "Title": "S3 bucket allows public read",
+      "Description": "Bucket is publicly readable",
+      "ResourceId": "arn:aws:s3:::demo-bucket"
+    },
+    {
+      "AccountId": "123456789012",
+      "Status": "PASS",
+      "Severity": "LOW",
+      "Title": "Passing control",
+      "Description": "No issue"
+    }
+  ]
+}

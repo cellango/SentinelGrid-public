@@ -1,0 +1,182 @@
+{
+  "register_status": "draft",
+  "last_reviewed": "2026-03-30",
+  "notes": [
+    "This register captures current known tenant-isolation exceptions and review-required paths.",
+    "Entries are seeded from the current audit-readiness review and are not yet formal approval evidence."
+  ],
+  "entries": [
+    {
+      "id": "gateway_onboarding_header_forwarding",
+      "approval_status": "pending",
+      "severity": "high",
+      "owner": "API Gateway",
+      "description": "Onboarding gateway routes forward caller-supplied tenant headers instead of always deriving tenant from validated auth context.",
+      "source_refs": [
+        "backend/services/api_gateway/app/api/routes_onboarding.py:18",
+        "backend/services/api_gateway/app/api/routes_onboarding.py:90"
+      ]
+    },
+    {
+      "id": "gateway_pre_auth_tenant_hint_forwarding",
+      "approval_status": "approved",
+      "severity": "high",
+      "owner": "API Gateway",
+      "description": "Approved pre-auth hint boundary. Login and refresh gateway routes allowlist only X-Tenant-ID and X-Realm for realm discovery or continuity before identity is validated or refreshed.",
+      "source_refs": [
+        "backend/services/api_gateway/app/api/routes_auth.py:10",
+        "backend/services/api_gateway/app/api/routes_auth.py:34",
+        "backend/services/api_gateway/app/api/routes_auth.py:40"
+      ]
+    },
+    {
+      "id": "gateway_ingest_pipeline_diagnostic_surface",
+      "approval_status": "approved",
+      "severity": "medium",
+      "owner": "API Gateway",
+      "description": "Approved shared diagnostic boundary. The ingest pipeline test endpoint executes platform ingest-pipeline simulations against caller-supplied sample events and intentionally does not derive tenant scope because it operates only on shared pipeline definitions.",
+      "source_refs": [
+        "backend/services/api_gateway/app/api/routes_ingest.py:21",
+        "backend/services/api_gateway/app/api/routes_ingest.py:63"
+      ]
+    },
+    {
+      "id": "iam_onboarding_header_first_tenant_resolution",
+      "approval_status": "pending",
+      "severity": "high",
+      "owner": "IAM Agent",
+      "description": "IAM onboarding helper prioritizes explicit tenant header override and contains TODO-based fallback tenant derivation logic.",
+      "source_refs": [
+        "backend/agents/iam_agent/app/api/onboarding.py:339",
+        "backend/agents/iam_agent/app/api/onboarding.py:357",
+        "backend/agents/iam_agent/app/api/auth.py:1168"
+      ]
+    },
+    {
+      "id": "iam_platform_realm_provisioning_boundary",
+      "approval_status": "approved",
+      "severity": "medium",
+      "owner": "IAM Agent",
+      "description": "Approved platform-admin realm provisioning routes require authenticated PLATFORM_ADMIN request context before invoking master-realm admin operations for realm creation and status inspection.",
+      "source_refs": [
+        "backend/agents/iam_agent/app/api/realms.py:74",
+        "backend/agents/iam_agent/app/api/realms.py:201"
+      ]
+    },
+    {
+      "id": "iam_platform_org_provisioning_boundary",
+      "approval_status": "approved",
+      "severity": "medium",
+      "owner": "IAM Agent",
+      "description": "Approved platform-admin organization provisioning routes require authenticated PLATFORM_ADMIN request context and now execute through the explicit superadmin DB path.",
+      "source_refs": [
+        "backend/agents/iam_agent/app/api/iam_orgs.py:184",
+        "backend/agents/iam_agent/app/api/iam_orgs.py:276"
+      ]
+    },
+    {
+      "id": "public_lead_record_lookup_flow",
+      "approval_status": "approved",
+      "severity": "medium",
+      "owner": "IAM Agent",
+      "description": "Approved pre-tenant lead lookup boundary. Lead retrieval requires both the opaque lead identifier and the backend-issued provisioning token, enforces lead-expiry checks, and returns only minimized commercial state needed to resume signup.",
+      "source_refs": [
+        "backend/agents/iam_agent/app/api/leads.py:61",
+        "backend/agents/iam_agent/app/api/leads.py:624"
+      ]
+    },
+    {
+      "id": "public_payment_conversion_flows",
+      "approval_status": "approved",
+      "severity": "medium",
+      "owner": "IAM Agent",
+      "description": "Approved pre-tenant payment conversion routes operate on opaque lead records using backend-issued provisioning tokens, lead-expiry validation, checkout-session matching, and Stripe-signed webhook verification.",
+      "source_refs": [
+        "backend/agents/iam_agent/app/api/payment.py:118",
+        "backend/agents/iam_agent/app/api/payment.py:321",
+        "backend/agents/iam_agent/app/api/payment.py:700"
+      ]
+    },
+    {
+      "id": "iam_public_auth_state_and_callback_boundary",
+      "approval_status": "approved",
+      "severity": "medium",
+      "owner": "IAM Agent",
+      "description": "Approved public auth boundary for OIDC state issuance plus OIDC/SAML callbacks. Effective tenant, IdP, and redirect bindings are established by server-issued state or RelayState validation, while any compatibility query parameters are accepted only when they exactly match the stored callback metadata.",
+      "source_refs": [
+        "backend/agents/iam_agent/app/api/state.py:9",
+        "backend/agents/iam_agent/app/api/gateway.py:196",
+        "backend/agents/iam_agent/app/api/gateway.py:332"
+      ]
+    },
+    {
+      "id": "iam_internal_identity_stats_boundary",
+      "approval_status": "approved",
+      "severity": "low",
+      "owner": "IAM Agent",
+      "description": "Approved internal analytics boundary for orchestrator snapshot generation. Identity statistics require the internal service token and take tenant identity from the internal path parameter, then scope user, role, and group counts to Keycloak users bound to that tenant.",
+      "source_refs": [
+        "backend/agents/iam_agent/app/api/stats.py:15",
+        "backend/agents/iam_agent/app/api/stats.py:42",
+        "backend/services/orchestrator/app/services/iam_client.py:36"
+      ]
+    },
+    {
+      "id": "iam_internal_marketing_funnel_boundary",
+      "approval_status": "approved",
+      "severity": "low",
+      "owner": "IAM Agent",
+      "description": "Approved internal marketing analytics boundary. Funnel summary reporting is restricted to service-to-service callers presenting the internal service token and is no longer exposed as a public reporting surface.",
+      "source_refs": [
+        "backend/agents/iam_agent/app/api/marketing.py:36",
+        "backend/agents/iam_agent/app/api/marketing.py:415"
+      ]
+    },
+    {
+      "id": "internal_header_trust_model",
+      "approval_status": "pending",
+      "severity": "high",
+      "owner": "Platform Engineering",
+      "description": "Several internal services accept X-Tenant-ID directly, which is only acceptable if internal-only exposure and trusted-caller boundaries are formally enforced and evidenced.",
+      "source_refs": [
+        "backend/libs/sg_core/dependencies.py:9",
+        "backend/services/ingestion_service/app/core/security.py:67",
+        "backend/services/detection_service/app/core/security.py:63",
+        "backend/services/connector_service/app/core/security.py:65"
+      ]
+    },
+    {
+      "id": "rls_runtime_adoption_gap",
+      "approval_status": "pending",
+      "severity": "high",
+      "owner": "Platform Engineering",
+      "description": "RLS support exists in migrations and helper code, but runtime route adoption of tenant-scoped DB sessions is not yet evident across services.",
+      "source_refs": [
+        "backend/libs/sg_core/db.py:87",
+        "backend/migrations_consolidated/V003__row_level_security.sql:361"
+      ]
+    },
+    {
+      "id": "jobs_null_tenant_visibility",
+      "approval_status": "pending",
+      "severity": "medium",
+      "owner": "API Gateway",
+      "description": "Jobs APIs allow visibility of rows where tenant_id IS NULL, which requires explicit classification and approval.",
+      "source_refs": [
+        "backend/services/api_gateway/app/api/routes_jobs.py:73",
+        "backend/services/api_gateway/app/api/routes_jobs.py:91"
+      ]
+    },
+    {
+      "id": "privileged_access_nullable_tenant_scope",
+      "approval_status": "pending",
+      "severity": "high",
+      "owner": "IAM Agent",
+      "description": "Privileged access update path accepts a nullable tenant scope in the write filter and requires explicit review.",
+      "source_refs": [
+        "backend/agents/iam_agent/app/services/privileged_access_service.py:192",
+        "backend/agents/iam_agent/app/services/privileged_access_service.py:208"
+      ]
+    }
+  ]
+}

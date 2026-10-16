@@ -1,0 +1,9 @@
+# Flyway Dockerfile for Model Gateway migrations
+FROM flyway/flyway:10-alpine
+
+# Copy migration files
+COPY migrations /flyway/sql
+
+# Default command runs migrations and exits
+CMD ["migrate"]
+

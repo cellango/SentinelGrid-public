@@ -1,0 +1,39 @@
+# SentinelGrid API Base - Common Dependencies
+# ==============================================
+# These are installed in sentinelgrid/api-base image
+# Used by 20+ REST API services
+
+# Web Framework
+fastapi==0.136.0
+uvicorn[standard]==0.44.0
+pydantic==2.13.2
+pydantic-settings==2.13.1
+
+# HTTP Client
+httpx==0.28.1
+requests==2.33.1
+
+# Database
+sqlalchemy==2.0.49
+psycopg2-binary==2.9.11
+
+# Authentication
+python-jose[cryptography]==3.5.0
+pyjwt==2.12.0
+cryptography==46.0.7
+
+# Redis
+redis==7.4.0
+
+# Utilities
+python-dotenv==1.2.2
+python-multipart==0.0.26
+
+# Logging & Monitoring
+python-json-logger==2.0.7
+
+# Validation
+email-validator==2.1.0
+
+# Timezone
+python-dateutil==2.9.0.post0

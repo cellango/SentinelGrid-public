@@ -1,0 +1,67 @@
+# IAM Agent Service Dependencies
+# Note: Base dependencies installed separately in Dockerfile
+
+# Keycloak integration
+python-keycloak==4.0.0
+# JWT handling - using PyJWT for better control over validation
+PyJWT[cryptography]==2.8.0
+
+# HTTP client for Keycloak API
+httpx==0.26.0
+
+# FastAPI (if not in libs)
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Caching (optional for now, can add Redis later)
+cachetools==5.3.2
+
+# Utilities
+python-dotenv==1.0.0
+
+# Embeddings (for RAG)
+sentence-transformers==2.2.2
+numpy==1.24.3
+
+# LDAP/AD connector
+ldap3==2.9.1
+
+# Database (for tenant seeding)
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+
+# AWS SDK (for connection testing)
+boto3>=1.28.0
+botocore>=1.31.0
+
+# Azure SDK (for connection testing)
+azure-identity>=1.15.0
+azure-mgmt-subscription>=3.1.1
+azure-core>=1.29.0
+
+# GCP SDK (for connection testing)
+google-auth>=2.23.0
+google-cloud-resource-manager>=1.10.0
+google-api-core>=2.11.0
+
+# HTTP client for Git provider APIs
+httpx>=0.26.0
+
+# Git operations for scanning
+GitPython>=3.1.40
+
+# Password hashing for leads
+bcrypt>=4.0.1
+
+# Demo seed script catalogs
+PyYAML>=6.0.1
+
+# Redis for caching
+redis>=5.0.0
+python-jose[cryptography]>=3.3.0
+
+# MFA/TOTP support
+pyotp>=2.9.0
+qrcode[pil]>=7.4.2

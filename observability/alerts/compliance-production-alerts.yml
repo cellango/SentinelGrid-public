@@ -1,0 +1,38 @@
+groups:
+  - name: sentinelgrid-compliance-operations
+    rules:
+      - alert: SentinelGridComplianceEvidenceCollectionFailuresDetected
+        expr: increase(compliance_evidence_collection_tasks_total{service="compliance-service",status="failed"}[15m]) > 0 or increase(compliance_evidence_collection_total{service="compliance-service",outcome="failure"}[15m]) > 0
+        for: 10m
+        labels:
+          severity: warning
+          scope: compliance
+          owner_name: Clement Ellango
+          owner_role: Compliance / Platform Lead
+        annotations:
+          summary: "Compliance evidence collection failures detected"
+          description: "The compliance service recorded failed evidence collection work in the last 15 minutes."
+
+      - alert: SentinelGridComplianceReportGenerationFailuresDetected
+        expr: increase(compliance_report_generation_failures_total{service="reporting-service"}[15m]) > 0
+        for: 10m
+        labels:
+          severity: warning
+          scope: compliance
+          owner_name: Clement Ellango
+          owner_role: Compliance / Reporting Lead
+        annotations:
+          summary: "Compliance report generation failures detected"
+          description: "The reporting service recorded compliance report generation failures in the last 15 minutes."
+
+      - alert: SentinelGridComplianceStaleEvidenceDetected
+        expr: max_over_time(compliance_stale_evidence_items{service="compliance-service"}[30m]) > 0
+        for: 30m
+        labels:
+          severity: warning
+          scope: compliance
+          owner_name: Clement Ellango
+          owner_role: Compliance / Platform Lead
+        annotations:
+          summary: "Stale compliance evidence detected"
+          description: "At least one tenant has accepted compliance evidence past its validity window."

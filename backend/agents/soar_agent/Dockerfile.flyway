@@ -1,0 +1,14 @@
+# Flyway migration container for SOAR Agent
+FROM flyway/flyway:10-alpine
+
+# Copy migration scripts
+COPY db/migrations /flyway/sql
+
+# Flyway configuration via environment variables (see docker-compose.dev.yml)
+# No need for flyway.conf file - using env vars
+
+WORKDIR /flyway
+
+# Run migrations
+CMD ["migrate"]
+

@@ -1,0 +1,271 @@
+{
+  "index_patterns": ["wazuh-alerts-*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "refresh_interval": "5s",
+      "index": {
+        "mapping": {
+          "total_fields": {
+            "limit": 2000
+          }
+        },
+        "max_result_window": 10000
+      }
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "tenant_id": {
+          "type": "keyword"
+        },
+        "edr_source": {
+          "type": "keyword"
+        },
+        "sidecar_enabled": {
+          "type": "boolean"
+        },
+        "agent": {
+          "properties": {
+            "id": {
+              "type": "keyword"
+            },
+            "name": {
+              "type": "keyword"
+            },
+            "ip": {
+              "type": "ip"
+            },
+            "version": {
+              "type": "keyword"
+            },
+            "labels": {
+              "properties": {
+                "tenant_id": {
+                  "type": "keyword"
+                },
+                "registered_at": {
+                  "type": "date"
+                },
+                "registered_via": {
+                  "type": "keyword"
+                },
+                "platform": {
+                  "type": "keyword"
+                }
+              }
+            }
+          }
+        },
+        "rule": {
+          "properties": {
+            "id": {
+              "type": "keyword"
+            },
+            "level": {
+              "type": "integer"
+            },
+            "description": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "groups": {
+              "type": "keyword"
+            },
+            "mitre": {
+              "properties": {
+                "id": {
+                  "type": "keyword"
+                },
+                "tactic": {
+                  "type": "keyword"
+                },
+                "technique": {
+                  "type": "keyword"
+                }
+              }
+            },
+            "pci_dss": {
+              "type": "keyword"
+            },
+            "gdpr": {
+              "type": "keyword"
+            },
+            "nist_800_53": {
+              "type": "keyword"
+            },
+            "hipaa": {
+              "type": "keyword"
+            }
+          }
+        },
+        "data": {
+          "type": "object",
+          "enabled": true
+        },
+        "decoder": {
+          "properties": {
+            "name": {
+              "type": "keyword"
+            },
+            "parent": {
+              "type": "keyword"
+            }
+          }
+        },
+        "process": {
+          "properties": {
+            "pid": {
+              "type": "long"
+            },
+            "ppid": {
+              "type": "long"
+            },
+            "name": {
+              "type": "keyword"
+            },
+            "executable": {
+              "type": "keyword"
+            },
+            "command_line": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 512
+                }
+              }
+            },
+            "hash": {
+              "properties": {
+                "md5": { "type": "keyword" },
+                "sha1": { "type": "keyword" },
+                "sha256": { "type": "keyword" },
+                "hash": { "type": "keyword" }
+              }
+            }
+          }
+        },
+        "registry": {
+          "properties": {
+            "key": { "type": "keyword" },
+            "value": { "type": "keyword" },
+            "operation": { "type": "keyword" },
+            "hive": { "type": "keyword" }
+          }
+        },
+        "file": {
+          "properties": {
+            "path": { "type": "keyword" },
+            "name": { "type": "keyword" },
+            "action": { "type": "keyword" },
+            "hash": {
+              "properties": {
+                "md5": { "type": "keyword" },
+                "sha1": { "type": "keyword" },
+                "sha256": { "type": "keyword" },
+                "hash": { "type": "keyword" }
+              }
+            }
+          }
+        },
+        "driver": {
+          "properties": {
+            "name": { "type": "keyword" },
+            "path": { "type": "keyword" },
+            "hash": { "type": "keyword" },
+            "module": { "type": "keyword" }
+          }
+        },
+        "module": {
+          "properties": {
+            "name": { "type": "keyword" },
+            "path": { "type": "keyword" },
+            "hash": { "type": "keyword" },
+            "dll": {
+              "properties": {
+                "name": { "type": "keyword" },
+                "path": { "type": "keyword" },
+                "hash": { "type": "keyword" }
+              }
+            }
+          }
+        },
+        "sensor": {
+          "properties": {
+            "status": { "type": "keyword" },
+            "health": { "type": "keyword" },
+            "version": { "type": "keyword" },
+            "last_checkin": { "type": "date" },
+            "uptime_seconds": { "type": "long" }
+          }
+        },
+        "hunt": {
+          "properties": {
+            "id": { "type": "keyword" },
+            "name": { "type": "keyword" },
+            "artifact": { "type": "keyword" }
+          }
+        },
+        "task": {
+          "properties": {
+            "id": { "type": "keyword" },
+            "name": { "type": "keyword" },
+            "status": { "type": "keyword" }
+          }
+        },
+        "collection": {
+          "properties": {
+            "id": { "type": "keyword" },
+            "status": { "type": "keyword" },
+            "path": { "type": "keyword" }
+          }
+        },
+        "location": {
+          "type": "keyword"
+        },
+        "full_log": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 512
+            }
+          }
+        },
+        "predecoder": {
+          "properties": {
+            "program_name": {
+              "type": "keyword"
+            },
+            "timestamp": {
+              "type": "keyword"
+            },
+            "hostname": {
+              "type": "keyword"
+            }
+          }
+        },
+        "sentinelgrid": {
+          "properties": {
+            "source": {
+              "type": "keyword"
+            },
+            "version": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    }
+  }
+}

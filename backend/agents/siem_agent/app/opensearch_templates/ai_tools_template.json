@@ -1,0 +1,52 @@
+{
+  "index_patterns": ["sg-ai-tools-*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "index.refresh_interval": "5s"
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "id": {
+          "type": "keyword"
+        },
+        "org_id": {
+          "type": "keyword"
+        },
+        "ai_app_id": {
+          "type": "keyword"
+        },
+        "agent_id": {
+          "type": "keyword"
+        },
+        "user_id": {
+          "type": "keyword"
+        },
+        "tool_name": {
+          "type": "keyword"
+        },
+        "action": {
+          "type": "keyword"
+        },
+        "allowed": {
+          "type": "boolean"
+        },
+        "policy_violated": {
+          "type": "boolean"
+        },
+        "violation_reason": {
+          "type": "text"
+        },
+        "created_at": {
+          "type": "date"
+        }
+      }
+    }
+  },
+  "priority": 100
+}
+

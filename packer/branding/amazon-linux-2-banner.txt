@@ -1,0 +1,9 @@
+═══════════════════════════════════════════════════════════════
+       SentinelGrid Hardened Amazon Linux 2
+═══════════════════════════════════════════════════════════════
+    CIS Level 1 Hardened | Endpoint Protection Pre-Installed
+═══════════════════════════════════════════════════════════════
+
+Authorized access only. All activity monitored and logged.
+
+

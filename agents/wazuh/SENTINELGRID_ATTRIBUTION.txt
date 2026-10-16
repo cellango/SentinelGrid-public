@@ -1,0 +1,18 @@
+Wazuh reference attribution for the SentinelGrid source preview
+
+Upstream project: Wazuh, https://github.com/wazuh/wazuh
+Reference version: v4.8.0
+Reference commit: 038fe11d988fa54cca8a6c3101fc7906fad5da3b
+
+Upstream copyright notices:
+ Portions Copyright (C) 2015, Wazuh Inc.
+ Based on work Copyright (C) 2003 - 2013 Trend Micro, Inc.
+
+The complete upstream license, including GPL version 2 and component/linking
+notices, is preserved verbatim in LICENSE_WAZUH.txt. It is not replaced by
+SentinelGrid's root Apache-2.0 license.
+
+No Wazuh installer is included in this source preview. Historical SentinelGrid
+repackaging scripts and attribution templates do not establish that a package
+preserves upstream notices, has unchanged functionality, or meets all applicable
+source-delivery terms. No rebranded binary is certified by this notice.

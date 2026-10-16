@@ -1,0 +1,154 @@
+{% extends "base_report.html" %}
+
+{% block executive_summary %}
+<div class="metric-card">
+    <h4>Overall Posture Score</h4>
+    <div class="value">{{ overall_score|format_number }}</div>
+    <div class="description">out of 100</div>
+</div>
+
+<div class="metric-card">
+    <h4>Total Findings</h4>
+    <div class="value">{{ total_findings|format_number }}</div>
+    <div class="description">{{ critical_findings }} critical, {{ high_findings }} high</div>
+</div>
+
+<div class="metric-card">
+    <h4>Remediation Rate</h4>
+    <div class="value">{{ remediation_rate|format_percent }}</div>
+    <div class="description">{{ fixed_findings }} fixed</div>
+</div>
+
+<p style="margin-top: 1cm;">
+This Cloud Posture & Exposure Report analyzes {{ tenant_name }}'s cloud security configuration for the period {{ period_start }} to {{ period_end }}. The overall security posture score is {{ overall_score }} out of 100, with {{ total_findings }} findings identified across cloud environments.
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h1>Posture Score by Cloud Provider</h1>
+    
+    {% if posture_score_chart %}
+    <img src="{{ posture_score_chart }}" alt="Posture Score" class="chart">
+    {% endif %}
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Cloud Provider</th>
+                <th>Account/Subscription</th>
+                <th>Score</th>
+                <th>Findings</th>
+                <th>Trend</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in cloud_accounts %}
+            <tr>
+                <td>{{ account.provider }}</td>
+                <td>{{ account.account_id }}</td>
+                <td><strong>{{ account.score }}</strong></td>
+                <td>{{ account.findings_count }}</td>
+                <td>{{ account.trend }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Top High/Critical Findings</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Severity</th>
+                <th>Finding</th>
+                <th>Resource</th>
+                <th>Status</th>
+                <th>CIS Control</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for finding in top_findings %}
+            <tr>
+                <td>
+                    <span class="badge badge-{{ finding.badge_class }}">{{ finding.severity }}</span>
+                </td>
+                <td>{{ finding.title }}</td>
+                <td>{{ finding.resource_name }}</td>
+                <td>{{ finding.status }}</td>
+                <td>{{ finding.cis_control if finding.cis_control else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Remediation Status</h1>
+    
+    {% if remediation_chart %}
+    <img src="{{ remediation_chart }}" alt="Remediation Status" class="chart">
+    {% endif %}
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Count</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Fixed</td>
+                <td>{{ fixed_findings|format_number }}</td>
+                <td>{{ (fixed_findings / total_findings * 100)|format_percent }}</td>
+            </tr>
+            <tr>
+                <td>In Progress</td>
+                <td>{{ in_progress_findings|format_number }}</td>
+                <td>{{ (in_progress_findings / total_findings * 100)|format_percent }}</td>
+            </tr>
+            <tr>
+                <td>Outstanding</td>
+                <td>{{ outstanding_findings|format_number }}</td>
+                <td>{{ (outstanding_findings / total_findings * 100)|format_percent }}</td>
+            </tr>
+            <tr>
+                <td>Accepted Risk</td>
+                <td>{{ accepted_risk_findings|format_number }}</td>
+                <td>{{ (accepted_risk_findings / total_findings * 100)|format_percent }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Compliance Mapping</h1>
+    
+    <h3>CIS Benchmark Controls</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>CIS Control</th>
+                <th>Description</th>
+                <th>Findings</th>
+                <th>Compliance %</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for control in cis_controls %}
+            <tr>
+                <td>{{ control.control_id }}</td>
+                <td>{{ control.description }}</td>
+                <td>{{ control.findings_count }}</td>
+                <td>{{ control.compliance_percentage|format_percent }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

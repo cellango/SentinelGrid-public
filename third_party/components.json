@@ -1,0 +1,346 @@
+{
+  "review_date": "2026-10-15",
+  "scope": "Source-preview provenance inventory; not a resolved dependency SBOM or binary distribution clearance.",
+  "original_material": {
+    "license": "Apache-2.0",
+    "license_file": "LICENSE",
+    "basis": "Owner confirmed remaining source and SentinelGrid logos are original or created for this project, apart from declared dependencies and Next.js starter assets.",
+    "exceptions": "Third-party material retains its own terms; see components below.",
+    "assets": [
+      {
+        "path": "docs/SentinelGrid.svg",
+        "sha256": "69d06d6207ad5919b2b3c4cabc4ee03e31a5710a2dd97f11e1ae4347535ecf01",
+        "basis": "Owner confirmed original or created for this project."
+      },
+      {
+        "path": "frontend/public/favicon.ico",
+        "sha256": "09a7033e11e3c7c2df8274a370f8bfcade0176b068cb3d448204d3f98eb76cf4",
+        "basis": "Owner confirmed original or created for this project."
+      },
+      {
+        "path": "frontend/public/icon.svg",
+        "sha256": "69d06d6207ad5919b2b3c4cabc4ee03e31a5710a2dd97f11e1ae4347535ecf01",
+        "basis": "Owner confirmed original or created for this project."
+      },
+      {
+        "path": "frontend/src/app/icon.svg",
+        "sha256": "bd096df3761a8b90cc31437cfb730b731ca3454d4249a103f8efff813ea6dbe7",
+        "basis": "Owner confirmed original or created for this project."
+      }
+    ],
+    "existing_component_licenses": [
+      {
+        "path": "SentinelGridAIShield/",
+        "license": "Apache-2.0",
+        "license_file": "SentinelGridAIShield/LICENSE"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "nextjs-starter",
+      "distribution": "retained_source_assets_and_derived_scaffolding",
+      "license": "MIT",
+      "license_files": [
+        "third_party/licenses/nextjs-14-MIT.txt",
+        "third_party/licenses/nextjs-15-MIT.txt"
+      ],
+      "upstream_repository": "https://github.com/vercel/next.js",
+      "reference_version": "v15.5.15",
+      "reference_commit": "412eb90b6587ec02e8361c92efa9091487e7348f",
+      "assets": [
+        {
+          "path": "website/app/favicon.ico",
+          "sha256": "2b8ad2d33455a8f736fc3a8ebf8f0bdea8848ad4c0db48a2833bd0f9cd775932",
+          "upstream_git_blob": "718d6fea4835ec2d246af9800eddb7ffb276240c",
+          "upstream_source": "https://github.com/vercel/next.js/blob/412eb90b6587ec02e8361c92efa9091487e7348f/packages/create-next-app/templates/app/ts/app/favicon.ico",
+          "modified": false
+        },
+        {
+          "path": "website/public/file.svg",
+          "sha256": "2b67812c325c199a02536cdbeea0c593a72f707d323b72ee3e08dbab06753bd4",
+          "upstream_git_blob": "004145cddf3f9db91b57b9cb596683c8eb420862",
+          "upstream_source": "https://github.com/vercel/next.js/blob/412eb90b6587ec02e8361c92efa9091487e7348f/packages/create-next-app/templates/app/ts/public/file.svg",
+          "modified": false
+        },
+        {
+          "path": "website/public/globe.svg",
+          "sha256": "b614b9bf183925957661ac851498fe1d8029fd43a62fbfed86f9e2624a57e7cf",
+          "upstream_git_blob": "567f17b0d7c7fb662c16d4357dd74830caf2dccb",
+          "upstream_source": "https://github.com/vercel/next.js/blob/412eb90b6587ec02e8361c92efa9091487e7348f/packages/create-next-app/templates/app/ts/public/globe.svg",
+          "modified": false
+        },
+        {
+          "path": "website/public/next.svg",
+          "sha256": "55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc",
+          "upstream_git_blob": "5174b28c565c285e3e312ec5178be64fbeca8398",
+          "upstream_source": "https://github.com/vercel/next.js/blob/412eb90b6587ec02e8361c92efa9091487e7348f/packages/create-next-app/templates/app/ts/public/next.svg",
+          "modified": false
+        },
+        {
+          "path": "website/public/vercel.svg",
+          "sha256": "f081337b2fee635b455b63275406a3e7f39d6a014e25ad90dab5a67e62a12ac4",
+          "upstream_git_blob": "77053960334e2e34dc584dea8019925c3b4ccca9",
+          "upstream_source": "https://github.com/vercel/next.js/blob/412eb90b6587ec02e8361c92efa9091487e7348f/packages/create-next-app/templates/app/ts/public/vercel.svg",
+          "modified": false
+        },
+        {
+          "path": "website/public/window.svg",
+          "sha256": "644768c4aaeb4767bce293344eeb0c125fb804a94d801440424072202d85e3a1",
+          "upstream_git_blob": "b2b2a44f6ebc70c450043c05a002e7a93ba5d651",
+          "upstream_source": "https://github.com/vercel/next.js/blob/412eb90b6587ec02e8361c92efa9091487e7348f/packages/create-next-app/templates/app/ts/public/window.svg",
+          "modified": false
+        }
+      ],
+      "scaffolding_scope": "Next.js-derived starter portions in frontend/ and website/; original SentinelGrid modifications retain Apache-2.0.",
+      "verification_limit": "The six assets match this reference revision byte for byte. This does not identify the original create-next-app invocation or certify installed runtime versions."
+    },
+    {
+      "id": "wazuh-reference-material",
+      "distribution": "license_text_and_source_owned_integration_scripts_only",
+      "upstream_repository": "https://github.com/wazuh/wazuh",
+      "reference_version": "v4.8.0",
+      "reference_commit": "038fe11d988fa54cca8a6c3101fc7906fad5da3b",
+      "license_files": [
+        "agents/wazuh/LICENSE_WAZUH.txt",
+        "scripts/rebrand-agents/LICENSE_WAZUH.txt"
+      ],
+      "license_description": "Complete upstream license: GPL version 2 with the included upstream copyright, component, and linking notices.",
+      "upstream_license_sha256": "9136fd9ef577a45b1bcea8c8cd761e8c9c21e15cc2a09e7c139755e581bde00e",
+      "modifications": "No Wazuh installer or vendored Wazuh implementation is in this source preview. Original orchestration/rebranding scripts are reviewed source, not approved package outputs.",
+      "excluded_paths": [
+        "agents/wazuh/*.pkg",
+        "agents/wazuh/*.rpm",
+        "agents/wazuh/*.deb",
+        "agents/wazuh/*.msi"
+      ],
+      "historical_disposition": "Four installer blobs exist in local Git history and must remain private or be omitted from every publication ref. Five installer files are retained privately; local digests are not upstream authenticity verification."
+    },
+    {
+      "id": "heroicons",
+      "distribution": "package_reference_only",
+      "manifest": "frontend/package.json",
+      "declared_version": "^2.2.0",
+      "reference_version": "v2.2.0",
+      "license": "MIT",
+      "license_files": [
+        "third_party/licenses/heroicons-MIT.txt"
+      ],
+      "upstream_license": "https://github.com/tailwindlabs/heroicons/blob/v2.2.0/LICENSE"
+    },
+    {
+      "id": "lucide",
+      "distribution": "package_reference_only",
+      "manifest": "SentinelGridPostureAgent/frontend/package.json",
+      "declared_version": "^0.294.0",
+      "reference_version": "0.294.0",
+      "license_description": "ISC with upstream notice identifying Feather-derived MIT portions.",
+      "license_files": [
+        "third_party/licenses/lucide-ISC.txt"
+      ],
+      "upstream_license": "https://github.com/lucide-icons/lucide/blob/0.294.0/LICENSE"
+    },
+    {
+      "id": "dm-sans-OFL",
+      "name": "DM Sans",
+      "distribution": "next_font_google_reference_only",
+      "source_reference": "frontend/src/app/layout.tsx",
+      "license": "OFL-1.1",
+      "license_files": [
+        "third_party/licenses/dm-sans-OFL.txt"
+      ],
+      "upstream_license": "https://github.com/google/fonts/blob/main/ofl/dmsans/OFL.txt",
+      "upstream_license_git_blob": "4430b85ac62998e2edb914360f9ebdfe43f4deaa",
+      "verification_limit": "No font binary is retained in the candidate; this is a reference license record, not a build-output font inventory."
+    },
+    {
+      "id": "ibm-plex-sans-OFL",
+      "name": "IBM Plex Sans",
+      "distribution": "next_font_google_reference_only",
+      "source_reference": "frontend/src/app/layout.tsx",
+      "license": "OFL-1.1",
+      "license_files": [
+        "third_party/licenses/ibm-plex-sans-OFL.txt"
+      ],
+      "upstream_license": "https://github.com/google/fonts/blob/main/ofl/ibmplexsans/OFL.txt",
+      "upstream_license_git_blob": "c35c4c618fab33da8695177b3a6cefe0810b7b28",
+      "verification_limit": "No font binary is retained in the candidate; this is a reference license record, not a build-output font inventory."
+    },
+    {
+      "id": "jetbrains-mono-OFL",
+      "name": "JetBrains Mono",
+      "distribution": "next_font_google_reference_only",
+      "source_reference": "frontend/src/app/layout.tsx",
+      "license": "OFL-1.1",
+      "license_files": [
+        "third_party/licenses/jetbrains-mono-OFL.txt"
+      ],
+      "upstream_license": "https://github.com/google/fonts/blob/main/ofl/jetbrainsmono/OFL.txt",
+      "upstream_license_git_blob": "821a3dac22aff15a1f1c9689a1d79c45bb58ca39",
+      "verification_limit": "No font binary is retained in the candidate; this is a reference license record, not a build-output font inventory."
+    }
+  ],
+  "dependency_manifests": {
+    "container_and_iac_manifests": [
+      "SentinelGridAIShield/gateway/Dockerfile",
+      "SentinelGridAIShield/services/Dockerfile",
+      "SentinelGridPenTestAgent/services/mcp-server/Dockerfile",
+      "SentinelGridPenTestAgent/services/pentest-service/Dockerfile",
+      "SentinelGridPenTestAgent/services/report-generator/Dockerfile",
+      "SentinelGridPenTestAgent/services/scanner-orchestrator/Dockerfile",
+      "SentinelGridPostureAgent/frontend/Dockerfile",
+      "SentinelGridPostureAgent/services/analyzer-orchestrator/Dockerfile",
+      "SentinelGridPostureAgent/services/mcp-server/Dockerfile",
+      "SentinelGridPostureAgent/services/posture-service/Dockerfile",
+      "SentinelGuard/Dockerfile.edr",
+      "backend/agents/iam_agent/Dockerfile",
+      "backend/agents/mcp_server/Dockerfile",
+      "backend/agents/siem_agent/Dockerfile",
+      "backend/agents/soar_agent/Dockerfile",
+      "backend/agents/soar_agent/Dockerfile.flyway",
+      "backend/docker/base-images/Dockerfile.api-base",
+      "backend/docker/base-images/Dockerfile.api-ml",
+      "backend/docker/base-images/Dockerfile.runtime-python",
+      "backend/services/action_service/Dockerfile",
+      "backend/services/agent_runtime/Dockerfile",
+      "backend/services/api_gateway/Dockerfile",
+      "backend/services/audit_service/Dockerfile",
+      "backend/services/automated_response_service/Dockerfile",
+      "backend/services/cert_service/Dockerfile",
+      "backend/services/cmdb_service/Dockerfile",
+      "backend/services/compliance_service/Dockerfile",
+      "backend/services/connector_service/Dockerfile",
+      "backend/services/detection_service/Dockerfile",
+      "backend/services/email_ingestion_service/Dockerfile",
+      "backend/services/framework_service/Dockerfile",
+      "backend/services/gitleaks_sidecar/Dockerfile",
+      "backend/services/incident_service/Dockerfile",
+      "backend/services/ingestion_service/Dockerfile",
+      "backend/services/metadata_service/Dockerfile",
+      "backend/services/model_gateway/Dockerfile",
+      "backend/services/model_gateway/db/Dockerfile.data-migrations",
+      "backend/services/model_gateway/db/Dockerfile.flyway",
+      "backend/services/observables_service/Dockerfile",
+      "backend/services/orchestrator/Dockerfile",
+      "backend/services/reporting_service/Dockerfile",
+      "backend/services/scanner_orchestrator/Dockerfile",
+      "backend/services/tenant_service/Dockerfile",
+      "backend/services/ticketing_service/Dockerfile",
+      "backend/services/vulnerability_service/Dockerfile",
+      "backend/services/wazuh_manager_service/Dockerfile",
+      "docker/agents/Dockerfile.endpoint-protection",
+      "frontend/Dockerfile",
+      "infra/customers/agribotsai/keycloak/terraform/clients.tf",
+      "infra/customers/agribotsai/keycloak/terraform/main.tf",
+      "infra/customers/agribotsai/keycloak/terraform/mappers.tf",
+      "infra/customers/agribotsai/keycloak/terraform/outputs.tf",
+      "infra/customers/agribotsai/keycloak/terraform/realm.tf",
+      "infra/customers/agribotsai/keycloak/terraform/roles.tf",
+      "infra/customers/agribotsai/keycloak/terraform/user-profile.tf",
+      "infra/customers/agribotsai/keycloak/terraform/users.tf",
+      "infra/customers/agribotsai/keycloak/terraform/variables.tf",
+      "infra/customers/aws-egress-blocking.tf",
+      "infra/eks/addons.tf",
+      "infra/eks/data-planes.tf",
+      "infra/eks/data.tf",
+      "infra/eks/main.tf",
+      "infra/eks/variables.tf",
+      "infra/shared/terraform/providers.tf",
+      "infra/vault/config/vault-dev-persistent.hcl",
+      "infra/vault/config/vault-http.hcl",
+      "infra/vault/config/vault-prod.hcl",
+      "infra/vault/config/vault.hcl",
+      "infra/vault/policies/platform-admin-policy.hcl",
+      "infra/vault/policies/tenant-policy-template.hcl",
+      "terraform/aws-sentinelgrid-integration/examples/basic/main.tf",
+      "terraform/aws-sentinelgrid-integration/examples/org-stackset-wrapper/main.tf",
+      "terraform/aws-sentinelgrid-integration/main.tf",
+      "terraform/aws-sentinelgrid-integration/outputs.tf",
+      "terraform/aws-sentinelgrid-integration/variables.tf",
+      "terraform/azure-sentinelgrid-integration/examples/basic/main.tf",
+      "terraform/azure-sentinelgrid-integration/main.tf",
+      "terraform/azure-sentinelgrid-integration/outputs.tf",
+      "terraform/azure-sentinelgrid-integration/variables.tf",
+      "terraform/cdn/main.tf",
+      "terraform/cdn/outputs.tf",
+      "terraform/cdn/variables.tf",
+      "terraform/gcp-sentinelgrid-integration/examples/basic/main.tf",
+      "terraform/gcp-sentinelgrid-integration/main.tf",
+      "terraform/gcp-sentinelgrid-integration/outputs.tf",
+      "terraform/gcp-sentinelgrid-integration/variables.tf",
+      "website/Dockerfile"
+    ],
+    "go_manifests": [
+      "SentinelGridAIShield/gateway/go.mod",
+      "SentinelGridAIShield/gateway/go.sum",
+      "SentinelGuard/go.mod",
+      "SentinelGuard/go.sum"
+    ],
+    "python_requirements": [
+      "SentinelGridAIShield/services/requirements.txt",
+      "SentinelGridPenTestAgent/services/mcp-server/requirements.txt",
+      "SentinelGridPenTestAgent/services/pentest-service/requirements.txt",
+      "SentinelGridPenTestAgent/services/report-generator/requirements.txt",
+      "SentinelGridPenTestAgent/services/scanner-orchestrator/requirements.txt",
+      "SentinelGridPenTestAgent/shared/requirements.txt",
+      "SentinelGridPenTestAgent/tests/requirements.txt",
+      "SentinelGridPostureAgent/services/analyzer-orchestrator/requirements.txt",
+      "SentinelGridPostureAgent/services/mcp-server/requirements.txt",
+      "SentinelGridPostureAgent/services/posture-service/requirements.txt",
+      "SentinelGridPostureAgent/tests/requirements.txt",
+      "backend/agents/iam_agent/requirements-specific.txt",
+      "backend/agents/iam_agent/requirements.txt",
+      "backend/agents/iam_agent/tests/requirements.txt",
+      "backend/agents/mcp_server/requirements.txt",
+      "backend/agents/siem_agent/requirements-specific.txt",
+      "backend/agents/siem_agent/requirements.txt",
+      "backend/agents/soar_agent/requirements-specific.txt",
+      "backend/agents/soar_agent/requirements.txt",
+      "backend/libs/requirements.txt",
+      "backend/services/action_service/requirements.txt",
+      "backend/services/action_service/tests/requirements.txt",
+      "backend/services/api_gateway/requirements.txt",
+      "backend/services/audit_service/requirements.txt",
+      "backend/services/automated_response_service/requirements.txt",
+      "backend/services/cert_service/requirements.txt",
+      "backend/services/cmdb_service/requirements.txt",
+      "backend/services/compliance_service/requirements.txt",
+      "backend/services/connector_service/requirements.txt",
+      "backend/services/detection_service/requirements.txt",
+      "backend/services/email_ingestion_service/requirements.txt",
+      "backend/services/framework_service/requirements.txt",
+      "backend/services/framework_service/tests/requirements.txt",
+      "backend/services/incident_service/requirements.txt",
+      "backend/services/ingestion_service/requirements.txt",
+      "backend/services/model_gateway/requirements-loader.txt",
+      "backend/services/model_gateway/requirements-specific.txt",
+      "backend/services/model_gateway/requirements.txt",
+      "backend/services/model_gateway/tests/requirements.txt",
+      "backend/services/observables_service/requirements.txt",
+      "backend/services/orchestrator/requirements.txt",
+      "backend/services/reporting_service/requirements.txt",
+      "backend/services/scanner_orchestrator/requirements.txt",
+      "backend/services/tenant_service/requirements.txt",
+      "backend/services/ticketing_service/requirements.txt",
+      "backend/services/ticketing_service/tests/requirements.txt",
+      "backend/services/vulnerability_service/requirements.txt",
+      "backend/services/wazuh_manager_service/requirements.txt",
+      "backend/tests/compliance/requirements-test.txt",
+      "backend/tests/requirements-test.txt",
+      "backend/tests/requirements.txt",
+      "scripts/requirements-preview.txt"
+    ],
+    "npm_manifests": [
+      "SentinelGridPostureAgent/frontend/package.json",
+      "frontend/package-lock.json",
+      "frontend/package.json",
+      "website/package-lock.json",
+      "website/package.json"
+    ]
+  },
+  "later_checks": [
+    "Task 8 resolves and audits the dependencies used by supported preview commands.",
+    "Runtime bundles, fonts, containers, models, and repackaged installers need their own exact-content and license review before distribution.",
+    "Tasks 6 and 7 must implement the private-history and excluded-installer dispositions."
+  ]
+}

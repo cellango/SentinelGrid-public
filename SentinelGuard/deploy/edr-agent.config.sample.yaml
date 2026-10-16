@@ -1,0 +1,44 @@
+# SentinelGuard EDR agent configuration (sample)
+
+tenant_id: "YOUR_TENANT_ID"
+agent_id: "endpoint-1234"
+ingest_url: "https://ingest.your-domain.example/ingest"
+auth_token: "REPLACE_ME"
+
+buffer_dir: "/var/lib/sentinelguard/spool"
+batch_size: 100
+request_timeout_seconds: 10
+max_event_bytes: 262144
+skip_tls_verify: false
+
+edr:
+  wazuh:
+    enabled: true
+    binary: "/usr/bin/wazuh-agentd"
+    config_path: "/var/ossec/etc/ossec.conf"
+    health_endpoint: "http://localhost:55000"
+    transport:
+      ingest_url: "https://ingest.your-domain.example/ingest"
+      mTLS_cert: "/etc/sentinelguard/certs/wazuh-agent.crt"
+      mTLS_key: "/etc/sentinelguard/certs/wazuh-agent.key"
+      token: "REPLACE_ME"
+  openedr:
+    enabled: true
+    binary: "/opt/openedr/bin/openedr"
+    config_path: "/etc/openedr/config.yaml"
+    health_endpoint: "http://localhost:8040/health"
+    transport:
+      ingest_url: "https://ingest.your-domain.example/ingest"
+      mTLS_cert: "/etc/sentinelguard/certs/openedr.crt"
+      mTLS_key: "/etc/sentinelguard/certs/openedr.key"
+      token: "REPLACE_ME"
+  velociraptor:
+    enabled: false
+    binary: "/usr/local/bin/velociraptor"
+    config_path: "/etc/velociraptor/client.config.yaml"
+    health_endpoint: "http://localhost:8001/server.health"
+    transport:
+      ingest_url: "https://ingest.your-domain.example/ingest"
+      mTLS_cert: "/etc/sentinelguard/certs/velociraptor.crt"
+      mTLS_key: "/etc/sentinelguard/certs/velociraptor.key"
+      token: "REPLACE_ME"

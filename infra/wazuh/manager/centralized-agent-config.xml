@@ -1,0 +1,200 @@
+<!--
+  Wazuh Manager - Centralized Agent Configuration
+  ===============================================
+  
+  Purpose: Detect applications attempting to bypass SentinelGrid AI Shield gateway
+           by monitoring connections to AI provider endpoints
+  
+  This configuration is managed by Wazuh Manager and pushed to all agents.
+  Agents cannot permanently modify it - any local changes are overwritten every 5 minutes.
+  
+  Monitoring Capabilities:
+  - Network connections to ai.openai.com, api.anthropic.com
+  - DNS queries for AI provider domains
+  - Process command-line monitoring for openai/anthropic SDKs
+  - File integrity monitoring of Wazuh's own config
+-->
+
+<agent_config>
+  
+  <!-- Apply to all agents -->
+  <client_buffer>
+    <disabled>no</disabled>
+    <queue_size>5000</queue_size>
+    <events_per_second>500</events_per_second>
+  </client_buffer>
+
+  <!--
+    AI Provider Connection Monitoring
+    =================================
+    Monitor syscalls for connections to AI provider IP addresses
+  -->
+  
+  <syscheck>
+    <!-- Monitor Wazuh's own config files for tampering -->
+    <directories check_all="yes" realtime="yes" report_changes="yes">/var/ossec/etc/ossec.conf</directories>
+    <directories check_all="yes" realtime="yes" report_changes="yes">/var/ossec/etc/shared</directories>
+    <alert_new_files>yes</alert_new_files>
+  </syscheck>
+
+  <!--
+    Syscall Auditing (Linux)
+    ========================
+    Monitor connect() syscalls to AI provider IPs
+  -->
+  
+  <wodle name="syscollector">
+    <disabled>no</disabled>
+    <interval>1h</interval>
+    <network>yes</network>
+    <os>yes</os>
+    <packages>yes</packages>
+    <ports all="yes">yes</ports>
+    <processes>yes</processes>
+  </wodle>
+
+  <!--
+    Command Monitoring
+    ==================
+    Log execution of processes that might be AI-related
+  -->
+  
+  <localfile>
+    <log_format>audit</log_format>
+    <location>/var/log/audit/audit.log</location>
+  </localfile>
+
+  <localfile>
+    <log_format>syslog</log_format>
+    <location>/var/log/syslog</location>
+  </localfile>
+
+  <!--
+    Active Response
+    ===============
+    Automatically respond to agent tampering
+  -->
+  
+  <active-response>
+    <disabled>no</disabled>
+    <ca_store>/var/ossec/etc/wpk_root.pem</ca_store>
+    <ca_verification>yes</ca_verification>
+  </active-response>
+
+</agent_config>
+
+<!--
+  Custom Rules for AI Provider Detection
+  ======================================
+  These rules run on the Wazuh Manager (not agents)
+  Agents send raw logs, Manager analyzes them
+-->
+
+<group name="ai_security,">
+  
+  <!--
+    Rule 100401: Direct Connection to OpenAI API
+    ============================================
+    Triggers when agent detects outbound connection to api.openai.com
+  -->
+  <rule id="100401" level="12">
+    <if_group>syslog</if_group>
+    <match>api.openai.com|api.openai.azure.com</match>
+    <description>Direct connection to OpenAI API detected - bypassing SentinelGrid gateway</description>
+    <group>ai_security,policy_violation,</group>
+    <mitre>
+      <id>T1071.001</id>
+      <tactic>Command and Control</tactic>
+      <technique>Application Layer Protocol: Web Protocols</technique>
+    </mitre>
+  </rule>
+
+  <!--
+    Rule 100402: Direct Connection to Anthropic API
+    ===============================================
+  -->
+  <rule id="100402" level="12">
+    <if_group>syslog</if_group>
+    <match>api.anthropic.com</match>
+    <description>Direct connection to Anthropic API detected - bypassing SentinelGrid gateway</description>
+    <group>ai_security,policy_violation,</group>
+    <mitre>
+      <id>T1071.001</id>
+    </mitre>
+  </rule>
+
+  <!--
+    Rule 100403: Wazuh Agent Config Modified
+    =========================================
+    Triggers when ossec.conf is changed (tampering attempt)
+  -->
+  <rule id="100403" level="10">
+    <if_sid>550</if_sid>
+    <match>/var/ossec/etc/ossec.conf</match>
+    <description>Wazuh agent configuration file modified - possible tampering</description>
+    <group>ai_security,agent_tampering,</group>
+    <mitre>
+      <id>T1562.001</id>
+      <tactic>Defense Evasion</tactic>
+      <technique>Impair Defenses: Disable or Modify Tools</technique>
+    </mitre>
+  </rule>
+
+  <!--
+    Rule 100404: Wazuh Agent Service Stopped
+    =========================================
+  -->
+  <rule id="100404" level="10">
+    <if_sid>2901,2902</if_sid>
+    <match>wazuh-agent|ossec</match>
+    <description>Wazuh agent service stopped - possible tampering</description>
+    <group>ai_security,agent_tampering,</group>
+    <mitre>
+      <id>T1562.001</id>
+    </mitre>
+  </rule>
+
+  <!--
+    Rule 100405: DNS Query for AI Provider
+    ======================================
+    Log DNS queries to AI providers (informational)
+  -->
+  <rule id="100405" level="5">
+    <if_group>syslog</if_group>
+    <match>query.*api.openai.com|query.*api.anthropic.com|query.*api.cohere.ai</match>
+    <description>DNS query for AI provider domain detected</description>
+    <group>ai_security,dns,</group>
+  </rule>
+
+  <!--
+    Rule 100406: AI SDK Process Detected
+    ====================================
+    Detect processes using OpenAI/Anthropic SDKs
+  -->
+  <rule id="100406" level="3">
+    <if_group>syslog</if_group>
+    <match>python.*openai|python.*anthropic|node.*openai|node.*anthropic</match>
+    <description>AI SDK process detected - monitoring for bypass</description>
+    <group>ai_security,process_monitoring,</group>
+  </rule>
+
+</group>
+
+<!--
+  Manager-Side Correlation Rules
+  ==============================
+  These run ONLY on Wazuh Manager
+  Detect patterns that indicate bypass
+-->
+
+<group name="ai_security_correlation,">
+
+  <!--
+    Rule 100410: Agent Silent (No AI Telemetry)
+    ===========================================
+    Correlation: Host has AI apps but no logs for 30+ minutes
+    This is handled by SIEM agent correlation, not Wazuh rules directly
+  -->
+
+</group>
+

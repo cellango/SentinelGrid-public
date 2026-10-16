@@ -1,0 +1,1802 @@
+{
+  "format_version": 1,
+  "review_date": "2026-10-15",
+  "source_scope": "Selected source paths only; local caches, installed dependencies and private artifacts excluded.",
+  "manifests": [
+    {
+      "path": "SentinelGridAIShield/docker-compose.yml",
+      "kind": "compose_definition",
+      "sha256": "5da52c90c90b69364383cc07ea0a66b951b2b0dde9d6c5701e3e7296296eed6c",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridAIShield/gateway/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "6a96cab86e81c921e4a649c75b911519164a4cd718a83b491e6142ef936509c2",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM golang:1.22-alpine AS builder",
+        "FROM alpine:latest"
+      ]
+    },
+    {
+      "path": "SentinelGridAIShield/gateway/go.mod",
+      "kind": "go_mod",
+      "sha256": "6a12bc957ebc51b1351bd522b7c5bc670ab788cb0213be16ee12d12a73380934",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridAIShield/gateway/go.sum",
+      "kind": "go_sum",
+      "sha256": "da2a2967a8489e8f1491738f373d498b22b700df4bea04d2cf61b081cedc6249",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridAIShield/services/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "332d9de452935e7aa2ba1405d8ab8186bae07b07ba65fc9505f1e6c9fed39cf6",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "SentinelGridAIShield/services/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "d2f12d452cb6e71fb57294ddc3d630b21c5a6ac392ec283e4993ef43631ed70a",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/docker-compose.production.yml",
+      "kind": "compose_definition",
+      "sha256": "4e573ec7597a0f76e7b518732ba16532f3f7f49779b3afbb330838e0a16f7358",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/docker-compose.yml",
+      "kind": "compose_definition",
+      "sha256": "0b0fbcd40c5fd38bd5081509fbabc3b66bc53a4dbb4726b5dab3caea0626f547",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/services/mcp-server/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "c7df8138e4e3ef9780804573a76894569e6439f791ff0e20a316695ba92e90bd",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "SentinelGridPenTestAgent/services/mcp-server/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "b5dbe916a1d9b7655e9815fa4751e40233315dbf656e341940b918d09260c264",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/services/pentest-service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "9072833b9cda95ff07176ad10136a360e5e041f8b686d1f8d05374a428987010",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "SentinelGridPenTestAgent/services/pentest-service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "db3cc07ebbea33bba10f9c32f6ca1b70bbcf46d859ac9e7e4d8f7027644028e9",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/services/report-generator/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "c05d3a1ed14af1b024f3f2e50d640122a614142d54ae172ca6da02bdd827df4f",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "SentinelGridPenTestAgent/services/report-generator/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "f333ff503bc96e8c22fb711bcee0d3f993cf69c2ca436082488980a053e43d15",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/services/scanner-orchestrator/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "cbf84fb1688c10add31902570557de8aa18bac132019fc32283e579843702bfc",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "SentinelGridPenTestAgent/services/scanner-orchestrator/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "52347835265db2cb974cbe5f9232c9d57a7020b77fc5a63d2a6e2e9fb4e3680e",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/shared/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "e529a6d6c4e288bc98dcda7ccd343dc28f47b5c0630c12ef5ff1f8eae2fd1846",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPenTestAgent/tests/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "08daeede16ef69886e37eec0f39acfa1c68946d860a11587f664427a38dea838",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPostureAgent/docker-compose.yml",
+      "kind": "compose_definition",
+      "sha256": "f888e15776afb3f0dd1ba7a797b78cb321a5cf7c8a5a585e6f6c49f7eaa1b7d1",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPostureAgent/frontend/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "e734c650fe7e5fba9ccc7c5df94bf0cb7af7b5d0f9356dff27271b090c107dcc",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM node:18-alpine AS base",
+        "FROM base AS deps",
+        "FROM base AS builder",
+        "FROM base AS runner"
+      ]
+    },
+    {
+      "path": "SentinelGridPostureAgent/frontend/package.json",
+      "kind": "npm_manifest",
+      "sha256": "f1c13be03c8f9b404ab70b36abdb518f366495b3154f1a53e8da1cc42239ad1b",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPostureAgent/services/analyzer-orchestrator/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "bfb75cef03314a4a213f37078d13ed864342acff4f962030d2aba2b54f465e4d",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "SentinelGridPostureAgent/services/analyzer-orchestrator/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "a064529a6952f0137aaf047c87c4f58d4c42a41ea17094bef51dea6484b2e1c2",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPostureAgent/services/mcp-server/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "bdcec1227bd8b4c83e548a1dd36c63e300432b24cc6162bce2fbd9d6543a2494",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "SentinelGridPostureAgent/services/mcp-server/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "c950c7391aa0efe197b567fd7ba7bb0dad97d7f7c259b2419e4f1f4d6e8dfe32",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPostureAgent/services/posture-service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "a4163bba9317fac3b966cca6a0030b5e987dc183d6eacec1d7d3f2ac3f698ccc",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "SentinelGridPostureAgent/services/posture-service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "e0309217b69f0ab221ee53bd0e3aecefba2a394d75f87882d9ba590ced17786c",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGridPostureAgent/tests/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "ae84a482d133ee6a534da9b64bf0479840822d3e3a5f9161d9f792f601f4c983",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGuard/Dockerfile.edr",
+      "kind": "container_recipe",
+      "sha256": "4d33cd5b06dfacbf84d153386bdba203f95ca16fb02606e8285fcb9bfd3ac0fb",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM golang:1.22-alpine AS builder",
+        "FROM alpine:3.19"
+      ]
+    },
+    {
+      "path": "SentinelGuard/deploy/docker-compose.yml",
+      "kind": "compose_definition",
+      "sha256": "adac0fc2b5487c5e115c98643d933ca9033ca4b5e2bdc1f7bbc5a1f14bbd0884",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGuard/go.mod",
+      "kind": "go_mod",
+      "sha256": "c991724c0787eb2cb38dabeea5b87f7ce01a916dc4e65b7023dcf6a9b57167a0",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "SentinelGuard/go.sum",
+      "kind": "go_sum",
+      "sha256": "33fdfe08c8ec1ec35ef8773642a83184ba43af285829f792facf73f5d6da5137",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/agents/iam_agent/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "5bb77354cef903ab572624d7bb911e96324299c0da5a66fe531775d8eda2c405",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM ${SENTINELGRID_API_ML_IMAGE}"
+      ]
+    },
+    {
+      "path": "backend/agents/iam_agent/requirements-specific.txt",
+      "kind": "python_requirements",
+      "sha256": "8c8cb475964cefd8ab868c19fb698a0078237609b415ce027b680d2ab5767e6b",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/agents/iam_agent/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "89f707a3333381a2c2cc0246b3999142edd7d5c41d96cb794df51cde2a1d9172",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/agents/iam_agent/tests/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "b3bad3cd4adf05c219ad3d741f07c7a44dd4ee722cc81763e45d68c852fd7328",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/agents/mcp_server/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "ccd21a065b5bbc5f4ba397d72681cbc7baf99b93bd9ab88932e5b327916ac64d",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/agents/mcp_server/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "6a28557e8ddc0a1f62859f6eaa10b6ebdef96715acb6db5a074a13ea953e5691",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/agents/siem_agent/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "c14b6c404a7412fd9f275b0895d2387bdb4c4ec39ebeee4dbf9378ca8d3a8532",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM ${SENTINELGRID_API_BASE_IMAGE}"
+      ]
+    },
+    {
+      "path": "backend/agents/siem_agent/requirements-specific.txt",
+      "kind": "python_requirements",
+      "sha256": "3e7c24104f96650e73752552114c52c16a7150e02b2d88874a67875c20032257",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/agents/siem_agent/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "00e7995660bcb53f45fea28bf49b24593da72e3cea480b794e453a46d8d68a90",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/agents/soar_agent/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "1294484cb4becd8da4248582fe2becac79729b5dca78bfc379eda43c512fbe40",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/agents/soar_agent/Dockerfile.flyway",
+      "kind": "container_recipe",
+      "sha256": "b1f5d123af7b0ce6d870b4841384b54e42dbb25302a9ea04d754e7726f9bcfd7",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM flyway/flyway:10-alpine"
+      ]
+    },
+    {
+      "path": "backend/agents/soar_agent/requirements-specific.txt",
+      "kind": "python_requirements",
+      "sha256": "d1edc506a818ff4d7579889601d25b600416a9d7f5bdcfdd6289402dddee1a5e",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/agents/soar_agent/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "b6e6ddd2cbddd80b3c579067542718ba4ad41a675e92e7a8e942d4ef0dcdb8c3",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/docker/base-images/Dockerfile.api-base",
+      "kind": "container_recipe",
+      "sha256": "ae4e0482ee03579672deee387aa9d9ebca79c983c1ae0359bf58de1e0c533ea4",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM ${SENTINELGRID_RUNTIME_PYTHON_IMAGE}"
+      ]
+    },
+    {
+      "path": "backend/docker/base-images/Dockerfile.api-ml",
+      "kind": "container_recipe",
+      "sha256": "d6e2b9da83041a6a74d14db8d867fd24718414a4210ab35eac6eb880c02cd5bd",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM ${SENTINELGRID_API_BASE_IMAGE}"
+      ]
+    },
+    {
+      "path": "backend/docker/base-images/Dockerfile.runtime-python",
+      "kind": "container_recipe",
+      "sha256": "5c0cdcf19019b00a05ea524c22f88edce6923a6eb14749eae80ea7c6e785aa2e",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim AS base"
+      ]
+    },
+    {
+      "path": "backend/libs/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "7f7ea1bcf2c1ea5488ff8616ad470b4c38c20a899dbc921c9d8d923d101d9ae6",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/action_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "17d34fc170367baeb5813b543a7803e2487f64ca23df2882eec7ccc841929986",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/action_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "9a2292796ee579c3a1b274405228b77a9f67a0919d9cfe4081923a06069d6bba",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/action_service/tests/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "f04935be4282c8ccfbb9f5f565ff8f7dfb846e0e9471be50a66ef45a42c4b5ec",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/agent_runtime/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "57aef9d20998c2a0f543fe2edf281910dcdc09b808b660b8ee40c3c7af882790",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/api_gateway/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "5934cb2c53c522906430bee09287db8f4bafaca7ffd1c626cb1aaf221aa090cf",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM ${SENTINELGRID_API_BASE_IMAGE}"
+      ]
+    },
+    {
+      "path": "backend/services/api_gateway/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "dd5ecc335d46e397abec15dc29af7ce2d75bd416a4d03e6df8e74ad671d02edd",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/audit_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "ea89e23d7c8542d8d5a76d975acb754ba22407612f43e0d72793cc867bb4580f",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/audit_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "d78761a51f58c730bf929b81d863e0f0bf85543171217190da558844dda7a262",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/automated_response_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "9e420a51fcf9e781f1681c89236d5b832c5e8c5a3c7072a8536c9050d6214f80",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/automated_response_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "5794499d42b20a7be42b0465b920a5f853a7a4c4c8b2cf4bb3910736ac028dd9",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/cert_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "70578a6a1c6ac514af7751d1a211af2a9243f0d8a37a437694dfcf029ee9bf76",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/cert_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "e8127ce1fcad5736583b20323820cb5bc46c81d06293688d5a6a9c6ca4d309e4",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/cmdb_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "924c9c5290f94a44d1ecbfcda6ec4f9799eea63ce24834bc5277e9c0757a00b9",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/cmdb_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "1697ef921b3be0400e456aa99f0168101b1f67b3439556e1cedb3ac5c83845a4",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/compliance_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "4f7a71242ed9b1c4c2eca2acb8ae8be20764813c326abc726288edb7ea261993",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/compliance_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "5794499d42b20a7be42b0465b920a5f853a7a4c4c8b2cf4bb3910736ac028dd9",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/connector_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "84f719d4c83a3e3f6a9670e41f6d8d2ad1167a3b238bd1ac717fc320d885ac67",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/connector_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "5734683840d7e1a42f721096710d2e29b5397319d474481024936a290e5147af",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/detection_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "313d25b5c133cfff4f26e5c02965c7b41b07b5c9f61202b37d508f4323180e8a",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/detection_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "0c2b35f7d933739dba47080ab7dcad1b193841c779a0f8304d38ee1807a5b12f",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/email_ingestion_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "ca92098002f3311861f62f39a897b848c4113cd5ae3b33e5fe0dee78e138f65f",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/email_ingestion_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "e852a673d2467f0cc4cab15846fc70573ab7f359bf34f010e382d3518acb1621",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/framework_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "3b233938ea18a93cb78c9847f298685a9aeb5defb2b7923d3fc0fd9e7c76b03a",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/framework_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "900263fc7258afd3dda990132be694f03a98ce7deb8363a0dc08089509dc1890",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/framework_service/tests/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "d75d622d24472ae2b4f8523a9a6a65f43ed727c57744b79aa0dbbb212e2cb958",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/gitleaks_sidecar/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "16cd9b4ec084e8c2d4ac0c01ebea2f3f13407ab8c367b3fac6ffb9d168cec9e8",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "backend/services/incident_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "288189766c9d231a9eb6710e88db157d2551c5290302a8ecc258f58345812431",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/incident_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "1e3e65d1aa7d601c3810b3c8bd58634201c2ad2c1503351559031692f29e3698",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/ingestion_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "1908932e7af70903f6b51bf9e9dc4215325454428c54e420d3ad91f5912d46e9",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/ingestion_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "9afe6932f98f9fa591bee7144f1ef7c97fea41ad3cbf288687d55abc0f1c890c",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/metadata_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "7c8cf684091e29322a36b62f38e92d3390760938978a073f455fdb99e11529d9",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/model_gateway/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "c9f767165a55a6327b93bd3163c660046114d9735ff4544d91970e1e171a41d1",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM ${SENTINELGRID_API_ML_IMAGE}"
+      ]
+    },
+    {
+      "path": "backend/services/model_gateway/db/Dockerfile.data-migrations",
+      "kind": "container_recipe",
+      "sha256": "091aabe821d67060957d49232781622a983e919851b5ce4b5070ff3e2201d368",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM python:3.11-slim"
+      ]
+    },
+    {
+      "path": "backend/services/model_gateway/db/Dockerfile.flyway",
+      "kind": "container_recipe",
+      "sha256": "f0666b0109273fc5672a3029002b3de319a19b1bc2930d675f5d128a091f7ba2",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM flyway/flyway:10-alpine"
+      ]
+    },
+    {
+      "path": "backend/services/model_gateway/requirements-loader.txt",
+      "kind": "python_requirements",
+      "sha256": "d17d2e969bea99ce4c0fa25168531434379f61e979b96e4904eb586e3b5dd6e2",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/model_gateway/requirements-specific.txt",
+      "kind": "python_requirements",
+      "sha256": "db7a4b3db11023d781da64065a3666a97399447deeefab69358e503b1aeea999",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/model_gateway/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "7c91d93ce5aaef3248a8d09699d32b389200270fb000af98c0796fc2c41982ab",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/model_gateway/tests/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "29d061a9c8bac5f3ec016cd90176fa704c9d73c148c27e44c891369e9d1a6dff",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/observables_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "3e80fb70d0049c69b5b0ce2e86fecbcc6636735d22afe0b5d767c7e3279e3e69",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/observables_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "8b2518b815a121e8da0d1e34bfae95bb6bac95fd97de5ec7dc2189a06fc57d5e",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/orchestrator/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "d4c011ad4aa560d4d7c806dbe1877087c989b0909cde38356a7415cffa17ed01",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM ${SENTINELGRID_API_BASE_IMAGE}"
+      ]
+    },
+    {
+      "path": "backend/services/orchestrator/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "c27ccb102595dcc8bb7c05fd67c33c3300624146954ae3dabe028a409078a84a",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/reporting_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "725e823a8568939ad18cef513c37abb76cef410e6472b83d90b46d86669df55e",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/reporting_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "6d6febbe40b788499ee8e577d57b2efcd64531d09dbf3164a0bf447faf0e7842",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/scanner_orchestrator/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "ba3d545b72853d4b760f4ff5f979db32a333d3082b0eb52a4e0620aeccf24523",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/scanner_orchestrator/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "39a5815272ce2c384d79ce68430d63127b9e7f6a038d58ede221fa7568480827",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/tenant_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "38d6eba6f0a8481dbedae9f41b051dcaddedfcc78414ef9d1bd343db0b5f08e4",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/tenant_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "a10d7b379c999241a5ad51f885043e4504d4eb3cb4574a5706d46f1537ca7902",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/ticketing_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "1f892e3c6e40b5de5923e4bb035c3f469ab6f26f8638129eb6423632c1ed2d10",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/ticketing_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "d4eb4d064578dd950239fe93b4ee9f2ef929120b45156b538e6421c6d2fcf5fe",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/ticketing_service/tests/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "f04935be4282c8ccfbb9f5f565ff8f7dfb846e0e9471be50a66ef45a42c4b5ec",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/vulnerability_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "97e491cc7ce0329dd5357815c4fd26fbba1fc013e5caffc9b179e7eeafe52f5c",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/vulnerability_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "92175cfc174bf3f46118675318e364999145415d2714c4b129a4eb3da55ce942",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/wazuh_manager_service/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "e78b93db9d8c1c328e515a9a19fb151cd65c3a146dfdb92eefaf6bae4616679c",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM sentinelgrid/api-base:latest"
+      ]
+    },
+    {
+      "path": "backend/services/wazuh_manager_service/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "d628c288cd38b8fe9b2ed535d0aedfb35caed2308cb23a0ccf9aa43bce85bdf2",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/tests/compliance/requirements-test.txt",
+      "kind": "python_requirements",
+      "sha256": "90926a1603f5e98b922846b51db071142a5449853157d8be4c70d7a302cd903b",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/tests/requirements-test.txt",
+      "kind": "python_requirements",
+      "sha256": "8b578a7cda1baee189f11fbd0de7c08869c8e3ff2e3c8270b1afea8e73b9bbe8",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/tests/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "cb271044c4f1249581da470850760f4ef85268b15aa082c1b4a096097251581a",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "charts/common-service/Chart.yaml",
+      "kind": "helm_chart_manifest",
+      "sha256": "2f7fc8bbb357e546f82db1a4f168a9ce866220f3115cf3e5b75d3ad4929c0fe7",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "docker-compose.dev.yml",
+      "kind": "compose_definition",
+      "sha256": "b28ac4e2c55d8cc2f59e592d62d6ad8d1b82bc128040a3b7c0f3d3efcb38ec75",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "docker-compose.minimal.yml",
+      "kind": "compose_definition",
+      "sha256": "c90281e3a54a258cb372bc3d830a0c92a034101985eefc5ae2cdce1a03824db2",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "docker-compose.observability.yml",
+      "kind": "compose_definition",
+      "sha256": "6e67cc4cb20a4f4f0bdf2569fb6615ab464a7f1e0559ea2a2bd23b953390b027",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "docker-compose.test.yml",
+      "kind": "compose_definition",
+      "sha256": "d35075046db2496051a00590743ef2c82c593baf7b56240151acda9e51bcbc21",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "docker/agents/Dockerfile.endpoint-protection",
+      "kind": "container_recipe",
+      "sha256": "8c30f9fefc138e0bc0bb4d9847a7db6fc4b87c0132a9b7777d2128bb2a0cf9a0",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM ubuntu:22.04"
+      ]
+    },
+    {
+      "path": "docker/agents/docker-compose.yml",
+      "kind": "compose_definition",
+      "sha256": "affa7e0668b32bc613078b6d07f7d986210adc3f682887a8d778f8a8b096e386",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "frontend/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "8ec4c18f9c26b28151e43b6d71050dd599621412627aa6a1220de4456de27c11",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM node:20-alpine AS builder",
+        "FROM node:20-alpine AS runner"
+      ]
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "kind": "npm_lock",
+      "sha256": "c94489d46fc970c5e56ebbd0d021cd95facae30259dbe41e54fd4b2da8a4dca0",
+      "scope": "supported_preview"
+    },
+    {
+      "path": "frontend/package.json",
+      "kind": "npm_manifest",
+      "sha256": "24354d29d5cccac1225b3dd51231ce95c574ba6927465a3e5436c74d150c186a",
+      "scope": "supported_preview"
+    },
+    {
+      "path": "scripts/requirements-preview.txt",
+      "kind": "python_requirements",
+      "sha256": "febb7bd24b2e24c4c446d477ea77354ba56ecd0302205a3d46659556678244f5",
+      "scope": "supported_preview"
+    },
+    {
+      "path": "website/Dockerfile",
+      "kind": "container_recipe",
+      "sha256": "5a33cfb341293146a4e88c12478ea3ade811f544d89ad5b2a09c2b2588f9cff2",
+      "scope": "experimental_reference_only",
+      "image_references": [
+        "FROM node:20-alpine AS builder",
+        "FROM node:20-alpine AS runner"
+      ]
+    },
+    {
+      "path": "website/package-lock.json",
+      "kind": "npm_lock",
+      "sha256": "cd5762f9838ee8eb6e4d439b132a002d764fb200004b9098da0a6630ead34d4f",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "website/package.json",
+      "kind": "npm_manifest",
+      "sha256": "a91f242a3f7ce1b0a6fff6a1983b3f76069a0b0863b96845e3d381778c081e56",
+      "scope": "experimental_reference_only"
+    }
+  ],
+  "counts_by_kind": {
+    "compose_definition": 10,
+    "container_recipe": 49,
+    "go_mod": 2,
+    "go_sum": 2,
+    "python_requirements": 52,
+    "npm_manifest": 3,
+    "helm_chart_manifest": 1,
+    "npm_lock": 2
+  },
+  "runtime_risks": {
+    "status": "not_resolved_or_cleared_for_execution",
+    "python_requirement_files": 51,
+    "exact_declared_package_version_pairs_checked": 37,
+    "known_affected_exact_pairs": 13,
+    "unresolved_requirements_or_includes": 375,
+    "affected_exact_pins": [
+      {
+        "name": "accelerate",
+        "version": "1.13.0",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "GHSA-4j2p-28q2-5m79",
+            "aliases": [
+              "CVE-2026-69112"
+            ],
+            "fixed_in": [],
+            "link": "https://osv.dev/vulnerability/GHSA-4j2p-28q2-5m79",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-3804",
+            "aliases": [
+              "CVE-2026-69112",
+              "GHSA-4j2p-28q2-5m79"
+            ],
+            "fixed_in": [],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-3804",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "fastapi",
+        "version": "0.104.1",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "PYSEC-2024-38",
+            "aliases": [
+              "CVE-2024-24762",
+              "GHSA-qf9m-vfgh-m389"
+            ],
+            "fixed_in": [
+              "0.109.1"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2024-38",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "fastapi",
+        "version": "0.109.0",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "PYSEC-2024-38",
+            "aliases": [
+              "CVE-2024-24762",
+              "GHSA-qf9m-vfgh-m389"
+            ],
+            "fixed_in": [
+              "0.109.1"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2024-38",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "pyjwt",
+        "version": "2.8.0",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "GHSA-752w-5fwx-jx9f",
+            "aliases": [
+              "CVE-2026-32597",
+              "PYSEC-2026-120"
+            ],
+            "fixed_in": [
+              "2.12.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-752w-5fwx-jx9f",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-120",
+            "aliases": [
+              "CVE-2026-32597",
+              "GHSA-752w-5fwx-jx9f"
+            ],
+            "fixed_in": [
+              "2.12.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-120",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2025-183",
+            "aliases": [
+              "CVE-2025-45768"
+            ],
+            "fixed_in": [],
+            "link": "https://osv.dev/vulnerability/PYSEC-2025-183",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-179",
+            "aliases": [
+              "CVE-2026-48526",
+              "GHSA-xgmm-8j9v-c9wx"
+            ],
+            "fixed_in": [
+              "2.13.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-179",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-175",
+            "aliases": [
+              "CVE-2026-48522",
+              "GHSA-993g-76c3-p5m4"
+            ],
+            "fixed_in": [
+              "2.13.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-175",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-177",
+            "aliases": [
+              "CVE-2026-48524",
+              "GHSA-fhv5-28vv-h8m8"
+            ],
+            "fixed_in": [
+              "2.13.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-177",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-178",
+            "aliases": [
+              "CVE-2026-48525",
+              "GHSA-w7vc-732c-9m39"
+            ],
+            "fixed_in": [
+              "2.13.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-178",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-fhv5-28vv-h8m8",
+            "aliases": [
+              "CVE-2026-48524",
+              "PYSEC-2026-177"
+            ],
+            "fixed_in": [
+              "2.13.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-fhv5-28vv-h8m8",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-xgmm-8j9v-c9wx",
+            "aliases": [
+              "CVE-2026-48526",
+              "PYSEC-2026-179"
+            ],
+            "fixed_in": [
+              "2.13.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-xgmm-8j9v-c9wx",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-w7vc-732c-9m39",
+            "aliases": [
+              "CVE-2026-48525",
+              "PYSEC-2026-178"
+            ],
+            "fixed_in": [
+              "2.13.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-w7vc-732c-9m39",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-2gx3-rcp4-g85q",
+            "aliases": [
+              "CVE-2026-101917"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-2gx3-rcp4-g85q",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-hxm8-2xgr-2p9m",
+            "aliases": [
+              "CVE-2026-102269"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-hxm8-2xgr-2p9m",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-9v7f-9g4p-ffgj",
+            "aliases": [
+              "CVE-2026-102267"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-9v7f-9g4p-ffgj",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-ffc3-869f-jxw9",
+            "aliases": [
+              "CVE-2026-102268"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-ffc3-869f-jxw9",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-p4g4-x82p-q773",
+            "aliases": [
+              "CVE-2026-102271"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-p4g4-x82p-q773",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-jwrc-g2q2-pq5p",
+            "aliases": [
+              "CVE-2026-102270"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-jwrc-g2q2-pq5p",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-42vr-xj54-vc7v",
+            "aliases": [
+              "CVE-2026-101918"
+            ],
+            "fixed_in": [
+              "2.15.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-42vr-xj54-vc7v",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4145",
+            "aliases": [
+              "CVE-2026-102268",
+              "GHSA-ffc3-869f-jxw9"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4145",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4149",
+            "aliases": [
+              "CVE-2026-102271",
+              "GHSA-p4g4-x82p-q773"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4149",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4144",
+            "aliases": [
+              "CVE-2026-102267",
+              "GHSA-9v7f-9g4p-ffgj"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4144",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4148",
+            "aliases": [
+              "CVE-2026-102270",
+              "GHSA-jwrc-g2q2-pq5p"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4148",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4140",
+            "aliases": [
+              "CVE-2026-101917",
+              "GHSA-2gx3-rcp4-g85q"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4140",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4141",
+            "aliases": [
+              "CVE-2026-101918",
+              "GHSA-42vr-xj54-vc7v"
+            ],
+            "fixed_in": [
+              "2.15.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4141",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4147",
+            "aliases": [
+              "CVE-2026-102269",
+              "GHSA-hxm8-2xgr-2p9m"
+            ],
+            "fixed_in": [
+              "2.14.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4147",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-x33g-cr3x-6449",
+            "aliases": [
+              "CVE-2026-102275"
+            ],
+            "fixed_in": [
+              "2.15.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-x33g-cr3x-6449",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4183",
+            "aliases": [
+              "CVE-2026-102275",
+              "GHSA-x33g-cr3x-6449"
+            ],
+            "fixed_in": [
+              "2.15.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4183",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "pypdf2",
+        "version": "3.0.1",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "PYSEC-2026-1835",
+            "aliases": [
+              "CVE-2023-36464",
+              "GHSA-4vvm-4w3v-6mr8"
+            ],
+            "fixed_in": [
+              "3.9.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-1835",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "pytest",
+        "version": "7.4.3",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "GHSA-6w46-j5rx-g56g",
+            "aliases": [
+              "CVE-2025-71176",
+              "PYSEC-2026-1845"
+            ],
+            "fixed_in": [
+              "9.0.3"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-6w46-j5rx-g56g",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-1845",
+            "aliases": [
+              "CVE-2025-71176",
+              "GHSA-6w46-j5rx-g56g"
+            ],
+            "fixed_in": [
+              "9.0.3"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-1845",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "pytest",
+        "version": "7.4.4",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "GHSA-6w46-j5rx-g56g",
+            "aliases": [
+              "CVE-2025-71176",
+              "PYSEC-2026-1845"
+            ],
+            "fixed_in": [
+              "9.0.3"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-6w46-j5rx-g56g",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-1845",
+            "aliases": [
+              "CVE-2025-71176",
+              "GHSA-6w46-j5rx-g56g"
+            ],
+            "fixed_in": [
+              "9.0.3"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-1845",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "python-dotenv",
+        "version": "1.0.0",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "GHSA-mf9w-mj56-hr94",
+            "aliases": [
+              "CVE-2026-28684",
+              "PYSEC-2026-2270"
+            ],
+            "fixed_in": [
+              "1.2.2"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-mf9w-mj56-hr94",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-2270",
+            "aliases": [
+              "CVE-2026-28684",
+              "GHSA-mf9w-mj56-hr94"
+            ],
+            "fixed_in": [
+              "1.2.2"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-2270",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "python-multipart",
+        "version": "0.0.6",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "GHSA-2jv5-9r88-3w3p",
+            "aliases": [
+              "CVE-2024-24762",
+              "GHSA-qf9m-vfgh-m389",
+              "PYSEC-2024-38",
+              "PYSEC-2026-1850"
+            ],
+            "fixed_in": [
+              "0.0.7"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-2jv5-9r88-3w3p",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-59g5-xgcq-4qw3",
+            "aliases": [
+              "CVE-2024-53981",
+              "PYSEC-2026-1851"
+            ],
+            "fixed_in": [
+              "0.0.18"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-59g5-xgcq-4qw3",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-wp53-j4wj-2cfg",
+            "aliases": [
+              "CVE-2026-24486",
+              "PYSEC-2026-1852"
+            ],
+            "fixed_in": [
+              "0.0.22"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-wp53-j4wj-2cfg",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-mj87-hwqh-73pj",
+            "aliases": [
+              "CVE-2026-40347",
+              "PYSEC-2026-3038"
+            ],
+            "fixed_in": [
+              "0.0.26"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-mj87-hwqh-73pj",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-pp6c-gr5w-3c5g",
+            "aliases": [
+              "CVE-2026-42561",
+              "PYSEC-2026-3039"
+            ],
+            "fixed_in": [
+              "0.0.27"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-pp6c-gr5w-3c5g",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-v9pg-7xvm-68hf",
+            "aliases": [
+              "CVE-2026-53540",
+              "PYSEC-2026-3040"
+            ],
+            "fixed_in": [
+              "0.0.31"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-v9pg-7xvm-68hf",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-5rvq-cxj2-64vf",
+            "aliases": [
+              "CVE-2026-53539",
+              "PYSEC-2026-3036"
+            ],
+            "fixed_in": [
+              "0.0.30"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-5rvq-cxj2-64vf",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-6jv3-5f52-599m",
+            "aliases": [
+              "CVE-2026-53538",
+              "PYSEC-2026-3037"
+            ],
+            "fixed_in": [
+              "0.0.30"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-6jv3-5f52-599m",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-1850",
+            "aliases": [
+              "CVE-2024-24762",
+              "GHSA-2jv5-9r88-3w3p"
+            ],
+            "fixed_in": [
+              "0.0.7"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-1850",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-1852",
+            "aliases": [
+              "CVE-2026-24486",
+              "GHSA-wp53-j4wj-2cfg"
+            ],
+            "fixed_in": [
+              "0.0.22"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-1852",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-1851",
+            "aliases": [
+              "CVE-2024-53981",
+              "GHSA-59g5-xgcq-4qw3"
+            ],
+            "fixed_in": [
+              "0.0.18"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-1851",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-3038",
+            "aliases": [
+              "CVE-2026-40347",
+              "GHSA-mj87-hwqh-73pj"
+            ],
+            "fixed_in": [
+              "0.0.26"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-3038",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-3037",
+            "aliases": [
+              "CVE-2026-53538",
+              "GHSA-6jv3-5f52-599m"
+            ],
+            "fixed_in": [
+              "0.0.30"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-3037",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-3036",
+            "aliases": [
+              "CVE-2026-53539",
+              "GHSA-5rvq-cxj2-64vf"
+            ],
+            "fixed_in": [
+              "0.0.30"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-3036",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-3040",
+            "aliases": [
+              "CVE-2026-53540",
+              "GHSA-v9pg-7xvm-68hf"
+            ],
+            "fixed_in": [
+              "0.0.31"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-3040",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-3039",
+            "aliases": [
+              "CVE-2026-42561",
+              "GHSA-pp6c-gr5w-3c5g"
+            ],
+            "fixed_in": [
+              "0.0.27"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-3039",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "sentence-transformers",
+        "version": "2.2.2",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "GHSA-jhr6-gm9c-rqjv",
+            "aliases": [
+              "CVE-2026-68770"
+            ],
+            "fixed_in": [
+              "5.6.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-jhr6-gm9c-rqjv",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4164",
+            "aliases": [
+              "CVE-2026-68770",
+              "GHSA-jhr6-gm9c-rqjv"
+            ],
+            "fixed_in": [
+              "5.6.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4164",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "sentence-transformers",
+        "version": "5.4.1",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "GHSA-jhr6-gm9c-rqjv",
+            "aliases": [
+              "CVE-2026-68770"
+            ],
+            "fixed_in": [
+              "5.6.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-jhr6-gm9c-rqjv",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4164",
+            "aliases": [
+              "CVE-2026-68770",
+              "GHSA-jhr6-gm9c-rqjv"
+            ],
+            "fixed_in": [
+              "5.6.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4164",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "transformers",
+        "version": "5.5.4",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "GHSA-x9r9-c232-4q39",
+            "aliases": [
+              "CVE-2026-80047"
+            ],
+            "fixed_in": [],
+            "link": "https://osv.dev/vulnerability/GHSA-x9r9-c232-4q39",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-xrqw-3rrv-vx5w",
+            "aliases": [
+              "CVE-2026-9856"
+            ],
+            "fixed_in": [
+              "5.10.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-xrqw-3rrv-vx5w",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-3929",
+            "aliases": [
+              "CVE-2026-9856",
+              "GHSA-xrqw-3rrv-vx5w"
+            ],
+            "fixed_in": [
+              "5.10.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-3929",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4174",
+            "aliases": [
+              "CVE-2026-80047",
+              "GHSA-x9r9-c232-4q39"
+            ],
+            "fixed_in": [],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4174",
+            "withdrawn": null
+          }
+        ]
+      },
+      {
+        "name": "weasyprint",
+        "version": "60.1",
+        "query_status": "success",
+        "vulnerabilities": [
+          {
+            "id": "PYSEC-2026-2034",
+            "aliases": [
+              "CVE-2025-68616",
+              "GHSA-983w-rhvv-gwmv"
+            ],
+            "fixed_in": [
+              "68.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-2034",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-983w-rhvv-gwmv",
+            "aliases": [
+              "CVE-2025-68616",
+              "PYSEC-2026-2034"
+            ],
+            "fixed_in": [
+              "68.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-983w-rhvv-gwmv",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-jhhc-3hcp-qhm5",
+            "aliases": [
+              "CVE-2026-49452",
+              "PYSEC-2026-3412"
+            ],
+            "fixed_in": [],
+            "link": "https://osv.dev/vulnerability/GHSA-jhhc-3hcp-qhm5",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-3412",
+            "aliases": [
+              "CVE-2026-49452",
+              "GHSA-jhhc-3hcp-qhm5"
+            ],
+            "fixed_in": [],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-3412",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-jf6q-chmf-3h3v",
+            "aliases": [
+              "CVE-2026-55073"
+            ],
+            "fixed_in": [
+              "70.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-jf6q-chmf-3h3v",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-3940",
+            "aliases": [
+              "CVE-2026-55073",
+              "GHSA-jf6q-chmf-3h3v"
+            ],
+            "fixed_in": [
+              "70.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-3940",
+            "withdrawn": null
+          },
+          {
+            "id": "GHSA-r543-q48m-4c9j",
+            "aliases": [
+              "CVE-2026-106443"
+            ],
+            "fixed_in": [
+              "70.0"
+            ],
+            "link": "https://osv.dev/vulnerability/GHSA-r543-q48m-4c9j",
+            "withdrawn": null
+          },
+          {
+            "id": "PYSEC-2026-4311",
+            "aliases": [
+              "CVE-2026-106443",
+              "GHSA-r543-q48m-4c9j"
+            ],
+            "fixed_in": [
+              "70.0"
+            ],
+            "link": "https://osv.dev/vulnerability/PYSEC-2026-4311",
+            "withdrawn": null
+          }
+        ]
+      }
+    ],
+    "limits": [
+      "Exact-pin checks use declared versions only and do not resolve a complete runtime environment.",
+      "Ranges, includes, OS conditions, Go graphs, other npm applications, container bases, charts and infrastructure providers need separate environment-specific resolution, vulnerability and license checks.",
+      "No runtime installs, scans, deployments, images, packages, models, or binary redistribution are approved by the preview audit."
+    ]
+  }
+}

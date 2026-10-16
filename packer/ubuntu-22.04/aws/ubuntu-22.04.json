@@ -1,0 +1,178 @@
+{
+  "variables": {
+    "aws_region": "us-east-1",
+    "aws_instance_type": "t3.medium",
+    "source_ami": "ami-0c55b159cbfafe1f0",
+    "ssh_username": "ubuntu",
+    "sentinelgrid_agent_version": "1.0.0",
+    "sentinel_guard_enabled": "false",
+    "sentinel_guard_version": "0.1.0",
+    "sentinel_guard_package_url": "",
+    "sentinel_guard_tenant_id": "",
+    "sentinel_guard_agent_id": "",
+    "sentinel_guard_ingest_url": "",
+    "sentinel_guard_tls_verify": "true",
+    "sentinel_guard_wazuh_alert_path": "/var/ossec/logs/alerts/alerts.json",
+    "sentinel_guard_auth_token": "",
+    "sentinelgrid_tenant_token": "",
+    "sentinelgrid_manager_host": "manager.sentinelgrid.ai",
+    "image_name": "sentinelgrid-ubuntu-22.04-hardened-{{timestamp}}",
+    "image_description": "SentinelGrid Hardened Ubuntu 22.04 LTS with Endpoint Protection Agent"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "instance_type": "{{user `aws_instance_type`}}",
+      "source_ami": "{{user `source_ami`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ami_name": "{{user `image_name`}}",
+      "ami_description": "{{user `image_description`}}",
+      "ami_users": [],
+      "ami_groups": [],
+      "tags": {
+        "Name": "{{user `image_name`}}",
+        "OS": "Ubuntu 22.04 LTS",
+        "Hardening": "CIS Level 1",
+        "Agent": "SentinelGrid Endpoint Protection",
+        "ManagedBy": "Packer",
+        "Version": "{{user `sentinelgrid_agent_version`}}"
+      },
+      "snapshot_tags": {
+        "Name": "{{user `image_name`}}",
+        "OS": "Ubuntu 22.04 LTS"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt-get update -qq",
+        "sudo apt-get install -y wget curl"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../../../scripts/cis-hardening/ubuntu-22.04/level1/harden.sh",
+      "destination": "/tmp/cis-harden.sh"
+    },
+    {
+      "type": "file",
+      "source": "../../../packer/scripts/install-sentinelgrid-agent.sh",
+      "destination": "/tmp/install-agent.sh"
+    },
+    {
+      "type": "file",
+      "source": "../../../packer/scripts/install-sentinelguard.sh",
+      "destination": "/tmp/install-sentinelguard.sh"
+    },
+    {
+      "type": "file",
+      "source": "../../../packer/scripts/sentinelguard.config.tmpl",
+      "destination": "/tmp/sentinelguard.config.tmpl"
+    },
+    {
+      "type": "file",
+      "source": "../../branding/ubuntu-22.04-banner.txt",
+      "destination": "/tmp/ssh-banner.txt"
+    },
+    {
+      "type": "file",
+      "source": "../../branding/ubuntu-22.04-motd.txt",
+      "destination": "/tmp/motd.txt"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chmod +x /tmp/cis-harden.sh",
+        "chmod +x /tmp/install-agent.sh",
+        "sudo /tmp/cis-harden.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "# Install SentinelGrid branding",
+        "echo 'Installing SentinelGrid branding...'",
+        "",
+        "# SSH Banner",
+        "sudo cp /tmp/ssh-banner.txt /etc/ssh/sshd_banner",
+        "sudo chmod 644 /etc/ssh/sshd_banner",
+        "echo 'Banner /etc/ssh/sshd_banner' | sudo tee -a /etc/ssh/sshd_config",
+        "",
+        "# MOTD",
+        "sudo cp /tmp/motd.txt /etc/motd",
+        "sudo chmod 644 /etc/motd",
+        "",
+        "# SentinelGrid image info",
+        "cat << 'EOF' | sudo tee /etc/sentinelgrid-image-info",
+        "SENTINELGRID_IMAGE=true",
+        "SENTINELGRID_VERSION={{user `sentinelgrid_agent_version`}}",
+        "SENTINELGRID_BUILD_DATE=$(date +%Y-%m-%d)",
+        "OS_TYPE=ubuntu-22.04",
+        "HARDENING_LEVEL=cis-level1",
+        "CLOUD_PROVIDER=aws",
+        "AGENT_VERSION={{user `sentinelgrid_agent_version`}}",
+        "MANAGER_HOST={{user `sentinelgrid_manager_host`}}",
+        "EOF",
+        "",
+        "# Add to /etc/os-release",
+        "echo '' | sudo tee -a /etc/os-release",
+        "echo '# SentinelGrid Hardened Image' | sudo tee -a /etc/os-release",
+        "echo 'SENTINELGRID_IMAGE=true' | sudo tee -a /etc/os-release",
+        "echo 'SENTINELGRID_VERSION={{user `sentinelgrid_agent_version`}}' | sudo tee -a /etc/os-release",
+        "",
+        "echo 'SentinelGrid branding installed'"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "SENTINELGRID_TENANT_TOKEN={{user `sentinelgrid_tenant_token`}}",
+        "SENTINELGRID_MANAGER_HOST={{user `sentinelgrid_manager_host`}}",
+        "SENTINELGRID_AGENT_VERSION={{user `sentinelgrid_agent_version`}}"
+      ],
+      "inline": [
+        "sudo /tmp/install-agent.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "SENTINEL_GUARD_ENABLED={{user `sentinel_guard_enabled`}}",
+        "SENTINEL_GUARD_PACKAGE_URL={{user `sentinel_guard_package_url`}}",
+        "SENTINEL_GUARD_TENANT_ID={{user `sentinel_guard_tenant_id`}}",
+        "SENTINEL_GUARD_AGENT_ID={{user `sentinel_guard_agent_id`}}",
+        "SENTINEL_GUARD_INGEST_URL={{user `sentinel_guard_ingest_url`}}",
+        "SENTINEL_GUARD_TLS_VERIFY={{user `sentinel_guard_tls_verify`}}",
+        "SENTINEL_GUARD_WAZUH_ALERT_PATH={{user `sentinel_guard_wazuh_alert_path`}}",
+        "SENTINEL_GUARD_AUTH_TOKEN={{user `sentinel_guard_auth_token`}}",
+        "SENTINEL_GUARD_VERSION={{user `sentinel_guard_version`}}",
+        "SENTINEL_GUARD_CONFIG_TEMPLATE=/tmp/sentinelguard.config.tmpl"
+      ],
+      "inline": [
+        "chmod +x /tmp/install-sentinelguard.sh",
+        "sudo /tmp/install-sentinelguard.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo rm -f /tmp/cis-harden.sh /tmp/install-agent.sh",
+        "sudo rm -f /tmp/install-sentinelguard.sh /tmp/sentinelguard.config.tmpl",
+        "sudo rm -f /root/.ssh/authorized_keys",
+        "sudo rm -f /home/ubuntu/.ssh/authorized_keys",
+        "sudo history -c",
+        "sudo sync"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "manifest.json",
+      "strip_path": true
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "results": {
+    "failed_checks": [
+      {
+        "check_id": "CKV_AWS_1",
+        "check_name": "S3 bucket is public",
+        "file_path": "main.tf",
+        "severity": "HIGH",
+        "resource": "aws_s3_bucket.public"
+      }
+    ]
+  }
+}

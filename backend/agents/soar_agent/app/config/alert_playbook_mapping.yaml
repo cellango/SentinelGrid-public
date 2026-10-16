@@ -1,0 +1,282 @@
+# Alert Type to Playbook Mapping Configuration
+# Default mappings for detection events to playbooks
+
+# This file defines the default behavior when a detection event is received.
+# Tenants can override these mappings in the database via detection_playbook_mappings table.
+
+mappings:
+  - alert_type: identity_privilege_escalation
+    playbook_key: ACCOUNT-COMPROMISE
+    playbook_name: "Account Compromise / Suspicious Login"
+    auto_execute: false
+    requires_approval: true
+    severity_threshold: high
+    description: "Admin/privileged access anomalies"
+    nist_controls: ["AC-2", "AC-5", "AC-6", "IR-4"]
+    mitre_techniques: ["T1078", "T1098"]
+
+  - alert_type: identity_auth_anomaly
+    playbook_key: PASSWORD-SPRAY
+    playbook_name: "Password Spray / Auth Anomaly"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: medium
+    description: "Brute force, spray, geo, VPN anomalies"
+    nist_controls: ["AC-7", "IA-2", "IR-4"]
+    mitre_techniques: ["T1110", "T1110.003", "T1110.004"]
+
+  - alert_type: identity_mfa_root_issue
+    playbook_key: MFA-BYPASS
+    playbook_name: "MFA Bypass / Root Use"
+    auto_execute: false
+    requires_approval: true
+    severity_threshold: high
+    description: "MFA disabled/bypassed, root/break-glass usage"
+    nist_controls: ["AC-2", "AC-5", "AC-6", "IR-4"]
+    mitre_techniques: ["T1556", "T1078"]
+
+  - alert_type: phishing_user_report
+    playbook_key: PHISH-USER
+    playbook_name: "Phishing – User Reported"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: medium
+    description: "User-reported phishing"
+    nist_controls: ["IR-4", "IR-5", "AC-2"]
+    mitre_techniques: ["T1566.001", "T1566.002"]
+
+  - alert_type: phishing_gateway_alert
+    playbook_key: PHISH-GATEWAY
+    playbook_name: "Phishing – Gateway Alert"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: high
+    description: "SEG/email gateway phishing alerts"
+    nist_controls: ["IR-4", "IR-5"]
+    mitre_techniques: ["T1566.001", "T1566.002"]
+
+  - alert_type: endpoint_suspicious_activity
+    playbook_key: ENDPOINT-ISOLATE
+    playbook_name: "Endpoint Isolation / Suspicious Activity"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: medium
+    description: "LOLbins, persistence, privilege attempts, FIM changes"
+    nist_controls: ["DE.CM", "RS.MI"]
+    mitre_techniques: ["T1547", "T1218", "T1068", "T1046", "T1059", "T1136.001"]
+
+  - alert_type: endpoint_malware_ransomware
+    playbook_key: MALWARE-CONTAIN
+    playbook_name: "Malware Containment / Ransomware"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: high
+    description: "High/critical malware and ransomware patterns"
+    nist_controls: ["SI-3", "SI-4", "IR-4", "RS.MI"]
+    mitre_techniques: ["T1059", "T1204", "T1486"]
+
+  - alert_type: endpoint_monitoring_gap
+    playbook_key: AGENT-OFFLINE
+    playbook_name: "Agent Offline / Monitoring Gap"
+    auto_execute: false
+    requires_approval: false
+    severity_threshold: medium
+    description: "Agent offline or outdated"
+    nist_controls: ["DE.CM"]
+    mitre_techniques: []
+
+  - alert_type: network_recon_exploit
+    playbook_key: WAF-ATTACK
+    playbook_name: "Recon / Exploit Attempt"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: medium
+    description: "Scans, exploit attempts, TLS/cert anomalies, new exposure"
+    nist_controls: ["DE.CM", "RS.MI"]
+    mitre_techniques: ["T1046", "T1190", "T1553"]
+
+  - alert_type: network_c2_egress
+    playbook_key: C2/BEACON
+    playbook_name: "C2 / Malicious Egress"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: high
+    description: "C2 signatures, malicious DNS/egress, Tor/proxy"
+    nist_controls: ["DE.CM", "RS.MI"]
+    mitre_techniques: ["T1071", "T1041", "T1090"]
+
+  - alert_type: network_lateral_movement
+    playbook_key: ENDPOINT-ISOLATE
+    playbook_name: "Lateral Movement"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: high
+    description: "Internal SMB/RDP/WinRM lateral movement"
+    nist_controls: ["DE.CM", "RS.MI"]
+    mitre_techniques: ["T1021"]
+
+  - alert_type: cloud_public_exposure
+    playbook_key: CLOUD-PUBLIC-STORAGE
+    playbook_name: "Cloud Public Exposure"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: high
+    description: "Public buckets/blobs/SGs on critical ports"
+    nist_controls: ["PR.DS", "PR.AC", "DE.CM"]
+    mitre_techniques: ["T1530", "T1567.002"]
+
+  - alert_type: cloud_logging_integrity
+    playbook_key: LOGGING-DISABLED
+    playbook_name: "Logging / KMS Integrity"
+    auto_execute: true
+    requires_approval: true
+    severity_threshold: high
+    description: "CloudTrail/KMS tampering, mass delete/stop"
+    nist_controls: ["DE.CM", "PR.DS"]
+    mitre_techniques: ["T1562", "T1485", "T1529"]
+
+  - alert_type: k8s_misconfiguration
+    playbook_key: K8S-PRIV-POD
+    playbook_name: "K8s Misconfiguration"
+    auto_execute: true
+    requires_approval: true
+    severity_threshold: high
+    description: "Privileged pods, cluster-admin bindings, unapproved registries"
+    nist_controls: ["PR.AC"]
+    mitre_techniques: ["T1098", "T1548", "T1195"]
+
+  - alert_type: db_data_exfil
+    playbook_key: DB-BULK-SELECT
+    playbook_name: "DB Bulk Access / Exfil"
+    auto_execute: false
+    requires_approval: true
+    severity_threshold: high
+    description: "Bulk SELECT/DELETE/UPDATE and service account anomalies"
+    nist_controls: ["DE.CM", "PR.DS"]
+    mitre_techniques: ["T1005", "T1499"]
+
+  - alert_type: db_misconfiguration
+    playbook_key: DB-PUBLIC-EXPOSED
+    playbook_name: "DB Misconfiguration / Exposure"
+    auto_execute: true
+    requires_approval: true
+    severity_threshold: high
+    description: "DB public, unencrypted, schema changes, audit off"
+    nist_controls: ["PR.DS", "DE.CM"]
+    mitre_techniques: ["T1530", "T1562"]
+
+  - alert_type: db_auth_anomaly
+    playbook_key: DB-BULK-SELECT
+    playbook_name: "DB Auth Anomaly"
+    auto_execute: false
+    requires_approval: true
+    severity_threshold: medium
+    description: "DB login bursts, new DB accounts, new client hosts"
+    nist_controls: ["DE.CM", "PR.AC"]
+    mitre_techniques: ["T1110", "T1078"]
+
+  - alert_type: git_secret_exposure
+    playbook_key: SECRET-EXPOSURE
+    playbook_name: "Secret Exposure in Code/Logs"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: high
+    description: "Secrets/hard-coded keys/CI log leaks"
+    nist_controls: ["PR.DS", "DE.CM"]
+    mitre_techniques: ["T1552.001"]
+
+  - alert_type: git_iac_misconfiguration
+    playbook_key: IAC-HIGH-RISK
+    playbook_name: "IaC High-Risk Misconfig"
+    auto_execute: true
+    requires_approval: true
+    severity_threshold: high
+    description: "High-risk IaC issues and insecure K8s manifests"
+    nist_controls: ["PR.IP", "PR.AC"]
+    mitre_techniques: ["T1587", "T1609"]
+
+  - alert_type: git_app_vulnerability
+    playbook_key: SAST-HIGH
+    playbook_name: "High-Severity SAST"
+    auto_execute: false
+    requires_approval: true
+    severity_threshold: high
+    description: "High severity SAST findings"
+    nist_controls: ["PR.IP"]
+    mitre_techniques: []
+
+  - alert_type: ai_prompt_injection
+    playbook_key: AI-PROMPT-INJECTION
+    playbook_name: "AI Prompt Injection"
+    auto_execute: true
+    requires_approval: false
+    severity_threshold: high
+    description: "Prompt/jailbreak attempts"
+    nist_controls: ["PR.AC", "DE.CM"]
+    mitre_techniques: ["prompt_injection"]
+
+  - alert_type: ai_data_leak
+    playbook_key: AI-DATA-LEAK
+    playbook_name: "AI Data Leakage"
+    auto_execute: true
+    requires_approval: true
+    severity_threshold: high
+    description: "PII/secrets to external LLM"
+    nist_controls: ["SC-7", "SC-8", "SC-13", "IR-4", "IR-5", "PL-8"]
+    mitre_techniques: ["T1567", "T1530"]
+
+  - alert_type: ai_usage_anomaly
+    playbook_key: AI-POLICY-VIOLATION
+    playbook_name: "AI Policy Violation / Usage Anomaly"
+    auto_execute: false
+    requires_approval: true
+    severity_threshold: medium
+    description: "Unauthorized model use, key abuse, token spikes"
+    nist_controls: ["PR.AC", "DE.CM"]
+    mitre_techniques: ["policy_violation", "usage_anomaly"]
+
+  - alert_type: ai_tool_misuse
+    playbook_key: AI-POLICY-VIOLATION
+    playbook_name: "AI Unsafe Tool Use"
+    auto_execute: false
+    requires_approval: true
+    severity_threshold: high
+    description: "Unsafe tool invocations or chaining"
+    nist_controls: ["PR.AC", "DE.CM"]
+    mitre_techniques: ["unsafe_tool"]
+
+  - alert_type: monitoring_gap
+    playbook_key: AGENT-OFFLINE
+    playbook_name: "Monitoring Gap"
+    auto_execute: false
+    requires_approval: false
+    severity_threshold: medium
+    description: "Source/agent silent, outdated agents"
+    nist_controls: ["DE.CM"]
+    mitre_techniques: []
+
+  - alert_type: monitoring_job_failure
+    playbook_key: DRIFT-DETECTED
+    playbook_name: "Job/Scan Failure"
+    auto_execute: false
+    requires_approval: false
+    severity_threshold: medium
+    description: "Backups failing, ticket/webhook failures"
+    nist_controls: ["PR.IP", "RS.CO"]
+    mitre_techniques: []
+
+  - alert_type: monitoring_detection_integrity
+    playbook_key: DRIFT-DETECTED
+    playbook_name: "Detection/Config Integrity"
+    auto_execute: false
+    requires_approval: true
+    severity_threshold: medium
+    description: "Config drift, logging disabled, branch protection missing"
+    nist_controls: ["PR.IP", "DE.CM"]
+    mitre_techniques: ["T1553"]
+
+# Configuration notes:
+# - auto_execute: If true, playbook runs automatically without human approval
+# - requires_approval: If true, playbook requires approval even if triggered
+# - severity_threshold: Minimum severity to trigger playbook (critical > high > medium > low)
+# - Tenants can override these settings via detection_playbook_mappings table

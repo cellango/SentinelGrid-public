@@ -1,0 +1,32 @@
+# Dockerfile for data migrations (Python-based)
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements for data migrations (minimal - no LLM dependencies)
+COPY requirements-loader.txt ./requirements.txt
+
+# Install Python dependencies (with increased timeout for large packages like PyTorch)
+RUN pip install --no-cache-dir --default-timeout=300 -r requirements.txt
+
+# Copy application code
+COPY app/ ./app/
+
+# Copy data migration script
+COPY db/scripts/load_knowledge_base_data.py ./scripts/
+
+# Make script executable
+RUN chmod +x scripts/load_knowledge_base_data.py
+
+# Environment variables
+ENV PYTHONPATH=/app
+
+# Default command runs data migrations
+CMD ["python", "scripts/load_knowledge_base_data.py"]

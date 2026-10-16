@@ -1,0 +1,206 @@
+name: Test Hardened Images
+
+on:
+  workflow_run:
+    workflows: ["Build Hardened Images"]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      image_id:
+        description: 'Image ID to test (AMI ID, Azure Image ID, or GCP Image ID)'
+        required: true
+      cloud:
+        description: 'Cloud Provider'
+        required: true
+        type: choice
+        options:
+          - aws
+          - azure
+          - gcp
+      os:
+        description: 'Operating System'
+        required: true
+        type: choice
+        options:
+          - amazon-linux-2
+          - ubuntu-22.04
+          - rhel-8
+          - debian-12
+          - windows-server-2022
+
+jobs:
+  test-aws:
+    name: Test AWS Image
+    runs-on: ubuntu-latest
+    if: |
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'schedule') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.cloud == 'aws')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Launch test instance
+        id: launch
+        run: |
+          # Get AMI ID from workflow run artifacts or use provided ID
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            AMI_ID="${{ github.event.inputs.image_id }}"
+          else
+            # Download manifest and extract AMI ID
+            # This would be done by downloading artifacts from the build workflow
+            AMI_ID="ami-xxxxx"  # Placeholder
+          fi
+          
+          # Launch test instance
+          INSTANCE_ID=$(aws ec2 run-instances \
+            --image-id $AMI_ID \
+            --instance-type t3.micro \
+            --key-name test-key \
+            --security-group-ids sg-xxxxx \
+            --subnet-id subnet-xxxxx \
+            --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=test-hardened-image}]" \
+            --query 'Instances[0].InstanceId' \
+            --output text)
+          
+          echo "instance_id=$INSTANCE_ID" >> $GITHUB_OUTPUT
+          echo "Waiting for instance to be running..."
+          aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+
+      - name: Run tests
+        run: |
+          INSTANCE_ID="${{ steps.launch.outputs.instance_id }}"
+          PUBLIC_IP=$(aws ec2 describe-instances \
+            --instance-ids $INSTANCE_ID \
+            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+            --output text)
+          
+          # Wait for SSH
+          echo "Waiting for SSH..."
+          for i in {1..30}; do
+            if ssh -o StrictHostKeyChecking=no -i ~/.ssh/test-key ec2-user@$PUBLIC_IP "echo 'SSH ready'" 2>/dev/null; then
+              break
+            fi
+            sleep 10
+          done
+          
+          # Run basic tests
+          ssh -i ~/.ssh/test-key ec2-user@$PUBLIC_IP << 'EOF'
+            # Test 1: Verify CIS hardening
+            echo "Testing CIS hardening..."
+            test -f /var/log/cis-hardening.log && echo "✓ CIS hardening log exists"
+            
+            # Test 2: Verify agent installation
+            echo "Testing agent installation..."
+            systemctl status sentinelgrid-agent && echo "✓ Agent service exists"
+            
+            # Test 3: Verify security settings
+            echo "Testing security settings..."
+            [ "$(sysctl -n kernel.randomize_va_space)" = "2" ] && echo "✓ ASLR enabled"
+            
+            # Test 4: Verify SELinux/AppArmor
+            echo "Testing MAC..."
+            [ -f /etc/selinux/config ] && grep -q "SELINUX=enforcing" /etc/selinux/config && echo "✓ SELinux enforcing"
+            [ -f /etc/apparmor.d ] && echo "✓ AppArmor installed"
+          EOF
+
+      - name: Terminate test instance
+        if: always()
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ steps.launch.outputs.instance_id }}
+
+  test-azure:
+    name: Test Azure Image
+    runs-on: ubuntu-latest
+    if: |
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'schedule') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.cloud == 'azure')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Launch test VM
+        id: launch
+        run: |
+          # Launch test VM from image
+          az vm create \
+            --resource-group test-rg \
+            --name test-hardened-vm \
+            --image "${{ github.event.inputs.image_id }}" \
+            --admin-username testuser \
+            --generate-ssh-keys \
+            --public-ip-sku Standard
+          
+          echo "vm_name=test-hardened-vm" >> $GITHUB_OUTPUT
+
+      - name: Run tests
+        run: |
+          # Get VM IP
+          VM_IP=$(az vm show -d -g test-rg -n test-hardened-vm --query publicIps -o tsv)
+          
+          # Run tests via SSH
+          ssh -o StrictHostKeyChecking=no testuser@$VM_IP << 'EOF'
+            # Similar tests as AWS
+            echo "Running tests..."
+          EOF
+
+      - name: Cleanup
+        if: always()
+        run: |
+          az vm delete --resource-group test-rg --name test-hardened-vm --yes
+
+  test-gcp:
+    name: Test GCP Image
+    runs-on: ubuntu-latest
+    if: |
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'schedule') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.cloud == 'gcp')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Launch test instance
+        id: launch
+        run: |
+          gcloud compute instances create test-hardened-vm \
+            --image="${{ github.event.inputs.image_id }}" \
+            --zone=us-east1-b \
+            --machine-type=e2-micro
+          
+          echo "instance_name=test-hardened-vm" >> $GITHUB_OUTPUT
+
+      - name: Run tests
+        run: |
+          # Get instance IP
+          VM_IP=$(gcloud compute instances describe test-hardened-vm \
+            --zone=us-east1-b \
+            --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+          
+          # Run tests via SSH
+          gcloud compute ssh test-hardened-vm --zone=us-east1-b --command="echo 'Running tests...'"
+
+      - name: Cleanup
+        if: always()
+        run: |
+          gcloud compute instances delete test-hardened-vm --zone=us-east1-b --quiet
+

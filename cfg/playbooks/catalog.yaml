@@ -1,0 +1,535 @@
+# SentinelGrid Playbook Catalog (source of truth)
+# Aligned to seeded playbooks (V052) and incident_types for the drag-and-drop playbook editor.
+# Status values: seeded_db, pending_runbook_ref, ready, deprecated.
+
+playbooks:
+- id: ACCOUNT-COMPROMISE
+  incident_type: identity_privilege_escalation
+  name: Account Compromise / Suspicious Login
+  automation_default: manual
+  mitre_tactics: ["TA0003", "TA0004", "TA0005"]
+  mitre_techniques: ["T1078", "T1098"]
+  nist_controls: ["AC-2", "AC-5", "AC-6", "IR-4"]
+  runbook_ref: account-compromise-workflow
+  owner: identity
+  status: seeded_db
+
+  triggers:
+  - 'Alert: ACCOUNT-COMPROMISE'
+- id: PASSWORD-SPRAY
+  incident_type: identity_auth_anomaly
+  name: Password Spray Response
+  automation_default: semi_auto
+  mitre_tactics: ["TA0006"]
+  mitre_techniques: ["T1110.003"]
+  nist_controls: ["AC-7", "IA-2", "IR-4"]
+  runbook_ref: password-spray-workflow
+  owner: identity
+  status: seeded_db
+
+  triggers:
+  - 'Alert: PASSWORD-SPRAY'
+- id: MFA-BYPASS
+  incident_type: identity_mfa_root_issue
+  name: MFA Bypass / Disabled
+  automation_default: manual
+  mitre_tactics: ["TA0006"]
+  mitre_techniques: ["T1556"]
+  nist_controls: ["AC-2", "AC-5", "AC-6", "IR-4"]
+  runbook_ref: mfa-bypass-workflow
+  owner: identity
+  status: seeded_db
+
+  triggers:
+  - 'Alert: MFA-BYPASS'
+- id: PRIV-GROUP-CHANGE
+  incident_type: identity_privilege_escalation
+  name: Privileged Group Change
+  automation_default: manual
+  mitre_tactics: ["TA0003"]
+  mitre_techniques: ["T1098"]
+  nist_controls: ["AC-2", "AC-5", "AC-6", "IR-4"]
+  runbook_ref: priv-group-change-workflow
+  owner: identity
+  status: seeded_db
+
+  triggers:
+  - 'Alert: PRIV-GROUP-CHANGE'
+- id: PHISH-USER
+  incident_type: phishing_user_report
+  name: Phishing – User Reported
+  automation_default: semi_auto
+  mitre_tactics: ["TA0001"]
+  mitre_techniques: ["T1566"]
+  nist_controls: ["IR-4", "IR-5", "AC-2"]
+  runbook_ref: phish-user-reported-workflow
+  owner: phishing
+  status: seeded_db
+
+  triggers:
+  - 'Alert: PHISH-USER'
+- id: PHISH-GATEWAY
+  incident_type: phishing_gateway_alert
+  name: Phishing – Gateway Alert
+  automation_default: semi_auto
+  mitre_tactics: ["TA0001"]
+  mitre_techniques: ["T1566"]
+  nist_controls: ["IR-4", "IR-5"]
+  runbook_ref: phish-gateway-workflow
+  owner: phishing
+  status: seeded_db
+
+  triggers:
+  - 'Alert: PHISH-GATEWAY'
+- id: EXEC-NOTIFY
+  incident_type: exec_notify
+  name: Executive Notify
+  automation_default: manual
+  mitre_tactics: []
+  mitre_techniques: []
+  nist_controls: ["RS.CO"]
+  runbook_ref: exec-notify-workflow
+  owner: exec
+  status: seeded_db
+
+  triggers:
+  - 'Alert: EXEC-NOTIFY'
+- id: ENDPOINT-ISOLATE
+  incident_type: endpoint_suspicious_activity
+  name: Endpoint Isolation
+  automation_default: semi_auto
+  mitre_tactics: ["TA0008"]
+  mitre_techniques: ["T1105", "T1059"]
+  nist_controls: ["DE.CM", "RS.MI"]
+  runbook_ref: endpoint-isolate-workflow
+  owner: endpoint
+  status: seeded_db
+
+  triggers:
+  - 'Alert: ENDPOINT-ISOLATE'
+- id: MALWARE-CONTAIN
+  incident_type: endpoint_malware_ransomware
+  name: Malware Containment
+  automation_default: semi_auto
+  mitre_tactics: ["TA0002"]
+  mitre_techniques: ["T1059", "T1204"]
+  nist_controls: ["DE.CM", "RS.MI"]
+  runbook_ref: malware-contain-workflow
+  owner: endpoint
+  status: seeded_db
+
+  triggers:
+  - 'Alert: MALWARE-CONTAIN'
+- id: RANSOMWARE-IR
+  incident_type: endpoint_malware_ransomware
+  name: Ransomware IR
+  automation_default: semi_auto
+  mitre_tactics: ["TA0040"]
+  mitre_techniques: ["T1486"]
+  nist_controls: ["SI-3", "SI-4", "CP-9", "CP-10", "IR-4", "IR-6"]
+  runbook_ref: ransomware-ir-workflow
+  owner: endpoint
+  status: seeded_db
+
+  triggers:
+  - 'Alert: RANSOMWARE-IR'
+- id: WAF-ATTACK
+  incident_type: network_recon_exploit
+  name: Web App Attack Response
+  automation_default: semi_auto
+  mitre_tactics: ["TA0001"]
+  mitre_techniques: ["T1190"]
+  nist_controls: ["DE.CM", "RS.MI"]
+  runbook_ref: waf-attack-workflow
+  owner: network
+  status: seeded_db
+
+  triggers:
+  - 'Alert: WAF-ATTACK'
+- id: C2/BEACON
+  incident_type: network_c2_egress
+  name: C2 / Beacon Response
+  automation_default: semi_auto
+  mitre_tactics: ["TA0011"]
+  mitre_techniques: ["T1071"]
+  nist_controls: ["DE.CM", "RS.MI"]
+  runbook_ref: c2-beacon-workflow
+  owner: network
+  status: seeded_db
+
+  triggers:
+  - 'Alert: C2/BEACON'
+- id: EGRESS-ANOMALY
+  incident_type: network_c2_egress
+  name: Egress Anomaly Response
+  automation_default: manual
+  mitre_tactics: ["TA0010"]
+  mitre_techniques: ["T1041"]
+  nist_controls: ["DE.CM", "RS.MI"]
+  runbook_ref: egress-anomaly-workflow
+  owner: network
+  status: seeded_db
+
+  triggers:
+  - 'Alert: EGRESS-ANOMALY'
+- id: CLOUD-PUBLIC-STORAGE
+  incident_type: cloud_public_exposure
+  name: Cloud Public Storage Remediation
+  automation_default: semi_auto
+  mitre_tactics: ["TA0009", "TA0010"]
+  mitre_techniques: ["T1530", "T1567.002"]
+  nist_controls: ["SC-7", "SC-13", "SC-28", "IR-4", "IR-5"]
+  runbook_ref: public-storage-workflow
+  owner: cloud
+  status: seeded_db
+
+  triggers:
+  - 'Alert: CLOUD-PUBLIC-STORAGE'
+- id: SG-OPEN-CRITICAL
+  incident_type: cloud_public_exposure
+  name: Open Security Group Remediation
+  automation_default: semi_auto
+  mitre_tactics: ["TA0007"]
+  mitre_techniques: ["T1046"]
+  nist_controls: ["PR.AC", "PR.DS"]
+  runbook_ref: sg-open-critical-workflow
+  owner: cloud
+  status: seeded_db
+
+  triggers:
+  - 'Alert: SG-OPEN-CRITICAL'
+- id: ROOT-USE
+  incident_type: identity_mfa_root_issue
+  name: Root Use Response
+  automation_default: manual
+  mitre_tactics: ["TA0001"]
+  mitre_techniques: ["T1078"]
+  nist_controls: ["PR.AC", "DE.CM"]
+  runbook_ref: root-use-workflow
+  owner: cloud
+  status: seeded_db
+
+  triggers:
+  - 'Alert: ROOT-USE'
+- id: K8S-PRIV-POD
+  incident_type: k8s_misconfiguration
+  name: K8s Privileged Pod Response
+  automation_default: semi_auto
+  mitre_tactics: ["TA0003"]
+  mitre_techniques: ["T1098"]
+  nist_controls: ["PR.AC"]
+  runbook_ref: k8s-priv-pod-workflow
+  owner: cloud
+  status: seeded_db
+
+  triggers:
+  - 'Alert: K8S-PRIV-POD'
+- id: KMS-KEY-DISABLED
+  incident_type: cloud_logging_integrity
+  name: KMS Key Disabled/Deletion
+  automation_default: manual
+  mitre_tactics: ["TA0040"]
+  mitre_techniques: ["T1485"]
+  nist_controls: ["PR.DS"]
+  runbook_ref: kms-key-disabled-workflow
+  owner: cloud
+  status: seeded_db
+
+  triggers:
+  - 'Alert: KMS-KEY-DISABLED'
+- id: DB-BULK-SELECT
+  incident_type: db_data_exfil
+  name: DB Bulk Access Response
+  automation_default: manual
+  mitre_tactics: ["TA0009"]
+  mitre_techniques: ["T1005"]
+  nist_controls: ["DE.CM", "PR.DS"]
+  runbook_ref: db-bulk-select-workflow
+  owner: db
+  status: seeded_db
+
+  triggers:
+  - 'Alert: DB-BULK-SELECT'
+- id: DB-PUBLIC-EXPOSED
+  incident_type: db_misconfiguration
+  name: DB Public Exposure
+  automation_default: semi_auto
+  mitre_tactics: ["TA0009"]
+  mitre_techniques: ["T1530"]
+  nist_controls: ["PR.DS"]
+  runbook_ref: db-public-exposed-workflow
+  owner: db
+  status: seeded_db
+
+  triggers:
+  - 'Alert: DB-PUBLIC-EXPOSED'
+- id: DB-AUDIT-OFF
+  incident_type: db_misconfiguration
+  name: DB Audit Logging Off
+  automation_default: semi_auto
+  mitre_tactics: ["TA0005"]
+  mitre_techniques: ["T1562"]
+  nist_controls: ["DE.CM"]
+  runbook_ref: db-audit-off-workflow
+  owner: db
+  status: seeded_db
+
+  triggers:
+  - 'Alert: DB-AUDIT-OFF'
+- id: SECRET-EXPOSURE
+  incident_type: git_secret_exposure
+  name: Secret Exposure Response
+  automation_default: semi_auto
+  mitre_tactics: ["TA0009"]
+  mitre_techniques: ["T1552.001"]
+  nist_controls: ["PR.DS", "DE.CM"]
+  runbook_ref: secret-exposure-workflow
+  owner: code
+  status: seeded_db
+
+  triggers:
+  - 'Alert: SECRET-EXPOSURE'
+- id: IAC-HIGH-RISK
+  incident_type: git_iac_misconfiguration
+  name: IaC High-Risk Misconfig
+  automation_default: semi_auto
+  mitre_tactics: ["TA0042"]
+  mitre_techniques: ["T1587"]
+  nist_controls: ["PR.IP", "PR.AC"]
+  runbook_ref: iac-high-risk-workflow
+  owner: code
+  status: seeded_db
+
+  triggers:
+  - 'Alert: IAC-HIGH-RISK'
+- id: SAST-HIGH
+  incident_type: git_app_vulnerability
+  name: High-Severity SAST Finding
+  automation_default: manual
+  mitre_tactics: []
+  mitre_techniques: []
+  nist_controls: ["PR.IP"]
+  runbook_ref: sast-high-workflow
+  owner: code
+  status: seeded_db
+
+  triggers:
+  - 'Alert: SAST-HIGH'
+- id: AI-PROMPT-INJECTION
+  incident_type: ai_prompt_injection
+  name: AI Prompt Injection Response
+  automation_default: semi_auto
+  mitre_tactics: ["custom"]
+  mitre_techniques: ["prompt_injection"]
+  nist_controls: ["PR.AC", "DE.CM"]
+  runbook_ref: ai-prompt-injection-workflow
+  owner: ai
+  status: seeded_db
+
+  triggers:
+  - 'Alert: AI-PROMPT-INJECTION'
+- id: AI-DATA-LEAK
+  incident_type: ai_data_leak
+  name: AI Data Leakage Response
+  automation_default: semi_auto
+  mitre_tactics: ["TA0009", "TA0010"]
+  mitre_techniques: ["T1567", "T1530"]
+  nist_controls: ["SC-7", "SC-8", "SC-13", "IR-4", "IR-5", "PL-8"]
+  runbook_ref: ai-data-leak-workflow
+  owner: ai
+  status: seeded_db
+
+  triggers:
+  - 'Alert: AI-DATA-LEAK'
+- id: AI-POLICY-VIOLATION
+  incident_type: ai_usage_anomaly
+  name: AI Policy Violation
+  automation_default: semi_auto
+  mitre_tactics: ["custom"]
+  mitre_techniques: ["policy_violation"]
+  nist_controls: ["PR.AC", "DE.CM"]
+  runbook_ref: ai-policy-violation-workflow
+  owner: ai
+  status: seeded_db
+
+  triggers:
+  - 'Alert: AI-POLICY-VIOLATION'
+- id: LOGGING-DISABLED
+  incident_type: monitoring_detection_integrity
+  name: Logging Disabled
+  automation_default: semi_auto
+  mitre_tactics: []
+  mitre_techniques: []
+  nist_controls: ["DE.CM"]
+  runbook_ref: logging-disabled-workflow
+  owner: hygiene
+  status: seeded_db
+
+  triggers:
+  - 'Alert: LOGGING-DISABLED'
+- id: AGENT-OFFLINE
+  incident_type: monitoring_gap
+  name: Agent Offline
+  automation_default: manual
+  mitre_tactics: []
+  mitre_techniques: []
+  nist_controls: ["DE.CM"]
+  runbook_ref: agent-offline-workflow
+  owner: hygiene
+  status: seeded_db
+
+  triggers:
+  - 'Alert: AGENT-OFFLINE'
+- id: DRIFT-DETECTED
+  incident_type: monitoring_detection_integrity
+  name: Config Drift Detected
+  automation_default: manual
+  mitre_tactics: ["TA0005"]
+  mitre_techniques: ["T1553"]
+  nist_controls: ["PR.IP", "DE.CM"]
+  runbook_ref: drift-detected-workflow
+  owner: hygiene
+  status: seeded_db
+
+  # Additional coverage to close detection incident_type gaps
+  triggers:
+  - 'Alert: DRIFT-DETECTED'
+- id: DB-AUTH-ANOMALY
+  incident_type: db_auth_anomaly
+  name: DB Authentication Anomaly Response
+  automation_default: semi_auto
+  mitre_tactics: ["TA0006"]
+  mitre_techniques: ["T1078", "T1110"]
+  nist_controls: ["AC-2", "DE.CM", "IR-4"]
+  runbook_ref: db-auth-anomaly-workflow
+  owner: db
+  triggers:
+  - "SIEM alert: DB failed login burst or unusual source"
+  - "DB audit: new client IP or role misuse"
+  status: seeded_db
+
+- id: AI-TOOL-MISUSE
+  incident_type: ai_tool_misuse
+  name: AI Tool Misuse Response
+  automation_default: manual
+  mitre_tactics: ["TA0009"]
+  mitre_techniques: ["T1567", "T1204"]
+  nist_controls: ["DE.CM", "IR-4", "PR.AC"]
+  runbook_ref: ai-tool-misuse-workflow
+  owner: ai
+  triggers:
+  - "AI Shield alert: misuse or data exfil pattern"
+  - "AI tool policy violation event"
+  status: seeded_db
+
+- id: MONITORING-JOB-FAIL
+  incident_type: monitoring_job_failure
+  name: Monitoring Job Failure
+  automation_default: manual
+  mitre_tactics: []
+  mitre_techniques: []
+  nist_controls: ["DE.CM", "RS.MI"]
+  runbook_ref: monitoring-job-failure-workflow
+  owner: hygiene
+  triggers:
+  - "Pipeline/collector down alert"
+  - "Scheduled monitoring job failure"
+  status: seeded_db
+
+- id: ENDPOINT-MONITOR-GAP
+  incident_type: endpoint_monitoring_gap
+  name: Endpoint Monitoring Gap
+  automation_default: manual
+  mitre_tactics: []
+  mitre_techniques: []
+  nist_controls: ["DE.CM", "PR.PT"]
+  runbook_ref: endpoint-monitor-gap-workflow
+  owner: endpoint
+  triggers:
+  - "Endpoint agent offline or outdated"
+  - "No telemetry from host beyond threshold"
+  status: seeded_db
+
+- id: NETWORK-LATERAL
+  incident_type: network_lateral_movement
+  name: Lateral Movement Investigation
+  automation_default: semi_auto
+  mitre_tactics: ["TA0008"]
+  mitre_techniques: ["T1021", "T1075"]
+  nist_controls: ["DE.CM", "RS.AN"]
+  runbook_ref: network-lateral-workflow
+  owner: network
+  triggers:
+  - "SIEM/IDS lateral movement alert"
+  - "New SMB/RDP/WinRM flows between internal hosts"
+  status: seeded_db
+
+- id: ENDPOINT-MALWARE
+  incident_type: endpoint_malware
+  name: Endpoint Malware Cleanup
+  automation_default: semi_auto
+  mitre_tactics: ["TA0002"]
+  mitre_techniques: ["T1204", "T1059"]
+  nist_controls: ["DE.CM", "RS.MI"]
+  runbook_ref: endpoint-malware-workflow
+  owner: endpoint
+  triggers:
+  - "EDR/Wazuh malware alert"
+  - "Suspicious process or hash detection"
+  status: seeded_db
+
+- id: ENDPOINT-RANSOMWARE
+  incident_type: endpoint_ransomware
+  name: Ransomware Containment (Endpoint)
+  automation_default: semi_auto
+  mitre_tactics: ["TA0040"]
+  mitre_techniques: ["T1486"]
+  nist_controls: ["IR-4", "CP-9", "CP-10"]
+  runbook_ref: endpoint-ransomware-workflow
+  owner: endpoint
+  triggers:
+  - "Mass encryption pattern detected"
+  - "Ransom note file or extension pattern"
+  status: seeded_db
+
+- id: CLOUD-PUBLIC-STORAGE-EXFIL
+  incident_type: cloud_public_storage
+  name: Cloud Public Storage Exposure
+  automation_default: semi_auto
+  mitre_tactics: ["TA0009", "TA0010"]
+  mitre_techniques: ["T1530", "T1567.002"]
+  nist_controls: ["SC-7", "SC-13", "SC-28", "IR-4"]
+  runbook_ref: cloud-public-storage-workflow
+  owner: cloud
+  triggers:
+  - "Storage bucket/container made public"
+  - "Data access surge on public bucket"
+  status: seeded_db
+
+- id: NETWORK-DATA-EXFIL
+  incident_type: network_data_exfiltration
+  name: Network Data Exfiltration Response
+  automation_default: semi_auto
+  mitre_tactics: ["TA0010"]
+  mitre_techniques: ["T1041"]
+  nist_controls: ["DE.CM", "RS.MI"]
+  runbook_ref: network-data-exfil-workflow
+  owner: network
+  triggers:
+  - "High egress volume to untrusted destination"
+  - "IDS alert: data exfil pattern"
+  status: seeded_db
+
+- id: DEVICE-LOSS
+  incident_type: device_loss
+  name: Lost/Stolen Device Response
+  automation_default: manual
+  mitre_tactics: []
+  mitre_techniques: []
+  nist_controls: ["PE-3", "PE-18", "IR-4"]
+  runbook_ref: device-loss-workflow
+  owner: endpoint
+  triggers:
+  - "User reports lost or stolen device"
+  - "MDM marks device missing"
+  status: seeded_db

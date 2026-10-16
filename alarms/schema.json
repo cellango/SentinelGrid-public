@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AlarmCatalog",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "alarm_id",
+      "title",
+      "category",
+      "severity",
+      "type",
+      "source",
+      "entity"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "alarm_id": {
+        "type": "string",
+        "pattern": "^ALM-[A-Z]+-[A-Za-z0-9]+$"
+      },
+      "title": { "type": "string", "minLength": 3 },
+      "category": {
+        "type": "string",
+        "enum": ["auth", "endpoint", "network", "data", "application", "service"]
+      },
+      "severity": {
+        "type": "string",
+        "enum": ["CRIT", "HIGH", "MED", "LOW"]
+      },
+      "type": {
+        "type": "string",
+        "enum": ["detection", "health", "coverage"]
+      },
+      "source": { "type": "string", "minLength": 2 },
+      "signal_refs": {
+        "type": "array",
+        "items": { "type": "string" },
+        "uniqueItems": true
+      },
+      "entity": { "type": "string" },
+      "triage_playbook": { "type": "string" },
+      "tags": {
+        "type": "array",
+        "items": { "type": "string" },
+        "uniqueItems": true
+      }
+    }
+  }
+}

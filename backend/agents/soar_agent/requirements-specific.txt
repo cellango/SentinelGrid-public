@@ -1,0 +1,10 @@
+# SOAR Agent - Service-Specific Dependencies
+# ============================================
+# Common deps (FastAPI, SQLAlchemy, httpx, etc.) already in sentinelgrid/api-base
+
+# YAML processing (for playbooks)
+pyyaml>=6.0.1
+
+# Multipart form data
+python-multipart>=0.0.6
+

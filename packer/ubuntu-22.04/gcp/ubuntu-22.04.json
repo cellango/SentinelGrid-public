@@ -1,0 +1,133 @@
+{
+  "variables": {
+    "gcp_project_id": "",
+    "gcp_account_file": "",
+    "gcp_zone": "us-east1-b",
+    "gcp_machine_type": "n1-standard-2",
+    "sentinelgrid_agent_version": "1.0.0",
+    "sentinel_guard_enabled": "false",
+    "sentinel_guard_version": "0.1.0",
+    "sentinel_guard_package_url": "",
+    "sentinel_guard_tenant_id": "",
+    "sentinel_guard_agent_id": "",
+    "sentinel_guard_ingest_url": "",
+    "sentinel_guard_tls_verify": "true",
+    "sentinel_guard_wazuh_alert_path": "/var/ossec/logs/alerts/alerts.json",
+    "sentinel_guard_auth_token": "",
+    "sentinelgrid_tenant_token": "",
+    "sentinelgrid_manager_host": "manager.sentinelgrid.ai",
+    "image_name": "sentinelgrid-ubuntu-22-04-hardened-{{timestamp}}",
+    "image_description": "SentinelGrid Hardened Ubuntu 22.04 LTS with Endpoint Protection Agent"
+  },
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "{{user `gcp_project_id`}}",
+      "account_file": "{{user `gcp_account_file`}}",
+      "zone": "{{user `gcp_zone`}}",
+      "machine_type": "{{user `gcp_machine_type`}}",
+      "source_image": "ubuntu-2204-jammy-v20240111",
+      "image_name": "{{user `image_name`}}",
+      "image_description": "{{user `image_description`}}",
+      "image_family": "sentinelgrid-ubuntu-22-04-hardened",
+      "ssh_username": "packer",
+      "tags": [
+        "sentinelgrid",
+        "hardened",
+        "ubuntu-22-04"
+      ],
+      "image_labels": {
+        "os": "ubuntu-22-04",
+        "hardening": "cis-level-1",
+        "agent": "sentinelgrid-endpoint-protection",
+        "managed-by": "packer",
+        "version": "{{user `sentinelgrid_agent_version`}}"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt-get update -qq",
+        "sudo apt-get install -y wget curl"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../../../scripts/cis-hardening/ubuntu-22.04/level1/harden.sh",
+      "destination": "/tmp/cis-harden.sh"
+    },
+    {
+      "type": "file",
+      "source": "../../../scripts/install-sentinelgrid-agent.sh",
+      "destination": "/tmp/install-agent.sh"
+    },
+    {
+      "type": "file",
+      "source": "../../../scripts/install-sentinelguard.sh",
+      "destination": "/tmp/install-sentinelguard.sh"
+    },
+    {
+      "type": "file",
+      "source": "../../../scripts/sentinelguard.config.tmpl",
+      "destination": "/tmp/sentinelguard.config.tmpl"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chmod +x /tmp/cis-harden.sh",
+        "chmod +x /tmp/install-agent.sh",
+        "sudo /tmp/cis-harden.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "SENTINELGRID_TENANT_TOKEN={{user `sentinelgrid_tenant_token`}}",
+        "SENTINELGRID_MANAGER_HOST={{user `sentinelgrid_manager_host`}}",
+        "SENTINELGRID_AGENT_VERSION={{user `sentinelgrid_agent_version`}}"
+      ],
+      "inline": [
+        "sudo /tmp/install-agent.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "SENTINEL_GUARD_ENABLED={{user `sentinel_guard_enabled`}}",
+        "SENTINEL_GUARD_PACKAGE_URL={{user `sentinel_guard_package_url`}}",
+        "SENTINEL_GUARD_TENANT_ID={{user `sentinel_guard_tenant_id`}}",
+        "SENTINEL_GUARD_AGENT_ID={{user `sentinel_guard_agent_id`}}",
+        "SENTINEL_GUARD_INGEST_URL={{user `sentinel_guard_ingest_url`}}",
+        "SENTINEL_GUARD_TLS_VERIFY={{user `sentinel_guard_tls_verify`}}",
+        "SENTINEL_GUARD_WAZUH_ALERT_PATH={{user `sentinel_guard_wazuh_alert_path`}}",
+        "SENTINEL_GUARD_AUTH_TOKEN={{user `sentinel_guard_auth_token`}}",
+        "SENTINEL_GUARD_VERSION={{user `sentinel_guard_version`}}",
+        "SENTINEL_GUARD_CONFIG_TEMPLATE=/tmp/sentinelguard.config.tmpl"
+      ],
+      "inline": [
+        "chmod +x /tmp/install-sentinelguard.sh",
+        "sudo /tmp/install-sentinelguard.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo rm -f /tmp/cis-harden.sh /tmp/install-agent.sh",
+        "sudo rm -f /tmp/install-sentinelguard.sh /tmp/sentinelguard.config.tmpl",
+        "sudo rm -f /root/.ssh/authorized_keys",
+        "sudo rm -f /home/packer/.ssh/authorized_keys",
+        "sudo history -c",
+        "sudo sync"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "manifest.json",
+      "strip_path": true
+    }
+  ]
+}

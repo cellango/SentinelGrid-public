@@ -1,0 +1,27 @@
+
+Welcome to SentinelGrid Hardened Red Hat Enterprise Linux 8
+
+╔═══════════════════════════════════════════════════════════╗
+║  Security Features                                        ║
+╚═══════════════════════════════════════════════════════════╝
+
+✓ CIS Level 1 Security Hardening Applied
+✓ SentinelGrid Endpoint Protection Agent Pre-Installed
+✓ SELinux Enforcing Mode Enabled
+✓ Firewalld Configured
+✓ Security Updates Applied
+
+═══════════════════════════════════════════════════════════
+
+Quick Commands:
+  Agent status:   sudo systemctl status sentinelgrid-agent
+  View logs:      sudo tail -f /var/ossec/logs/ossec.log
+  System info:    cat /etc/sentinelgrid-image-info
+
+Documentation: https://docs.sentinelgrid.ai/images/rhel-8
+Support: support@sentinelgrid.ai
+
+═══════════════════════════════════════════════════════════
+Built with ❤️  by SentinelGrid | Powered by Wazuh
+
+

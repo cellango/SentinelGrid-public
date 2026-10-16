@@ -1,0 +1,112 @@
+{{- if .Values.networkPolicy.enabled }}
+{{- $legacyIngressNamespaces := .Values.networkPolicy.allowNamespaces | default (list) -}}
+{{- $legacyIngressPods := .Values.networkPolicy.allowPodSelectors | default (list) -}}
+{{- $ingress := .Values.networkPolicy.ingress | default dict -}}
+{{- $egress := .Values.networkPolicy.egress | default dict -}}
+{{- $ingressPorts := get $ingress "ports" | default (list (dict "port" .Values.service.targetPort "protocol" "TCP")) -}}
+{{- $hasIngressPeerRules := or
+      (get $ingress "public")
+      $legacyIngressNamespaces
+      $legacyIngressPods
+      (get $ingress "allowNamespaces")
+      (get $ingress "allowPodSelectors")
+      (get $ingress "allowServiceInstances") -}}
+{{- $hasEgressRules := or
+      (get $egress "allowDNS")
+      (get $egress "allowAnyPorts")
+      (get $egress "allowNamespaces")
+      (get $egress "allowPodSelectors")
+      (get $egress "allowServiceInstances") -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "common-service.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "common-service.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "common-service.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+    {{- if $hasEgressRules }}
+    - Egress
+    {{- end }}
+  ingress:
+    {{- if $hasIngressPeerRules }}
+    {{- if (get $ingress "public") }}
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+{{ include "common-service.networkPolicyPorts" (dict "ports" $ingressPorts) | indent 8 }}
+    {{- end }}
+    {{- if or $legacyIngressNamespaces $legacyIngressPods (get $ingress "allowNamespaces") (get $ingress "allowPodSelectors") (get $ingress "allowServiceInstances") }}
+    - from:
+      {{- range $legacyIngressNamespaces }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . }}
+      {{- end }}
+      {{- range $legacyIngressPods }}
+        - podSelector:
+{{ toYaml . | indent 12 }}
+      {{- end }}
+      {{- range (get $ingress "allowNamespaces" | default (list)) }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . }}
+      {{- end }}
+      {{- range (get $ingress "allowPodSelectors" | default (list)) }}
+        - podSelector:
+{{ toYaml . | indent 12 }}
+      {{- end }}
+      {{- range (get $ingress "allowServiceInstances" | default (list)) }}
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: {{ include "common-service.name" $ }}
+              app.kubernetes.io/instance: {{ .instance }}
+      {{- end }}
+      ports:
+{{ include "common-service.networkPolicyPorts" (dict "ports" $ingressPorts) | indent 8 }}
+    {{- end }}
+    {{- else }}
+    - {}
+    {{- end }}
+  {{- if $hasEgressRules }}
+  egress:
+    {{- if (get $egress "allowDNS") }}
+    - ports:
+{{ include "common-service.networkPolicyPorts" (dict "ports" (list (dict "port" 53 "protocol" "UDP") (dict "port" 53 "protocol" "TCP"))) | indent 8 }}
+    {{- end }}
+    {{- range (get $egress "allowAnyPorts" | default (list)) }}
+    - ports:
+{{ include "common-service.networkPolicyPorts" (dict "ports" (list .)) | indent 8 }}
+    {{- end }}
+    {{- range (get $egress "allowServiceInstances" | default (list)) }}
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: {{ include "common-service.name" $ }}
+              app.kubernetes.io/instance: {{ .instance }}
+      ports:
+{{ include "common-service.networkPolicyPorts" (dict "ports" (.ports | default (list (dict "port" 8000 "protocol" "TCP")))) | indent 8 }}
+    {{- end }}
+    {{- if or (get $egress "allowNamespaces") (get $egress "allowPodSelectors") }}
+    - to:
+      {{- range (get $egress "allowNamespaces" | default (list)) }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . }}
+      {{- end }}
+      {{- range (get $egress "allowPodSelectors" | default (list)) }}
+        - podSelector:
+{{ toYaml . | indent 12 }}
+      {{- end }}
+      ports:
+{{ include "common-service.networkPolicyPorts" (dict "ports" (get $egress "ports" | default (list (dict "port" 443 "protocol" "TCP")))) | indent 8 }}
+    {{- end }}
+  {{- end }}
+{{- end }}

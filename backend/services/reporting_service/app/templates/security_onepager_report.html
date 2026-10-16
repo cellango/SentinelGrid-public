@@ -1,0 +1,154 @@
+{% extends "base_report.html" %}
+
+{% block executive_summary %}
+<div style="text-align: center; margin: 1cm 0;">
+    <h2 style="color: {{ primary_color }};">Security Posture Summary</h2>
+    <p style="font-size: 14pt; margin: 0.5cm 0;">
+        {{ tenant_name }} maintains a robust security posture powered by SentinelGrid's AI-driven security platform.
+    </p>
+</div>
+
+<div class="metric-card" style="width: 22%;">
+    <h4>Security Score</h4>
+    <div class="value" style="font-size: 28pt;">{{ security_score }}</div>
+    <div class="description">out of 100</div>
+</div>
+
+<div class="metric-card" style="width: 22%;">
+    <h4>MFA Coverage</h4>
+    <div class="value" style="font-size: 28pt;">{{ mfa_coverage|format_percent(0) }}</div>
+    <div class="description">of users</div>
+</div>
+
+<div class="metric-card" style="width: 22%;">
+    <h4>Incidents Resolved</h4>
+    <div class="value" style="font-size: 28pt;">{{ incidents_resolved }}</div>
+    <div class="description">this period</div>
+</div>
+
+<div class="metric-card" style="width: 22%;">
+    <h4>Avg Response Time</h4>
+    <div class="value" style="font-size: 28pt;">{{ avg_response_time_minutes }}</div>
+    <div class="description">minutes</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h1>Key Security Capabilities</h1>
+    
+    <h3>24/7 Threat Monitoring</h3>
+    <ul>
+        <li>AI-powered threat detection across identity, endpoint, network, and cloud</li>
+        <li>Real-time monitoring of {{ log_sources_count }} log sources</li>
+        <li>{{ avg_events_per_day|format_number }} events analyzed daily</li>
+    </ul>
+    
+    <h3>Incident Response</h3>
+    <ul>
+        <li>Mean Time to Respond (MTTR): {{ avg_response_time_minutes }} minutes</li>
+        <li>{{ playbooks_executed }} automated playbooks executed</li>
+        <li>{{ incidents_detected }} incidents detected and {{ incidents_resolved }} resolved</li>
+        <li>NIST SP 800-61 compliant incident handling</li>
+    </ul>
+    
+    <h3>Identity & Access Management</h3>
+    <ul>
+        <li>Multi-factor authentication enforced</li>
+        <li>MFA coverage: {{ mfa_coverage|format_percent }}</li>
+        <li>Regular access reviews conducted</li>
+        <li>Automated user lifecycle management (joiner/mover/leaver)</li>
+    </ul>
+    
+    <h3>Compliance & Governance</h3>
+    <ul>
+        <li>SOC 2 compliance program in place</li>
+        <li>NIST CSF aligned security practices</li>
+        <li>Continuous compliance monitoring</li>
+        <li>7-year audit log retention</li>
+    </ul>
+</div>
+
+<div class="section">
+    <h1>Compliance Status</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Framework</th>
+                <th>Status</th>
+                <th>Coverage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>SOC 2 Type II</td>
+                <td>{{ soc2_status }}</td>
+                <td>{{ soc2_coverage|format_percent }}</td>
+            </tr>
+            <tr>
+                <td>NIST CSF</td>
+                <td>Aligned</td>
+                <td>{{ nist_coverage|format_percent }}</td>
+            </tr>
+            {% if gdpr_applicable %}
+            <tr>
+                <td>GDPR</td>
+                <td>Compliant</td>
+                <td>100%</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h1>Security Metrics</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+                <th>Period</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Multi-Factor Authentication Coverage</td>
+                <td><strong>{{ mfa_coverage|format_percent }}</strong></td>
+                <td>{{ period_start }} to {{ period_end }}</td>
+            </tr>
+            <tr>
+                <td>Security Incidents Detected</td>
+                <td><strong>{{ incidents_detected }}</strong></td>
+                <td>{{ period_start }} to {{ period_end }}</td>
+            </tr>
+            <tr>
+                <td>Incidents Resolved</td>
+                <td><strong>{{ incidents_resolved }}</strong></td>
+                <td>{{ period_start }} to {{ period_end }}</td>
+            </tr>
+            <tr>
+                <td>Average Response Time</td>
+                <td><strong>{{ avg_response_time_minutes }} minutes</strong></td>
+                <td>{{ period_start }} to {{ period_end }}</td>
+            </tr>
+            <tr>
+                <td>Cloud Security Posture Score</td>
+                <td><strong>{{ security_score }}/100</strong></td>
+                <td>As of {{ period_end }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top: 2cm; padding: 0.5cm; background-color: #F9FAFB; border: 1px solid #E5E7EB;">
+    <p style="text-align: center; margin: 0; font-size: 10pt; color: #64748B;">
+        <strong>Powered by SentinelGrid</strong><br>
+        AI-Driven Security-as-a-Service Platform<br>
+        {{ generated_date }}
+    </p>
+</div>
+{% endblock %}
+
