@@ -18,17 +18,18 @@ The machine-readable records are:
 | --- | --- |
 | `scripts/requirements-preview.txt` | 43 exact pins, including pip and the Linux-specific SQLAlchemy dependency; hash checking required with 811 official PyPI artifact hashes |
 | Python vulnerability check | pip-audit 2.10.1 queried all 43 pins; zero findings and no ignored advisory IDs |
-| Python installation | Hash-verified macOS arm64 installation and `pip check` passed; hash-matching Python 3.13 Linux x86_64 wheels resolved without execution |
-| Python source checks | 22 tests, compilation of 1,445 Python files, and Ruff passed in the fresh patched environment |
+| Python installation | Hash-verified fresh macOS arm64 installation and `pip check` passed; actual Ubuntu x86_64 installation/checks passed in Task 10 after adding the platform-specific pin |
+| Python source checks | 28 tests, compilation of 1,447 Python files, and Ruff passed locally and on Ubuntu in Task 10 |
 | `frontend/package.json` and lockfile | 828 locked package entries, all with official npm registry URLs and SHA-512 integrity; 772 installed on the review host |
 | Frontend installation/tests | Fresh Node.js 22.23.3 `npm ci --ignore-scripts` and all 13 focused tests passed |
 | Frontend parser overrides | Tailwind utility generation, nested-selector transformation, and Next.js resolution of patched PostCSS passed |
 | Frontend vulnerability check | Initial 57 affected entries reduced to 40 propagated entries from two unique unpatched advisories; zero critical findings remain |
 
 Counts include development dependencies. Optional platform packages are included
-in the lock/license inventory even when not installed on this host. macOS execution
-and Linux wheel resolution do not replace the actual Ubuntu clean-clone/CI run in
-Task 10. Windows installation/execution has not been qualified.
+in the lock/license inventory even when not installed on this host. The
+[Task 10 record](history-strategy.md#task-10-private-github-verification) binds the
+actual Ubuntu checks to a commit. Windows installation/execution has not been
+qualified.
 
 ## Security updates and reproducibility
 
@@ -136,6 +137,6 @@ every direct advisory and affected version with the two exact scoped records,
 including expiry and input conditions. Any additional finding fails this review
 until fixed or separately assessed. Keep raw reports private. After dependency
 changes, refresh hashes/license records and installation/tests. Task 12 must rerun
-the audit with fresh advisory data against the final reviewed inputs. Task 7's
-local root snapshot predates these changes and must be rebuilt before Task 10's
-first private push. No remote repository, push, or visibility change occurred here.
+the audit with fresh advisory data against the final reviewed inputs. Task 10
+rebuilt the independent repository from the reviewed source and verified private
+GitHub CI. Public visibility, tags, and releases remain pending.

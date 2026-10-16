@@ -219,7 +219,18 @@ the current release boundary.
 
 ## Task 10 Verify a clean clone and GitHub CI
 
-- [ ] Complete
+- [x] Complete
+
+Completed October 15, 2026: rebuilt the 3,231-file independent snapshot after
+Tasks 8–9, created the approved private `cellango/SentinelGrid-public`, and pushed
+only `main`. Fresh local/GitHub clones passed the supported checks. Actual Ubuntu
+CI exposed a missing Linux-specific `greenlet` pin; added its verified hashes and
+license records, audited all 43 Python pins, and passed all four hosted jobs.
+A disposable dispatch run failed all four jobs on deliberate inventory, frontend,
+and synthetic-secret defects; its branch was removed without merging. See
+[the commit-bound verification](history-strategy.md#task-10-private-github-verification).
+The original repository stays private; public visibility, tags, and releases
+remain unapproved until Task 13. Repository protections/reporting are next.
 
 In a fresh clone of the private candidate, run documented setup, `make preview-check`,
 frontend `npm run test:preview`, both secret scans, and actionlint. Run the actual

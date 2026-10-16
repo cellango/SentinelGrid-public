@@ -1,7 +1,8 @@
 # Selected public source-preview contents
 
-Task 5 is complete as of October 15, 2026. It selects 3,454 reviewed working-tree
-files for developer review and comments.
+The current selection contains **3,231 files** for developer review and comments.
+Task 5 originally selected 3,454 files; the later source restoration, dependency
+records, and documentation consolidation below explain subsequent changes.
 The owner chose to include the sanitized cloud-provider work as **experimental
 review source** on October 15, 2026. No application runtime is supported by this
 selection. The existing private GitHub repository is not cleared for a visibility
@@ -28,9 +29,9 @@ scan filter or a release tag.
 | Synthetic configuration, seed logic, catalogs, and rules | Source examples for review; no customer datasets or live target configuration selected |
 | Licensing, `third_party/`, and Wazuh reference metadata | Complete notices and provenance retained; installers and dependency bundles excluded |
 
-All 48 owner-excluded business documents remain private. Retained historical
+All owner-excluded business documents remain private. Retained historical
 documents remain development records, including old production, completion,
-benchmark, and audit statements. Task 9 must reconcile their claims and navigation
+benchmark, and audit statements. Task 9 reconciled their claims and navigation
 with the preview boundary; inclusion here does not turn those statements into
 current evidence. Private test reports referenced by historical docs are not
 included as attachments or build artifacts.
@@ -103,7 +104,7 @@ task's snapshot before this reviewed documentation addition.
 
 Task 7's isolated check exposed application Python packages hidden by broad ignore
 rules. Seventy-two reviewed source files were restored with narrow Python-only
-exceptions, bringing the current inventory to **3,527 files**. Private payloads,
+exceptions, bringing the Task 7 inventory to **3,527 files**. Private payloads,
 caches, downloaded model files, and historical material remain excluded. The
 rebuilt independent root snapshot passed source/history scans and the supported
 Python checks. See [the Task 7 record](history-strategy.md#task-7-local-verification).
@@ -112,12 +113,12 @@ Later reviewed changes still require a refreshed inventory and final release fre
 Task 8 updates the preview dependencies and adds the dependency/license review,
 resolved inventory, manifest catalog, and exact scoped exception record. These
 records are selected source metadata; installed dependencies remain excluded.
-See [the dependency review](dependencies.md). Rebuild the local independent
-snapshot from final reviewed files before its first private push in Task 10.
+See [the dependency review](dependencies.md). Task 10 rebuilt the independent
+snapshot from reviewed files before its first private push.
 
 Task 9 reorganizes documentation and omits superseded design/progress/business
 material, bringing the current selection to **3,231 files**. The 415 retained
 Markdown files have explicit classes and valid selected-source links. See the
 [documentation review](documentation.md) and
 [classification inventory](../../publication/documentation.json). The prior local
-root commit must be rebuilt; its old tree contains material now excluded.
+root commit was rebuilt in Task 10; its old tree contains material now excluded.

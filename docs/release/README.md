@@ -12,5 +12,6 @@ signoffs in the archive have no authority over this release.
 - [Documentation consolidation](documentation.md)
 
 The independent repository stays private through preparation and CI. Task 10
-performs the approved private creation/push; Task 13 still requires final approval
+completed the approved private creation/push and [CI verification](history-strategy.md#task-10-private-github-verification);
+Task 11 protections/reporting are next. Task 13 still requires final approval
 of the exact candidate, tag, release contents, and public visibility.

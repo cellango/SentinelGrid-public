@@ -5,7 +5,8 @@ The owner approved an independent source snapshot at `cellango/SentinelGrid-publ
 the GitHub noreply identity, and private repository creation/initial push in
 Task 10. The existing repository and all its hosted material stay private.
 Public visibility still requires the final Task 13 review.
-Task 7 local preparation is complete; see the verification record below.
+Task 10 rebuilt the reviewed source after Tasks 8–9 and created the approved
+private repository. See the verification records below; publication remains pending.
 
 ## Selected destination and history
 
@@ -142,6 +143,58 @@ commit, not the Task 12 release freeze. Tasks 8 and 9 may change reviewed source
 rebuild from those final files before the first private push in Task 10. No remote
 repository was created, no push occurred, and no visibility setting changed.
 
+## Task 10 private GitHub verification
+
+Completed October 15, 2026. Rebuilt a fresh independent root from **3,231 selected
+files**, including the Task 8 dependency updates and Task 9 documentation cleanup.
+The older Task 7 repositories were retained privately and were never pushed.
+Verified every selected byte/executable mode, one parentless root on `main`, the
+approved noreply identity, independent object storage, strict Git integrity, and
+the absence of original commits, four installer blobs, 53 earlier quarantined
+paths/payloads, and all 320 documents retired in Task 9 by path and content hash.
+
+The approved new repository is
+[`cellango/SentinelGrid-public`](https://github.com/cellango/SentinelGrid-public),
+**private**, independent rather than a fork, with the wiki disabled. The original
+repository, local refs/remotes, hosted material, and owner working changes were
+preserved. No collaborators, messages, product secrets, deployment environments,
+tags, releases, or public visibility were added. Only the reviewed source workflow
+is active; its token has `contents: read`, checkout credentials are not persisted,
+and the repository's inherited workflow default is read-only.
+
+| Verification | Commit-bound result |
+| --- | --- |
+| Independent root | `f6d703d412cf55d758759a461cb51efe1cb83e02`; 3,231 files, 3,201 unique blobs, 4,009 accounted-for objects, no imported old commits |
+| Fresh clone setup/checks | Python 3.13 hash-verified install and `pip check`; 28 Python tests, 1,447 compiled Python files, Ruff, 415 Markdown link/class checks, actionlint 1.7.12, and zero Gitleaks 8.30.1 source/history findings |
+| Frontend | Fresh Node.js 22.23.3 `npm ci --ignore-scripts`; 13 tests in three suites passed |
+| Actual Ubuntu workflow | [Passing run](https://github.com/cellango/SentinelGrid-public/actions/runs/38846520816) at `5656258fc4f82b35e1d7a639cc6908cbdd7542d3`; `source-checks`, `frontend-auth`, `secret-scan (snapshot)`, and `secret-scan (history)` all passed |
+| Deliberate failure checks | [Disposable dispatch run](https://github.com/cellango/SentinelGrid-public/actions/runs/38846593819) at `7b6580cc3139cca639a5783b5ad40ce8a8514ac7`; all four jobs failed at the intended check steps |
+
+The first Ubuntu install failed because SQLAlchemy's Linux dependency on
+`greenlet` was absent from the macOS-derived pin list. Added `greenlet` 3.5.6 with
+79 official PyPI hashes and both license-file records; the current environment
+has **43 pins and 811 artifact hashes**. All 43 pins were audited with no findings
+or advisory ignores. The failing install was repaired, rather than skipped.
+The [dependency review](dependencies.md) retains the two separate npm tooling
+exceptions; passing tests do not turn the raw npm audit into a clean result.
+
+The canary added one unlisted source file, one deliberately false Jest assertion,
+and a deterministic SHA-256 string labeled as an API key. That string was derived
+from a fixed explanatory phrase and was never a credential. The unlisted file
+failed the source inventory; the assertion produced one failed/13 passed tests;
+both secret jobs rejected the synthetic canary. The workflow was unchanged, all
+four jobs failed rather than succeeding through skips, and the branch was deleted
+without merging. Only `main` remains on the remote. No PR or reviewer invitation
+was created: the canary used `workflow_dispatch`. The same credential-free jobs
+are configured for `pull_request`; actual public fork behavior is not claimed
+from this dispatch run.
+
+The separate working copy and raw verification/scanner evidence remain in ignored
+private preparation storage. These are preparatory commits, not the Task 12
+release freeze. Task 11 must configure applicable protections/reporting; Task 12
+must refresh dependencies and bind all checks to the exact release candidate.
+Task 13 still requires final approval before public visibility, a tag, or a release.
+
 ## Collaborator impact and acceptance
 
 Existing collaborators can continue using their private clones, branches, and PRs.
@@ -152,7 +205,7 @@ or collaborator announcement is a separate explicit action; none is sent here.
 
 The owner answered "Approve the new snapshot plan" after reviewing the concrete
 route, destination, identity, and operations. Task 6 is closed. Actual repository
-creation and the initial private push remain in Task 10. Task 7 completed local
-isolated preparation and verification; Task 8 dependency review is next. See
+creation and the initial private push were completed in Task 10. Tasks 7–9
+completed local preparation, dependency review, and documentation consolidation. See
 [the publication checklist](tasks.md) and
 [selected source contents](contents.md).

@@ -2,9 +2,10 @@
 
 Decision: **publication pending**. Source cleanup and focused checks do not clear
 the existing Git history, third-party history, or externally retained artifacts.
-The original repository's visibility and Git history are unchanged. Task 7 prepared
-an independent local root snapshot; no remote repository, push, cloud resources,
-releases, or tags were created.
+The original repository's visibility and Git history are unchanged. Task 10
+rebuilt the independent snapshot after dependency/documentation review and created
+the approved **private** `cellango/SentinelGrid-public` repository for CI.
+No public visibility change, cloud deployment, release, or tag has occurred.
 
 Work through the remaining gates using [Public Release Tasks](tasks.md).
 
@@ -76,12 +77,13 @@ the source-only preview.
 | Task 8 supported dependencies | 42 hash-verified Python pins with zero reported advisories; frontend refreshed with zero critical findings and two exact unpatched tooling exceptions; 42 Python/828 npm license records |
 | Task 8 dependency compatibility | 22 Python tests and 13 frontend tests passed; parser override smoke checks and Python 3.13 Linux wheel resolution passed; actual Ubuntu execution remains Task 10 |
 | Task 9 documentation and claims | Passed: 415 classified Markdown files with valid local links, 28 Python tests/1,447 compiled files, 13 frontend tests, five TSX syntax checks, scanner canaries, and zero source secret findings; 320 retired/private docs preserved |
+| Task 10 clean clone and actual GitHub CI | Passed: rebuilt 3,231-file root; fresh clone checks; all four Ubuntu jobs passed after adding/auditing the Linux-specific Python pin; deliberate defects failed all four jobs, and the disposable branch was removed. See [commit-bound evidence](history-strategy.md#task-10-private-github-verification) |
 
 The Python test run reported existing Pydantic/SQLAlchemy/test-client deprecation
 warnings. The clean npm install reported deprecated transitive packages. These
 earlier results are focused source-preview checks. Task 8 separately records the
 resolved dependency audit, license boundaries, and two unpatched tooling exceptions.
-The workflow itself has not yet run on GitHub. Full-stack startup/build, cloud
+The workflow has run on private GitHub Actions. Full-stack startup/build, cloud
 plans, active scans, endpoint enrollment, and adversarial two-tenant E2E are outside
 this source preview and were not certified here.
 
@@ -130,8 +132,9 @@ an independent `cellango/SentinelGrid-public` snapshot, kept private through
 preparation and CI, with only `main` intended for publication. The existing
 repository and hosted material remain private. Verified recovery copies cover
 all 41 local refs/359 reachable commits and the selected source. Task 7 completed
-local isolated preparation; approved new-private-repository creation and its
-initial push are deferred to Task 10. Final visibility/tag approval remains Task 13.
+local isolated preparation; Task 10 rebuilt the snapshot, created the approved
+private repository, and pushed its independent `main`. Final visibility/tag
+approval remains Task 13.
 
 The [Task 7 record](history-strategy.md#task-7-local-verification)
 documents the verified independent root snapshot. Its first isolated test run
@@ -148,7 +151,9 @@ unpatched development-tooling advisories through 40 dependent entries; exact,
 dated source-preview exceptions preserve those findings and require recheck before
 the release freeze. Other runtime manifests remain unresolved, including known
 affected declared pins. The Task 7 local snapshot predates these changes and must
-be rebuilt before the first private push. Task 9 documentation review is complete; Task 10 clean-clone/private-CI verification is next.
+be rebuilt before the first private push. Task 10 performed that rebuild; its
+first Ubuntu execution also found and fixed the missing Linux-specific `greenlet`
+pin. The current Python list contains 43 audited pins with 811 artifact hashes.
 
 The [Task 9 documentation review](documentation.md) replaces competing designs
 with code-linked source maps and organizes current guidance under architecture,
@@ -156,13 +161,13 @@ development, reference, and release folders. Earlier technical/validation record
 are explicitly historical; 307 obsolete/duplicate documents and 13 additional
 business documents are omitted with verified private recovery copies. The old
 Task 7 snapshot contains retired material and cannot be the pushed candidate.
-Rebuild it from the current 3,231 selected files before Task 10's first private push.
+Task 10 rebuilt a fresh root from the current 3,231 selected files before pushing.
 
 ## Remaining publication gates
 
-1. **Preserve the independent publication boundary:** Task 7 verified the selected
-   source-only snapshot. Rebuild and recheck it after the dependency/documentation
-   tasks and before the initial private push. Push only its independent `main`;
+1. **Preserve the independent publication boundary:** Task 10 rebuilt and verified
+   the source-only snapshot after dependency/documentation review. Publish only
+   its independent `main`;
    keep all original local/remote refs, hosted business documents, PR material,
    logs, and external copies private. Do not import them into the new repository.
    A change to the approved destination/operations or any original-history rewrite
@@ -176,7 +181,8 @@ Rebuild it from the current 3,231 selected files before Task 10's first private 
 3. **Repository settings:** enable and test private vulnerability reporting with
    monitored notifications; configure required source and secret checks, branch
    protection, available secret protection, and read-only fork/PR workflows. These
-   settings were not read or modified in this local preparation.
+   The new repository's inherited read-only workflow permissions were verified in
+   Task 10; branch protections and reporting still need Task 11 configuration.
 4. **Release identity:** review and commit the chosen changes, run all preview
    gates on that exact commit, record dependency/artifact digests and limitations,
    then review repository visibility and release contents before publication.

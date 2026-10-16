@@ -234,6 +234,25 @@
     "markdown_files": 415,
     "old_preparation_snapshot_contains_retired_material": true,
     "independent_snapshot_rebuild_required_before_task": 10,
-    "obsolete_or_duplicate_documents": 307
+    "obsolete_or_duplicate_documents": 307,
+    "independent_snapshot_rebuild_completed_task": 10,
+    "old_preparation_snapshot_never_pushed": true
+  },
+  "private_ci_verification": {
+    "task": 10,
+    "date": "2026-10-15",
+    "status": "complete",
+    "record": "docs/release/history-strategy.md",
+    "destination": "cellango/SentinelGrid-public",
+    "visibility": "private",
+    "selected_files": 3231,
+    "root_commit": "f6d703d412cf55d758759a461cb51efe1cb83e02",
+    "verified_ubuntu_commit": "5656258fc4f82b35e1d7a639cc6908cbdd7542d3",
+    "passing_run": 38846520816,
+    "failure_canary_run": 38846593819,
+    "all_four_canary_jobs_failed": true,
+    "disposable_branch_removed": true,
+    "public_visibility_approved": false,
+    "next_task": 11
   }
 }
