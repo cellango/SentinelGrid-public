@@ -3,6 +3,7 @@
 import os
 from dataclasses import dataclass
 from typing import Optional, Literal
+from urllib.parse import urlsplit
 
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -56,6 +57,8 @@ class Settings(BaseSettings):
     # Keycloak configuration
     KEYCLOAK_URL: str = os.getenv("KEYCLOAK_URL", "http://keycloak:8080")
     KEYCLOAK_REALM: str = os.getenv("KEYCLOAK_REALM", "sentinelgrid")
+    # Explicit public issuer bases when browser and internal Keycloak origins differ.
+    KEYCLOAK_ISSUER_BASE_URLS: list[str] = Field(default_factory=list)
     
     # Alerting / Slack
     SLACK_WEBHOOK_URL: Optional[str] = os.getenv("SLACK_WEBHOOK_URL")
@@ -175,6 +178,19 @@ class Settings(BaseSettings):
         "SECURITY_ADMIN",
     ]
 
+    @field_validator("KEYCLOAK_ISSUER_BASE_URLS")
+    @classmethod
+    def _validate_issuer_bases(cls, values):
+        normalized = []
+        for value in values:
+            parsed = urlsplit(value)
+            if (parsed.scheme not in {"http", "https"} or not parsed.hostname
+                    or parsed.username or parsed.password or parsed.query or parsed.fragment
+                    or "/realms/" in parsed.path):
+                raise ValueError("KEYCLOAK_ISSUER_BASE_URLS must contain trusted base URLs, without credentials or realm paths")
+            normalized.append(value.rstrip("/"))
+        return list(dict.fromkeys(normalized))
+
     @field_validator("MFA_ENFORCED_APPS", "MFA_ENFORCED_ROLES", mode="before")
     @classmethod
     def _split_csv(cls, v):
@@ -210,6 +226,9 @@ class Settings(BaseSettings):
 
         if not self.KEYCLOAK_ADMIN_CLIENT_ID:
             raise ValueError("KEYCLOAK_ADMIN_CLIENT_ID is required when KEYCLOAK_ADMIN_USE_SERVICE_ACCOUNT is enabled")
+
+        for issuer_base in self.KEYCLOAK_ISSUER_BASE_URLS:
+            require_secure_service_url(self.ENVIRONMENT, issuer_base, "KEYCLOAK_ISSUER_BASE_URLS", disallowed_hosts=DEFAULT_KEYCLOAK_HOSTS)
 
         require_tls_verification(self.ENVIRONMENT, self.KEYCLOAK_VERIFY_TLS, "KEYCLOAK_VERIFY_TLS")
         require_tls_verification(self.ENVIRONMENT, self.VAULT_VERIFY_TLS, "VAULT_VERIFY_TLS")

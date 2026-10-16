@@ -102,3 +102,19 @@ def test_production_rejects_placeholder_vault_url():
 def test_production_rejects_local_public_app_base():
     with pytest.raises(ValidationError, match="PUBLIC_APP_BASE_URL"):
         Settings(**_production_kwargs(PUBLIC_APP_BASE_URL="https://localhost:3443"))
+
+
+@pytest.mark.parametrize("issuer", ["not-a-url", "https://user:password@identity.example.test", "https://identity.example.test?x=y", "https://identity.example.test/realms/customer-a"])
+def test_rejects_unusable_issuer_base_configuration(issuer):
+    with pytest.raises(ValidationError, match="KEYCLOAK_ISSUER_BASE_URLS"):
+        Settings(ENVIRONMENT="development", KEYCLOAK_ISSUER_BASE_URLS=[issuer])
+
+
+def test_explicit_issuer_bases_are_normalized_without_implicit_host_aliases():
+    config = Settings(ENVIRONMENT="development", KEYCLOAK_ISSUER_BASE_URLS=["https://identity.example.test/", "https://identity.example.test"])
+    assert config.KEYCLOAK_ISSUER_BASE_URLS == ["https://identity.example.test"]
+
+
+def test_production_rejects_cleartext_additional_issuer_base():
+    with pytest.raises(ValidationError, match="KEYCLOAK_ISSUER_BASE_URLS"):
+        Settings(**_production_kwargs(KEYCLOAK_ISSUER_BASE_URLS=["http://identity.example.test"]))

@@ -37,7 +37,7 @@ preview-check:
 	$(PYTHON) -m unittest discover -s scripts/tests -v
 	$(PYTHON) -m pytest --noconftest backend/tests/test_infrastructure_change_schema.py -q
 	$(RUFF) check --select F821 backend SentinelGridAIShield SentinelGridPenTestAgent SentinelGridPostureAgent scripts
-	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_auth_api.py -q
+	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_auth_api.py backend/agents/iam_agent/tests/test_token_validator.py backend/agents/iam_agent/tests/test_config_security.py -q
 
 preview-secrets:
 	$(PYTHON) scripts/scan_public_secrets.py snapshot
