@@ -1,7 +1,7 @@
 """Entitlements API endpoints."""
 
 from typing import List, Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -11,7 +11,8 @@ from app.api.request_context import (
     RequestContext,
     ensure_request_tenant_matches,
     get_current_request_context,
-    get_tenant_session,
+    ensure_request_has_any_role,
+    get_entitlement_session as get_tenant_session,
 )
 from app.core.config import settings
 from app.core.tenant_isolation import TenantIsolationValidator
@@ -39,7 +40,7 @@ class EntitlementCreate(BaseModel):
     granted_to_id: UUID
     granted_to_name: Optional[str] = Field(None, max_length=255)
     granted_by: UUID
-    expires_at: Optional[str] = None
+    expires_at: Optional[datetime] = None
     metadata_json: dict = Field(default_factory=dict, alias="metadata")
 
 
@@ -67,17 +68,30 @@ class EntitlementResponse(BaseModel):
 class EntitlementUpdate(BaseModel):
     """Schema for updating an entitlement."""
     status: Optional[str] = None
-    expires_at: Optional[str] = None
+    expires_at: Optional[datetime] = None
     metadata_json: Optional[dict] = Field(None, alias="metadata")
 
 
-def _resolve_audit_actor(request_context: RequestContext, fallback_actor: UUID) -> UUID:
+def _resolve_audit_actor(request_context: RequestContext, fallback_actor=None) -> UUID:
+    # A body value or an old grantor cannot establish the current actor.
     try:
-        if request_context.user_id:
-            return UUID(str(request_context.user_id))
-    except ValueError:
-        pass
-    return fallback_actor
+        return UUID(request_context.user_id or "")
+    except ValueError as exc:
+        raise HTTPException(status_code=403, detail="Authenticated user UUID required for grant changes") from exc
+
+
+def _require_grant_administrator(context: RequestContext) -> UUID:
+    ensure_request_has_any_role(context, "TENANT_ADMIN", "IAM_ADMIN", "PLATFORM_ADMIN")
+    return _resolve_audit_actor(context)
+
+
+def _commit_grant_change(db, write_event):
+    try:
+        write_event()
+        db.commit()
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(status_code=503, detail="Grant change and audit could not be committed") from exc
 
 
 @router.post("", response_model=EntitlementResponse, status_code=201)
@@ -89,6 +103,7 @@ async def create_entitlement(
     """Create a new entitlement."""
     ensure_request_tenant_matches(request_context.tenant_id, entitlement.tenant_id)
     TenantIsolationValidator.validate_tenant_id(request_context.tenant_id)
+    actor = _require_grant_administrator(request_context)
     
     # Check for duplicate
     existing = db.query(Entitlement).filter(
@@ -109,18 +124,18 @@ async def create_entitlement(
     # Create new entitlement
     entitlement_payload = entitlement.model_dump()
     entitlement_payload["tenant_id"] = request_context.tenant_id
+    entitlement_payload["granted_by"] = actor
+    entitlement_payload["id"] = uuid4()
     db_entitlement = Entitlement(**entitlement_payload)
     db.add(db_entitlement)
-    db.commit()
-    db.refresh(db_entitlement)
-    
     # Audit log
     audit_logger = AuditLogger(db)
-    audit_logger.log_entitlement_created(
+    _commit_grant_change(db, lambda: audit_logger.log_entitlement_created(
         db_entitlement,
         performed_by=_resolve_audit_actor(request_context, entitlement.granted_by),
         reason="Entitlement created via API"
-    )
+    ))
+    db.refresh(db_entitlement)
     
     # Invalidate cache
     cache.invalidate_entitlement(str(db_entitlement.id), str(db_entitlement.tenant_id))
@@ -227,6 +242,7 @@ async def update_entitlement(
     db: Session = Depends(get_tenant_session)
 ):
     """Update an entitlement."""
+    actor = _require_grant_administrator(request_context)
     entitlement = db.query(Entitlement).filter(
         Entitlement.id == entitlement_id,
         Entitlement.tenant_id == request_context.tenant_id,
@@ -254,18 +270,16 @@ async def update_entitlement(
         entitlement.metadata_json = entitlement_update.metadata_json
         new_values["metadata"] = entitlement_update.metadata_json
     
-    db.commit()
-    db.refresh(entitlement)
-    
     # Audit log
     audit_logger = AuditLogger(db)
-    audit_logger.log_entitlement_updated(
+    _commit_grant_change(db, lambda: audit_logger.log_entitlement_updated(
         entitlement,
         performed_by=_resolve_audit_actor(request_context, entitlement.granted_by),
         old_values=old_values,
         new_values=new_values,
         reason="Entitlement updated via API"
-    )
+    ))
+    db.refresh(entitlement)
     
     # Invalidate cache
     cache.invalidate_entitlement(str(entitlement.id), str(entitlement.tenant_id))
@@ -280,6 +294,7 @@ async def delete_entitlement(
     db: Session = Depends(get_tenant_session)
 ):
     """Delete (revoke) an entitlement."""
+    actor = _require_grant_administrator(request_context)
     entitlement = db.query(Entitlement).filter(
         Entitlement.id == entitlement_id,
         Entitlement.tenant_id == request_context.tenant_id,
@@ -289,16 +304,16 @@ async def delete_entitlement(
         raise HTTPException(status_code=404, detail="Entitlement not found")
     
     # Soft delete by setting status to 'revoked'
+    old_status = entitlement.status
     entitlement.status = "revoked"
-    db.commit()
     
     # Audit log
     audit_logger = AuditLogger(db)
-    audit_logger.log_entitlement_revoked(
-        entitlement,
-        performed_by=_resolve_audit_actor(request_context, entitlement.granted_by),
+    _commit_grant_change(db, lambda: audit_logger.log_entitlement_event(
+        "revoked", entitlement.id, entitlement.tenant_id, actor,
+        changes={"status": {"old": old_status, "new": "revoked"}},
         reason="Entitlement revoked via API"
-    )
+    ))
     
     # Invalidate cache
     cache.invalidate_entitlement(str(entitlement.id), str(entitlement.tenant_id))

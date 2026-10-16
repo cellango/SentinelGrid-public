@@ -13,10 +13,11 @@ class Certification(Base):
     """Certification model for entitlement reviews."""
     
     __tablename__ = "certifications"
+    __table_args__ = {"schema": "public"}
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    campaign_id = Column(UUID(as_uuid=True), ForeignKey('audit_campaigns.id', ondelete='CASCADE'), nullable=False, index=True)
-    entitlement_id = Column(UUID(as_uuid=True), ForeignKey('entitlements.id', ondelete='CASCADE'), nullable=False, index=True)
+    campaign_id = Column(UUID(as_uuid=True), ForeignKey('public.audit_campaigns.id', ondelete='CASCADE'), nullable=False, index=True)
+    entitlement_id = Column(UUID(as_uuid=True), ForeignKey('public.entitlements.id', ondelete='CASCADE'), nullable=False, index=True)
     user_id = Column(UUID(as_uuid=True), nullable=False, index=True)  # The user whose entitlement is being certified
     reviewer_id = Column(UUID(as_uuid=True), nullable=False, index=True)  # The user performing the review
     review_status = Column(String(50), nullable=False, default='pending', index=True)  # 'pending', 'approved', 'revoked', 'retained'

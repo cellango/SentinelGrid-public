@@ -9,7 +9,7 @@ from app.api import governance
 from app.api.request_context import (
     RequestContext,
     get_current_request_context,
-    get_tenant_session,
+    get_entitlement_session as get_tenant_session,
 )
 
 

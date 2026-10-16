@@ -1,6 +1,6 @@
 # Identity and tenant review boundaries
 
-Status: source review only. The [tenant UUID rule](../AGENTS.md) is a required
+Status: focused source and disposable-database review; deployment qualification remains pending. The [tenant UUID rule](../AGENTS.md) is a required
 invariant, not evidence that all existing endpoints enforce it. Slugs are a
 customer-facing convenience at the gateway edge; downstream programmatic traffic
 must use the authenticated tenant UUID and reject mismatches.
@@ -43,8 +43,9 @@ real ephemeral RSA keys/signatures with mocked key transport; configuration test
 also retain TLS/production guards. They run in `make preview-check` alongside the
 existing mocked auth-route checks. This verifies the named source boundary, not
 live Keycloak configuration, all callers, RLS or an operational IAM deployment.
-Persistent audit/session controls and ITDR/NHI/SCIM/editor reconciliation remain
-separate IAM migration slices. The policy checks below cover source decisions only.
+Focused audit/session controls are described below. ITDR/NHI/SCIM/editor and full
+IAM acceptance remain separate migration slices; live provider/runtime qualification
+is pending.
 
 The old direct-reset endpoint returns HTTP 410 in IAM and the frontend proxy;
 that removes the bypass and does not implement account recovery. The mocked tests
@@ -115,8 +116,79 @@ combinations without hardcoded role pairs, and a SoD-only allow cannot grant acc
 The [policy regressions](../../backend/agents/iam_agent/tests/test_policy_enforcement.py)
 and tenant-route checks run in `make preview-check` with synthetic storage and
 blocked database initialization. They test default deny, ordering, SoD conflicts,
-context spoofing, stale grants, scoped targets, expiry and write failures. Live
-identity provisioning, all downstream enforcement and durable audit/RLS/session
-qualification remain open. Existing usage/log errors deny, but application logs
-are not a persistent decision audit trail and the legacy policy audit helper is
-not used to commit partway through authorization. No schema change is included.
+context spoofing, stale grants, scoped targets, expiry and write failures. These are focused source checks. The durable audit and database tests below extend
+that boundary; live identity provisioning and all downstream enforcement remain open.
+
+
+## Persistent audit and tenant database checks
+
+The shared `DB_URL` holds app-catalog entitlements, policies and directory/catalog
+records. `IAM_DB_URL` explicitly selects a **separate PostgreSQL database** for
+fine-grained access grants, governance and grant audit; it is never inferred from
+`DB_URL`. Missing grant-store configuration returns HTTP 503. Selecting the same
+configured host/port/database for both stores is rejected. Catalog `app_id`/`name`
+rows and grant `resource_type`/`resource_id`/`action` rows are incompatible contracts.
+The session split preserves them; it moves no existing data. Authorization reads
+policy state in the shared tenant session and commits grant usage and its audit in
+the IAM session. These reads across databases are not a distributed transaction or
+an exact provider-action authorization/approval mechanism.
+
+New [V014](../../backend/migrations_consolidated/V014__public_iam_audit_and_tenant_guards.sql)
+and [IAMAuditEvent](../../backend/agents/iam_agent/app/models/audit_event.py) add
+`public.iam_audit_events` without altering or backfilling legacy `entitlement_audit_log`.
+The new table records tenant, actual actor/type, subject, decision, resource/action,
+reason and bounded redacted context/change snapshots. IDs have no cascading foreign
+keys, so deleting a live grant cannot erase the new event. Legacy history retains
+its existing shape and retention limitations; it is not silently relabelled or copied.
+Credential-like payload keys are redacted; this is not a complete arbitrary-PII
+classification or external tamper-evidence system.
+
+Each allow/deny made by the evaluation engine, including lookup errors, attempts an
+event. Authentication/admission rejections before evaluation are outside this stream. Allow requires
+an audit commit in the same IAM transaction as usage. Audit failure rolls back usage,
+returns a deny marked unaudited internally, and the HTTP authorization adapter returns
+503. It does not claim that an unavailable database recorded the failed attempt.
+The individual and bulk grant-create/update/revoke paths couple changes and events
+in one transaction; bulk items use savepoints and report success only after the
+outer commit. Grant mutations require a verified tenant administrator and user UUID;
+a body `granted_by` value or a previous grantor cannot impersonate the current actor.
+Other legacy governance/editor/provider writers still need their feature acceptance.
+
+The [shared transaction helper](../../backend/libs/sg_core/tenant_session.py) validates
+a UUID before opening a session and binds parameterized transaction-local `set_config`
+on every SQLAlchemy transaction, including savepoints and transactions after commit/
+rollback. A session cannot be rebound to another tenant. Pool checkout clears old
+session-level tenant/admin settings outside a transaction. IAM ownership helpers
+require an explicit authenticated tenant; a resource merely having a tenant or a
+user UUID is insufficient. Importing IAM database configuration no longer runs DDL.
+
+V014 forces RLS for the named existing IAM tenant tables and parent-bound child rows.
+Restrictive guards intersect older permissive policies, preventing the
+`app.is_superadmin` flag from widening those tables. New audit events permit scoped
+read/append and prohibit application update/delete. The application must be a
+nonowner, nonsuperuser, `NOBYPASSRLS` role without policy-alter, role-membership or
+truncate privileges. The old shared superadmin helper fails closed; the IAM helper's
+legacy name retains platform-role checks and tenant scope. Cross-tenant maintenance
+requires a separately provisioned operational identity, not an application flag.
+Custom tenant settings remain trusted middleware input, not protection from a
+compromised service that can execute arbitrary SQL.
+
+Run `make preview-check` for unit/source checks and `make preview-iam-db` for the
+[real database suite](../../backend/agents/iam_agent/tests/test_iam_database.py).
+The latter requires PostgreSQL server tools (`SG_TEST_PG_BINDIR` can select them)
+and starts/removes its own private Unix-socket cluster, ignoring existing DB URLs.
+Missing tools fail the gate. It tests two tenants using a nonowner application role,
+commit/rollback/savepoint/pool reuse, stale session flags, invalid context, cross-tenant
+writes/child links, model/DDL parity, immutable audit writes, retained legacy rows,
+allow/deny events and atomic failure handling. Local qualification used PostgreSQL
+17.5, SQLAlchemy 2.0.39 and psycopg2 2.9.10. The separate CI job targets PostgreSQL 16
+on Ubuntu; its hosted result must be checked after publication of this change.
+
+The [database profile notes](../architecture/database-compatibility.md#iam-audit-and-session-implementation)
+explain history selection and adoption gates. These tests qualify the named boundary
+and synthetic upgrade. They do not certify the complete V001–V013 application
+baseline/Flyway runner, arbitrary populated legacy databases, all views/functions,
+all downstream endpoints or live identity configuration. Shared/global grant patterns
+and seed clones receive no cross-tenant exception in the new guards; their authorized
+sharing path and the older governance model/schema differences remain feature
+reconciliation work before runtime enablement.

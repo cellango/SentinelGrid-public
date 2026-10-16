@@ -11,7 +11,7 @@ from app.api.request_context import (
     RequestContext,
     ensure_request_tenant_matches,
     get_current_request_context,
-    get_tenant_session,
+    get_entitlement_session as get_tenant_session,
 )
 from app.core.tenant_isolation import TenantIsolationValidator
 from app.models.audit_campaign import AuditCampaign

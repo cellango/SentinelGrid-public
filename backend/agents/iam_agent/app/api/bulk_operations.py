@@ -1,7 +1,7 @@
 """Bulk operations API endpoints for entitlements."""
 
 from typing import List
-from uuid import UUID
+from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -10,10 +10,11 @@ from app.api.request_context import (
     RequestContext,
     ensure_request_tenant_matches,
     get_current_request_context,
-    get_tenant_session,
+    get_entitlement_session as get_tenant_session,
 )
 from app.models.entitlement import Entitlement
-from app.api.entitlements import EntitlementCreate, EntitlementUpdate
+from app.api.entitlements import EntitlementCreate, EntitlementUpdate, _require_grant_administrator
+from app.services.audit_logger import AuditLogger
 from app.services.redis_cache import cache
 
 router = APIRouter(prefix="/api/v1/entitlements", tags=["entitlements"])
@@ -43,61 +44,49 @@ class BulkOperationResponse(BaseModel):
     errors: List[str] = []
 
 
+def _finish_bulk(db, response, field, tenant_id):
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        response.failed += getattr(response, field)
+        setattr(response, field, 0)
+        response.errors.append("Grant changes and audit could not be committed")
+    if getattr(response, field):
+        cache.invalidate_tenant_entitlements(str(tenant_id))
+    return response
+
+
 @router.post("/bulk", response_model=BulkOperationResponse)
 async def bulk_create_entitlements(
     request: BulkCreateRequest,
     request_context: RequestContext = Depends(get_current_request_context),
     db: Session = Depends(get_tenant_session)
 ):
-    """Bulk create entitlements."""
+    for item in request.entitlements:
+        ensure_request_tenant_matches(request_context.tenant_id, item.tenant_id)
+    actor = _require_grant_administrator(request_context)
     response = BulkOperationResponse()
-    tenant_ids_to_invalidate = set()
-    
-    for entitlement_data in request.entitlements:
-        ensure_request_tenant_matches(request_context.tenant_id, entitlement_data.tenant_id)
+    for item in request.entitlements:
         try:
-            # Check for duplicate
-            existing = db.query(Entitlement).filter(
-                Entitlement.tenant_id == request_context.tenant_id,
-                Entitlement.resource_type == entitlement_data.resource_type,
-                Entitlement.resource_id == entitlement_data.resource_id,
-                Entitlement.action == entitlement_data.action,
-                Entitlement.granted_to_type == entitlement_data.granted_to_type,
-                Entitlement.granted_to_id == entitlement_data.granted_to_id,
-            ).first()
-            
-            if existing:
-                response.failed += 1
-                response.errors.append(
-                    f"Entitlement already exists: {entitlement_data.resource_type}:{entitlement_data.resource_id}:{entitlement_data.action}"
-                )
-                continue
-            
-            # Create new entitlement
-            entitlement_payload = entitlement_data.model_dump()
-            entitlement_payload["tenant_id"] = request_context.tenant_id
-            db_entitlement = Entitlement(**entitlement_payload)
-            db.add(db_entitlement)
+            with db.begin_nested():
+                existing = db.query(Entitlement).filter(
+                    Entitlement.tenant_id == request_context.tenant_id,
+                    Entitlement.resource_type == item.resource_type, Entitlement.resource_id == item.resource_id,
+                    Entitlement.action == item.action, Entitlement.granted_to_type == item.granted_to_type,
+                    Entitlement.granted_to_id == item.granted_to_id).first()
+                if existing:
+                    raise ValueError("Duplicate entitlement")
+                payload = item.model_dump()
+                payload.update(id=uuid4(), tenant_id=request_context.tenant_id, granted_by=actor)
+                entitlement = Entitlement(**payload)
+                db.add(entitlement)
+                AuditLogger(db).log_entitlement_created(entitlement, actor, reason="Bulk grant creation")
             response.created += 1
-            tenant_ids_to_invalidate.add(str(request_context.tenant_id))
-            
-        except Exception as e:
+        except Exception:
             response.failed += 1
-            response.errors.append(f"Error creating entitlement: {str(e)}")
-    
-    try:
-        db.commit()
-        
-        # Invalidate cache for affected tenants
-        for tenant_id in tenant_ids_to_invalidate:
-            cache.invalidate_tenant_entitlements(tenant_id)
-    except Exception as e:
-        db.rollback()
-        response.failed += response.created
-        response.created = 0
-        response.errors.append(f"Database error: {str(e)}")
-    
-    return response
+            response.errors.append("Grant creation rejected or audit unavailable")
+    return _finish_bulk(db, response, "created", request_context.tenant_id)
 
 
 @router.put("/bulk", response_model=BulkOperationResponse)
@@ -106,56 +95,27 @@ async def bulk_update_entitlements(
     request_context: RequestContext = Depends(get_current_request_context),
     db: Session = Depends(get_tenant_session)
 ):
-    """Bulk update entitlements."""
+    actor = _require_grant_administrator(request_context)
     response = BulkOperationResponse()
-    tenant_ids_to_invalidate = set()
-    
-    for update_data in request.updates:
+    for item in request.updates:
         try:
-            entitlement_id = update_data.get("id")
-            if not entitlement_id:
-                response.failed += 1
-                response.errors.append("Missing 'id' in update data")
-                continue
-            
-            entitlement = db.query(Entitlement).filter(
-                Entitlement.id == entitlement_id,
-                Entitlement.tenant_id == request_context.tenant_id,
-            ).first()
-            if not entitlement:
-                response.failed += 1
-                response.errors.append(f"Entitlement not found: {entitlement_id}")
-                continue
-            
-            # Update fields
-            update_fields = EntitlementUpdate(**{k: v for k, v in update_data.items() if k != "id"})
-            if update_fields.status is not None:
-                entitlement.status = update_fields.status
-            if update_fields.expires_at is not None:
-                entitlement.expires_at = update_fields.expires_at
-            if update_fields.metadata_json is not None:
-                entitlement.metadata_json = update_fields.metadata_json
-            
+            with db.begin_nested():
+                target = UUID(str(item.get("id")))
+                entitlement = db.query(Entitlement).filter(Entitlement.id == target,
+                    Entitlement.tenant_id == request_context.tenant_id).first()
+                if entitlement is None:
+                    raise ValueError("Entitlement not found")
+                update = EntitlementUpdate(**{k: v for k, v in item.items() if k != "id"})
+                old = {"status": entitlement.status, "expires_at": entitlement.expires_at, "metadata": entitlement.metadata_json}
+                for key, value in update.model_dump(exclude_unset=True).items():
+                    setattr(entitlement, key, value)
+                new = {"status": entitlement.status, "expires_at": entitlement.expires_at, "metadata": entitlement.metadata_json}
+                AuditLogger(db).log_entitlement_updated(entitlement, actor, old, new, reason="Bulk grant update")
             response.updated += 1
-            tenant_ids_to_invalidate.add(str(entitlement.tenant_id))
-            
-        except Exception as e:
+        except Exception:
             response.failed += 1
-            response.errors.append(f"Error updating entitlement: {str(e)}")
-    
-    try:
-        db.commit()
-        
-        # Invalidate cache for affected tenants
-        for tenant_id in tenant_ids_to_invalidate:
-            cache.invalidate_tenant_entitlements(tenant_id)
-    except Exception as e:
-        db.rollback()
-        response.failed += response.updated
-        response.updated = 0
-        response.errors.append(f"Database error: {str(e)}")
-    
-    return response
+            response.errors.append("Grant update rejected or audit unavailable")
+    return _finish_bulk(db, response, "updated", request_context.tenant_id)
 
 
 @router.delete("/bulk", response_model=BulkOperationResponse)
@@ -164,40 +124,21 @@ async def bulk_delete_entitlements(
     request_context: RequestContext = Depends(get_current_request_context),
     db: Session = Depends(get_tenant_session)
 ):
-    """Bulk delete (revoke) entitlements."""
+    actor = _require_grant_administrator(request_context)
     response = BulkOperationResponse()
-    tenant_ids_to_invalidate = set()
-    
-    for entitlement_id in request.entitlement_ids:
+    for target in request.entitlement_ids:
         try:
-            entitlement = db.query(Entitlement).filter(
-                Entitlement.id == entitlement_id,
-                Entitlement.tenant_id == request_context.tenant_id,
-            ).first()
-            if not entitlement:
-                response.failed += 1
-                response.errors.append(f"Entitlement not found: {entitlement_id}")
-                continue
-            
-            # Soft delete
-            entitlement.status = "revoked"
+            with db.begin_nested():
+                entitlement = db.query(Entitlement).filter(Entitlement.id == target,
+                    Entitlement.tenant_id == request_context.tenant_id).first()
+                if entitlement is None:
+                    raise ValueError("Entitlement not found")
+                previous = entitlement.status
+                entitlement.status = "revoked"
+                AuditLogger(db).log_entitlement_event("revoked", entitlement.id, entitlement.tenant_id, actor,
+                    changes={"status": {"old": previous, "new": "revoked"}}, reason="Bulk grant revocation")
             response.deleted += 1
-            tenant_ids_to_invalidate.add(str(entitlement.tenant_id))
-            
-        except Exception as e:
+        except Exception:
             response.failed += 1
-            response.errors.append(f"Error deleting entitlement: {str(e)}")
-    
-    try:
-        db.commit()
-        
-        # Invalidate cache for affected tenants
-        for tenant_id in tenant_ids_to_invalidate:
-            cache.invalidate_tenant_entitlements(tenant_id)
-    except Exception as e:
-        db.rollback()
-        response.failed += response.deleted
-        response.deleted = 0
-        response.errors.append(f"Database error: {str(e)}")
-    
-    return response
+            response.errors.append("Grant revocation rejected or audit unavailable")
+    return _finish_bulk(db, response, "deleted", request_context.tenant_id)

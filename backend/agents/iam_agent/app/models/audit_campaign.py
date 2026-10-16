@@ -12,6 +12,7 @@ class AuditCampaign(Base):
     """Audit Campaign model for access review campaigns."""
     
     __tablename__ = "audit_campaigns"
+    __table_args__ = {"schema": "public"}
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id = Column(UUID(as_uuid=True), nullable=False, index=True)

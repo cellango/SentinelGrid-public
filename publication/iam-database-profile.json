@@ -1,0 +1,35 @@
+{
+  "profile": "separate_iam_grants",
+  "history_table": "flyway_schema_history",
+  "automatic_baseline": false,
+  "new_migration_authority": "backend/migrations_consolidated",
+  "shared_database_baseline_excluded": true,
+  "notes": [
+    "Historical IAM V0-V3 bytes retained solely for the existing separate grant-store lineage; V0 is comments only",
+    "New V014 remains in consolidated authority and never rewrites legacy audit rows or catalog entitlements",
+    "Unknown populated databases, missing/drifted histories, role provisioning and deployment require explicit reconciliation; the bundle does not execute Flyway or connect",
+    "Application catalog DB retains its independent V001-V014 history; never mix those histories or use repair/ignore-missing to adopt"
+  ],
+  "migrations": [
+    {
+      "path": "backend/agents/iam_agent/migrations/V0__create_database.sql",
+      "sha256": "e63676d8014d4b4ef5428474c20a23216394f317d6a629b16f5c982ed4509532"
+    },
+    {
+      "path": "backend/agents/iam_agent/migrations/V1__create_entitlements_schema.sql",
+      "sha256": "42312f9cbefe3fd4386d18f1bd992bdbd78e2fc3dc4504f7a0d7ba59b726b0fa"
+    },
+    {
+      "path": "backend/agents/iam_agent/migrations/V2__create_tenant_reference_table.sql",
+      "sha256": "fa21ff12fb135540fcb7dea8e6b4f8fd5218972d161b1f98b3f4405146b91d6e"
+    },
+    {
+      "path": "backend/agents/iam_agent/migrations/V3__create_access_requests.sql",
+      "sha256": "e14580e199bfd57280ff5c9961181a509c2c1a2a12c287b7bc08029773edae3e"
+    },
+    {
+      "path": "backend/migrations_consolidated/V014__public_iam_audit_and_tenant_guards.sql",
+      "sha256": "3c5ab510583fe92b5e59d5a1e1447e7fce17e96340f4e2ff796575d6da5b4775"
+    }
+  ]
+}

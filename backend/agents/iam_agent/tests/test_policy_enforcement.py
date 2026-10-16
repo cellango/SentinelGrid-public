@@ -14,7 +14,7 @@ from fastapi.testclient import TestClient
 # actual database/session qualification has its own disposable-database suite.
 with patch("sqlalchemy.engine.Engine.connect", side_effect=RuntimeError("DB disabled in policy tests")):
     from app.api import authorize, policies, iam_portal
-    from app.api.request_context import RequestContext, get_current_request_context, get_tenant_session
+    from app.api.request_context import RequestContext, get_current_request_context, get_tenant_session, get_entitlement_session
     from app.models.policies import EvaluationContext as PolicyContext, Policy
     from app.services import evaluation_engine
     from app.services.evaluation_engine import EvaluationContext, EvaluationEngine
@@ -232,11 +232,12 @@ def route_client(monkeypatch, request):
     app.include_router(iam_portal.router if request.param else policies.router)
     app.dependency_overrides[get_current_request_context] = lambda: RequestContext(TENANT, str(USER), ("reviewer",))
     app.dependency_overrides[get_tenant_session] = lambda: Mock()
+    app.dependency_overrides[get_entitlement_session] = app.dependency_overrides[get_tenant_session]
     app.dependency_overrides[policies.get_current_user_info] = lambda: {
         "tenant_id": str(TENANT), "user_id": str(USER), "realm_name": "synthetic", "roles": ["reviewer"]}
     app.dependency_overrides[iam_portal.get_current_user_info] = app.dependency_overrides[policies.get_current_user_info]
     engine = Mock()
-    engine.evaluate = Mock(side_effect=lambda ctx, **_: asyncio.sleep(0, result=evaluation_engine.EvaluationResult("deny", "synthetic")))
+    engine.evaluate = Mock(side_effect=lambda ctx, **_: asyncio.sleep(0, result=evaluation_engine.EvaluationResult("deny", "synthetic", audit_recorded=True)))
     monkeypatch.setattr(authorize, "EvaluationEngine", Mock(return_value=engine))
     return TestClient(app), engine
 

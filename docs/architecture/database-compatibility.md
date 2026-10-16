@@ -1,10 +1,12 @@
 # Database compatibility and case storage plan
 
-Reviewed October 16, 2026. Status: accepted planning baseline; **not implemented or
-database-qualified**. This page defines storage boundaries and migration gates for
+Reviewed October 16, 2026. Status: accepted platform planning baseline; **full
+database/runtime qualification remains pending**. The focused IAM audit/session
+implementation and synthetic qualification are recorded below. This page defines storage boundaries and migration gates for
 the [runtime decision](decisions/0001-case-runtime.md) and
-[logical contracts](../reference/agentic-contracts.md). It adds no tables, models,
-SQL, migration versions, database provisioning or execution dependencies.
+[logical contracts](../reference/agentic-contracts.md). The planning sections add no schema or execution dependencies; the focused IAM
+implementation below pairs its model and additive migration without deployment
+provisioning or a general runtime qualification.
 
 ## Preserve the public lineage
 
@@ -298,3 +300,62 @@ or application rollback while additive schema remains compatible. A restored
 database does not undo a provider effect; reconcile external state before resuming.
 No cleanup or destructive downgrade is included here. Passing offline preview
 checks verifies this documentation change, not any row in the qualification matrix.
+
+
+## IAM audit and session implementation
+
+The focused IAM migration keeps two physical database contracts separate:
+
+| Store | Table identity and caller | Migration history |
+| --- | --- | --- |
+| Shared application `DB_URL` | `public.entitlements` is the app catalog; `public.policies` is policy DSL. Catalog/Portal/policy sessions and the authorization policy reader use this store. | Exact consolidated V001–V013 plus new V014; the full extension/owner/runner baseline remains a D0 gate. |
+| Separate `IAM_DB_URL` | `public.entitlements` is fine-grained grants; grant, role-mapping, access-request/governance session adapters and `public.iam_audit_events` use this store. | Historical IAM V0–V3 retained byte for byte, plus new consolidated V014 in the explicitly selected IAM profile. No shared V001 is imported. |
+
+The [reviewed profile](../../publication/iam-database-profile.json) pins selected
+source paths and SHA-256 values. `python scripts/prepare_iam_flyway.py --output
+<new-directory>` assembles an IAM-only `sql/` location and `flyway.conf`, with
+validation enabled, cleaning disabled and automatic baselining disabled. The tool
+only copies reviewed bytes; it neither connects nor runs Flyway. Run an operator-
+reviewed Flyway distribution from that bundle directory, supply credentials through
+the deployment secret configuration and use the existing IAM history table. Never
+point the IAM runner at the whole shared application location or run the shared
+baseline against an IAM grant database. New application DDL remains solely in
+`backend/migrations_consolidated`; the bundle is a reviewed selection, not another
+migration source or startup runner.
+
+For an existing IAM database, inventory its actual history table, checksums,
+columns/constraints/policies, owner/privileges, rows and backup first. Exact historical
+lineage can validate then advance to V014. Missing/drifted history, a private V126
+variant, an unreviewed earlier shape or an unknown populated database must stop for
+explicit reconciliation; do not repair checksums, auto-baseline, ignore missing
+versions or manufacture history. Fresh synthetic tests execute exact V1–V3 SQL and
+V014; V0 contains only provisioning comments. The shared-policy fixture uses the
+exact named table declarations from V001. This verifies SQL behavior, **not** an
+end-to-end Flyway execution or the complete shared baseline. D0 and hosted runner
+qualification remain required before enabling a deployment.
+
+V014 creates a new audit table/model without replacing legacy audit data or adding
+cascading audit foreign keys. It adds restrictive tenant guards on the named IAM
+parent/child tables present in either profile; missing unrelated tables are left
+alone, and unexpected tenant-column types fail migration. It does not expand the
+fixed V003 table list to every later domain table: V013 and other domain-wide RLS
+acceptance remain in their owning migration tasks. App-controlled superadmin flags
+cannot bypass the named IAM guards. Legacy shared/global IAM definitions gain no
+implicit cross-tenant authority; their read/clone contracts require feature review.
+
+Provision roles separately: a migration owner; a nonowner application role with
+`NOSUPERUSER NOBYPASSRLS`, no migration/operational role membership, no schema-create/
+policy-alter/truncate rights; domain-specific DML; and SELECT/INSERT only for the new
+audit events. No credentials or roles are created by V014. Retention/cross-tenant
+maintenance needs a separate accountable operational identity. Both database URLs,
+server/driver versions, history validation, grants, backups and rollback window must
+be reviewed for a real environment. An application rollback keeps the additive table;
+never drop audit history as a schema downgrade.
+
+The current checks use a new private socket-only PostgreSQL cluster and synthetic
+records. They prove the named audit, grant and tenant transaction paths with a
+least-privilege role. Current grant CRUD/authorization is covered; older campaign,
+certification, role-pattern and editor ORM/API differences are not thereby qualified.
+The [identity reference](../reference/identity.md#persistent-audit-and-tenant-database-checks)
+describes semantics, tested versions and limits. These focused results do not close
+D0, all domain compatibility, runtime/engine qualification or overall IAM acceptance.

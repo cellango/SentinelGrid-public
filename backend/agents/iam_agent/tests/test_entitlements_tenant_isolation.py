@@ -31,7 +31,7 @@ if "redis" not in sys.modules:
 
 
 from app.api import bulk_operations, entitlements
-from app.api.request_context import RequestContext, get_current_request_context, get_tenant_session
+from app.api.request_context import RequestContext, get_current_request_context, get_entitlement_session as get_tenant_session
 
 
 class QuerySpy:
@@ -63,6 +63,10 @@ class FakeDB:
         self.added = []
         self.committed = False
 
+    def begin_nested(self):
+        from contextlib import nullcontext
+        return nullcontext()
+
     def query(self, _model):
         return self.query_spy
 
@@ -84,6 +88,7 @@ def request_context():
     return RequestContext(
         tenant_id=uuid4(),
         user_id=str(uuid4()),
+        roles=("TENANT_ADMIN",),
     )
 
 

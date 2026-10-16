@@ -12,6 +12,7 @@ class RoleEntitlementPattern(Base):
     """Role Entitlement Pattern model for mapping roles to entitlement patterns."""
     
     __tablename__ = "role_entitlement_patterns"
+    __table_args__ = {"schema": "public"}
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     role_name = Column(String(255), nullable=False, index=True)

@@ -12,6 +12,7 @@ class AuditSchedule(Base):
     """Audit Schedule model for automated campaign generation."""
     
     __tablename__ = "audit_schedules"
+    __table_args__ = {"schema": "public"}
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id = Column(UUID(as_uuid=True), nullable=False, index=True)

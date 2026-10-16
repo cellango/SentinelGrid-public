@@ -30,7 +30,9 @@ class EvaluationContext:
         additional_context: Optional[Dict[str, Any]] = None,
         *,
         trusted_client_ip: Optional[str] = None,
-        subject_roles: Optional[tuple[str, ...]] = None
+        subject_roles: Optional[tuple[str, ...]] = None,
+        actor_id: Optional[UUID] = None,
+        actor_type: str = "user"
     ):
         self.user_id = user_id
         self.tenant_id = tenant_id
@@ -39,6 +41,8 @@ class EvaluationContext:
         self.action = action
         self.additional_context = additional_context or {}
         # Only the authenticated server adapter supplies subject facts and peer IP.
+        self.actor_id = actor_id if actor_id is not None else (user_id if actor_type == "user" else None)
+        self.actor_type = actor_type
         self.subject_roles = subject_roles
         self.client_ip = trusted_client_ip
         self.request_time = datetime.now(timezone.utc)
@@ -54,8 +58,10 @@ class EvaluationResult:
         decision: str,  # "allow" or "deny"
         reason: str,
         matched_entitlements: Optional[List[Dict[str, Any]]] = None,
-        evaluated_at: Optional[datetime] = None
+        evaluated_at: Optional[datetime] = None,
+        audit_recorded: bool = False
     ):
+        self.audit_recorded = audit_recorded
         self.decision = decision
         self.reason = reason
         self.matched_entitlements = matched_entitlements or []
@@ -74,9 +80,10 @@ class EvaluationResult:
 class EvaluationEngine:
     """Engine for evaluating access requests against entitlements."""
     
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, *, policy_db: Optional[Session] = None):
         """Initialize evaluation engine."""
         self.db = db
+        self.policy_db = policy_db if policy_db is not None else db
     
     def _matches_pattern(self, pattern: str, value: str) -> bool:
         """
@@ -189,62 +196,69 @@ class EvaluationEngine:
         
         return matching
     
-    async def evaluate(
-        self,
-        context: EvaluationContext,
-        use_cache: bool = True
-    ) -> EvaluationResult:
-        """Require fresh entitlements AND explicit policy grant, with every restriction.
+    def _decide(self, context: EvaluationContext) -> EvaluationResult:
+        context.request_time = datetime.now(timezone.utc)
+        candidates = self._find_matching_entitlements(context)
+        valid_entitlements = [e for e in candidates
+                              if e.tenant_id == context.tenant_id
+                              and e.granted_to_type == "user" and e.granted_to_id == context.user_id
+                              and self._matches_resource_pattern(e, context)
+                              and self._check_entitlement_status(e)
+                              and self._check_context_policies(e, context)]
+        if not valid_entitlements:
+            return EvaluationResult("deny", "No current entitlement satisfies the resource/context restrictions")
 
-        ``use_cache`` is retained for caller compatibility. Decision caching is
-        disabled until policy, subject, revocation and context versions can be bound.
-        The legacy cache import/clear endpoint remains for removing older entries.
+        policy_context = PolicyContext(
+            user_id=str(context.user_id),
+            roles=list(context.subject_roles) if context.subject_roles is not None else None,
+            resource_type=context.resource_type, resource=context.resource_id, action=context.action,
+            entitlement_ids=[str(e.id) for e in valid_entitlements],
+            ip_address=context.client_ip, time_of_day=context.request_time.strftime("%H:%M"),
+            day_of_week=("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")[context.request_time.weekday()],
+        )
+        policy_result = PolicyService(self.policy_db, context.tenant_id, "", load_seed_tenant=False).evaluate_all_policies(policy_context)
+        if policy_result.result != "allow":
+            # No request-body MFA/approval flags can fulfill these requirements.
+            return EvaluationResult("deny", f"Policy {policy_result.result}: {policy_result.explanation}")
+
+        matched = [{"id": str(e.id), "resource_type": e.resource_type,
+                    "resource_id": e.resource_id, "action": e.action, "status": e.status}
+                   for e in valid_entitlements]
+        primary = valid_entitlements[0]
+        primary.last_used_at = datetime.now(timezone.utc)
+        primary.usage_count_90d = (primary.usage_count_90d or 0) + 1
+        return EvaluationResult("allow", "Current entitlement and policy grant satisfy all evaluated restrictions", matched)
+
+    async def evaluate(self, context: EvaluationContext, use_cache: bool = True) -> EvaluationResult:
+        """Return allow only after usage and the decision event commit together.
+
+        Decision caches remain disabled. Every deny/error also attempts a durable
+        event. If persistence fails, return a deny marked unaudited; HTTP adapters
+        must return unavailable, rather than claim a completed audited decision.
         """
         try:
-            context.request_time = datetime.now(timezone.utc)
-            candidates = self._find_matching_entitlements(context)
-            valid_entitlements = [e for e in candidates
-                                  if e.tenant_id == context.tenant_id
-                                  and e.granted_to_type == "user" and e.granted_to_id == context.user_id
-                                  and self._matches_resource_pattern(e, context)
-                                  and self._check_entitlement_status(e)
-                                  and self._check_context_policies(e, context)]
-            if not valid_entitlements:
-                return EvaluationResult("deny", "No current entitlement satisfies the resource/context restrictions")
-
-            policy_context = PolicyContext(
-                user_id=str(context.user_id),
-                roles=list(context.subject_roles) if context.subject_roles is not None else None,
-                resource_type=context.resource_type, resource=context.resource_id, action=context.action,
-                entitlement_ids=[str(e.id) for e in valid_entitlements],
-                ip_address=context.client_ip, time_of_day=context.request_time.strftime("%H:%M"),
-                day_of_week=("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")[context.request_time.weekday()],
-            )
-            policy_result = PolicyService(self.db, context.tenant_id, "", load_seed_tenant=False).evaluate_all_policies(policy_context)
-            if policy_result.result != "allow":
-                # No request-body MFA/approval flags can fulfill these requirements.
-                return EvaluationResult("deny", f"Policy {policy_result.result}: {policy_result.explanation}")
-
-            matched = [{"id": str(e.id), "resource_type": e.resource_type,
-                        "resource_id": e.resource_id, "action": e.action, "status": e.status}
-                       for e in valid_entitlements]
-            primary = valid_entitlements[0]
-            primary.last_used_at = datetime.now(timezone.utc)
-            primary.usage_count_90d = (primary.usage_count_90d or 0) + 1
-            # Persistent, transaction-coupled decision auditing is a separate
-            # migration gate. Even this legacy write/log path must not fail open.
+            result = self._decide(context)
+        except Exception:
+            logger.exception("Authorization lookup failed; denying access")
+            self.db.rollback()
+            result = EvaluationResult("deny", "Authorization evaluation unavailable")
+        try:
             AuditLogger(self.db).log_evaluation(
                 user_id=context.user_id, tenant_id=context.tenant_id,
                 resource_type=context.resource_type, resource_id=context.resource_id,
-                action=context.action, decision="allow", matched_entitlements=matched,
-                context={"client_ip": context.client_ip},
+                action=context.action, decision=result.decision,
+                matched_entitlements=result.matched_entitlements,
+                context={"client_ip": context.client_ip, "request_time": context.request_time.isoformat(),
+                         "subject_roles": context.subject_roles},
+                actor_id=context.actor_id, actor_type=context.actor_type, reason=result.reason,
             )
             self.db.commit()
-            return EvaluationResult("allow", "Current entitlement and policy grant satisfy all evaluated restrictions", matched)
+            result.audit_recorded = True
+            return result
         except Exception:
-            logger.exception("Authorization evaluation failed; denying access")
+            logger.exception("Authorization audit persistence failed; denying access")
             self.db.rollback()
-            return EvaluationResult("deny", "Authorization evaluation unavailable")
+            return EvaluationResult("deny", "Authorization audit unavailable")
 
     async def evaluate_batch(
         self,

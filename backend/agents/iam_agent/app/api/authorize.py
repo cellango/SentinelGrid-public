@@ -11,6 +11,7 @@ from app.api.request_context import (
     ensure_request_tenant_matches,
     get_current_request_context,
     get_tenant_session,
+    get_entitlement_session,
 )
 from app.services.evaluation_engine import EvaluationEngine, EvaluationContext
 from app.services.redis_cache import cache
@@ -68,11 +69,17 @@ def _ensure_subject(request_context: RequestContext, user_id: UUID) -> bool:
 
 def _evaluation_context(request: AuthorizationRequest, caller: RequestContext) -> EvaluationContext:
     is_self = _ensure_subject(caller, request.user_id)
+    try:
+        actor_id = UUID(caller.user_id) if caller.user_id else None
+    except ValueError as exc:
+        raise HTTPException(status_code=403, detail="Authenticated actor UUID required") from exc
     return EvaluationContext(
         user_id=request.user_id, tenant_id=caller.tenant_id,
         resource_type=request.resource_type, resource_id=request.resource_id, action=request.action,
         additional_context=request.context, trusted_client_ip=caller.client_ip,
         subject_roles=caller.roles if is_self else None,
+        actor_id=actor_id,
+        actor_type="internal_service" if "INTERNAL_SERVICE" in caller.roles else "user",
     )
 
 
@@ -80,7 +87,8 @@ def _evaluation_context(request: AuthorizationRequest, caller: RequestContext) -
 async def authorize(
     request: AuthorizationRequest,
     request_context: RequestContext = Depends(get_current_request_context),
-    db: Session = Depends(get_tenant_session)
+    policy_db: Session = Depends(get_tenant_session),
+    db: Session = Depends(get_entitlement_session)
 ):
     """
     Evaluate an access request.
@@ -88,12 +96,14 @@ async def authorize(
     Returns allow/deny decision based on user entitlements and context.
     """
     ensure_request_tenant_matches(request_context.tenant_id, request.tenant_id)
-    engine = EvaluationEngine(db)
+    engine = EvaluationEngine(db, policy_db=policy_db)
     
     context = _evaluation_context(request, request_context)
 
     # Evaluate
     result = await engine.evaluate(context, use_cache=True)
+    if not result.audit_recorded:
+        raise HTTPException(status_code=503, detail="Authorization audit unavailable; access denied")
     
     return AuthorizationResponse(
         decision=result.decision,
@@ -107,18 +117,21 @@ async def authorize(
 async def authorize_batch(
     request: BatchAuthorizationRequest,
     request_context: RequestContext = Depends(get_current_request_context),
-    db: Session = Depends(get_tenant_session)
+    policy_db: Session = Depends(get_tenant_session),
+    db: Session = Depends(get_entitlement_session)
 ):
     """Evaluate multiple access requests in batch."""
     for access_request in request.requests:
         ensure_request_tenant_matches(request_context.tenant_id, access_request.tenant_id)
 
-    engine = EvaluationEngine(db)
+    engine = EvaluationEngine(db, policy_db=policy_db)
     
     contexts = [_evaluation_context(req, request_context) for req in request.requests]
 
     # Evaluate batch
     results = await engine.evaluate_batch(contexts, use_cache=True)
+    if any(not result.audit_recorded for result in results):
+        raise HTTPException(status_code=503, detail="Authorization audit unavailable; access denied")
     
     return BatchAuthorizationResponse(
         results=[
@@ -137,7 +150,7 @@ async def authorize_batch(
 async def get_user_entitlements(
     request: UserEntitlementsRequest,
     request_context: RequestContext = Depends(get_current_request_context),
-    db: Session = Depends(get_tenant_session)
+    db: Session = Depends(get_entitlement_session)
 ):
     """
     Get all entitlements for a user.

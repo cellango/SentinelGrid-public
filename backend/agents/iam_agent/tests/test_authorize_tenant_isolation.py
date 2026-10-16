@@ -31,7 +31,7 @@ if "redis" not in sys.modules:
 
 
 from app.api import authorize as authorize_api
-from app.api.request_context import RequestContext, get_current_request_context, get_tenant_session
+from app.api.request_context import RequestContext, get_current_request_context, get_tenant_session, get_entitlement_session
 
 
 @pytest.fixture
@@ -60,6 +60,7 @@ def _override_db(app):
         yield object()
 
     app.dependency_overrides[get_tenant_session] = _get_tenant_session_override
+    app.dependency_overrides[get_entitlement_session] = app.dependency_overrides[get_tenant_session]
 
 
 def test_authorize_rejects_foreign_body_tenant(authorize_test_app, authorize_client):

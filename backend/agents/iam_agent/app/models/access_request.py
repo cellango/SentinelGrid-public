@@ -13,6 +13,7 @@ class AccessRequest(Base):
     """Access Request model for entitlement requests."""
     
     __tablename__ = "access_requests"
+    __table_args__ = {"schema": "public"}
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id = Column(UUID(as_uuid=True), nullable=False, index=True)
@@ -36,9 +37,10 @@ class AccessRequestHistory(Base):
     """Access Request History model for audit trail."""
     
     __tablename__ = "access_request_history"
+    __table_args__ = {"schema": "public"}
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    request_id = Column(UUID(as_uuid=True), ForeignKey('access_requests.id', ondelete='CASCADE'), nullable=False, index=True)
+    request_id = Column(UUID(as_uuid=True), ForeignKey('public.access_requests.id', ondelete='CASCADE'), nullable=False, index=True)
     event_type = Column(String(50), nullable=False)  # 'created', 'submitted', 'approved', 'denied', 'cancelled', 'comment'
     performed_by = Column(UUID(as_uuid=True), nullable=False)
     performed_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), index=True)

@@ -7,12 +7,12 @@ from typing import Generator
 from uuid import UUID
 
 from fastapi import Depends, HTTPException, Request, status
-from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_token_validator
 from app.core.config import settings
-from app.core.database import SessionLocal
+from app.core.database import SessionLocal, IAMSessionLocal, IAMDatabaseNotConfigured
+from sg_core.tenant_session import tenant_session
 from app.services.token_validator import TokenValidator
 
 
@@ -124,46 +124,29 @@ def get_current_tenant_id(
 def get_tenant_session(
     request_context: RequestContext = Depends(get_current_request_context),
 ) -> Generator[Session, None, None]:
-    """Yield a DB session with tenant-scoped RLS context from the validated token."""
-    db = SessionLocal()
-    try:
-        db.execute(
-            text("SET LOCAL app.current_tenant_id = :tenant_id"),
-            {"tenant_id": str(request_context.tenant_id)},
-        )
-        db.execute(text("SET LOCAL app.is_superadmin = 'false'"))
+    """Shared catalog/policy database, bound before every transaction."""
+    with tenant_session(SessionLocal, request_context.tenant_id) as db:
         yield db
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise
-    finally:
-        try:
-            db.execute(text("RESET app.current_tenant_id"))
-            db.execute(text("RESET app.is_superadmin"))
-        except Exception:
-            pass
-        db.close()
+
+
+def get_entitlement_session(
+    request_context: RequestContext = Depends(get_current_request_context),
+) -> Generator[Session, None, None]:
+    """Separate IAM grant/audit database. Missing configuration fails closed."""
+    try:
+        with tenant_session(IAMSessionLocal, request_context.tenant_id) as db:
+            yield db
+    except IAMDatabaseNotConfigured as exc:
+        raise HTTPException(status_code=503, detail="Access-grant database is not configured") from exc
 
 
 def get_superadmin_db(
     request_context: RequestContext = Depends(get_current_request_context),
 ) -> Generator[Session, None, None]:
-    """Yield a DB session with explicit superadmin RLS bypass for platform-admin routes."""
-    ensure_request_has_any_role(request_context, "PLATFORM_ADMIN")
+    """Compatibility name: platform administration remains tenant scoped.
 
-    db = SessionLocal()
-    try:
-        db.execute(text("SET LOCAL app.is_superadmin = 'true'"))
-        yield db
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise
-    finally:
-        try:
-            db.execute(text("RESET app.is_superadmin"))
-            db.execute(text("RESET app.current_tenant_id"))
-        except Exception:
-            pass
-        db.close()
+    Cross-tenant maintenance needs a separately provisioned operational identity;
+    an application-controlled GUC cannot establish it.
+    """
+    ensure_request_has_any_role(request_context, "PLATFORM_ADMIN")
+    yield from get_tenant_session(request_context)

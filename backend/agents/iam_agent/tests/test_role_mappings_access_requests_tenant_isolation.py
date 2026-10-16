@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.api import access_requests, role_mappings
-from app.api.request_context import RequestContext, get_current_request_context, get_tenant_session
+from app.api.request_context import RequestContext, get_current_request_context, get_entitlement_session as get_tenant_session
 
 
 class QuerySpy:

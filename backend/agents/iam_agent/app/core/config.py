@@ -75,6 +75,7 @@ class Settings(BaseSettings):
     
     # Database (for identity cache)
     DB_URL: Optional[str] = os.getenv("DB_URL")
+    IAM_DB_URL: Optional[str] = None  # Separate access-grant store; never inferred from DB_URL.
     
     # Redis (for caching JWKS)
     REDIS_URL: Optional[str] = os.getenv("REDIS_URL", "redis://redis:6379")
@@ -234,6 +235,8 @@ class Settings(BaseSettings):
         require_tls_verification(self.ENVIRONMENT, self.VAULT_VERIFY_TLS, "VAULT_VERIFY_TLS")
         require_tls_verification(self.ENVIRONMENT, self.UPSTREAM_TLS_VERIFY, "UPSTREAM_TLS_VERIFY")
         require_non_default_database_url(self.ENVIRONMENT, self.DB_URL, "DB_URL")
+        if self.IAM_DB_URL:
+            require_non_default_database_url(self.ENVIRONMENT, self.IAM_DB_URL, "IAM_DB_URL")
         require_authenticated_redis_url(self.ENVIRONMENT, self.REDIS_URL, "REDIS_URL")
         require_secure_service_url(
             self.ENVIRONMENT,

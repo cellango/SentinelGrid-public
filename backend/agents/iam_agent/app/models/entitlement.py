@@ -32,6 +32,6 @@ class Entitlement(Base):
     updated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
     
     __table_args__ = (
-        {'postgresql_partition_by': None},  # Add partitioning later if needed
+        {'schema': 'public', 'postgresql_partition_by': None},  # Add partitioning later if needed
     )
 
