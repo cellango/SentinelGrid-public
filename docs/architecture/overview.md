@@ -33,6 +33,16 @@ identity boundaries, or an end-to-end event-to-response workflow.
 | Additional subsystems | [AI Shield](../../SentinelGridAIShield/), [Posture](../../SentinelGridPostureAgent/), [Pentest](../../SentinelGridPenTestAgent/) | Experimental component source; no active scanning or standalone-runtime clearance |
 | Infrastructure | [infra](../../infra/), [charts](../../charts/), [terraform](../../terraform/), [packer](../../packer/) | Reference implementation; deployment and packaging workflows disabled |
 
+## Selected target design
+
+The [agentic platform target](agentic-platform.md) and
+[runtime ADR](decisions/0001-case-runtime.md) record the accepted future ownership
+and engine decision. They do not describe a deployed runtime. The
+[logical contracts](../reference/agentic-contracts.md) and
+[proposed role catalog](../reference/agent-registry.md) distinguish new definitions
+from legacy IDs and deterministic helpers. Current source paths and supported
+preview checks remain as described on this page.
+
 ## Contracts to inspect
 
 - [Identity and tenant boundaries](../reference/identity.md): required UUID isolation versus verified auth behavior.

@@ -1,11 +1,13 @@
-# Current source references
+# Source and design contract references
 
-These pages identify implementation entrypoints and gaps; they are not operating
-runbooks or API/runtime certifications.
+These pages identify implementation entrypoints, gaps and explicitly labeled
+future contracts. They are not operating runbooks or API/runtime certifications.
 
 - [Identity and tenant boundaries](identity.md)
 - [Agent and module categories](agent-components.md)
 - [Entity and evidence shapes](entity-model.md)
+- [Proposed canonical AI role catalog](agent-registry.md)
+- [Case, execution and registry design contracts](agentic-contracts.md)
 - [Product catalog compatibility fields](product-catalog.md)
 - [Architecture map](../architecture/overview.md) and [cloud adapters](../architecture/cloud-providers.md)
 

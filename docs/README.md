@@ -12,6 +12,12 @@ running commands. Original code uses [Apache-2.0](../LICENSING.md).
 4. [Reference index](reference/README.md): identity, agent components, entity/evidence shapes, and catalog fields.
 5. [Release review](release/review.md), [dependency review](release/dependencies.md), and [publication tasks](release/tasks.md).
 
+For design review, read the [selected agentic target](architecture/agentic-platform.md),
+[authoritative runtime decision](architecture/decisions/0001-case-runtime.md),
+[logical contracts](reference/agentic-contracts.md), and
+[proposed role catalog](reference/agent-registry.md). They are explicitly labeled
+as future design; names and accepted decisions do not establish implementation or enablement.
+
 Only the commands in the repository [README](../README.md) are supported preview
 entrypoints. The presence of a service, UI route, adapter name, or deployment file
 does not establish a supported integration or a runnable platform.
@@ -20,9 +26,9 @@ does not establish a supported integration or a runnable platform.
 
 | Folder | Purpose |
 | --- | --- |
-| `architecture/` | Current source layout and implemented boundaries, with explicit gaps |
+| `architecture/` | Current source layout plus explicitly labeled accepted target decisions; implementation gaps remain visible |
 | `development/` | Contributor and documentation maintenance instructions |
-| `reference/` | Focused source contracts and review entrypoints |
+| `reference/` | Source references and explicitly labeled design contracts/role definitions |
 | `release/` | This publication's scope decisions, evidence, and remaining tasks |
 | `archive/` | Clearly marked earlier validation and technical references; no current authority |
 | Component-local READMEs/docs | Experimental module reference; root preview scope takes precedence |
