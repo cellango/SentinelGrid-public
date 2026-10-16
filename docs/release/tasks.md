@@ -5,10 +5,10 @@ Apache-2.0 for original SentinelGrid code. A supported runnable beta is a separa
 milestone. Follow [RELEASE_SCOPE.md](../../RELEASE_SCOPE.md).
 
 Work through these tasks in order, one at a time. Check a task only when its
-acceptance check passes, and record evidence without secret values. **Task 13 is in finalization; Task 14 follows publication.** History changes, account changes, and publication will be reviewed as
+acceptance check passes, and record evidence without secret values. **Task 14 is next.** History changes, account changes, and publication will be reviewed as
 concrete actions when their tasks are reached; this list does not execute them.
 
-## Preparation already completed
+## Original preparation results
 
 - [x] Add Apache-2.0 for original code and preserve component license boundaries.
 - [x] Retire direct password reset and remove secret logging.
@@ -18,9 +18,11 @@ concrete actions when their tasks are reached; this list does not execute them.
 - [x] Pass the current-source secret scan and focused local checks: 30 tests,
   Python compilation/undefined-name checks, and active workflow validation.
 
-These results describe the working tree. Final-commit and GitHub CI verification
-remain open. The history scan has **137 potential matches**, not 137 confirmed
-live credentials. See [the release review](review.md).
+These preliminary results are preserved as history. The published release
+manifest records the final commit and its passing local/GitHub checks. The original
+private-history scan had **137 potential matches**, not 137 confirmed live
+credentials; Task 1 classified them, and the independent public history passed
+its secret scan. See [the release review](review.md).
 
 ## Task 1 Review historical secret matches
 
@@ -297,7 +299,12 @@ tasks are closed, and the exact source/release contents are ready for owner revi
 
 ## Task 13 Publish the developer preview
 
-- [ ] Finalization in progress; verify the resulting tag/release before closing
+- [x] Complete
+
+Published October 16, 2026: [v0.1.0-preview.1](https://github.com/cellango/SentinelGrid-public/releases/tag/v0.1.0-preview.1) is a developer source-preview prerelease
+at `7cf4a5766083533517ed3467858dd830ee540ed3`, with the verified source archive, release manifest and checksums.
+All four hosted jobs passed on this commit; 28 Python and 13 frontend tests,
+source/history scans and artifact checks passed.
 
 The owner approved publication of the independent `cellango/SentinelGrid-public`
 and it is now public. Branch/Actions/secret/fork protections and private reporting
@@ -312,10 +319,11 @@ The scoped exception is recorded in [the protection review](repository-protectio
 It does not mark the incoming test passed. Preserve the single-test limit and keep
 experimental runtime/cloud/image/package automation disabled.
 
-Refreeze the disclosure changes, pass the existing four required jobs on the
-resulting commit, rebuild/check the three source-only release assets, and publish
-`v0.1.0-preview.1` as a prerelease at that exact SHA through the protected workflow.
-Actual protections and source/secret/dependency gates remain required.
+The disclosure changes were refrozen and merged through the protected PR workflow.
+The tag points to the exact verified release commit, and the three uploaded
+source-only assets were downloaded and checked before publication. Actual
+protections and source/secret/dependency gates remained enforced. Later `main`
+commits may update release tracking without changing this immutable release.
 
 **Done when:** the approved commit and preview release are publicly accessible
 with the intended refs, scope, and license information.

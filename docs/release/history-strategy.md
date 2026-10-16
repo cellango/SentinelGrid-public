@@ -209,3 +209,21 @@ creation and the initial private push were completed in Task 10. Tasks 7–9
 completed local preparation, dependency review, and documentation consolidation. See
 [the publication checklist](tasks.md) and
 [selected source contents](contents.md).
+
+## Task 13 public source-preview publication
+
+Published October 16, 2026: [v0.1.0-preview.1](https://github.com/cellango/SentinelGrid-public/releases/tag/v0.1.0-preview.1) at
+`7cf4a5766083533517ed3467858dd830ee540ed3`. The documentation refreeze went through a protected pull request;
+all four required jobs passed again on the merged commit. Fresh isolated local
+checks passed 28 Python and 13 frontend tests, both secret scans, source/document
+checks and workflow validation. The archive was reproduced identically; exactly
+three source-only assets were uploaded and verified against their hashes.
+
+The public [protection/reporting record](repository-protections.md) distinguishes
+verified controls, notification preferences, private maintainer-draft access and
+direct inbox receipt from the unverified incoming-report notification flow. The
+owner accepted that documented exception and authorized prerelease completion.
+Private evidence, reporting addresses and the synthetic advisory remain private.
+The original repository, refs, remote and history were not changed. The release
+tag/assets remain fixed while later `main` commits may update tracking docs.
+Task 14 remains the follow-up verification step.

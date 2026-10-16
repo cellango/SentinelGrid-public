@@ -1,4 +1,9 @@
-# Frozen source-preview candidate
+# Released source-preview candidate
+
+Published October 16, 2026: [v0.1.0-preview.1](https://github.com/cellango/SentinelGrid-public/releases/tag/v0.1.0-preview.1), commit
+`7cf4a5766083533517ed3467858dd830ee540ed3`. The release manifest and asset checksums bind this
+identity. Later release-tracking commits on `main` do not move the tag or replace
+its assets; verify the release by checking out `v0.1.0-preview.1`.
 
 Task 12 prepared **v0.1.0-preview.1**, a developer source preview for review and
 comments. Task 13 refreezes the documentation on October 16, 2026, after the owner
@@ -23,7 +28,7 @@ Its source file set must exactly match [the path inventory](../../publication/so
 Only `main` is selected; original private history and earlier preparation copies
 are excluded. A moving branch name is not a replacement for the full commit SHA.
 
-| Proposed release asset | Contents |
+| Release asset | Contents |
 | --- | --- |
 | `SentinelGrid-v0.1.0-preview.1-source.tar.gz` | Exactly the frozen source files, under a directory named with the full commit SHA |
 | `release-manifest.json` | Public verification metadata and per-file hashes; no private scanner evidence |
