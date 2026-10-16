@@ -1,8 +1,10 @@
 # Repository protections and private reporting
 
-Task 11 is **in progress**, reviewed October 15, 2026. The available Actions
-restrictions are applied and verified. A monitored private contact and delivery
-confirmation are still missing, so Task 11 and publication remain open.
+Task 11 **private preparation is complete**, reviewed October 15, 2026. The
+available Actions restrictions are applied and verified. Following the owner's
+request for configurable reporting with no hardcoded email, the selected route is
+GitHub private vulnerability reporting. Public-only activation and notification
+delivery remain unverified and are required release gates in Tasks 13–14.
 
 The target is the independent, **private**
 [`cellango/SentinelGrid-public`](https://github.com/cellango/SentinelGrid-public).
@@ -63,21 +65,37 @@ does not authorize changing visibility now.
 
 ## Private reporting and delivery
 
-[SECURITY.md](../../SECURITY.md) remains the reporter-facing policy. The GitHub
-form cannot serve as the verified route during private preparation. The owner
-must select a reporting email, confirm it is monitored, and confirm receipt of a
-synthetic delivery test before Task 11 closes. No email address has been guessed,
-and no test message or report has been sent.
+[SECURITY.md](../../SECURITY.md) is the reporter-facing policy. Reporting is
+configured through GitHub's repository settings and the maintained
+[private form](../../.github/VULNERABILITY_REPORT.yml). The
+[issue chooser](../../.github/ISSUE_TEMPLATE/config.yml) links security reporters
+to that private channel and disables blank public issues. Neither file contains
+an email address. Notification destinations stay in the maintainer's GitHub
+settings; no product environment variable or SMTP service is needed for this
+repository's reports. Ordinary developer feedback retains its separate template.
 
-The prepared test uses subject **SentinelGrid private-reporting delivery test**
-and reference **SG-REPORTING-2026-10-15**. Its body states that it is only a delivery
-test and asks for receipt confirmation. It contains no vulnerability details,
-credentials, customer data, or attachments. The owner can send the test or
-authorize one message to the selected destination. Sending and inbox receipt are
-separate checks; a successful send alone does not prove delivery or monitoring.
+The form is unavailable during private preparation. The owner authorized **one
+clearly labeled test after the destination is prepared**. That authorization
+persists for the public activation step and does not authorize publication,
+additional messages, or repeated test submissions. No report has been sent.
 
-For the later GitHub form, confirm the owner subscribes to repository security
-notifications and that email delivery is enabled for the intended inbox, following
-[GitHub's notification guidance](https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository#configuring-notifications-for-private-vulnerability-reporting).
-Then verify receipt of an authorized synthetic private report in Task 14. Account
-notification preferences and inbox delivery have not been verified here.
+After the exact Task 13 visibility operation is approved:
+
+1. Enable private vulnerability reporting and confirm its status and private form.
+2. Configure the maintainer's repository security-notification subscription and
+   confirm the selected delivery preference in GitHub. The CLI cannot read the
+   subscription with its current token scope; no extra OAuth scope was requested
+   and no account-wide notification preference was changed during preparation.
+3. Submit the single authorized private test with title **TEST ONLY: SentinelGrid
+   private-reporting delivery check** and reference **SG-REPORTING-2026-10-15**.
+   Its body explicitly states that it is a delivery check, with no real finding,
+   credential, customer data, or attachment. Track this same report in Task 14;
+   do not submit a second test merely to repeat verification.
+4. Confirm the report remains private and the intended maintainer receives its
+   notification. A submitted report or enabled setting does not prove receipt.
+   Record confirmation without committing an inbox address or message contents.
+
+Follow [GitHub's notification guidance](https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository#configuring-notifications-for-private-vulnerability-reporting).
+Reporter access, notification settings, and actual delivery are still unverified.
+Release/tag finalization must stop if this channel or receipt cannot be verified;
+Task 14 repeats public checks and records the outcome of the same authorized test.

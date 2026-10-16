@@ -1,6 +1,6 @@
 # Selected public source-preview contents
 
-The current selection contains **3,233 files** for developer review and comments.
+The current selection contains **3,235 files** for developer review and comments.
 Task 5 originally selected 3,454 files; the later source restoration, dependency
 records, and documentation consolidation below explain subsequent changes.
 The owner chose to include the sanitized cloud-provider work as **experimental
@@ -123,7 +123,8 @@ Markdown files have explicit classes and valid selected-source links. See the
 [classification inventory](../../publication/documentation.json). The prior local
 root commit was rebuilt in Task 10; its old tree contains material now excluded.
 
-Task 11 adds the repository-settings policy and its classified release review,
-bringing the selection to **3,233 files and 416 Markdown files**. Applied Actions
-controls and pending reporting/public-only controls are distinguished explicitly.
+Task 11 adds the repository-settings policy, its classified release review, and
+the configured private-report form/issue chooser, bringing the selection to
+**3,235 files and 416 Markdown files**. Applied Actions controls and pending
+reporting/public-only controls are distinguished explicitly.
 See [the protection review](repository-protections.md). Publication remains pending.

@@ -243,30 +243,36 @@ bound to a commit. Required failures cannot turn into successful skips.
 
 ## Task 11 Configure repository protections and reporting
 
-- [ ] Complete
+- [x] Private preparation complete; public-only verification deferred to Tasks 13–14
 
-In progress October 15, 2026: applied/read back read-only Actions permissions,
+Prepared October 15, 2026: applied/read back read-only Actions permissions,
 disabled automated PR approval, required full action SHAs, and restricted actions
 to the three reviewed immutable references. All four hosted jobs passed under
 that policy. GitHub rejects private branch/ruleset protection on the current plan,
 native secret protection for this private personal repository, and the public-only
 fork/reporting controls. Exact public-activation payloads and verification steps
 are prepared in [the protection review](repository-protections.md).
-**Still required:** owner-selected monitored private contact and confirmed test
-delivery. Public-only controls remain explicitly pending; no visibility change
-or test message has been performed.
+The owner requested configurable reporting without a hardcoded email address.
+Added the private-report form and issue chooser, with notification destinations
+managed in GitHub settings. The owner authorized one clearly labeled test once
+the destination is prepared. Public-only controls, channel access, and actual
+notification delivery remain unverified; they must pass after approved visibility
+and before release/tag finalization. No visibility change or test report occurred.
 
 Configure available branch protections/rulesets, required checks/reviews, read-only
 Actions permissions, and secret scanning/push protection for the target repository
-and account plan. Establish a monitored private vulnerability contact and verify
-notification delivery. Prepare GitHub private reporting where available; if it
-requires public visibility, use the private contact before publication and enable
-and verify the GitHub form in Task 14. See
+and account plan. Configure private vulnerability reporting and maintainer
+notifications through GitHub rather than a committed email address. When a
+control requires public visibility, prepare its exact operation in Task 11, apply
+it after the approved Task 13 visibility change, and verify access/delivery before
+release finalization, with follow-up public checks in Task 14. See
 [branch protection](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)
 and [private reporting](https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository).
 
-**Done when:** applicable settings are verified, the private reporting route works,
-and public-only settings have explicit post-publication verification steps.
+**Private preparation done when:** available settings are verified, reporting
+configuration is reviewable without an email address, and public-only activation
+and the single authorized notification test are tracked as release gates. An
+enabled form or delivered notification is not claimed by this completion.
 
 ## Task 12 Freeze the release candidate
 
@@ -291,6 +297,9 @@ image, and package publication disabled.
 Include the [prepared public-only protections](repository-protections.md) in that
 approval. After the approved visibility change, apply and read back the required
 settings before finalizing a tag or release; stop finalization if verification fails.
+Enable the configured private-reporting channel, configure maintainer notification
+preferences, and verify access and delivery using the single authorized synthetic
+report. Do not finalize the tag/release if the channel or receipt is unverified.
 
 **Done when:** the approved commit and preview release are publicly accessible
 with the intended refs, scope, and license information.
@@ -303,6 +312,8 @@ Clone/download anonymously and repeat the documented checks. Verify the release
 commit, rendered notices/links, private reporting and notifications, and ordinary
 feedback channels. Complete the public-only settings from Task 11. Confirm private
 artifacts and privileged workflows were not exposed during publication.
+Verify and record receipt of the same authorized private reporting test from
+Task 13; do not send an additional test without further authorization.
 
 **Done when:** anonymous verification passes and the release review records the
 final commit, results, and feedback channels. Then close this checklist.

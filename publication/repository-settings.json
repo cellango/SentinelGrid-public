@@ -4,7 +4,7 @@
   "repository": "cellango/SentinelGrid-public",
   "scope": "Repository settings for the independent developer source preview; original repository and account billing are outside these operations.",
   "visibility": "private",
-  "task_11_status": "in_progress_pending_monitored_private_contact_and_delivery",
+  "task_11_status": "private_preparation_complete_with_public_only_verification_pending",
   "applied_and_read_back": {
     "actions_permissions": {
       "enabled": true,
@@ -31,7 +31,7 @@
     "all_four_jobs": "success"
   },
   "prepared_public_only": {
-    "activation_gate": "Only after the exact Task 13 visibility operation is approved; apply and verify before a release/tag, then repeat public/fork/reporting checks in Task 14. Stop publication finalization if any required setting cannot be verified.",
+    "activation_gate": "Only after the exact Task 13 visibility operation is approved; apply/read back required protections and verify private reporting access/notification receipt before release/tag finalization. Repeat public/fork verification in Task 14 using the same single authorized report. Stop finalization if a required setting or delivery cannot be verified.",
     "branch_protection": {
       "method": "PUT",
       "endpoint": "repos/cellango/SentinelGrid-public/branches/main/protection",
@@ -120,15 +120,9 @@
       },
       "state": "pending_public_activation_and_notification_test",
       "report_form": "https://github.com/cellango/SentinelGrid-public/security/advisories/new",
-      "delivery_verification": "Enable after approved publication; owner must confirm a synthetic private test reaches the monitored account. Verify researcher-facing access in Task 14. No test report or notification has been sent."
+      "delivery_verification": "After approved visibility, enable/configure the GitHub channel and maintainer notification preferences, submit the single authorized private test, and confirm privacy/access/notification receipt before release/tag finalization. Task 14 verifies the same report without resubmitting. No test has been sent.",
+      "configuration": ".github/VULNERABILITY_REPORT.yml"
     }
-  },
-  "private_reporting_fallback": {
-    "contact": null,
-    "contact_selection": "awaiting_owner",
-    "monitoring_confirmation": "pending",
-    "delivery_confirmation": "pending",
-    "publication_blocker": true
   },
   "not_performed": [
     "Public visibility change",
@@ -142,5 +136,29 @@
     "actions_permissions": "https://docs.github.com/en/rest/actions/permissions",
     "private_reporting": "https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository",
     "secret_protection": "https://docs.github.com/en/code-security/getting-started/quickstart-for-securing-your-repository"
+  },
+  "private_reporting_channel": {
+    "provider": "github_private_vulnerability_reporting",
+    "configuration": ".github/VULNERABILITY_REPORT.yml",
+    "issue_routing": ".github/ISSUE_TEMPLATE/config.yml",
+    "report_form": "https://github.com/cellango/SentinelGrid-public/security/advisories/new",
+    "reporting_email_in_source": false,
+    "notification_destination_configuration": "Maintainer GitHub repository subscription and account notification preferences; no source-controlled email address or product SMTP configuration.",
+    "current_availability": "unavailable_while_repository_private",
+    "notification_subscription_verified": false,
+    "notification_api_readback": "Current CLI token lacks notification scope; no scope expansion or account-wide preference change performed.",
+    "public_activation_task": 13,
+    "public_verification_task": 14,
+    "test_authorization": {
+      "authorized": true,
+      "maximum_submissions": 1,
+      "submitted": 0,
+      "reference": "SG-REPORTING-2026-10-15",
+      "title": "TEST ONLY: SentinelGrid private-reporting delivery check",
+      "condition": "Only after the configured destination is prepared and Task 13 public visibility is separately approved.",
+      "content": "Synthetic delivery test only; no actual vulnerability claim, credential, customer data or attachment.",
+      "notification_receipt_verified": false,
+      "repeat_submission_requires_new_authorization": true
+    }
   }
 }

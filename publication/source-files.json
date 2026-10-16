@@ -3,7 +3,9 @@
   "files": [
     ".dockerignore",
     ".gitattributes",
+    ".github/ISSUE_TEMPLATE/config.yml",
     ".github/ISSUE_TEMPLATE/review.yml",
+    ".github/VULNERABILITY_REPORT.yml",
     ".github/disabled-workflows/README.md",
     ".github/pull_request_template.md",
     ".github/workflows/build-hardened-images.yml.disabled",

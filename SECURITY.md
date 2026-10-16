@@ -9,19 +9,21 @@ including AI Shield's, describe their own scope.
 
 ## Report vulnerabilities privately
 
-**Preparation status:** the candidate is private and GitHub's private-reporting
-form is unavailable. A monitored reporting email and delivery confirmation are
-still pending. Publication remains gated on [the reporting verification](docs/release/repository-protections.md#private-reporting-and-delivery).
+Use this repository's **Security → Advisories → Report a vulnerability** form.
+The [private report form](https://github.com/cellango/SentinelGrid-public/security/advisories/new)
+routes reports through GitHub. Maintainers manage notification recipients and
+delivery preferences in GitHub settings; no reporting email is embedded in source.
 
-Use this repository's **Security → Advisories → Report a vulnerability** form when
-available. Before publication approval, maintainers must publish and test a
-monitored private contact. GitHub's form must be enabled after the approved public
-visibility change, with access and notification delivery verified in the release
-checks. Neither reporting route has been verified yet.
+**Preparation status:** the repository is still private, so GitHub's reporting
+form is not enabled yet. Its form configuration and issue-routing link are
+prepared. Activation, reporter access, and notification delivery must be verified
+after the approved public visibility change and before release finalization. See
+[the reporting verification](docs/release/repository-protections.md#private-reporting-and-delivery).
 
-If the form is unavailable, request a private reporting contact in a public issue
-without disclosing vulnerability details. Never include credentials, customer
-data, exploit payloads, or private scanner reports in public issues or PRs. No
+If the form is unavailable, open an ordinary issue asking maintainers to restore
+the private reporting channel, without including vulnerability details. Wait for
+that channel before sending a report. Never include credentials, customer data,
+exploit payloads, or private scanner reports in public issues or PRs. No
 response-time commitment is established for the preview. Include the commit,
 affected component, expected/observed behavior, and a synthetic reproduction in
 the private report. Suspected real credentials require owner assessment of

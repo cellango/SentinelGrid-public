@@ -14,6 +14,7 @@ signoffs in the archive have no authority over this release.
 
 The independent repository stays private through preparation and CI. Task 10
 completed the approved private creation/push and [CI verification](history-strategy.md#task-10-private-github-verification);
-Task 11 Actions restrictions are verified; private contact/delivery confirmation
-and the public-only activation steps remain open. Task 13 still requires final approval
+Task 11 private preparation is complete: Actions restrictions are verified, and
+GitHub reporting is prepared without a committed email. Public-only activation,
+access, and actual notification delivery remain Tasks 13–14 gates. Task 13 requires final approval
 of the exact candidate, tag, release contents, and public visibility.
