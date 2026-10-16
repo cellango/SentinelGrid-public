@@ -69,6 +69,7 @@ def policies_user_info(tenant_id):
         "user_id": "policy-user",
         "tenant_id": str(tenant_id),
         "realm_name": "demo",
+        "roles": ["TENANT_ADMIN"],
     }
 
 

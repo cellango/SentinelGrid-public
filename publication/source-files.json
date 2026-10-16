@@ -719,6 +719,7 @@
     "backend/agents/iam_agent/tests/test_payment_public_flow_controls.py",
     "backend/agents/iam_agent/tests/test_payment_service_catalog.py",
     "backend/agents/iam_agent/tests/test_policies_tenant_session.py",
+    "backend/agents/iam_agent/tests/test_policy_enforcement.py",
     "backend/agents/iam_agent/tests/test_policy_management.py",
     "backend/agents/iam_agent/tests/test_pricing_service.py",
     "backend/agents/iam_agent/tests/test_privileged_access.py",

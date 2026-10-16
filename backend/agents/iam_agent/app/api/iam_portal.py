@@ -9,6 +9,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
 from app.api.request_context import get_tenant_session
+from app.api.policies import get_policy_administrator
 from app.services.iam_portal_service import IAMPortalService
 from app.models.iam_portal import (
     AppCreate, AppUpdate, App,
@@ -51,6 +52,7 @@ def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depends(se
         raise HTTPException(status_code=401, detail="Invalid token")
     
     user_info = {
+        "roles": result.get("roles") or [],
         "user_id": result.get("user_id") or result.get("payload", {}).get("sub"),
         "tenant_id": result.get("tenant_id") or result.get("payload", {}).get("tenant_id"),
         "realm_name": result.get("payload", {}).get("iss", "").split("/realms/")[-1] if "/realms/" in result.get("payload", {}).get("iss", "") else "sentinelgrid",
@@ -98,6 +100,15 @@ def get_iam_service(
 
     logger.info(f"🔍 [get_iam_service] Successfully initialized with tenant_id={tenant_id}, realm_name={realm_name}")
     return IAMPortalService(db, tenant_id, realm_name)
+
+
+def get_policy_admin_iam_service(
+    user_info: dict = Depends(get_current_user_info),
+    db=Depends(get_tenant_session),
+) -> IAMPortalService:
+    """Protect the legacy policy routes with the same verified role boundary."""
+    get_policy_administrator(user_info)
+    return get_iam_service(db, user_info)
 
 
 def get_current_user_id(user_info: dict = Depends(get_current_user_info)) -> str:
@@ -454,7 +465,7 @@ async def list_policy_bundles(
 async def clone_policy_bundle(
     bundle_id: UUID,
     payload: PolicyClonePayload = Body(None),
-    iam_service: IAMPortalService = Depends(get_iam_service),
+    iam_service: IAMPortalService = Depends(get_policy_admin_iam_service),
     user_id: str = Depends(get_current_user_id),
 ):
     """Clone a global policy bundle into the current tenant."""
@@ -479,7 +490,7 @@ async def get_policy(
 @router.post("/policies", response_model=Policy, status_code=status.HTTP_201_CREATED)
 async def create_policy(
     payload: PolicyCreate,
-    iam_service: IAMPortalService = Depends(get_iam_service),
+    iam_service: IAMPortalService = Depends(get_policy_admin_iam_service),
     user_id: str = Depends(get_current_user_id),
 ):
     pol = iam_service.create_policy(payload, created_by=user_id)
@@ -492,7 +503,7 @@ async def create_policy(
 async def update_policy(
     policy_id: UUID,
     payload: PolicyUpdate,
-    iam_service: IAMPortalService = Depends(get_iam_service),
+    iam_service: IAMPortalService = Depends(get_policy_admin_iam_service),
 ):
     pol = iam_service.update_policy(policy_id, payload)
     if not pol:
@@ -503,7 +514,7 @@ async def update_policy(
 @router.post("/policies/{policy_id}/approve", response_model=Policy)
 async def approve_policy(
     policy_id: UUID,
-    iam_service: IAMPortalService = Depends(get_iam_service),
+    iam_service: IAMPortalService = Depends(get_policy_admin_iam_service),
     user_id: str = Depends(get_current_user_id),
 ):
     pol = iam_service.update_policy(policy_id, PolicyUpdate(approval_status="approved", approval_required=False))
@@ -515,7 +526,7 @@ async def approve_policy(
 @router.post("/policies/{policy_id}/reject", response_model=Policy)
 async def reject_policy(
     policy_id: UUID,
-    iam_service: IAMPortalService = Depends(get_iam_service),
+    iam_service: IAMPortalService = Depends(get_policy_admin_iam_service),
     user_id: str = Depends(get_current_user_id),
 ):
     pol = iam_service.update_policy(policy_id, PolicyUpdate(approval_status="rejected"))
@@ -538,7 +549,7 @@ async def create_policy_from_template(
     template_id: UUID,
     name: str,
     display_name: str,
-    iam_service: IAMPortalService = Depends(get_iam_service),
+    iam_service: IAMPortalService = Depends(get_policy_admin_iam_service),
     user_id: str = Depends(get_current_user_id),
 ):
     pol = iam_service.create_policy_from_template(template_id, name, display_name, created_by=user_id)
@@ -551,9 +562,9 @@ async def create_policy_from_template(
 async def evaluate_policy(
     policy_type: str,
     context: dict,
-    iam_service: IAMPortalService = Depends(get_iam_service),
+    iam_service: IAMPortalService = Depends(get_policy_admin_iam_service),
 ):
-    """Stub evaluation: return allow/deny based on any matching active policy of type."""
+    """Admin simulation using the shared policy evaluator; never action authority."""
     return iam_service.evaluate_policy(policy_type, context)
 
 

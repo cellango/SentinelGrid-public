@@ -123,6 +123,8 @@ class EvaluationContext(BaseModel):
     groups: Optional[List[str]] = None
     department: Optional[str] = None
     resource: Optional[str] = None  # App, entitlement, etc.
+    resource_type: Optional[str] = None
+    entitlement_ids: List[str] = Field(default_factory=list)
     action: Optional[str] = None  # 'signon', 'access', 'request'
     ip_address: Optional[str] = None
     country: Optional[str] = None

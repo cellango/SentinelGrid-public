@@ -2,7 +2,7 @@
 
 from typing import List, Optional, Dict, Any
 from uuid import UUID
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 
@@ -25,7 +25,7 @@ class AuthorizationRequest(BaseModel):
     resource_type: str = Field(..., max_length=100)
     resource_id: str = Field(..., max_length=255)
     action: str = Field(..., max_length=50)
-    context: Optional[Dict[str, Any]] = Field(None, description="Additional context (IP, time, etc.)")
+    context: Optional[Dict[str, Any]] = Field(None, description="Untrusted metadata; cannot establish policy authority")
 
 
 class AuthorizationResponse(BaseModel):
@@ -54,6 +54,28 @@ class UserEntitlementsRequest(BaseModel):
     action: Optional[str] = None
 
 
+def _ensure_subject(request_context: RequestContext, user_id: UUID) -> bool:
+    """Return whether the verified caller is the subject; bound delegation stays tenant-local."""
+    try:
+        is_self = UUID(request_context.user_id or "") == user_id
+    except ValueError:
+        is_self = False
+    roles = {role.upper() for role in request_context.roles}
+    if not is_self and not roles.intersection({"TENANT_ADMIN", "IAM_ADMIN", "PLATFORM_ADMIN", "INTERNAL_SERVICE"}):
+        raise HTTPException(status_code=403, detail="Access denied: Subject mismatch")
+    return is_self
+
+
+def _evaluation_context(request: AuthorizationRequest, caller: RequestContext) -> EvaluationContext:
+    is_self = _ensure_subject(caller, request.user_id)
+    return EvaluationContext(
+        user_id=request.user_id, tenant_id=caller.tenant_id,
+        resource_type=request.resource_type, resource_id=request.resource_id, action=request.action,
+        additional_context=request.context, trusted_client_ip=caller.client_ip,
+        subject_roles=caller.roles if is_self else None,
+    )
+
+
 @router.post("", response_model=AuthorizationResponse)
 async def authorize(
     request: AuthorizationRequest,
@@ -68,16 +90,8 @@ async def authorize(
     ensure_request_tenant_matches(request_context.tenant_id, request.tenant_id)
     engine = EvaluationEngine(db)
     
-    # Build evaluation context
-    context = EvaluationContext(
-        user_id=request.user_id,
-        tenant_id=request.tenant_id,
-        resource_type=request.resource_type,
-        resource_id=request.resource_id,
-        action=request.action,
-        additional_context=request.context or {}
-    )
-    
+    context = _evaluation_context(request, request_context)
+
     # Evaluate
     result = await engine.evaluate(context, use_cache=True)
     
@@ -101,19 +115,8 @@ async def authorize_batch(
 
     engine = EvaluationEngine(db)
     
-    # Build contexts
-    contexts = [
-        EvaluationContext(
-            user_id=req.user_id,
-            tenant_id=req.tenant_id,
-            resource_type=req.resource_type,
-            resource_id=req.resource_id,
-            action=req.action,
-            additional_context=req.context or {}
-        )
-        for req in request.requests
-    ]
-    
+    contexts = [_evaluation_context(req, request_context) for req in request.requests]
+
     # Evaluate batch
     results = await engine.evaluate_batch(contexts, use_cache=True)
     
@@ -142,6 +145,7 @@ async def get_user_entitlements(
     Useful for UI display of user permissions.
     """
     ensure_request_tenant_matches(request_context.tenant_id, request.tenant_id)
+    _ensure_subject(request_context, request.user_id)
     engine = EvaluationEngine(db)
     
     entitlements = engine.get_user_entitlements(

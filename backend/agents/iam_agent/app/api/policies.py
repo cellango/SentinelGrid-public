@@ -36,6 +36,7 @@ def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depends(se
     if not result.get("valid"):
         raise HTTPException(status_code=401, detail="Invalid token")
     return {
+        "roles": result.get("roles") or [],
         "user_id": result.get("user_id") or result.get("payload", {}).get("sub"),
         "tenant_id": result.get("tenant_id") or result.get("payload", {}).get("tenant_id"),
         "realm_name": result.get("payload", {}).get("iss", "").split("/realms/")[-1] if "/realms/" in result.get("payload", {}).get("iss", "") else "sentinelgrid",
@@ -53,6 +54,21 @@ def get_policy_service(
     if not tenant_id:
         raise HTTPException(status_code=400, detail="Tenant ID not found in token")
     return PolicyService(db, tenant_id, realm_name)
+
+
+def get_policy_administrator(user_info: dict = Depends(get_current_user_info)) -> dict:
+    """Policy editing and simulation require verified tenant-scoped administration."""
+    roles = {role.upper() for role in user_info.get("roles", [])}
+    if not roles.intersection({"TENANT_ADMIN", "IAM_ADMIN", "PLATFORM_ADMIN"}):
+        raise HTTPException(status_code=403, detail="Policy administrator role required")
+    return user_info
+
+
+def get_policy_admin_service(
+    user_info: dict = Depends(get_policy_administrator),
+    db=Depends(get_tenant_session),
+) -> PolicyService:
+    return get_policy_service(db, user_info)
 
 
 def get_current_user_id(user_info: dict = Depends(get_current_user_info)) -> str:
@@ -80,7 +96,7 @@ async def list_seed_bundles(
 async def clone_seed_bundle(
     policy_id: UUID,
     clone_request: ClonePolicyRequest | None = None,
-    policy_service: PolicyService = Depends(get_policy_service),
+    policy_service: PolicyService = Depends(get_policy_admin_service),
     user_id: str = Depends(get_current_user_id)
 ):
     """Clone a seed policy into the current tenant."""
@@ -103,7 +119,7 @@ async def clone_seed_bundle(
 @router.post("", response_model=Policy, status_code=status.HTTP_201_CREATED)
 async def create_policy(
     policy_data: PolicyCreate,
-    policy_service: PolicyService = Depends(get_policy_service),
+    policy_service: PolicyService = Depends(get_policy_admin_service),
     user_id: str = Depends(get_current_user_id)
 ):
     """Create a new policy."""
@@ -141,7 +157,7 @@ async def get_policy(
 async def update_policy(
     policy_id: UUID,
     policy_update: PolicyUpdate,
-    policy_service: PolicyService = Depends(get_policy_service)
+    policy_service: PolicyService = Depends(get_policy_admin_service)
 ):
     """Update policy."""
     success = policy_service.update_policy(policy_id, policy_update)
@@ -156,7 +172,7 @@ async def update_policy(
 @router.post("/{policy_id}/approve", response_model=Policy)
 async def approve_policy(
     policy_id: UUID,
-    policy_service: PolicyService = Depends(get_policy_service)
+    policy_service: PolicyService = Depends(get_policy_admin_service)
 ):
     """Approve a policy (activate it)."""
     ok = policy_service.update_policy(policy_id, PolicyUpdate(is_active=True))
@@ -171,7 +187,7 @@ async def approve_policy(
 @router.post("/{policy_id}/reject", response_model=Policy)
 async def reject_policy(
     policy_id: UUID,
-    policy_service: PolicyService = Depends(get_policy_service)
+    policy_service: PolicyService = Depends(get_policy_admin_service)
 ):
     """Reject a policy (deactivate it)."""
     ok = policy_service.update_policy(policy_id, PolicyUpdate(is_active=False))
@@ -186,7 +202,7 @@ async def reject_policy(
 @router.delete("/{policy_id}")
 async def delete_policy(
     policy_id: UUID,
-    policy_service: PolicyService = Depends(get_policy_service)
+    policy_service: PolicyService = Depends(get_policy_admin_service)
 ):
     """Delete policy."""
     success = policy_service.delete_policy(policy_id)
@@ -239,7 +255,7 @@ async def create_policy_from_template(
     template_id: UUID,
     name: str,
     display_name: str,
-    policy_service: PolicyService = Depends(get_policy_service),
+    policy_service: PolicyService = Depends(get_policy_admin_service),
     user_id: str = Depends(get_current_user_id)
 ):
     """Create a policy from a template."""
@@ -255,9 +271,9 @@ async def create_policy_from_template(
 async def evaluate_policy(
     policy_type: str,
     context: EvaluationContext,
-    policy_service: PolicyService = Depends(get_policy_service)
+    policy_service: PolicyService = Depends(get_policy_admin_service)
 ):
-    """Evaluate policies against context."""
+    """Admin-only simulation; caller facts here cannot authorize an action."""
     result = policy_service.evaluate_policy(policy_type, context)
     return result
 

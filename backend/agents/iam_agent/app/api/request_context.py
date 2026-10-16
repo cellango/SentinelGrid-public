@@ -21,6 +21,7 @@ class RequestContext:
     tenant_id: UUID
     user_id: str | None = None
     roles: tuple[str, ...] = ()
+    client_ip: str | None = None
 
 
 def _bearer_token_from_request(request: Request) -> str:
@@ -79,6 +80,7 @@ async def get_current_request_context(
         return RequestContext(
             tenant_id=_tenant_id_from_internal_header(request),
             roles=("INTERNAL_SERVICE",),
+            client_ip=request.client.host if request.client else None,
         )
 
     result = validator.validate_token(token)
@@ -107,6 +109,7 @@ async def get_current_request_context(
     return RequestContext(
         tenant_id=parsed_tenant_id,
         user_id=result.get("user_id"),
+        client_ip=request.client.host if request.client else None,
         roles=tuple(str(role) for role in (result.get("roles") or []) if role),
     )
 

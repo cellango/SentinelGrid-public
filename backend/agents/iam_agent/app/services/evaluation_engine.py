@@ -1,15 +1,18 @@
 """Entitlement evaluation engine for access decisions."""
 
 import logging
+import re
 from typing import Dict, Any, Optional, List
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 
 from app.models.entitlement import Entitlement
 from app.services.redis_cache import cache
 from app.services.audit_logger import AuditLogger
+from app.services.policy_service import PolicyService
+from app.models.policies import EvaluationContext as PolicyContext
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +27,10 @@ class EvaluationContext:
         resource_type: str,
         resource_id: str,
         action: str,
-        additional_context: Optional[Dict[str, Any]] = None
+        additional_context: Optional[Dict[str, Any]] = None,
+        *,
+        trusted_client_ip: Optional[str] = None,
+        subject_roles: Optional[tuple[str, ...]] = None
     ):
         self.user_id = user_id
         self.tenant_id = tenant_id
@@ -32,9 +38,10 @@ class EvaluationContext:
         self.resource_id = resource_id
         self.action = action
         self.additional_context = additional_context or {}
-        # Extract common context values
-        self.client_ip = self.additional_context.get("client_ip")
-        self.request_time = self.additional_context.get("request_time", datetime.utcnow())
+        # Only the authenticated server adapter supplies subject facts and peer IP.
+        self.subject_roles = subject_roles
+        self.client_ip = trusted_client_ip
+        self.request_time = datetime.now(timezone.utc)
         self.user_agent = self.additional_context.get("user_agent")
         self.session_id = self.additional_context.get("session_id")
 
@@ -52,7 +59,7 @@ class EvaluationResult:
         self.decision = decision
         self.reason = reason
         self.matched_entitlements = matched_entitlements or []
-        self.evaluated_at = evaluated_at or datetime.utcnow()
+        self.evaluated_at = evaluated_at or datetime.now(timezone.utc)
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
@@ -81,31 +88,10 @@ class EvaluationEngine:
         - 'alert:*' matches 'alert:123'
         - '*' matches anything
         """
-        if pattern == "*":
-            return True
-        
-        # Convert pattern to regex-like matching
-        # Simple implementation: split by '*' and check segments
-        if "*" not in pattern:
-            return pattern == value
-        
-        # Handle wildcard patterns
-        parts = pattern.split("*")
-        if not value.startswith(parts[0]):
+        if not isinstance(pattern, str) or not isinstance(value, str):
             return False
-        
-        value_remaining = value[len(parts[0]):]
-        for i, part in enumerate(parts[1:], 1):
-            if part == "":
-                # Trailing wildcard - matches rest
-                return True
-            if part not in value_remaining:
-                return False
-            value_remaining = value_remaining[value_remaining.index(part) + len(part):]
-        
-        # All parts matched
-        return value_remaining == "" or parts[-1] == ""
-    
+        return re.fullmatch(re.escape(pattern).replace(r"\*", ".*"), value) is not None
+
     def _matches_resource_pattern(self, entitlement: Entitlement, context: EvaluationContext) -> bool:
         """Check if entitlement matches the resource in context."""
         # Check resource_type
@@ -128,8 +114,12 @@ class EvaluationEngine:
             return False
         
         # Check expiration
-        if entitlement.expires_at and entitlement.expires_at < datetime.utcnow():
-            return False
+        if entitlement.expires_at:
+            expiry = entitlement.expires_at
+            if expiry.tzinfo is None:
+                expiry = expiry.replace(tzinfo=timezone.utc)
+            if expiry <= datetime.now(timezone.utc):
+                return False
         
         return True
     
@@ -138,17 +128,23 @@ class EvaluationEngine:
         Check context-based policies (time, IP, etc.).
         Currently supports basic checks; can be extended for complex policies.
         """
-        metadata = entitlement.metadata_json or {}
+        metadata = entitlement.metadata_json if entitlement.metadata_json is not None else {}
+        if not isinstance(metadata, dict):
+            return False
         
         # Check IP restrictions (if specified)
         allowed_ips = metadata.get("allowed_ips", [])
-        if allowed_ips and context.client_ip:
-            if context.client_ip not in allowed_ips:
+        if not isinstance(allowed_ips, list) or any(not isinstance(ip, str) for ip in allowed_ips):
+            return False
+        if allowed_ips:
+            if not context.client_ip or context.client_ip not in allowed_ips:
                 return False
         
         # Check time restrictions (if specified)
         allowed_hours = metadata.get("allowed_hours", None)
         if allowed_hours is not None:
+            if not isinstance(allowed_hours, list) or any(type(v) is not int or not 0 <= v <= 23 for v in allowed_hours):
+                return False
             current_hour = context.request_time.hour
             if current_hour not in allowed_hours:
                 return False
@@ -156,6 +152,8 @@ class EvaluationEngine:
         # Check day restrictions (if specified)
         allowed_days = metadata.get("allowed_days", None)
         if allowed_days is not None:
+            if not isinstance(allowed_days, list) or any(type(v) is not int or not 0 <= v <= 6 for v in allowed_days):
+                return False
             current_day = context.request_time.weekday()  # 0=Monday, 6=Sunday
             if current_day not in allowed_days:
                 return False
@@ -181,7 +179,7 @@ class EvaluationEngine:
         )
         
         # Get all candidate entitlements
-        candidates = query.all()
+        candidates = query.populate_existing().all()
         
         # Filter by resource pattern matching
         matching = []
@@ -196,113 +194,58 @@ class EvaluationEngine:
         context: EvaluationContext,
         use_cache: bool = True
     ) -> EvaluationResult:
-        """
-        Evaluate an access request.
-        
-        Returns EvaluationResult with decision (allow/deny) and reason.
-        """
-        # Generate cache key
-        cache_key = (
-            f"evaluation:user:{context.user_id}:tenant:{context.tenant_id}:"
-            f"resource:{context.resource_type}:{context.resource_id}:action:{context.action}"
-        )
-        
-        # Try cache first
-        if use_cache:
-            cached_result = cache.get(cache_key)
-            if cached_result:
-                logger.debug(f"Cache hit for evaluation: {cache_key}")
-                return EvaluationResult(
-                    decision=cached_result["decision"],
-                    reason=cached_result["reason"],
-                    matched_entitlements=cached_result.get("matched_entitlements", []),
-                    evaluated_at=datetime.fromisoformat(cached_result["evaluated_at"])
-                )
-        
-        # Find matching entitlements
-        matching_entitlements = self._find_matching_entitlements(context)
-        
-        if not matching_entitlements:
-            result = EvaluationResult(
-                decision="deny",
-                reason="No matching entitlements found",
-                matched_entitlements=[]
-            )
-            # Cache denial (shorter TTL)
-            if use_cache:
-                cache.set(cache_key, result.to_dict(), ttl=300)  # 5 minutes
-            return result
-        
-        # Check each entitlement for status and context policies
-        valid_entitlements = []
-        for entitlement in matching_entitlements:
-            if not self._check_entitlement_status(entitlement):
-                continue
-            
-            if not self._check_context_policies(entitlement, context):
-                continue
-            
-            valid_entitlements.append(entitlement)
-        
-        if not valid_entitlements:
-            result = EvaluationResult(
-                decision="deny",
-                reason="No valid entitlements (expired or context restrictions)",
-                matched_entitlements=[]
-            )
-            if use_cache:
-                cache.set(cache_key, result.to_dict(), ttl=300)
-            return result
-        
-        # Serialize matched entitlements
-        matched_entitlements = [
-            {
-                "id": str(e.id),
-                "resource_type": e.resource_type,
-                "resource_id": e.resource_id,
-                "action": e.action,
-                "status": e.status
-            }
-            for e in valid_entitlements
-        ]
+        """Require fresh entitlements AND explicit policy grant, with every restriction.
 
-        # At least one valid entitlement found - allow access
-        # Update last_used_at and usage_count for the first matching entitlement
-        primary_entitlement = valid_entitlements[0]
-        primary_entitlement.last_used_at = datetime.utcnow()
-        primary_entitlement.usage_count_90d = (primary_entitlement.usage_count_90d or 0) + 1
-        
+        ``use_cache`` is retained for caller compatibility. Decision caching is
+        disabled until policy, subject, revocation and context versions can be bound.
+        The legacy cache import/clear endpoint remains for removing older entries.
+        """
         try:
-            self.db.commit()
-            
-            # Audit log the evaluation
-            audit_logger = AuditLogger(self.db)
-            audit_logger.log_evaluation(
-                user_id=context.user_id,
-                tenant_id=context.tenant_id,
-                resource_type=context.resource_type,
-                resource_id=context.resource_id,
-                action=context.action,
-                decision="allow",
-                matched_entitlements=matched_entitlements,
-                context=context.additional_context
+            context.request_time = datetime.now(timezone.utc)
+            candidates = self._find_matching_entitlements(context)
+            valid_entitlements = [e for e in candidates
+                                  if e.tenant_id == context.tenant_id
+                                  and e.granted_to_type == "user" and e.granted_to_id == context.user_id
+                                  and self._matches_resource_pattern(e, context)
+                                  and self._check_entitlement_status(e)
+                                  and self._check_context_policies(e, context)]
+            if not valid_entitlements:
+                return EvaluationResult("deny", "No current entitlement satisfies the resource/context restrictions")
+
+            policy_context = PolicyContext(
+                user_id=str(context.user_id),
+                roles=list(context.subject_roles) if context.subject_roles is not None else None,
+                resource_type=context.resource_type, resource=context.resource_id, action=context.action,
+                entitlement_ids=[str(e.id) for e in valid_entitlements],
+                ip_address=context.client_ip, time_of_day=context.request_time.strftime("%H:%M"),
+                day_of_week=("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")[context.request_time.weekday()],
             )
-        except Exception as e:
-            logger.error(f"Failed to update entitlement usage: {e}")
+            policy_result = PolicyService(self.db, context.tenant_id, "", load_seed_tenant=False).evaluate_all_policies(policy_context)
+            if policy_result.result != "allow":
+                # No request-body MFA/approval flags can fulfill these requirements.
+                return EvaluationResult("deny", f"Policy {policy_result.result}: {policy_result.explanation}")
+
+            matched = [{"id": str(e.id), "resource_type": e.resource_type,
+                        "resource_id": e.resource_id, "action": e.action, "status": e.status}
+                       for e in valid_entitlements]
+            primary = valid_entitlements[0]
+            primary.last_used_at = datetime.now(timezone.utc)
+            primary.usage_count_90d = (primary.usage_count_90d or 0) + 1
+            # Persistent, transaction-coupled decision auditing is a separate
+            # migration gate. Even this legacy write/log path must not fail open.
+            AuditLogger(self.db).log_evaluation(
+                user_id=context.user_id, tenant_id=context.tenant_id,
+                resource_type=context.resource_type, resource_id=context.resource_id,
+                action=context.action, decision="allow", matched_entitlements=matched,
+                context={"client_ip": context.client_ip},
+            )
+            self.db.commit()
+            return EvaluationResult("allow", "Current entitlement and policy grant satisfy all evaluated restrictions", matched)
+        except Exception:
+            logger.exception("Authorization evaluation failed; denying access")
             self.db.rollback()
-        
-        result = EvaluationResult(
-            decision="allow",
-            reason=f"Access granted by {len(valid_entitlements)} entitlement(s)",
-            matched_entitlements=matched_entitlements
-        )
-        
-        # Cache result
-        if use_cache:
-            cache.set(cache_key, result.to_dict(), ttl=3600)  # 1 hour
-        
-        return result
-    
+            return EvaluationResult("deny", "Authorization evaluation unavailable")
+
     async def evaluate_batch(
         self,
         contexts: List[EvaluationContext],

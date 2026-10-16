@@ -26,12 +26,12 @@ class PolicyCloneConflict(Exception):
 class PolicyService:
     """Service for policy management and evaluation."""
     
-    def __init__(self, db: Session, tenant_id: UUID, realm_name: str):
+    def __init__(self, db: Session, tenant_id: UUID, realm_name: str, *, load_seed_tenant: bool = True):
         """Initialize policy service."""
         self.db = db
         self.tenant_id = tenant_id
         self.realm_name = realm_name
-        self.sg_admin_tenant_id = self._get_sg_admin_tenant_id()
+        self.sg_admin_tenant_id = self._get_sg_admin_tenant_id() if load_seed_tenant else None
     
     # ==================== Policy CRUD ====================
     
@@ -136,7 +136,7 @@ class PolicyService:
                     description=row[3],
                     policy_type=row[4],
                     scope=row[5],
-                    scope_id=UUID(row[6]) if row[6] else None,
+                    scope_id=UUID(str(row[6])) if row[6] else None,
                     policy_data=row[7],
                     is_active=row[8],
                     priority=row[9],
@@ -223,169 +223,151 @@ class PolicyService:
     
     # ==================== Policy Evaluation ====================
     
+    # There is deliberately no caller-selectable affirmative/first-allow mode.
+    _POLICY_TYPES = {"signon", "access", "approval", "sod", "authorization"}
+    _ACTIONS = {"allow", "deny", "require_mfa", "require_webauthn", "require_approval", "log", "notify"}
+    _OPERATORS = {"equals", "not_equals", "includes", "contains", "in", "not_in", "greater_than", "less_than"}
+    _CONTEXT_FIELDS = {
+        "role": "roles", "group": "groups", "department": "department",
+        "ip": "ip_address", "country": "country", "device_known": "device_known",
+        "time_of_day": "time_of_day", "day_of_week": "day_of_week",
+        "risk_level": "risk_level", "risk_score": "risk_score",
+        "user_id": "user_id", "username": "username", "email": "email",
+        "resource": "resource", "resource_type": "resource_type", "action": "action",
+    }
+
+    @staticmethod
+    def _denied(explanation: str) -> PolicyEvaluationResult:
+        return PolicyEvaluationResult(result="deny", policy_id=UUID(int=0),
+                                      matched_rules=[], actions=[], explanation=explanation)
+
     def evaluate_policy(self, policy_type: str, context: EvaluationContext) -> PolicyEvaluationResult:
-        """Evaluate policies of a given type against context."""
+        """Admin simulation of one policy type; never a substitute for authorization."""
+        if policy_type not in self._POLICY_TYPES:
+            return self._denied("Unsupported policy type")
+        return self._evaluate_policies(context, policy_type)
+
+    def evaluate_all_policies(self, context: EvaluationContext) -> PolicyEvaluationResult:
+        """Apply every active tenant policy; only access/authorization can grant access."""
+        return self._evaluate_policies(context)
+
+    def _evaluate_policies(self, context: EvaluationContext, policy_type: Optional[str] = None) -> PolicyEvaluationResult:
         try:
-            # Get active policies of this type, ordered by priority
             policies = self.list_policies(policy_type=policy_type)
-            active_policies = [p for p in policies if p.is_active]
-            
-            # Evaluate each policy in priority order
-            for policy in sorted(active_policies, key=lambda p: p.priority):
+            results = []
+            for policy in policies:
+                if not policy.is_active:
+                    continue
+                if policy.tenant_id != self.tenant_id:
+                    raise ValueError("Policy tenant mismatch")
+                dsl = self._parse_policy_dsl(policy.policy_data)
+                if dsl.type != policy.policy_type or dsl.scope != policy.scope:
+                    raise ValueError("Policy metadata and DSL disagree")
+                if dsl.scope_id is not None and UUID(dsl.scope_id) != policy.scope_id:
+                    raise ValueError("Policy scope IDs disagree")
+                if not self._policy_applies(policy, context):
+                    continue
                 result = self._evaluate_single_policy(policy, context)
-                if result:
-                    # Log evaluation
-                    self._log_evaluation(policy.id, policy_type, context, result)
-                    return result
-            
-            # Default: allow if no policies match
-            return PolicyEvaluationResult(
-                result="allow",
-                policy_id=UUID('00000000-0000-0000-0000-000000000000'),
-                matched_rules=[],
-                actions=[],
-                explanation="No policies matched, defaulting to allow"
-            )
-        except Exception as e:
-            logger.error(f"Failed to evaluate policy: {e}")
-            # Fail closed: deny on error
-            return PolicyEvaluationResult(
-                result="deny",
-                policy_id=UUID('00000000-0000-0000-0000-000000000000'),
-                matched_rules=[],
-                actions=[Action(type="log", value="Policy evaluation error", params={"error": str(e)})],
-                explanation="Policy evaluation failed, denying access"
-            )
-    
+                if result is not None:
+                    results.append((policy, result))
+
+            # Evaluate all rules/policies before combining. No grant or challenge can
+            # suppress a later denial, invalid definition or unavailable fact.
+            for outcome in ("deny", "require_approval", "step_up"):
+                found = next((r for _, r in results if r.result == outcome), None)
+                if found:
+                    return found
+            grant = next((r for p, r in results if r.result == "allow" and
+                          (policy_type is not None or p.policy_type in {"access", "authorization"})), None)
+            return grant or self._denied("No applicable explicit grant; default deny")
+        except Exception:
+            logger.exception("Policy evaluation failed; denying access")
+            return self._denied("Policy evaluation failed or required context unavailable")
+
+    def _policy_applies(self, policy: Policy, context: EvaluationContext) -> bool:
+        if policy.scope == "tenant":
+            if policy.scope_id is not None:
+                raise ValueError("Tenant policy cannot have a scope ID")
+            return True
+        if policy.scope_id is None:
+            raise ValueError("Scoped policy requires a scope ID")
+        if policy.scope == "app":
+            return context.resource_type == "app" and UUID(context.resource or "") == policy.scope_id
+        if policy.scope == "entitlement":
+            return policy.scope_id in {UUID(value) for value in context.entitlement_ids}
+        raise ValueError("Unsupported policy scope")
+
+    def _parse_policy_dsl(self, data: Dict[str, Any]) -> PolicyDSL:
+        dsl = PolicyDSL.model_validate(data)
+        if not dsl.rules or len({r.id for r in dsl.rules}) != len(dsl.rules):
+            raise ValueError("Policy requires uniquely identified rules")
+        for rule in dsl.rules:
+            if not rule.id or not rule.actions:
+                raise ValueError("Rule requires an ID and actions")
+            for action in rule.actions:
+                if action.type not in self._ACTIONS:
+                    raise ValueError("Unsupported policy action")
+            for condition in rule.conditions:
+                if condition.type not in self._CONTEXT_FIELDS or condition.op not in self._OPERATORS or condition.field is not None:
+                    raise ValueError("Unsupported condition")
+                if condition.value is None:
+                    raise ValueError("Missing condition operand")
+                if condition.op in {"in", "not_in"} and not isinstance(condition.value, list):
+                    raise ValueError("Membership operand must be a list")
+        return dsl
+
     def _evaluate_single_policy(self, policy: Policy, context: EvaluationContext) -> Optional[PolicyEvaluationResult]:
-        """Evaluate a single policy."""
-        try:
-            policy_dsl = PolicyDSL(**policy.policy_data)
-            
-            # Evaluate rules in order
-            matched_rules = []
-            actions_to_take = []
-            
-            for rule in sorted(policy_dsl.rules, key=lambda r: r.priority):
-                if self._evaluate_rule(rule, context):
-                    matched_rules.append(rule.id)
-                    actions_to_take.extend(rule.actions)
-                    
-                    # Check if we should stop (e.g., deny action)
-                    for action in rule.actions:
-                        if action.type == "deny":
-                            return PolicyEvaluationResult(
-                                result="deny",
-                                policy_id=policy.id,
-                                matched_rules=matched_rules,
-                                actions=actions_to_take,
-                                explanation=f"Policy '{policy.display_name}' denied access"
-                            )
-                        elif action.type == "require_approval":
-                            return PolicyEvaluationResult(
-                                result="require_approval",
-                                policy_id=policy.id,
-                                matched_rules=matched_rules,
-                                actions=actions_to_take,
-                                explanation=f"Policy '{policy.display_name}' requires approval"
-                            )
-                        elif action.type == "require_mfa" or action.type == "require_webauthn":
-                            return PolicyEvaluationResult(
-                                result="step_up",
-                                policy_id=policy.id,
-                                matched_rules=matched_rules,
-                                actions=actions_to_take,
-                                explanation=f"Policy '{policy.display_name}' requires additional authentication"
-                            )
-            
-            # If we have matched rules but no deny/step_up, allow
-            if matched_rules:
-                return PolicyEvaluationResult(
-                    result="allow",
-                    policy_id=policy.id,
-                    matched_rules=matched_rules,
-                    actions=actions_to_take,
-                    explanation=f"Policy '{policy.display_name}' allowed access"
-                )
-            
-            return None  # No rules matched
-        except Exception as e:
-            logger.error(f"Failed to evaluate policy {policy.id}: {e}")
+        dsl = self._parse_policy_dsl(policy.policy_data)
+        matches = [rule for rule in dsl.rules if self._evaluate_rule(rule, context)]
+        actions = [action for rule in matches for action in rule.actions]
+        types = {action.type for action in actions}
+        outcome = next((result for names, result in (
+            ({"deny"}, "deny"), ({"require_approval"}, "require_approval"),
+            ({"require_mfa", "require_webauthn"}, "step_up"), ({"allow"}, "allow")
+        ) if types.intersection(names)), None)
+        if outcome is None:
             return None
-    
+        return PolicyEvaluationResult(result=outcome, policy_id=policy.id,
+                                      matched_rules=[r.id for r in matches], actions=actions,
+                                      explanation=f"Policy '{policy.display_name}': {outcome}")
+
     def _evaluate_rule(self, rule: PolicyRule, context: EvaluationContext) -> bool:
-        """Evaluate a rule's conditions against context."""
-        if not rule.conditions:
-            return True  # No conditions = always match
-        
-        # All conditions must match (AND logic)
-        for condition in rule.conditions:
-            if not self._evaluate_condition(condition, context):
-                return False
-        
-        return True
-    
+        # Evaluate each condition, even after a false one, to expose unavailable
+        # facts/invalid operands rather than silently dropping a restrictive rule.
+        return all([self._evaluate_condition(c, context) for c in rule.conditions])
+
     def _evaluate_condition(self, condition: Condition, context: EvaluationContext) -> bool:
-        """Evaluate a single condition against context."""
-        try:
-            # Get value from context based on condition type
-            context_value = self._get_context_value(condition.type, context)
-            
-            if context_value is None:
-                return False
-            
-            # Apply operator
-            op = condition.op.lower()
-            value = condition.value
-            
-            if op == "equals":
-                return context_value == value
-            elif op == "includes" or op == "contains":
-                if isinstance(context_value, list):
-                    return value in context_value
-                elif isinstance(context_value, str):
-                    return value in context_value
-                return False
-            elif op == "in":
-                if isinstance(value, list):
-                    return context_value in value
-                return False
-            elif op == "not_in":
-                if isinstance(value, list):
-                    return context_value not in value
-                return False
-            elif op == "greater_than":
-                return context_value > value
-            elif op == "less_than":
-                return context_value < value
-            elif op == "not_equals":
-                return context_value != value
-            else:
-                logger.warning(f"Unknown operator: {op}")
-                return False
-        except Exception as e:
-            logger.error(f"Failed to evaluate condition: {e}")
-            return False
-    
+        actual = self._get_context_value(condition.type, context)
+        if actual is None:
+            raise ValueError("Required policy fact unavailable")
+        op, expected = condition.op, condition.value
+        if op in {"equals", "not_equals"}:
+            if type(actual) is not type(expected):
+                raise ValueError("Incompatible comparison types")
+            return actual == expected if op == "equals" else actual != expected
+        if op in {"includes", "contains"}:
+            if isinstance(actual, list):
+                if any(type(v) is not type(expected) for v in actual):
+                    raise ValueError("Incompatible membership types")
+            elif not (isinstance(actual, str) and isinstance(expected, str)):
+                raise ValueError("Unsupported membership types")
+            return expected in actual
+        if op in {"in", "not_in"}:
+            if not isinstance(expected, list) or any(type(v) is not type(actual) for v in expected):
+                raise ValueError("Incompatible membership types")
+            return actual in expected if op == "in" else actual not in expected
+        if op in {"greater_than", "less_than"}:
+            if isinstance(actual, bool) or isinstance(expected, bool) or not isinstance(actual, (int, float)) or not isinstance(expected, (int, float)):
+                raise ValueError("Ordered comparison requires numeric values")
+            return actual > expected if op == "greater_than" else actual < expected
+        raise ValueError("Unsupported policy operator")
+
     def _get_context_value(self, condition_type: str, context: EvaluationContext) -> Any:
-        """Get value from context based on condition type."""
-        type_map = {
-            "role": context.roles,
-            "group": context.groups,
-            "department": context.department,
-            "ip": context.ip_address,
-            "country": context.country,
-            "device_known": context.device_known,
-            "time_of_day": context.time_of_day,
-            "day_of_week": context.day_of_week,
-            "risk_level": context.risk_level,
-            "risk_score": context.risk_score,
-            "user_id": context.user_id,
-            "username": context.username,
-            "email": context.email,
-        }
-        return type_map.get(condition_type)
-    
+        field = self._CONTEXT_FIELDS.get(condition_type)
+        if field is None:
+            raise ValueError("Unsupported policy fact")
+        return getattr(context, field)
+
     # ==================== Policy Templates ====================
     
     def list_templates(self, policy_type: Optional[str] = None) -> List[PolicyTemplate]:
@@ -674,30 +656,13 @@ class PolicyService:
             return None
     
     def _validate_policy_dsl(self, policy_data: Dict[str, Any]) -> bool:
-        """Validate policy DSL structure."""
+        """Reject unsupported DSL at authoring time and again during evaluation."""
         try:
-            # Basic validation
-            if not isinstance(policy_data, dict):
-                return False
-            
-            if "id" not in policy_data or "type" not in policy_data or "rules" not in policy_data:
-                return False
-            
-            if not isinstance(policy_data["rules"], list):
-                return False
-            
-            # Validate rules
-            for rule in policy_data["rules"]:
-                if not isinstance(rule, dict):
-                    return False
-                if "id" not in rule or "conditions" not in rule or "actions" not in rule:
-                    return False
-            
+            self._parse_policy_dsl(policy_data)
             return True
-        except Exception as e:
-            logger.error(f"Policy DSL validation error: {e}")
+        except Exception:
             return False
-    
+
     def _extract_and_store_rules(self, policy_id: UUID, policy_data: Dict[str, Any]):
         """Extract rules from policy DSL and store them."""
         try:

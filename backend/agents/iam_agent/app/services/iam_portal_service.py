@@ -674,20 +674,17 @@ class IAMPortalService:
         return self.create_policy(payload, created_by=created_by)
 
     def evaluate_policy(self, policy_type: str, context: dict) -> dict:
-        """
-        Minimal evaluator: if an active policy exists for the type, return allow with a stub match.
-        """
-        policies = self.list_policies(policy_type)
-        if not policies:
-            return {"result": "no_policy", "matched_rules": []}
-        first = policies[0]
-        return {
-            "result": "allow" if first.is_active else "inactive",
-            "policy_id": str(first.id),
-            "matched_rules": [],
-            "actions": [],
-            "explanation": "Demo evaluator - first active policy returned"
-        }
+        """Compatibility simulation delegates to the same fail-closed evaluator."""
+        from app.models.policies import EvaluationContext
+        from app.services.policy_service import PolicyService
+
+        service = PolicyService(self.db, self.tenant_id, self.realm_name, load_seed_tenant=False)
+        try:
+            result = service.evaluate_policy(policy_type, EvaluationContext.model_validate(context))
+        except Exception:
+            result = service._denied("Invalid simulation context")
+        return result.model_dump(mode="json")
+
     def list_birthrights(self) -> List[AccessProfile]:
         """List birthright access profiles (flagged)."""
         return [p for p in self.list_access_profiles() if getattr(p, "is_birthright", False)]

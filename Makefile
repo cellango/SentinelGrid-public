@@ -6,7 +6,7 @@ RUFF ?= ruff
 help:
 	@echo "SentinelGrid developer source preview (see RELEASE_SCOPE.md)"
 	@echo "  make install          - Install isolated source-review test dependencies"
-	@echo "  make preview-check    - Check paths, documentation, source hygiene, V013 schema, and IAM auth"
+	@echo "  make preview-check    - Check paths, documentation, source hygiene, V013 schema, and IAM auth/policy"
 	@echo "  make preview-secrets  - Scan candidate source with Gitleaks 8.30.1"
 	@echo "  make preview-history  - Scan all locally available Git refs (full clone required)"
 	@echo "  Frontend: cd frontend && npm ci --ignore-scripts && npm run test:preview"
@@ -37,7 +37,7 @@ preview-check:
 	$(PYTHON) -m unittest discover -s scripts/tests -v
 	$(PYTHON) -m pytest --noconftest backend/tests/test_infrastructure_change_schema.py -q
 	$(RUFF) check --select F821 backend SentinelGridAIShield SentinelGridPenTestAgent SentinelGridPostureAgent scripts
-	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_auth_api.py backend/agents/iam_agent/tests/test_token_validator.py backend/agents/iam_agent/tests/test_config_security.py -q
+	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_auth_api.py backend/agents/iam_agent/tests/test_token_validator.py backend/agents/iam_agent/tests/test_config_security.py backend/agents/iam_agent/tests/test_policy_enforcement.py backend/agents/iam_agent/tests/test_authorize_tenant_isolation.py backend/agents/iam_agent/tests/test_policies_tenant_session.py -q
 
 preview-secrets:
 	$(PYTHON) scripts/scan_public_secrets.py snapshot
