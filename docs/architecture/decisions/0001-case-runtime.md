@@ -99,9 +99,13 @@ A later research proposal prefers native LangGraph, but reports on a custom engi
 described as LangGraph-style rather than a native implementation. Its useful domain
 requirements do not demonstrate a failure of the selected Temporal direction.
 Retain this decision; qualify it against the same three scenario fixtures, repaired
-fixed baseline and recovery/approval/evidence gates. A justified alternative spike
-may inform a superseding ADR; no second live scheduler, dependency or vendor storage
-is introduced by this refinement.
+fixed baseline and recovery/approval/evidence gates. Engine reconsideration is
+**deferred** as future item `FUT-001`; it has no target date and is not a prerequisite
+for current delivery. A16 covers Temporal qualification only. Reopening requires
+explicit owner prioritization of a documented gap or measured operating concern;
+replacement requires evidence and an accepted superseding ADR. Qualification failure
+blocks enablement without automatically scheduling alternative-engine work. No
+second scheduler, dependency or vendor storage is introduced by this deferral.
 
 ## Alternatives
 

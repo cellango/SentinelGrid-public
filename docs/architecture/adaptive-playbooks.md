@@ -160,12 +160,14 @@ death, persistence failure, cancellation, ambiguous effects and audit reconstruc
 Compare against a repaired fixed/conditional baseline with effects disabled. Set
 owner-approved quality, recovery, latency and cost thresholds before rollout.
 
-Native LangGraph remains an alternative for a bounded evaluation if evidence
-justifies reopening the ADR; it is not an additional live scheduler. A future
-reasoning-library experiment must stay within bounded activities and cannot own
-case approvals or independently dispatch effects. Any replacement requires an
-explicit superseding ADR, storage/security/operations comparison and single-owner
-cutover, not an implicit framework switch during a source port.
+Engine reconsideration, including native LangGraph, is **deferred** as future item
+`FUT-001`, with no target date or dependency on the active delivery plan. Current
+runtime work qualifies Temporal only. A failed qualification gate blocks enablement
+and records evidence; it does not automatically start an alternative-engine spike.
+Revisit only when the owner prioritizes a concrete qualification gap or measured
+operating concern. Replacement requires evidence, an accepted superseding ADR,
+storage/security/operations review and a single-owner cutover plan. No additional
+engine, checkpointer or reasoning-library experiment is scheduled by this design.
 
 Official [LangGraph persistence](https://docs.langchain.com/oss/python/langgraph/persistence),
 [interrupt](https://docs.langchain.com/oss/python/langgraph/interrupts) and
