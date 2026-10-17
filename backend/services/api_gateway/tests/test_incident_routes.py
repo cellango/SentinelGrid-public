@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.core.request_identity import require_gateway_identity
 from sg_core.db import get_tenant_session
 from sg_core.models import Incident, Ticket
 from sg_core.security import get_current_tenant
@@ -21,6 +22,8 @@ def incident_client(mock_db_session):
 
     app.dependency_overrides[get_tenant_session] = _get_db
     app.dependency_overrides[get_current_tenant] = _get_tenant
+    # Route-unit fixture; real gateway admission has its own no-override suite.
+    app.dependency_overrides[require_gateway_identity] = lambda: None
 
     with TestClient(app) as client:
         yield client, mock_db_session, tenant_id

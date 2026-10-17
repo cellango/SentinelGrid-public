@@ -41,6 +41,7 @@ python3.13 -m venv .venv
 . .venv/bin/activate
 python -m pip install -r scripts/requirements-preview.txt
 make preview-check
+# Included: shared IAM receipt and mounted-gateway identity checks.
 ```
 
 For frontend tests, use Node.js 22 and the committed npm lockfile:

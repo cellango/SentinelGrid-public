@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -43,6 +43,11 @@ preview-check:
 
 	$(MAKE) preview-mcp PYTHON="$(PYTHON)"
 	$(MAKE) preview-gateway-identity PYTHON="$(PYTHON)"
+	$(MAKE) preview-gateway PYTHON="$(PYTHON)"
+
+preview-gateway:
+	$(PYTHON) -m pytest -c backend/services/api_gateway/tests/pytest-identity.ini backend/services/api_gateway/tests/test_gateway_identity_boundary.py -q
+	PYTHONPATH=backend/libs:backend/services/api_gateway $(PYTHON) -m pytest -c backend/services/api_gateway/pytest.ini backend/services/api_gateway/tests/test_auth_middleware.py backend/services/api_gateway/tests/test_config_security.py backend/services/api_gateway/tests/test_metrics.py -q
 
 preview-gateway-identity:
 	$(PYTHON) -m pytest -c backend/tests/gateway_identity/pytest.ini backend/tests/gateway_identity -q

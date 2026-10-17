@@ -2,7 +2,9 @@
 
 from typing import List
 
-from pydantic import field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
+from sg_core.iam_verification import IAMVerificationSettings
+from sg_core.user_principals import UserClientBinding, UserPrincipalSettings
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from sg_core.service_security import (
@@ -46,6 +48,10 @@ class Settings(BaseSettings):
     TICKETING_SERVICE_URL: str = "http://ticketing_service:8000"
     MODEL_GATEWAY_URL: str = "http://model_gateway:8000"
     AGENT_RUNTIME_URL: str = "http://agent_runtime:8000"
+
+    IAM_TOKEN_VALIDATION_TIMEOUT: float = Field(default=5.0, gt=0, le=10, allow_inf_nan=False)
+    IAM_VERIFIER_CA_BUNDLE: str | None = None
+    IAM_USER_CLIENT_BINDINGS: tuple[UserClientBinding, ...] = Field(default=(), max_length=256)
 
     # Database
     DB_URL: str = "postgresql://sg:sg@postgres:5432/sg"
@@ -91,7 +97,18 @@ class Settings(BaseSettings):
             disallowed_hosts=DEFAULT_KEYCLOAK_HOSTS,
         )
 
+        self.verification_settings()
+        self.user_principal_settings()
         return self
+
+
+    def verification_settings(self) -> IAMVerificationSettings:
+        names = {"ENVIRONMENT", "IAM_AGENT_URL", "KEYCLOAK_CLIENT_ID",
+                 "IAM_TOKEN_VALIDATION_TIMEOUT", "IAM_VERIFIER_CA_BUNDLE"}
+        return IAMVerificationSettings(_env_file=None, **self.model_dump(include=names))
+
+    def user_principal_settings(self) -> UserPrincipalSettings:
+        return UserPrincipalSettings(_env_file=None, ENVIRONMENT=self.ENVIRONMENT, IAM_USER_CLIENT_BINDINGS=self.IAM_USER_CLIENT_BINDINGS)
 
 
 settings = Settings()

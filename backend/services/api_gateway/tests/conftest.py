@@ -23,6 +23,11 @@ os.environ.setdefault("RATE_LIMIT_ENABLED", "false")
 os.environ.setdefault("RATE_LIMIT_FAIL_CLOSED", "false")
 
 from app.main import app
+from app.core.request_identity import require_gateway_identity
+from sg_core.user_principals import UserClientBinding, UserPrincipalSettings
+
+TEST_TENANT_ID = "e53ae16f-4381-4da5-9992-8d8d85b1d0eb"
+TEST_SUBJECT_ID = "238699f6-5d17-48a0-935f-539c6d3594cf"
 
 
 @pytest.fixture
@@ -65,6 +70,8 @@ def client(mock_get_db, mock_get_tenant_session, mock_get_current_tenant):
     app.dependency_overrides[get_db] = mock_get_db
     app.dependency_overrides[get_tenant_session] = mock_get_tenant_session
     app.dependency_overrides[get_current_tenant] = mock_get_current_tenant
+    # Route-unit isolation only; real assembly admission is checked separately.
+    app.dependency_overrides[require_gateway_identity] = lambda: None
     
     yield TestClient(app)
     
@@ -73,13 +80,18 @@ def client(mock_get_db, mock_get_tenant_session, mock_get_current_tenant):
 
 
 @pytest.fixture
-def auth_client(mock_get_db, mock_get_tenant_session):
+def auth_client(mock_get_db, mock_get_tenant_session, monkeypatch):
     """FastAPI test client that uses the real auth dependency but mocked DB."""
     from sg_core.db import get_db, get_tenant_session
 
     app.dependency_overrides[get_db] = mock_get_db
     app.dependency_overrides[get_tenant_session] = mock_get_tenant_session
 
+    binding = UserClientBinding(issuer="https://identity.internal.test/realms/synthetic",
+        client_id="review-browser", tenant_id=TEST_TENANT_ID, contract="keycloak-user-v1",
+        service_accounts_enabled=False, token_exchange_enabled=False)
+    monkeypatch.setattr(app.state, "user_principal_settings", UserPrincipalSettings(
+        _env_file=None, IAM_USER_CLIENT_BINDINGS=(binding,)))
     yield TestClient(app)
 
     app.dependency_overrides.clear()
@@ -102,9 +114,11 @@ def token_payload_factory():
 
     def _factory(**overrides):
         payload = {
-            "sub": "user-123",
-            "tenant_id": "tenant-123",
-            "realm_roles": ["user", "admin"],
+            "sub": TEST_SUBJECT_ID,
+            "tenant_id": TEST_TENANT_ID,
+            "roles": ["user", "admin"],
+            "iss": "https://identity.internal.test/realms/synthetic", "azp": "review-browser",
+            "typ": "Bearer", "sg_principal_type": "user", "sg_identity_contract": "keycloak-user-v1",
             "email": "user@example.com",
         }
         payload.update(overrides)

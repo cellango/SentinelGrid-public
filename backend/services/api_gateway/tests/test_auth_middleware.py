@@ -7,6 +7,8 @@ from unittest.mock import Mock, patch
 from fastapi import HTTPException
 
 from app.api import routes_alerts
+from app.main import app
+TEST_TENANT_ID = "e53ae16f-4381-4da5-9992-8d8d85b1d0eb"
 
 
 class TestAuthenticationMiddleware:
@@ -52,8 +54,8 @@ class TestAuthenticationMiddleware:
             )
 
         assert response.status_code == 200
-        mock_verify.assert_called_once_with("valid-token")
-        mock_service_class.assert_called_once_with(mock_db_session, "tenant-123")
+        mock_verify.assert_called_once_with("valid-token", config=app.state.iam_verification_settings)
+        mock_service_class.assert_called_once_with(mock_db_session, TEST_TENANT_ID)
 
     def test_get_current_tenant_with_invalid_token(self, auth_client):
         """Invalid tokens should be rejected before the protected handler runs."""
@@ -80,8 +82,8 @@ class TestAuthenticationMiddleware:
                 headers={"Authorization": "Bearer valid-token"},
             )
 
-        assert response.status_code == 403
-        assert response.json()["detail"] == "No tenant_id in token. User must be assigned to a tenant."
+        assert response.status_code == 503
+        assert response.json()["detail"] == "Invalid verified request identity"
 
     def test_cookie_backed_session_is_resolved_when_authorization_header_is_missing(
         self,
@@ -103,8 +105,8 @@ class TestAuthenticationMiddleware:
             )
 
         assert response.status_code == 200
-        mock_verify.assert_called_once_with("cookie-backed-token")
-        mock_service_class.assert_called_once_with(mock_db_session, "tenant-123")
+        mock_verify.assert_called_once_with("cookie-backed-token", config=app.state.iam_verification_settings)
+        mock_service_class.assert_called_once_with(mock_db_session, TEST_TENANT_ID)
 
     def test_cookie_backed_session_replaces_frontend_session_marker_header(
         self,
@@ -127,8 +129,8 @@ class TestAuthenticationMiddleware:
             )
 
         assert response.status_code == 200
-        mock_verify.assert_called_once_with("cookie-backed-token")
-        mock_service_class.assert_called_once_with(mock_db_session, "tenant-123")
+        mock_verify.assert_called_once_with("cookie-backed-token", config=app.state.iam_verification_settings)
+        mock_service_class.assert_called_once_with(mock_db_session, TEST_TENANT_ID)
 
 
 class TestTenantContext:

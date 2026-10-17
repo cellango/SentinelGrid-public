@@ -103,9 +103,12 @@ compatibility is cleared. The frozen preview release remains unchanged.
 
 ## Current shared identity verification
 
-The [delegated IAM client](docs/architecture/gateway-identity.md) checks a bounded,
-input-bound verification receipt and rejects transport/identity contradictions.
-Offline tests use real RSA signatures and the current IAM validator with mocked
-HTTP. Full gateway route adoption, browser credential conflicts, user/workload
-classification and service-caller authorization remain open; this is not a
-supported authentication runtime or action authority. Core MCP remains unavailable.
+The [delegated IAM client and gateway identity gate](docs/architecture/gateway-identity.md)
+check a bounded, input-bound verification receipt, raw browser credential conflicts
+and an explicit user-client/tenant contract. The actual gateway rejects missing,
+ambiguous, workload or foreign identity before business dependencies. Its user
+bindings are empty by default. Shared-token ingestion and global ingest diagnostics
+remain blocked pending owned delegation. Offline positive data paths use spies;
+full proxy/action authorization, direct-service callers, live provider registration,
+SQL and runtime/feature equivalence remain open. A wider legacy gateway suite has
+existing failures and is not claimed passing. Core MCP remains unavailable.

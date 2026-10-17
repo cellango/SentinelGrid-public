@@ -1,7 +1,7 @@
 """API Gateway - Public REST API for frontend."""
 
 import asyncio
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 import sys
@@ -25,6 +25,9 @@ from app.api import (
     routes_ingest,
 )
 from app.core.config import settings
+from app.core.request_identity import require_gateway_identity
+from sg_core.request_credentials import AuthCookieMiddleware
+from sg_core.security import get_current_tenant
 from sg_core.request_tracing import RequestTracingMiddleware, configure_logging
 from sg_core.service_health import probe_http_dependency, summarize_service_health
 from sg_core.service_metrics import get_service_metrics
@@ -41,14 +44,20 @@ except Exception:  # pragma: no cover - best-effort import for dev images
         return 0
 
 app = FastAPI(
+    dependencies=[Depends(require_gateway_identity)],
     title="SentinelGrid API",
     description="AI-driven Security-as-a-Service API",
     version="0.1.0"
 )
+# Bind the verifier and user registration policy to this application's owned config.
+app.state.iam_verification_settings = settings.verification_settings()
+app.state.user_principal_settings = settings.user_principal_settings()
 # Avoid HTTP 307 redirects that leak http:// locations when clients omit trailing slashes
 app.router.redirect_slashes = False
 PROMETHEUS_MEDIA_TYPE = "text/plain; version=0.0.4; charset=utf-8"
 
+# CORS wraps credential rejection as well as successful route responses.
+app.add_middleware(AuthCookieMiddleware)
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -58,49 +67,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Middleware: copy access_token cookie into Authorization header when missing
-from starlette.middleware.base import BaseHTTPMiddleware
-
-SESSION_AUTH_MARKER = "session-cookie"
-SESSION_AUTHORIZATION = f"Bearer {SESSION_AUTH_MARKER}"
-
-
-class AuthCookieMiddleware(BaseHTTPMiddleware):
-    """Resolve browser session cookies into Authorization for upstream proxy routes."""
-    async def dispatch(self, request, call_next):
-        headers = request.scope.get("headers") or []
-        auth_header = request.headers.get("authorization")
-        uses_session_marker = (auth_header or "").strip().lower() == SESSION_AUTHORIZATION.lower()
-        has_auth = any((h[0].lower() == b"authorization") for h in headers)
-        cookie_header = None
-        try:
-            cookie_header = request.headers.get("cookie")
-        except Exception:
-            cookie_header = None
-
-        if not has_auth or uses_session_marker:
-            cookie_token = request.cookies.get("access_token")
-            new_headers = [(key, value) for key, value in headers if key.lower() != b"authorization"]
-            if cookie_token:
-                new_headers.append((b"authorization", f"Bearer {cookie_token}".encode()))
-                request.scope["headers"] = new_headers
-                logger.info(
-                    f"[middleware] Injected Authorization from access_token cookie for path {request.url.path} "
-                    f"(cookie_header_present={bool(cookie_header)} session_marker={uses_session_marker})"
-                )
-            else:
-                request.scope["headers"] = new_headers
-                logger.info(
-                    f"[middleware] No usable session cookie present for path {request.url.path} "
-                    f"(cookie_header_present={bool(cookie_header)} session_marker={uses_session_marker})"
-                )
-        else:
-            logger.debug(f"[middleware] Authorization header already present for path {request.url.path}")
-        response = await call_next(request)
-        return response
-
-
-app.add_middleware(AuthCookieMiddleware)
 app.add_middleware(RequestTracingMiddleware, service_name="api-gateway")
 
 # Include routers
@@ -155,17 +121,17 @@ from app.api.routes_agents import get_agent_versions
 @app.get("/api/agents")
 def agents_legacy_root():
     """
-    Legacy dashboard call. If auth/tenant is missing, return a benign stub instead of 404/401.
+    Legacy dashboard shape; the common identity gate still authenticates the caller.
     """
     return {"items": [], "total": 0}
 
 
 @app.get("/api/agents/versions")
-def agents_legacy_versions():
+def agents_legacy_versions(tenant_id: str = Depends(get_current_tenant)):
     """
-    Legacy dashboard call for agent versions. Returns stubbed data when auth is absent.
+    Compatibility handler; earlier router precedence and fallbacks require route reconciliation.
     """
-    return get_agent_versions(tenant_id="legacy-dashboard")
+    return get_agent_versions(tenant_id=tenant_id)
 
 
 @app.get("/")

@@ -8,6 +8,7 @@ from uuid import uuid4
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.core.request_identity import require_gateway_identity
 
 
 @pytest.fixture
@@ -19,6 +20,8 @@ def client(mock_get_db, mock_get_tenant_session, mock_get_current_tenant):
     app.dependency_overrides[get_db] = mock_get_db
     app.dependency_overrides[get_tenant_session] = mock_get_tenant_session
     app.dependency_overrides[get_current_tenant] = mock_get_current_tenant
+    # Route-unit fixture; real gateway admission has its own no-override suite.
+    app.dependency_overrides[require_gateway_identity] = lambda: None
     
     yield TestClient(app)
     app.dependency_overrides.clear()

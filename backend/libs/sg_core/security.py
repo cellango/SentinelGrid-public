@@ -1,21 +1,26 @@
 """Security utilities: token parsing, tenant extraction, auth helpers, tenant isolation enforcement."""
 
+from dataclasses import dataclass
+import hashlib
+import json
 from typing import Optional
+from uuid import UUID
 from fastapi import HTTPException, Security, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import logging
-from sg_core.iam_verification import verify_iam_token
+from sg_core.iam_verification import IAMVerificationSettings, verify_iam_token
+from sg_core.request_credentials import resolve_credentials, request_token
 from sg_core.service_metrics import get_service_metrics
 
 security = HTTPBearer(auto_error=False)
 logger = logging.getLogger(__name__)
 
 
-def verify_token(token: str) -> dict:
+def verify_token(token: str, *, config: IAMVerificationSettings | None = None) -> dict:
     """Return the IAM-verified JWT identity; this grants no action authority."""
     metrics = get_service_metrics()
     try:
-        payload = verify_iam_token(token)
+        payload = verify_iam_token(token, config=config) if config is not None else verify_iam_token(token)
     except HTTPException as exc:
         reason = "missing_token" if token is None or token == "" else (
             "invalid_token" if exc.status_code == 401 else "iam_agent_error")
@@ -32,64 +37,94 @@ def get_tenant_id_from_token(token: str) -> Optional[str]:
     return payload.get("tenant_id")
 
 
-def _get_token_from_request(credentials: HTTPAuthorizationCredentials, request: Request) -> Optional[str]:
-    """Return bearer token from Authorization header or fallback to access_token cookie."""
-    if credentials and credentials.credentials:
-        return credentials.credentials
-    # Fallback: read access_token cookie (e.g., when Authorization header isn't attached)
+@dataclass(frozen=True)
+class VerifiedRequestIdentity:
+    """Server-created request snapshot. Constructing this type is not authentication."""
+    tenant_id: str
+    user_id: str
+    roles: tuple[str, ...]
+    claims_json: str
+
+    def payload(self) -> dict:
+        return json.loads(self.claims_json)
+
+
+@dataclass(frozen=True)
+class _VerifiedRequestCache:
+    fingerprint: str
+    identity: VerifiedRequestIdentity
+
+
+_IDENTITY_CACHE = object()
+
+
+def _get_token_from_request(credentials, request: Request | None) -> str:
+    if request is not None:
+        return request_token(request)
+    if not isinstance(credentials, HTTPAuthorizationCredentials) or credentials.scheme.lower() != "bearer":
+        raise HTTPException(401, "Missing Authorization token")
     try:
-        token = request.cookies.get("access_token")
-        return token
-    except Exception:
-        return None
+        raw = (credentials.scheme + " " + credentials.credentials).encode("ascii")
+    except (UnicodeError, TypeError):
+        raise HTTPException(401, "Invalid authentication credentials") from None
+    token = resolve_credentials([(b"authorization", raw)])
+    if not token:
+        raise HTTPException(401, "Missing Authorization token")
+    return token
+
+
+def get_verified_request_identity(request: Request | None = None, credentials=None) -> VerifiedRequestIdentity:
+    try:
+        token = _get_token_from_request(credentials, request)
+    except HTTPException as exc:
+        get_service_metrics().increment_counter("auth_failures_total", reason=(
+            "missing_authorization_token" if exc.detail == "Missing Authorization token" else "invalid_credentials"))
+        raise
+    fingerprint = hashlib.sha256(token.encode("ascii")).hexdigest()
+    cached = request.scope.get(_IDENTITY_CACHE) if request is not None else None
+    if cached is not None:
+        if not isinstance(cached, _VerifiedRequestCache) or cached.fingerprint != fingerprint:
+            raise HTTPException(401, "Conflicting authentication credentials")
+        return cached.identity
+    config = getattr(request.app.state, "iam_verification_settings", None) if request is not None else None
+    if config is not None and not isinstance(config, IAMVerificationSettings):
+        raise HTTPException(503, "Token verification configuration unavailable")
+    payload = verify_token(token, config=config) if config is not None else verify_token(token)
+    try:
+        tenant = str(UUID(payload["tenant_id"]))
+        subject = str(UUID(payload["sub"]))
+        roles = payload["roles"]
+        if UUID(tenant).int == 0 or UUID(subject).int == 0 or not isinstance(roles, list) or not all(isinstance(r, str) for r in roles):
+            raise ValueError("Invalid verified identity")
+        identity = VerifiedRequestIdentity(tenant, subject, tuple(roles), json.dumps(payload, sort_keys=True, allow_nan=False))
+    except (KeyError, ValueError, TypeError):
+        raise HTTPException(503, "Invalid verified request identity") from None
+    if request is not None:
+        request.scope[_IDENTITY_CACHE] = _VerifiedRequestCache(fingerprint, identity)
+    return identity
 
 
 def get_current_tenant(
     credentials: HTTPAuthorizationCredentials = Security(security),
     request: Request = None,
 ) -> str:
-    """
-    FastAPI dependency to extract tenant_id from request token.
-    
-    Validates token via IAM Agent and returns tenant_id.
-    
-    Usage:
-        @app.get("/items")
-        def read_items(tenant_id: str = Depends(get_current_tenant)):
-            ...
-    """
-    token = _get_token_from_request(credentials, request) if request else (credentials.credentials if credentials else None)
-    logger.info(f"[auth] token present={bool(token)} from_header={bool(credentials and credentials.credentials)} from_cookie={bool(request and request.cookies.get('access_token') if request else False)}")
-    if not token:
-        get_service_metrics().increment_counter("auth_failures_total", reason="missing_authorization_token")
-        raise HTTPException(status_code=401, detail="Missing Authorization token")
-    logger.debug(f"🔍 [get_current_tenant] Validating token to extract tenant_id...")
-    tenant_id = get_tenant_id_from_token(token)
-    logger.debug(f"🔍 [get_current_tenant] Extracted tenant_id: {tenant_id}")
-    if not tenant_id:
-        logger.warning(f"🔍 [get_current_tenant] No tenant_id in token - returning 403")
-        get_service_metrics().increment_counter("auth_failures_total", reason="missing_tenant_id")
-        raise HTTPException(
-            status_code=403,
-            detail="No tenant_id in token. User must be assigned to a tenant."
-        )
-    logger.info(f"🔍 [get_current_tenant] Successfully extracted tenant_id: {tenant_id}")
+    """Return the UUID from the same verified request snapshot as the payload."""
+    identity = get_verified_request_identity(request, credentials)
     get_service_metrics().increment_counter("auth_success_total")
-    return tenant_id
+    return identity.tenant_id
 
 
 def get_user_roles_from_token(token: str) -> list[str]:
-    """Extract user roles from JWT token using IAM Agent."""
-    payload = verify_token(token)
-    return payload.get("roles", [])
+    """Compatibility claim accessor; this alone does not classify a human user."""
+    return verify_token(token).get("roles", [])
 
 
-def get_current_payload(credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
-    """
-    FastAPI dependency to return the validated token payload (with tenant_id, roles, plan_tier, user_id).
-    """
-    token = credentials.credentials
-    return verify_token(token)
+def get_current_payload(
+    credentials: HTTPAuthorizationCredentials = Security(security),
+    request: Request = None,
+) -> dict:
+    """Return a fresh copy; mutations cannot change another dependency's identity."""
+    return get_verified_request_identity(request, credentials).payload()
 
 
 # ============================================================================

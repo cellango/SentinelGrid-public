@@ -5,6 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.core.request_identity import require_gateway_identity
 from sg_core.opa import require_opa_allow
 
 
@@ -49,6 +50,8 @@ def test_source_health_reads_sidecar_endpoints(monkeypatch, mock_get_db, mock_ge
 
     app.dependency_overrides[get_db] = mock_get_db
     app.dependency_overrides[get_current_tenant] = mock_get_current_tenant
+    # Route-unit fixture; real gateway admission has its own no-override suite.
+    app.dependency_overrides[require_gateway_identity] = lambda: None
     app.dependency_overrides[require_opa_allow] = lambda: None
 
     client = TestClient(app)

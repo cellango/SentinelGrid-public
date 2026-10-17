@@ -23,6 +23,7 @@ for ownership. This guide replaces the old full-stack quick-start instructions.
 | Python review dependency lock | [requirements-preview.txt](../../scripts/requirements-preview.txt) |
 | Inventory regressions | [scripts/tests](../../scripts/tests/) |
 | Model/DDL contract | [test_infrastructure_change_schema.py](../../backend/tests/test_infrastructure_change_schema.py) |
+| Mounted gateway user identity and raw credentials | [test_gateway_identity_boundary.py](../../backend/services/api_gateway/tests/test_gateway_identity_boundary.py), `make preview-gateway` |
 | Shared IAM receipt boundary | [test_verifier_boundary.py](../../backend/tests/gateway_identity/test_verifier_boundary.py) |
 | Named IAM auth regressions | [test_auth_api.py](../../backend/agents/iam_agent/tests/test_auth_api.py) |
 | Frontend focused suite | [package.json](../../frontend/package.json), `test:preview` |

@@ -2,7 +2,8 @@ import app.main as gateway_main
 
 from sg_core.service_health import build_dependency_status
 from sg_core.service_metrics import reset_service_metrics
-from unittest.mock import Mock, patch
+from unittest.mock import patch
+from fastapi import HTTPException
 
 
 async def _healthy_probe(name: str, url: str, *, critical: bool, **kwargs):
@@ -52,16 +53,7 @@ def test_metrics_prometheus_endpoint_exposes_runtime_series(auth_client):
 def test_metrics_capture_token_validation_failures(auth_client):
     reset_service_metrics("api-gateway")
 
-    mock_response = Mock()
-    mock_response.raise_for_status.return_value = None
-    mock_response.json.return_value = {"valid": False, "error": "Invalid token"}
-
-    mock_client = Mock()
-    mock_client.__enter__ = Mock(return_value=mock_client)
-    mock_client.__exit__ = Mock(return_value=False)
-    mock_client.post.return_value = mock_response
-
-    with patch("sg_core.security.httpx.Client", return_value=mock_client):
+    with patch("sg_core.security.verify_iam_token", side_effect=HTTPException(401, "Invalid token")):
         response = auth_client.get(
             "/api/v1/alerts/",
             headers={"Authorization": "Bearer invalid-token"},
@@ -78,16 +70,7 @@ def test_metrics_capture_token_validation_failures(auth_client):
 def test_metrics_prometheus_endpoint_exposes_token_validation_failures(auth_client):
     reset_service_metrics("api-gateway")
 
-    mock_response = Mock()
-    mock_response.raise_for_status.return_value = None
-    mock_response.json.return_value = {"valid": False, "error": "Invalid token"}
-
-    mock_client = Mock()
-    mock_client.__enter__ = Mock(return_value=mock_client)
-    mock_client.__exit__ = Mock(return_value=False)
-    mock_client.post.return_value = mock_response
-
-    with patch("sg_core.security.httpx.Client", return_value=mock_client):
+    with patch("sg_core.security.verify_iam_token", side_effect=HTTPException(401, "Invalid token")):
         response = auth_client.get(
             "/api/v1/alerts/",
             headers={"Authorization": "Bearer invalid-token"},

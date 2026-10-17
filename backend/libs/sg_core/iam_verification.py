@@ -200,7 +200,7 @@ def _receipt(result: dict, submitted: dict, audience: str) -> dict:
     return {**payload, "tenant_id": tenant, "sub": subject, "user_id": subject, "roles": roles.copy()}
 
 
-def verify_iam_token(token: str) -> dict:
+def verify_iam_token(token: str, *, config: IAMVerificationSettings | None = None) -> dict:
     """Obtain a bounded, input-bound receipt. Never fall back to decoding locally."""
     if token is None or token == "":
         raise HTTPException(status_code=401, detail="Missing token")
@@ -209,7 +209,7 @@ def verify_iam_token(token: str) -> dict:
     except (ValueError, TypeError, UnicodeError, RecursionError):
         raise _invalid() from None
     try:
-        config = get_verification_settings()
+        config = config if config is not None else get_verification_settings()
         verify = ssl.create_default_context(cafile=config.IAM_VERIFIER_CA_BUNDLE) if config.IAM_VERIFIER_CA_BUNDLE else True
         with httpx.Client(
             timeout=httpx.Timeout(config.IAM_TOKEN_VALIDATION_TIMEOUT, pool=1.0),
