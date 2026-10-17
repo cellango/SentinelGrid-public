@@ -3,19 +3,18 @@
 import logging
 from typing import List, Optional
 from uuid import UUID
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from app.core.database import get_db, get_tenant_db, get_tenant_session
-from app.core.security import get_current_tenant
+from app.core.security import get_current_tenant, require_connector_request, MAX_SKIP, MAX_LIMIT
 from app.models.connector import ConnectorConfig
-from app.services.sync_service import SyncService
-from app.services.oauth_service import OAuthService
+from app.services.connector_reader import OwnedConnectorReader
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/connectors", tags=["connectors"])
-oauth_router = APIRouter(prefix="/connectors/oauth", tags=["oauth"])
+router = APIRouter(prefix="/connectors", tags=["connectors"], dependencies=[Depends(require_connector_request)])
+oauth_router = APIRouter(prefix="/connectors/oauth", tags=["oauth"], dependencies=[Depends(require_connector_request)])
 
 
 class ConnectorCreate(BaseModel):
@@ -89,61 +88,32 @@ def create_connector(
     )
 
 
+def get_owned_connector_reader(db: Session = Depends(get_tenant_session, scope="function")) -> OwnedConnectorReader:
+    return OwnedConnectorReader(db)
+
+
 @router.get("", response_model=List[ConnectorResponse])
-def list_connectors(
-    tenant_id: str = Depends(get_current_tenant),
-    db: Session = Depends(get_tenant_session)
-):
-    """List all connectors for the current tenant."""
-    connectors = db.query(ConnectorConfig).filter(
-        ConnectorConfig.tenant_id == UUID(tenant_id)
-    ).all()
-    
-    return [
-        ConnectorResponse(
-            id=str(c.id),
-            tenant_id=str(c.tenant_id),
-            type=c.type,
-            name=c.name,
-            status=c.status,
-            last_sync_at=c.last_sync_at.isoformat() if c.last_sync_at else None,
-            error_message=c.error_message,
-            created_at=c.created_at.isoformat(),
-            updated_at=c.updated_at.isoformat(),
-        )
-        for c in connectors
-    ]
+def list_connectors(skip: int = Query(0, ge=0, le=MAX_SKIP), limit: int = Query(100, ge=1, le=MAX_LIMIT),
+    tenant_id: str = Depends(get_current_tenant), reader: OwnedConnectorReader = Depends(get_owned_connector_reader)):
+    """Read bounded tenant-owned metadata without loading provider credentials."""
+    try:
+        return [ConnectorResponse(**row) for row in reader.list_owned(tenant_id, skip, limit)]
+    except Exception:
+        raise HTTPException(503, "Owned connector store unavailable") from None
 
 
 @router.get("/{connector_id}", response_model=ConnectorResponse)
-def get_connector(
-    connector_id: str,
-    tenant_id: str = Depends(get_current_tenant),
-    db: Session = Depends(get_tenant_session)
-):
-    """Get a specific connector."""
-    connector = db.query(ConnectorConfig).filter(
-        ConnectorConfig.id == UUID(connector_id),
-        ConnectorConfig.tenant_id == UUID(tenant_id)
-    ).first()
-    
-    if not connector:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Connector {connector_id} not found"
-        )
-    
-    return ConnectorResponse(
-        id=str(connector.id),
-        tenant_id=str(connector.tenant_id),
-        type=connector.type,
-        name=connector.name,
-        status=connector.status,
-        last_sync_at=connector.last_sync_at.isoformat() if connector.last_sync_at else None,
-        error_message=connector.error_message,
-        created_at=connector.created_at.isoformat(),
-        updated_at=connector.updated_at.isoformat(),
-    )
+def get_connector(connector_id: str, tenant_id: str = Depends(get_current_tenant),
+    reader: OwnedConnectorReader = Depends(get_owned_connector_reader)):
+    """Read one owned metadata projection; raw provider errors are withheld."""
+    try:
+        row = reader.get_owned(connector_id, tenant_id)
+        result = ConnectorResponse(**row) if row is not None else None
+    except Exception:
+        raise HTTPException(503, "Owned connector store unavailable") from None
+    if result is None:
+        raise HTTPException(404, "Connector not found")
+    return result
 
 
 @router.patch("/{connector_id}", response_model=ConnectorResponse)
@@ -219,6 +189,7 @@ def sync_connector(
     db: Session = Depends(get_tenant_session)
 ):
     """Trigger a manual sync for a connector."""
+    from app.services.sync_service import SyncService
     sync_service = SyncService(db)
     result = sync_service.sync_connector(connector_id, tenant_id)
     
@@ -231,6 +202,7 @@ def sync_all_connectors(
     db: Session = Depends(get_tenant_session)
 ):
     """Trigger sync for all active connectors."""
+    from app.services.sync_service import SyncService
     sync_service = SyncService(db)
     result = sync_service.sync_all_active_connectors(tenant_id)
     
@@ -344,26 +316,14 @@ def _require_same_tenant(authenticated_tenant_id: str, requested_tenant_id: str)
     return requested
 
 
-def resolve_oauth_callback_tenant(
-    request: OAuthCallbackRequest,
-    db: Session = Depends(get_db),
-) -> UUID:
-    """Resolve tenant scope for OAuth callback processing from the signed state token."""
-    oauth_service = OAuthService(db)
-    try:
-        return oauth_service.get_tenant_id_for_state(request.state)
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(exc),
-        ) from exc
+def resolve_oauth_callback_tenant(request: OAuthCallbackRequest) -> UUID:
+    """Legacy in-memory state cannot establish an owned provider callback contract."""
+    raise HTTPException(503, "Owned connector OAuth callback contract required")
 
 
-def get_oauth_callback_tenant_session(
-    tenant_id: UUID = Depends(resolve_oauth_callback_tenant),
-):
-    """Tenant-scoped DB dependency for OAuth callback processing."""
-    yield from get_tenant_db(str(tenant_id))
+def get_oauth_callback_tenant_session():
+    raise HTTPException(503, "Owned connector OAuth callback contract required")
+    yield
 
 
 @oauth_router.post("/init", response_model=OAuthInitResponse, status_code=status.HTTP_200_OK)
@@ -377,6 +337,7 @@ def init_oauth(
     
     Returns OAuth URL and state token for the frontend to redirect to.
     """
+    from app.services.oauth_service import OAuthService
     oauth_service = OAuthService(db)
     
     try:
@@ -439,6 +400,7 @@ def oauth_callback(
     
     Exchanges authorization code for tokens and creates connector.
     """
+    from app.services.oauth_service import OAuthService
     oauth_service = OAuthService(db)
     
     try:

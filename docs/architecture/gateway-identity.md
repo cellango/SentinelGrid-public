@@ -404,6 +404,67 @@ HTTP admission. Tracing tests use local root metadata. OpenSearch integration
 remains unqualified when the external service is unavailable. No schema, migration,
 shared verification library or dependency change is implied.
 
+## Connector owned metadata reads and source admission
+
+The [actual connector application](../../backend/services/connector_service/app/main.py)
+and both routers apply an [exact source gate](../../backend/services/connector_service/app/core/security.py)
+before handler dependencies. GET `/` and `/health` remain local metadata only.
+The two business reads, GET `/api/v1/connectors` and `/api/v1/connectors/{connector_id}`,
+require a strict direct bearer, current IAM receipt/user contract and owned
+`IAM_USER_CLIENT_BINDINGS` registration plus an exact `CONNECTOR_METADATA_READERS`
+grant. Grants name `issuer`, `client_id`, canonical UUID `tenant_id` and `subject_id`,
+and `permission: connector.read_owned`, and must reference an owned registration.
+Both lists default empty. User classification, administrator role, workload token,
+forwarded tenant or debug mode cannot independently grant a read.
+
+[The owned reader](../../backend/services/connector_service/app/services/connector_reader.py)
+selects only ID, tenant, type, name, status, sync timestamp and creation/update
+metadata. SQL never selects credentials, sync settings or raw provider errors.
+The response retains its existing shape with `error_message: null`; stored rows
+are not mutated. Tenant and resource predicates bind exact UUIDs, contradictory
+row ownership/targets fail closed, and list ordering is stable by ID. The list
+accepts only one each of `skip` (0–10,000) and `limit` (1–100, default 100), within
+a 64-byte query; detail accepts no query. Canonical targets, matching optional
+hints and no body are required before the shared tenant-session dependency.
+Genuine empty data stays empty, absent owned detail is 404, and store/projection/
+session failures are generic 503. Function-scoped cleanup finishes before success.
+This column allowlist is not a general redaction review of arbitrary stored names.
+
+All 12 existing method/path declarations remain. The other eight operations,
+create/update/delete, manual/all sync, provider connection test and OAuth init/
+callback, are unavailable and required restoration work. Raw state/code/tenant
+fields do not establish OAuth authority or open unscoped sessions. Legacy unscoped
+and raw-UUID session helpers deny. The old ingestion sender refuses delivery before
+using credentials or network: shared-token/header/body forwarding cannot satisfy
+ingestion's workload contract, and no fake success replaces delivery. Direct
+provider/sync/worker methods still require their own authority and qualification;
+this HTTP boundary does not clear those library paths.
+
+Import-time table creation is removed. Provider/OAuth service imports are lazy,
+behind unavailable operation handlers, so metadata assembly needs no provider SDK
+replacement. ORM mappings, declared SDK requirements and provider implementations
+are unchanged. The existing review dependency graph does not install or qualify
+all connector SDKs. The physical `connector_configs` table/search path, managed
+Flyway/model ownership, read roles/RLS, legacy data/credential encryption, upgrades,
+restore and deployed runtime still require explicit adoption; no schema was added.
+OAuth needs owned client/redirect/state expiry/one-time replay/PKCE and callback
+binding, protected token persistence and real provider effects. Sync needs exact
+actor/tenant/resource/version/source/target permission, workload issuance, provider
+credential ownership, durable ingestion acceptance/checkpoint/retry and effect
+verification. The AWS test stub must not claim real success when implemented work
+is missing. All browser/proxy/scheduler/operator contracts remain required.
+
+`make preview-connector-identity` mounts the actual application and reader, runs
+current IAM RSA validation in a separate process with key/HTTP doubles, inspects
+real ORM column selection/predicates and uses session/query-result doubles. There
+are no identity/admission overrides or provider SDK replacements. It checks owned
+reads, credential/error withholding, resource/tenant contradictions, signature and
+receipt failures, raw credential/hint/query/target denials, unavailable routes,
+standalone routers, future aliases, helpers and cleanup failures. Legacy tests that
+accepted raw header or callback state now assert unavailability; global SDK/service/
+DDL substitutes were removed from their harness. Neither source tests nor health
+metadata establish provider, SQL/RLS, OAuth, ingestion or full runtime equivalence.
+
 ## Qualification and remaining work
 
 `make preview-gateway-identity` retains the real generated RSA/current IAM validator

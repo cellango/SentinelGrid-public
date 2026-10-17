@@ -171,3 +171,14 @@ override canonical tenant context. Actual-assembly/current-IAM checks use key/HT
 doubles and the real local metrics renderer, with no admission override. Workload
 issuance, source/body/replay binding, trusted scrape/probe clients, queue/delivery/
 OpenSearch/model effects, deployment and full runtime qualification remain open.
+
+
+The [connector source boundary](docs/architecture/gateway-identity.md#connector-owned-metadata-reads-and-source-admission)
+preserves 12 method/path declarations. Two tenant-owned metadata reads require exact
+registered reader grants and select no credential, sync-setting or provider-error
+columns. Eight write/sync/provider-test/OAuth operations remain unavailable and
+required restoration work. Import-time DDL is removed; raw tenant/state helpers and
+shared-token ingestion forwarding deny. Actual-assembly/current-IAM checks use key/
+HTTP/session/result doubles without admission or provider-SDK substitutes. Managed
+schema/Flyway/RLS/data/encryption, real SDK/provider/OAuth/workload/delivery and full
+runtime qualification remain open.

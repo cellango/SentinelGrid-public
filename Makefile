@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -49,6 +49,10 @@ preview-check:
 	$(MAKE) preview-orchestrator-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-soar-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-ingestion-identity PYTHON="$(PYTHON)"
+	$(MAKE) preview-connector-identity PYTHON="$(PYTHON)"
+
+preview-connector-identity:
+	$(PYTHON) -m pytest -c backend/services/connector_service/tests/pytest-identity.ini backend/services/connector_service/tests/test_connector_identity_boundary.py -q
 
 preview-ingestion-identity:
 	$(PYTHON) -m pytest -c backend/services/ingestion_service/tests/pytest-identity.ini backend/services/ingestion_service/tests/test_ingestion_identity_boundary.py -q

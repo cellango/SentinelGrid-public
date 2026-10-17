@@ -1,10 +1,10 @@
 """Connector Service - Main application."""
 
 import logging
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.core.database import engine, Base
+from app.core.security import require_connector_request
 from app.api import connectors
 
 logging.basicConfig(
@@ -13,14 +13,17 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Schema ownership and upgrades require a reviewed Flyway profile; no import-time DDL.
 
 app = FastAPI(
     title="SentinelGrid Connector Service",
     description="Identity and Cloud connector service",
-    version=settings.VERSION
+    version=settings.VERSION,
+    dependencies=[Depends(require_connector_request)],
 )
+
+app.state.iam_verification_settings = settings.verification_settings()
+app.state.connector_principal_settings = settings.principal_settings()
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,41 +1,12 @@
-"""Service for sending events to ingestion service."""
+"""Event delivery requires the owned ingestion workload and acceptance contract."""
 
-import logging
-import httpx
-from typing import List, Dict, Any
-from app.core.config import settings
-
-logger = logging.getLogger(__name__)
+from typing import Any
 
 
-def send_to_ingestion(tenant_id: str, events: List[Dict[str, Any]]) -> None:
+def send_to_ingestion(tenant_id: str, events: list[dict[str, Any]]) -> None:
+    """Legacy caller cannot promote a static token plus tenant/body into authority.
+
+    Retain real delivery as required restoration work; never report fake success.
+    No credentials, event data or network destination are used by this guard.
     """
-    Send events to ingestion service.
-    
-    Args:
-        tenant_id: Tenant ID
-        events: List of event dictionaries
-    """
-    url = f"{settings.INGESTION_SERVICE_URL}/ingest/events"
-    
-    try:
-        with httpx.Client(timeout=30.0) as client:
-            response = client.post(
-                url,
-                json={
-                    "events": events,
-                    "tenant_id": tenant_id,
-                },
-                headers={
-                    "Authorization": f"Bearer {settings.INTERNAL_SERVICE_TOKEN}",
-                    "X-Tenant-ID": tenant_id,
-                    "Content-Type": "application/json",
-                },
-            )
-            response.raise_for_status()
-            logger.info(f"Successfully sent {len(events)} events to ingestion service")
-    
-    except Exception as e:
-        logger.error(f"Failed to send events to ingestion service: {e}")
-        raise
-
+    raise RuntimeError("Owned ingestion workload and delivery contract required")
