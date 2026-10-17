@@ -11,7 +11,7 @@ class RawEvent(BaseModel):
     source: str  # google_workspace, aws_cloudtrail, etc.
     timestamp: datetime
     raw_data: Dict[str, Any]
-    tenant_id: Optional[str] = None  # May be provided by connector
+    tenant_id: Optional[str] = None  # Optional hint; must match the verified tenant
     metadata: Optional[Dict[str, Any]] = None
     edr_source: Optional[str] = None  # Optional hint for endpoint data source
     sidecar_enabled: Optional[bool] = None  # Whether an endpoint sidecar produced the event
@@ -54,7 +54,7 @@ class IngestEvent(BaseModel):
 class IngestBatchRequest(BaseModel):
     """Batch ingestion request."""
     events: List[RawEvent]
-    tenant_id: Optional[str] = None  # Override tenant_id if not in events
+    tenant_id: Optional[str] = None  # Optional hint; cannot override caller context
 
 
 class IngestResponse(BaseModel):

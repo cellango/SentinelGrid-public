@@ -1,109 +1,144 @@
-"""Security utilities for Ingestion Service."""
+"""Exact ingestion HTTP source admission; no forwarded tenant or debug authority."""
 
-from typing import Optional
-from fastapi import HTTPException, Security, Request, Depends, status, Header
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-import os
-import httpx
-from functools import lru_cache
-from app.core.config import settings
-from sg_core.request_tracing import build_trace_headers
+from dataclasses import dataclass
+from uuid import UUID
+from fastapi import HTTPException, Request, Security
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from app.core.principal_policy import IngestionPrincipalSettings
+from sg_core.iam_verification import IAMVerificationSettings
+from sg_core.request_credentials import request_bearer_token
+from sg_core.security import get_verified_request_identity
+from sg_core.user_principals import require_user_binding
 
-security = HTTPBearer(auto_error=False)
+_BEARER_DOCUMENTATION = HTTPBearer(auto_error=False)
+_RUNTIME = frozenset(
+    {
+        ("GET", "/metrics", "app.main", "metrics"),
+        ("GET", "/metrics/prometheus", "app.main", "metrics_prometheus"),
+    }
+)
+
+
+@dataclass(frozen=True)
+class RuntimeReadContext:
+    """Constructing this object grants no event, tenant or operator authority."""
+
+    reader_tenant_id: UUID
+    subject_id: UUID
+    permission: str
+    scope: str
+
+
+def require_ingestion_request(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials | None = Security(_BEARER_DOCUMENTATION),
+) -> RuntimeReadContext | None:
+    endpoint = request.scope.get("endpoint")
+    path = request.scope.get("path", "")
+    operation = (
+        request.method,
+        path,
+        getattr(endpoint, "__module__", None),
+        getattr(endpoint, "__name__", None),
+    )
+    if operation == ("GET", "/", "app.main", "root"):
+        return None
+    if operation not in _RUNTIME:
+        raise HTTPException(
+            503,
+            "Ingestion operation requires an owned workload or operational contract",
+        )
+    request_bearer_token(request)
+    if not isinstance(
+        getattr(request.app.state, "iam_verification_settings", None),
+        IAMVerificationSettings,
+    ):
+        raise HTTPException(503, "Ingestion verifier configuration unavailable")
+    identity = get_verified_request_identity(request)
+    policy = getattr(request.app.state, "ingestion_principal_settings", None)
+    if not isinstance(policy, IngestionPrincipalSettings):
+        raise HTTPException(503, "Ingestion identity configuration unavailable")
+    binding = require_user_binding(identity.payload(), config=policy)
+    if not any(
+        (
+            g.issuer,
+            g.client_id,
+            g.tenant_id,
+            g.subject_id,
+            g.service,
+            g.scope,
+            g.permission,
+        )
+        == (
+            binding.issuer,
+            binding.client_id,
+            identity.tenant_id,
+            identity.user_id,
+            "ingestion-service",
+            "service_runtime",
+            "ingestion.read_runtime",
+        )
+        for g in policy.INGESTION_RUNTIME_READERS
+    ):
+        raise HTTPException(
+            403, "Explicit service-wide runtime reader permission required"
+        )
+    raw = request.scope.get("raw_path")
+    if (
+        request.scope.get("root_path")
+        or not isinstance(raw, bytes)
+        or raw != path.encode("ascii")
+    ):
+        raise HTTPException(403, "Ambiguous ingestion runtime read target")
+    for name, expected in {
+        "x-tenant-id": identity.tenant_id,
+        "x-realm": binding.issuer.rsplit("/realms/", 1)[1],
+    }.items():
+        values = request.headers.getlist(name)
+        if len(values) > 1 or values and values[0] != expected:
+            raise HTTPException(403, "Conflicting identity context")
+    if any(
+        name in request.headers
+        for name in (
+            "x-user-id",
+            "x-roles",
+            "x-internal-token",
+            "x-internal-service-token",
+            "x-api-key",
+        )
+    ):
+        raise HTTPException(403, "Conflicting identity context")
+    # Global runtime metrics are explicitly service-wide, never selected by a tenant hint.
+    if len(request.scope.get("query_string", b"")) > 64:
+        raise HTTPException(400, "Runtime read query too large")
+    query = request.query_params
+    if query and (
+        path != "/metrics"
+        or set(query) != {"format"}
+        or query.getlist("format") != ["prometheus"]
+    ):
+        raise HTTPException(400, "Unsupported or ambiguous runtime read query")
+    if (
+        request.headers.get("content-length", "0") != "0"
+        or "transfer-encoding" in request.headers
+    ):
+        raise HTTPException(400, "Runtime read body is unsupported")
+    return RuntimeReadContext(
+        UUID(identity.tenant_id),
+        UUID(identity.user_id),
+        "ingestion.read_runtime",
+        "service_runtime",
+    )
 
 
 async def verify_token_with_iam_agent(token: str) -> dict:
-    """
-    Verify JWT token using IAM Agent service.
-    Returns validated token payload with tenant_id and roles.
-    """
-    if settings.DEBUG_MODE and token == "dev-token":
-        # Allow a simple dev token in debug mode
-        return {
-            "valid": True,
-            "payload": {"sub": "dev-user", "tenant_id": "dev-tenant", "roles": ["admin"]},
-            "tenant_id": "dev-tenant",
-            "roles": ["admin"],
-            "user_id": "dev-user"
-        }
-    
-    try:
-        async with httpx.AsyncClient(timeout=5.0, verify=settings.UPSTREAM_TLS_VERIFY) as client:
-            response = await client.post(
-                f"{settings.IAM_AGENT_URL}/internal/iam/auth/validate-token",
-                json={"token": token},
-                headers=build_trace_headers(),
-            )
-            response.raise_for_status()
-            result = response.json()
-
-            if not result.get("valid"):
-                error = result.get("error", "Token validation failed")
-                raise HTTPException(status_code=401, detail=f"Invalid token: {error}")
-
-            payload = result.get("payload", {})
-            payload["tenant_id"] = result.get("tenant_id")
-            payload["roles"] = result.get("roles", [])
-            payload["user_id"] = result.get("user_id")
-
-            return payload
-
-    except httpx.RequestError as e:
-        raise HTTPException(
-            status_code=503,
-            detail=f"Failed to connect to IAM Agent: {str(e)}"
-        )
-    except httpx.HTTPStatusError as e:
-        if e.response.status_code == 401:
-            raise HTTPException(status_code=401, detail="Invalid token")
-        raise HTTPException(
-            status_code=503,
-            detail=f"IAM Agent error: {str(e)}"
-        )
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Token validation error: {str(e)}"
-        )
+    """Legacy token-only helper cannot establish an owned operation contract."""
+    raise HTTPException(503, "Owned ingestion request identity required")
 
 
 async def get_current_tenant(
     request: Request,
-    credentials: Optional[HTTPAuthorizationCredentials] = Security(security),
-    x_tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID")
+    credentials: HTTPAuthorizationCredentials | None = Security(_BEARER_DOCUMENTATION),
 ) -> str:
-    """
-    FastAPI dependency to extract tenant_id from request.
-    Prioritizes X-Tenant-ID header for internal service calls,
-    then falls back to JWT token validation via IAM Agent.
-    """
-    # 1. Check for X-Tenant-ID header (for internal service communication)
-    if x_tenant_id:
-        request.state.tenant_id = x_tenant_id
-        return x_tenant_id
-
-    # 2. Validate JWT token via IAM Agent
-    if credentials:
-        token = credentials.credentials
-        payload = await verify_token_with_iam_agent(token)
-        tenant_id = payload.get("tenant_id")
-        if not tenant_id:
-            raise HTTPException(
-                status_code=403,
-                detail="No tenant_id in token. User must be assigned to a tenant."
-            )
-        request.state.tenant_id = tenant_id
-        return tenant_id
-    
-    # 3. Fallback for development/testing if no token or header
-    if settings.DEBUG_MODE:
-        dev_tenant_id = os.getenv("DEV_TENANT_ID", "9c7df7a9-5a0b-4412-a41c-0c0ea777b2f0")
-        request.state.tenant_id = dev_tenant_id
-        return dev_tenant_id
-
-    raise HTTPException(
-        status_code=401,
-        detail="Not authenticated: Missing X-Tenant-ID header or valid JWT token"
-    )
+    """Event writes need an owned workload contract; runtime readers cannot ingest."""
+    raise HTTPException(503, "Owned ingestion workload and effect contract required")

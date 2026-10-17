@@ -160,3 +160,14 @@ Read-session failure cannot report success. Current-RSA/actual-assembly tests us
 key/HTTP/session/storage doubles; physical schema/Flyway/read-role/RLS, saved workflow
 redaction, live provider/caller and execution qualifications remain open. No engine
 replacement, supported runtime or change to the frozen published release is implied.
+
+
+The [ingestion source boundary](docs/architecture/gateway-identity.md#ingestion-runtime-reader-and-source-admission)
+preserves seven method/path pairs. Only root metadata is public; the two metrics
+GETs require an exact registered service-wide runtime reader. Ingest/flush and
+global health/readiness remain unavailable and required restoration work. Headers,
+debug tokens and body tenants cannot confer authority. Internal body hints cannot
+override canonical tenant context. Actual-assembly/current-IAM checks use key/HTTP
+doubles and the real local metrics renderer, with no admission override. Workload
+issuance, source/body/replay binding, trusted scrape/probe clients, queue/delivery/
+OpenSearch/model effects, deployment and full runtime qualification remain open.

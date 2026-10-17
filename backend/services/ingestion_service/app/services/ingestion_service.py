@@ -2,7 +2,7 @@
 
 import logging
 from typing import List, Tuple
-from uuid import uuid4
+from uuid import UUID, uuid4
 from app.models.event import RawEvent, IngestEvent, IngestBatchRequest, IngestResponse
 from app.services.normalizer import ECSNormalizer
 from app.services.validator import EventValidator
@@ -38,11 +38,11 @@ class IngestionService:
         Returns:
             Ingestion response with counts and errors
         """
-        # Use tenant_id from request if provided, otherwise use context
-        effective_tenant_id = request.tenant_id or tenant_id
-        
-        if not effective_tenant_id:
-            raise ValueError("tenant_id is required")
+        # The caller must supply verified workload authority separately. Body fields
+        # are matching hints only; this internal argument is never body-overridden.
+        effective_tenant_id = self._canonical_tenant(tenant_id)
+        if request.tenant_id is not None and request.tenant_id != effective_tenant_id:
+            raise ValueError("tenant_id mismatch between batch and auth context")
         
         ingested_count = 0
         failed_count = 0
@@ -114,4 +114,14 @@ class IngestionService:
         Args:
             tenant_id: Tenant ID
         """
-        await self.batch_processor._flush_batch(tenant_id)
+        await self.batch_processor._flush_batch(self._canonical_tenant(tenant_id))
+
+    @staticmethod
+    def _canonical_tenant(tenant_id: str) -> str:
+        try:
+            value = UUID(tenant_id)
+            if not value.int or str(value) != tenant_id:
+                raise ValueError()
+        except (ValueError, TypeError, AttributeError):
+            raise ValueError("Expected a canonical non-nil tenant UUID") from None
+        return tenant_id

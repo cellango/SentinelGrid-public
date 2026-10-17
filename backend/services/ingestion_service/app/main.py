@@ -1,10 +1,11 @@
 """Ingestion Service - Main application."""
 
 import asyncio
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 from app.core.config import settings
+from app.core.security import require_ingestion_request
 from app.api import ingest
 from app.services.batch_processor import get_batch_processor
 from sg_core.request_tracing import RequestTracingMiddleware, configure_logging
@@ -18,8 +19,12 @@ PROMETHEUS_MEDIA_TYPE = "text/plain; version=0.0.4; charset=utf-8"
 app = FastAPI(
     title="SentinelGrid Ingestion Service",
     description="Event ingestion and normalization service",
-    version=settings.VERSION
+    version=settings.VERSION,
+    dependencies=[Depends(require_ingestion_request)],
 )
+
+app.state.iam_verification_settings = settings.verification_settings()
+app.state.ingestion_principal_settings = settings.principal_settings()
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,9 +59,12 @@ def health_check():
 
 
 def _metrics_response(format: str | None = None):
-    if format == "prometheus":
-        return PlainTextResponse(runtime_metrics.prometheus_text(), media_type=PROMETHEUS_MEDIA_TYPE)
-    return runtime_metrics.snapshot()
+    try:
+        if format == "prometheus":
+            return PlainTextResponse(runtime_metrics.prometheus_text(), media_type=PROMETHEUS_MEDIA_TYPE)
+        return runtime_metrics.snapshot()
+    except Exception:
+        raise HTTPException(503, "Ingestion runtime metrics unavailable") from None
 
 
 @app.get("/metrics")

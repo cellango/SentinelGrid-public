@@ -28,13 +28,13 @@ async def test_rejects_cross_tenant_event():
                 event_type="netflow",
                 source="wazuh",
                 timestamp=datetime.now(timezone.utc),
-                tenant_id="tenant-b",
+                tenant_id="44444444-4444-4444-8444-444444444444",
                 raw_data={"message": "cross-tenant"},
             )
         ]
     )
 
-    resp = await svc.ingest_batch(request, tenant_id="tenant-a")
+    resp = await svc.ingest_batch(request, tenant_id="11111111-1111-4111-8111-111111111111")
 
     assert resp.ingested_count == 0
     assert resp.failed_count == 1
@@ -65,10 +65,10 @@ async def test_batch_processor_scoped_per_tenant():
         ]
     )
 
-    resp = await svc.ingest_batch(request, tenant_id="tenant-123")
+    resp = await svc.ingest_batch(request, tenant_id="11111111-1111-4111-8111-111111111111")
 
     assert resp.ingested_count == 2
     assert resp.failed_count == 0
     assert len(dummy_batch.calls) == 2
     for tenant_id_used, _ in dummy_batch.calls:
-        assert tenant_id_used == "tenant-123"
+        assert tenant_id_used == "11111111-1111-4111-8111-111111111111"

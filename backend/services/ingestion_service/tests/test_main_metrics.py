@@ -1,4 +1,3 @@
-from fastapi.testclient import TestClient
 
 import app.main as ingestion_main
 from sg_core.service_metrics import get_service_metrics, reset_service_metrics
@@ -28,11 +27,10 @@ def test_health_exposes_aggregate_queue_and_embedding_summary(monkeypatch):
     reset_service_metrics("ingestion-service")
     monkeypatch.setattr(ingestion_main, "get_batch_processor", lambda: DummyBatchProcessor())
 
-    client = TestClient(ingestion_main.app)
-    response = client.get("/health")
+    # Component rendering only; actual source gate/authorization is tested separately.
+    response = ingestion_main.health_check()
 
-    assert response.status_code == 200
-    assert response.json() == {
+    assert response == {
         "status": "healthy",
         "service": "ingestion-service",
         "version": ingestion_main.settings.VERSION,
@@ -51,7 +49,7 @@ def test_health_exposes_aggregate_queue_and_embedding_summary(monkeypatch):
             "cap_limit_per_tenant": 200,
         },
     }
-    assert "tenant-a" not in response.text
+    assert "tenant-a" not in str(response)
 
 
 def test_metrics_endpoint_returns_runtime_snapshot():
@@ -60,11 +58,8 @@ def test_metrics_endpoint_returns_runtime_snapshot():
     runtime_metrics.increment_counter("ingestion_batches_received_total", outcome="success")
     runtime_metrics.set_gauge("ingestion_pending_events", 3)
 
-    client = TestClient(ingestion_main.app)
-    response = client.get("/metrics")
-
-    assert response.status_code == 200
-    payload = response.json()
+    # Direct component unit call does not qualify HTTP runtime-reader authority.
+    payload = ingestion_main.metrics()
     assert payload["service"] == "ingestion-service"
     assert payload["counters"]["ingestion_batches_received_total"]["series"]["outcome=success"] == 1
     assert payload["gauges"]["ingestion_pending_events"]["__base__"] == 3
@@ -76,10 +71,9 @@ def test_metrics_prometheus_endpoint_returns_prometheus_text():
     runtime_metrics.increment_counter("ingestion_batches_received_total", outcome="success")
     runtime_metrics.set_gauge("ingestion_pending_events", 3)
 
-    client = TestClient(ingestion_main.app)
-    response = client.get("/metrics/prometheus")
+    response = ingestion_main.metrics_prometheus()
 
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/plain")
-    assert 'ingestion_batches_received_total{outcome="success",service="ingestion-service"} 1.0' in response.text
-    assert 'ingestion_pending_events{service="ingestion-service"} 3' in response.text
+    assert 'ingestion_batches_received_total{outcome="success",service="ingestion-service"} 1.0' in response.body.decode()
+    assert 'ingestion_pending_events{service="ingestion-service"} 3' in response.body.decode()

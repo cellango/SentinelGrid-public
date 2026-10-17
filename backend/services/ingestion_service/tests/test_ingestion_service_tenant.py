@@ -28,13 +28,13 @@ async def test_tenant_mismatch_rejected(monkeypatch):
                 event_type="process",
                 source="openedr",
                 timestamp=datetime.now(timezone.utc),
-                tenant_id="tenant-b",
+                tenant_id="44444444-4444-4444-8444-444444444444",
                 raw_data={"foo": "bar"},
             )
         ]
     )
 
-    response = await service.ingest_batch(request, tenant_id="tenant-a")
+    response = await service.ingest_batch(request, tenant_id="11111111-1111-4111-8111-111111111111")
 
     assert response.ingested_count == 0
     assert response.failed_count == 1
@@ -59,14 +59,14 @@ async def test_tenant_defaults_to_auth_context(monkeypatch):
         ]
     )
 
-    response = await service.ingest_batch(request, tenant_id="tenant-a")
+    response = await service.ingest_batch(request, tenant_id="11111111-1111-4111-8111-111111111111")
 
     assert response.ingested_count == 1
     assert response.failed_count == 0
     assert len(dummy_batch.calls) == 1
     tenant_id_used, ingest_event = dummy_batch.calls[0]
-    assert tenant_id_used == "tenant-a"
-    assert ingest_event.ecs_fields.tenant_id == "tenant-a"
+    assert tenant_id_used == "11111111-1111-4111-8111-111111111111"
+    assert ingest_event.ecs_fields.tenant_id == "11111111-1111-4111-8111-111111111111"
 
 
 @pytest.mark.asyncio
@@ -88,7 +88,7 @@ async def test_edr_source_and_sidecar_propagate(monkeypatch):
         ]
     )
 
-    response = await service.ingest_batch(request, tenant_id="tenant-x")
+    response = await service.ingest_batch(request, tenant_id="11111111-1111-4111-8111-111111111111")
 
     assert response.ingested_count == 1
     assert response.failed_count == 0

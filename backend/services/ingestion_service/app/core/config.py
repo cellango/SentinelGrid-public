@@ -3,7 +3,11 @@
 import os
 from typing import Optional
 
+from pydantic import Field, model_validator
 from pydantic_settings import SettingsConfigDict
+from sg_core.iam_verification import IAMVerificationSettings
+from sg_core.user_principals import UserClientBinding
+from app.core.principal_policy import IngestionPrincipalSettings, RuntimeReader
 
 from sg_core.service_security import ServiceSecuritySettings
 
@@ -20,6 +24,11 @@ class Settings(ServiceSecuritySettings):
     # SIEM Agent configuration (where events are sent)
     SIEM_AGENT_URL: str = os.getenv("SIEM_AGENT_URL", "http://siem_agent:8000")
     IAM_AGENT_URL: str = os.getenv("IAM_AGENT_URL", "http://iam_agent:8000")
+    KEYCLOAK_CLIENT_ID: str = "sentinelgrid-web"
+    IAM_TOKEN_VALIDATION_TIMEOUT: float = Field(default=5.0, gt=0, le=10, allow_inf_nan=False)
+    IAM_VERIFIER_CA_BUNDLE: str | None = None
+    IAM_USER_CLIENT_BINDINGS: tuple[UserClientBinding, ...] = Field(default=(), max_length=256)
+    INGESTION_RUNTIME_READERS: tuple[RuntimeReader, ...] = Field(default=(), max_length=256)
     # OpenSearch configuration (direct ingest target)
     OPENSEARCH_URL: str = os.getenv("OPENSEARCH_URL", "http://opensearch:9200")
     OPENSEARCH_USERNAME: Optional[str] = os.getenv("OPENSEARCH_USERNAME")
@@ -46,4 +55,19 @@ class Settings(ServiceSecuritySettings):
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
     DEBUG_MODE: bool = os.getenv("DEBUG_MODE", "False").lower() == "true"
+    @model_validator(mode="after")
+    def _validate_owned_identity(self):
+        self.verification_settings()
+        self.principal_settings()
+        return self
+
+    def verification_settings(self) -> IAMVerificationSettings:
+        names = {"ENVIRONMENT", "IAM_AGENT_URL", "KEYCLOAK_CLIENT_ID", "IAM_TOKEN_VALIDATION_TIMEOUT", "IAM_VERIFIER_CA_BUNDLE"}
+        return IAMVerificationSettings(_env_file=None, **self.model_dump(include=names))
+
+    def principal_settings(self) -> IngestionPrincipalSettings:
+        return IngestionPrincipalSettings(_env_file=None, ENVIRONMENT=self.ENVIRONMENT,
+            IAM_USER_CLIENT_BINDINGS=self.IAM_USER_CLIENT_BINDINGS, INGESTION_RUNTIME_READERS=self.INGESTION_RUNTIME_READERS)
+
+
 settings = Settings()

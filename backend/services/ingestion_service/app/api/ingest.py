@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException, status, Header
 from typing import Optional
 from app.models.event import IngestBatchRequest, IngestResponse
 from app.services.ingestion_service import IngestionService
-from app.core.security import get_current_tenant
+from app.core.security import get_current_tenant, require_ingestion_request
 
-router = APIRouter(prefix="/ingest", tags=["ingestion"])
+router = APIRouter(prefix="/ingest", tags=["ingestion"], dependencies=[Depends(require_ingestion_request)])
 
 
 def get_ingestion_service() -> IngestionService:

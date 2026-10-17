@@ -345,6 +345,65 @@ still require an owned managed profile and are not advertised as passing runtime
 qualification. No workload issuer, live provider registration/client/grant policy,
 shared catalog, action approval/audit/effect or full feature migration is qualified.
 
+## Ingestion runtime reader and source admission
+
+The [actual ingestion application](../../backend/services/ingestion_service/app/main.py)
+and its ingest router apply an [exact source gate](../../backend/services/ingestion_service/app/core/security.py)
+before handler dependencies. Only GET `/` exposes public local metadata. The two
+existing metrics routes, GET `/metrics` and `/metrics/prometheus`, require a strict
+direct bearer, the current IAM receipt/user contract and an owned
+`IAM_USER_CLIENT_BINDINGS` registration. They additionally require an exact
+`INGESTION_RUNTIME_READERS` grant naming `issuer`, `client_id`, canonical UUID
+`tenant_id` and `subject_id`, `service: ingestion-service`, `scope: service_runtime`
+and `permission: ingestion.read_runtime`. Each grant must reference an owned user
+registration. Both lists default empty. A role, tenant reader or workload JWT
+cannot grant access to service-wide metrics. These grants deliberately cover the
+whole process runtime, including aggregate activity across tenants; the reader's
+tenant identifies the operator and never selects a tenant metrics view.
+
+Verifier/policy snapshots come from ingestion's owned settings, with the same IAM
+origin/audience/timeout/CA rules above. Debug mode, a development token, tenant
+header, shared credential, API key or cookie-only session cannot establish direct
+operator authority. Matching tenant/realm hints are optional; conflicts, duplicates
+and forwarded actor/role/internal/API-key headers are rejected. Canonical read paths
+accept no body; `/metrics` permits only one optional `format=prometheus` query,
+while `/metrics/prometheus` accepts none. Queries are bounded to 64 bytes. The
+handlers render the actual in-memory metrics store without constructing a batch
+processor or probing any dependency. Rendering errors return a generic 503.
+
+All seven unique existing method/path pairs remain. The other four operations,
+POST `/ingest/events`, POST `/ingest/events/flush`, GET `/health` and GET `/ready`,
+are unavailable and remain required restoration work. Health currently exposes
+global queue/embedding summaries and constructs the batch processor; readiness
+probes upstream services and records global state. They need explicit operator or
+workload identity and trusted probe/scrape ingress contracts. Metrics source tests
+do not qualify Prometheus credentials, blackbox probes, ingress, TLS deployment or
+live operator registration; the configured existing callers still need migration.
+
+Event ingestion/flush need owned producing-workload issuance and credentials,
+exact tenant/source/target/body/replay/budget contracts, durable acceptance and
+honest OpenSearch/model delivery evidence. Connector static-token/header/body
+forwarding, browser callers, scripts and cloud collectors cannot regain access
+through fabricated users. Legacy token-only and raw-tenant dependencies deny in
+all environments. Internal `IngestionService` calls now require a canonical
+non-nil tenant argument, and batch `tenant_id` is only a matching hint; it cannot
+override that argument. Individual event mismatches stay rejected and raw payload
+fields never select the normalized tenant. An internal UUID argument alone still
+does not authenticate a worker or authorize ingestion. Full queue loss/retry,
+partial-bulk errors, embedding credentials/TLS/budgets and effect verification
+remain required; no event or provider operation is enabled by this source gate.
+
+`make preview-ingestion-identity` mounts the actual assembly, uses the current IAM
+RSA validator in a separate process with key/HTTP doubles, and renders the real
+metrics store without identity/admission overrides. It checks positive explicit
+service-wide grants and forged/expired/foreign/ambiguous/missing/unavailable
+identity, exact raw queries/targets, denied operations before effects, standalone
+router/future-route denial and direct-service tenant invariants. Legacy metric and
+probe rendering tests now call component functions directly; they do not qualify
+HTTP admission. Tracing tests use local root metadata. OpenSearch integration
+remains unqualified when the external service is unavailable. No schema, migration,
+shared verification library or dependency change is implied.
+
 ## Qualification and remaining work
 
 `make preview-gateway-identity` retains the real generated RSA/current IAM validator
