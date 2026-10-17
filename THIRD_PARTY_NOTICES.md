@@ -15,7 +15,7 @@ Third-party material retains its own terms. See [LICENSING.md](LICENSING.md),
 | DM Sans | [Upstream OFL](https://github.com/google/fonts/blob/main/ofl/dmsans/OFL.txt); [local notice](third_party/licenses/dm-sans-OFL.txt) | Font-loading reference only; no font binaries retained |
 | IBM Plex Sans | [Upstream OFL](https://github.com/google/fonts/blob/main/ofl/ibmplexsans/OFL.txt); [local notice](third_party/licenses/ibm-plex-sans-OFL.txt) | Font-loading reference only; no font binaries retained |
 | JetBrains Mono | [Upstream OFL](https://github.com/google/fonts/blob/main/ofl/jetbrainsmono/OFL.txt); [local notice](third_party/licenses/jetbrains-mono-OFL.txt) | Font-loading reference only; no font binaries retained |
-| Python and main frontend preview dependencies | [Resolved license inventory](third_party/preview-dependencies.json) and [Task 8 review](docs/release/dependencies.md) | 42 Python pins and 828 npm entries, including LGPL/MPL and native-package terms; installed implementations and binaries are not redistributed |
+| Python and main frontend preview dependencies | [Resolved license inventory](third_party/preview-dependencies.json) and [Task 8 review](docs/release/dependencies.md) | 54 Python source-test pins and 828 npm entries, including LGPL/MPL and native-package terms; installed implementations and binaries are not redistributed |
 | Other Go, Python/npm runtime, CI, container, infrastructure, and tool dependencies | [Manifest catalog](publication/dependency-manifests.json), workflow pins, and upstream projects | Experimental references; complete runtime/bundle resolution and redistribution remain outside this preview |
 
 The six Next.js starter assets are `website/app/favicon.ico` and

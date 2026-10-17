@@ -2,16 +2,20 @@
 
 import logging
 from mcp.server import Server
-from mcp.types import Tool, TextContent
+from mcp.shared.exceptions import McpError
+from mcp.types import (Tool, TextContent, CallToolResult, CallToolRequest, ServerResult, ErrorData, INVALID_PARAMS)
 
-from app.tools import siem_tools, soar_tools, iam_tools, observable_tools
+from app.core.tool_admission import WIRE_TOOL_MAP, UNAVAILABLE_MESSAGE
 
 logger = logging.getLogger(__name__)
 
 
 def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
     """
-    Create the SentinelGrid Core MCP server.
+    Create discovery metadata and an explicitly unavailable execution surface.
+
+    Legacy tenant_id/user_id arguments are retained for source compatibility only;
+    they confer no identity or permissions. No downstream tool module is imported.
     
     Args:
         tenant_id: Tenant ID for multi-tenancy
@@ -25,7 +29,7 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
     # SIEM Tools
     @server.list_tools()
     async def list_tools() -> list[Tool]:
-        return [
+        tools = [
             # SIEM Tools
             Tool(
                 name="search_logs",
@@ -269,56 +273,23 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                 }
             ),
         ]
-    
-    @server.call_tool()
-    async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-        """Handle tool calls."""
-        try:
-            # Add tenant_id and user_id to all tool calls
-            arguments["tenant_id"] = tenant_id
-            arguments["user_id"] = user_id
-            
-            # Route to appropriate tool
-            if name == "search_logs":
-                result = await siem_tools.search_logs(**arguments)
-            elif name == "get_detections":
-                result = await siem_tools.get_detections(**arguments)
-            elif name == "get_incidents":
-                result = await siem_tools.get_incidents(**arguments)
-            elif name == "create_incident":
-                result = await siem_tools.create_incident(**arguments)
-            elif name == "list_playbooks":
-                result = await soar_tools.list_playbooks(**arguments)
-            elif name == "get_playbook":
-                result = await soar_tools.get_playbook(**arguments)
-            elif name == "run_playbook":
-                result = await soar_tools.run_playbook(**arguments)
-            elif name == "get_playbook_execution":
-                result = await soar_tools.get_playbook_execution(**arguments)
-            elif name == "get_user":
-                result = await iam_tools.get_user(**arguments)
-            elif name == "lock_account":
-                result = await iam_tools.lock_account(**arguments)
-            elif name == "get_observable":
-                result = await observable_tools.get_observable(**arguments)
-            elif name == "search_observables":
-                result = await observable_tools.search_observables(**arguments)
-            else:
-                return [TextContent(type="text", text=f"Unknown tool: {name}")]
-            
-            # Return result
-            import json
-            return [TextContent(
-                type="text",
-                text=json.dumps(result, indent=2)
-            )]
-        
-        except Exception as e:
-            logger.error(f"Tool call failed: {name} - {e}")
-            return [TextContent(
-                type="text",
-                text=f"Error executing {name}: {str(e)}"
-            )]
-    
-    return server
+        for tool in tools:
+            tool.description = "Unavailable source-preview tool. " + (tool.description or "")
+        return tools
 
+    async def reject_unadmitted_call(request: CallToolRequest) -> ServerResult:
+        """Reject before argument traversal, mutation or downstream imports.
+
+        The source-preview transport has no verified caller/capabilities. Unknown
+        wire names are protocol errors; declared but unavailable operations are
+        explicit tool errors. No executable dispatcher is installed.
+        """
+        if request.params.name not in WIRE_TOOL_MAP:
+            raise McpError(ErrorData(code=INVALID_PARAMS, message="Unknown MCP tool"))
+        return ServerResult(CallToolResult(
+            isError=True,
+            content=[TextContent(type="text", text=UNAVAILABLE_MESSAGE)],
+        ))
+
+    server.request_handlers[CallToolRequest] = reject_unadmitted_call
+    return server

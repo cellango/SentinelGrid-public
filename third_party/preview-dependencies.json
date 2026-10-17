@@ -1,13 +1,21 @@
 {
   "format_version": 1,
-  "review_date": "2026-10-15",
+  "review_date": "2026-10-17",
   "scope": "Dependencies referenced by the supported source-preview checks; installed implementations/binaries are not publication contents. License declarations do not relicense third-party code or certify generated bundles.",
   "python_input": {
     "path": "scripts/requirements-preview.txt",
-    "sha256": "ac476e0c32f1987c2f1836f92a56c28c799e06716f087a67fdc18d4a1bc8f2bf",
-    "packages": 43,
-    "upstream_artifact_hashes": 811,
-    "platforms": "Python 3.13 macOS arm64 and Ubuntu x86_64 source-preview checks; Task 10 adds the SQLAlchemy platform-specific greenlet pin"
+    "sha256": "70c7ae76419009bf734aefcba73ad221440fac936e8ca6404fe7a4171c4fbc6c",
+    "packages": 54,
+    "upstream_artifact_hashes": 959,
+    "platforms": "Current54pin graph: fresh Python3.13 macOS arm64 install/pip check. Historical43pin Ubuntu baseline retained; expanded Linux graph/hosted execution remains unqualified.",
+    "includes": [
+      {
+        "path": "scripts/requirements-mcp-sdk.txt",
+        "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873",
+        "packages": 11,
+        "upstream_artifact_hashes": 148
+      }
+    ]
   },
   "npm_input": {
     "manifest": "frontend/package.json",
@@ -65,6 +73,22 @@
       "release_artifact_hash_count": 2
     },
     {
+      "name": "attrs",
+      "version": "26.1.0",
+      "declared_license": "MIT",
+      "pypi_license_expression": "MIT",
+      "source": "https://pypi.org/project/attrs/26.1.0/",
+      "license_text_sha256": "882115c95dfc2af1eeb6714f8ec6d5cbcabf667caff8729f42420da63f714e9f",
+      "license_files": [
+        {
+          "path": "attrs-26.1.0.dist-info/licenses/LICENSE",
+          "sha256": "882115c95dfc2af1eeb6714f8ec6d5cbcabf667caff8729f42420da63f714e9f"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
+    },
+    {
       "name": "cachetools",
       "version": "5.5.2",
       "declared_license": "MIT License",
@@ -99,6 +123,22 @@
       "source": "https://pypi.org/project/charset-normalizer/3.5.2/",
       "license_text_sha256": "6d0d41bfe170ac6c7dc248c9a63e254d0fb45a60d50a8257d0af92c6e249b887",
       "release_artifact_hash_count": 172
+    },
+    {
+      "name": "click",
+      "version": "8.5.0",
+      "declared_license": "BSD-3-Clause",
+      "pypi_license_expression": "BSD-3-Clause",
+      "source": "https://pypi.org/project/click/8.5.0/",
+      "license_text_sha256": "9a8ad106a394e853bfe21f42f4e72d592819a22805d991b5f3275029292b658d",
+      "license_files": [
+        {
+          "path": "click-8.5.0.dist-info/licenses/LICENSE.txt",
+          "sha256": "9a8ad106a394e853bfe21f42f4e72d592819a22805d991b5f3275029292b658d"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
     },
     {
       "name": "cryptography",
@@ -176,6 +216,22 @@
       "release_artifact_hash_count": 2
     },
     {
+      "name": "httpx-sse",
+      "version": "0.4.3",
+      "declared_license": "MIT",
+      "pypi_license_expression": null,
+      "source": "https://pypi.org/project/httpx-sse/0.4.3/",
+      "license_text_sha256": "beec67e4ee83a7af26f242bed9987aa863d6d2dfb776106aa2360c4187f31901",
+      "license_files": [
+        {
+          "path": "httpx_sse-0.4.3.dist-info/licenses/LICENSE",
+          "sha256": "beec67e4ee83a7af26f242bed9987aa863d6d2dfb776106aa2360c4187f31901"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
+    },
+    {
       "name": "idna",
       "version": "3.20",
       "declared_license": "BSD-3-Clause",
@@ -194,6 +250,38 @@
       "release_artifact_hash_count": 2
     },
     {
+      "name": "jsonschema",
+      "version": "4.26.0",
+      "declared_license": "MIT",
+      "pypi_license_expression": "MIT",
+      "source": "https://pypi.org/project/jsonschema/4.26.0/",
+      "license_text_sha256": "4f92a015a13c4d1a040bef018aa13430b4f1bc73b41b16bb846c346766de7439",
+      "license_files": [
+        {
+          "path": "jsonschema-4.26.0.dist-info/licenses/COPYING",
+          "sha256": "4f92a015a13c4d1a040bef018aa13430b4f1bc73b41b16bb846c346766de7439"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
+    },
+    {
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1",
+      "declared_license": "MIT",
+      "pypi_license_expression": "MIT",
+      "source": "https://pypi.org/project/jsonschema-specifications/2025.9.1/",
+      "license_text_sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c",
+      "license_files": [
+        {
+          "path": "jsonschema_specifications-2025.9.1.dist-info/licenses/COPYING",
+          "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
+    },
+    {
       "name": "jwcrypto",
       "version": "1.6.1",
       "declared_license": "LGPL-3.0-or-later",
@@ -201,6 +289,22 @@
       "source": "https://pypi.org/project/jwcrypto/1.6.1/",
       "license_text_sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768",
       "release_artifact_hash_count": 2
+    },
+    {
+      "name": "mcp",
+      "version": "1.30.0",
+      "declared_license": "MIT",
+      "pypi_license_expression": null,
+      "source": "https://pypi.org/project/mcp/1.30.0/",
+      "license_text_sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d",
+      "license_files": [
+        {
+          "path": "mcp-1.30.0.dist-info/licenses/LICENSE",
+          "sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
     },
     {
       "name": "opentelemetry-api",
@@ -339,6 +443,22 @@
       "release_artifact_hash_count": 2
     },
     {
+      "name": "python-multipart",
+      "version": "0.0.32",
+      "declared_license": "Apache-2.0",
+      "pypi_license_expression": "Apache-2.0",
+      "source": "https://pypi.org/project/python-multipart/0.0.32/",
+      "license_text_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "license_files": [
+        {
+          "path": "python_multipart-0.0.32.dist-info/licenses/LICENSE.txt",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
+    },
+    {
       "name": "PyYAML",
       "version": "6.0.2",
       "declared_license": "MIT License",
@@ -346,6 +466,22 @@
       "source": "https://pypi.org/project/PyYAML/6.0.2/",
       "license_text_sha256": "8d3928f9dc4490fd635707cb88eb26bd764102a7282954307d3e5167a577e8a4",
       "release_artifact_hash_count": 53
+    },
+    {
+      "name": "referencing",
+      "version": "0.37.0",
+      "declared_license": "MIT",
+      "pypi_license_expression": "MIT",
+      "source": "https://pypi.org/project/referencing/0.37.0/",
+      "license_text_sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c",
+      "license_files": [
+        {
+          "path": "referencing-0.37.0.dist-info/licenses/COPYING",
+          "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
     },
     {
       "name": "requests",
@@ -366,6 +502,22 @@
       "release_artifact_hash_count": 2
     },
     {
+      "name": "rpds-py",
+      "version": "2026.9.1",
+      "declared_license": "MIT",
+      "pypi_license_expression": "MIT",
+      "source": "https://pypi.org/project/rpds-py/2026.9.1/",
+      "license_text_sha256": "314e4e91be3baa93c0fb4bccc9e4e97cd643eb839b065af921782c2175fe9909",
+      "license_files": [
+        {
+          "path": "rpds_py-2026.9.1.dist-info/licenses/LICENSE",
+          "sha256": "314e4e91be3baa93c0fb4bccc9e4e97cd643eb839b065af921782c2175fe9909"
+        }
+      ],
+      "release_artifact_hash_count": 128,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
+    },
+    {
       "name": "ruff",
       "version": "0.15.7",
       "declared_license": "MIT",
@@ -382,6 +534,22 @@
       "source": "https://pypi.org/project/SQLAlchemy/2.0.39/",
       "license_text_sha256": "9821720b58d4a565b61321007a8ad43ab6991a3959e66cd5db4dd9eae69c7dfc",
       "release_artifact_hash_count": 57
+    },
+    {
+      "name": "sse-starlette",
+      "version": "3.5.0",
+      "declared_license": "BSD-3-Clause",
+      "pypi_license_expression": "BSD-3-Clause",
+      "source": "https://pypi.org/project/sse-starlette/3.5.0/",
+      "license_text_sha256": "80af6bfccbebd2c14d4aab96695cab9950e177190cc80f5ef819e99996883e8e",
+      "license_files": [
+        {
+          "path": "sse_starlette-3.5.0.dist-info/licenses/LICENSE",
+          "sha256": "80af6bfccbebd2c14d4aab96695cab9950e177190cc80f5ef819e99996883e8e"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
     },
     {
       "name": "starlette",
@@ -418,6 +586,22 @@
       "source": "https://pypi.org/project/urllib3/2.8.0/",
       "license_text_sha256": "130e3a64d5fdd5d096a752694634a7d9df284469de86e5732100268041e3d686",
       "release_artifact_hash_count": 2
+    },
+    {
+      "name": "uvicorn",
+      "version": "0.54.0",
+      "declared_license": "BSD-3-Clause",
+      "pypi_license_expression": "BSD-3-Clause",
+      "source": "https://pypi.org/project/uvicorn/0.54.0/",
+      "license_text_sha256": "efe1acf3e62fb99c288b0ec73e5a773b7268ef4320fe757ea994214e4b63c371",
+      "license_files": [
+        {
+          "path": "uvicorn-0.54.0.dist-info/licenses/LICENSE.md",
+          "sha256": "efe1acf3e62fb99c288b0ec73e5a773b7268ef4320fe757ea994214e4b63c371"
+        }
+      ],
+      "release_artifact_hash_count": 2,
+      "scope": "Additional MCP1.x source/protocol-test dependency; not runtime clearance"
     }
   ],
   "npm": [

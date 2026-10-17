@@ -83,3 +83,20 @@ Existing installations also need explicit provider-grant expiry/reconciliation b
 adopting disabled legacy jobs. No schema/history/data adoption or feature-equivalence
 claim follows from passing source tests. The published preview tag remains its frozen
 snapshot; current branch checks do not rewrite that release's evidence.
+
+
+## Current MCP source boundary
+
+The core MCP stdio server permits initialization/ping/discovery of twelve existing
+tool names/input schemas, while every tool call returns an explicit error. Legacy
+environment identities, arbitrary UUIDs/tenant headers, shared service tokens and
+approval/audit flags do not authorize reads or writes. Direct legacy helpers/raw
+clients also reject before downstream client setup. No tool arguments are rewritten
+into a caller identity. See the [current MCP source contract](backend/agents/mcp_server/README.md).
+
+Required MCP capabilities remain migration work. This source containment does not
+qualify verified transport identity/capabilities, data ownership, provider effects,
+durable audit, HTTP/OAuth, distributed limits, full gateway/caller compatibility or
+complete runtime/feature equivalence. The additional hash-pinned MCP1.x protocol
+test graph belongs to the source-review environment; no deployment graph or SDK2
+compatibility is cleared. The frozen preview release remains unchanged.

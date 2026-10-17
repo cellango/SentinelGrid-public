@@ -1,15 +1,24 @@
 {
   "format_version": 1,
-  "date": "2026-10-16",
+  "date": "2026-10-17",
   "scope": "Supported source-preview dependency inputs only",
   "python": {
-    "audit_tool": "pip-audit 2.10.1",
-    "audited_pins": 43,
+    "audit_tool": "OSV querybatch API exact package/version queries",
+    "audit_date": "2026-10-17",
+    "audit_source": "https://api.osv.dev/v1/querybatch",
+    "audited_pins": 54,
     "findings": 0,
     "hash_required": true,
     "manifest": "scripts/requirements-preview.txt",
-    "manifest_sha256": "ac476e0c32f1987c2f1836f92a56c28c799e06716f087a67fdc18d4a1bc8f2bf",
-    "platform_closure_repair": "Task 10: pin greenlet 3.5.6 with official PyPI hashes for SQLAlchemy on Linux x86_64; MIT AND PSF-2.0 license files verified"
+    "manifest_sha256": "70c7ae76419009bf734aefcba73ad221440fac936e8ca6404fe7a4171c4fbc6c",
+    "additional_inputs": [
+      {
+        "path": "scripts/requirements-mcp-sdk.txt",
+        "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873"
+      }
+    ],
+    "fresh_installation": "Python3.13 macOS arm64; official PyPI binary wheels/hash checks; pip check passed; no package version changed among the previous43pins",
+    "expanded_Linux_execution": false
   },
   "frontend": {
     "audit_command": "npm audit --package-lock-only --json (full tree; no omit or severity filter)",
@@ -86,5 +95,24 @@
     "supported_input_boundary_unchanged": true,
     "license_inventory_inputs_unchanged": true,
     "runtime_graphs_cleared": false
+  },
+  "historical_python_review": {
+    "audit_tool": "pip-audit 2.10.1",
+    "audited_pins": 43,
+    "findings": 0,
+    "hash_required": true,
+    "manifest": "scripts/requirements-preview.txt",
+    "manifest_sha256": "ac476e0c32f1987c2f1836f92a56c28c799e06716f087a67fdc18d4a1bc8f2bf",
+    "platform_closure_repair": "Task 10: pin greenlet 3.5.6 with official PyPI hashes for SQLAlchemy on Linux x86_64; MIT AND PSF-2.0 license files verified"
+  },
+  "MCP_source_extension": {
+    "date": "2026-10-17",
+    "selected_sdk": "mcp1.30.0",
+    "SDK2_qualified": false,
+    "additional_pins": 11,
+    "additional_artifact_hashes": 148,
+    "provider_runtime_cleared": false,
+    "frontend_inputs_or_audit_changed": false,
+    "prior_freeze_refresh_is_historical": true
   }
 }

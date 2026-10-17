@@ -1,12 +1,17 @@
 # Source-preview dependency review
 
-Task 8 is complete for the supported source checks; Task 12 refreshed its audit
-and reassessed both scoped exceptions on October 15, 2026. Task 13 repeated the
-full audits and upstream patch checks on October 16 with no new findings.
-The Python environment has no reported dependency advisories. The frontend retains
-two explicitly scoped development-tooling exceptions: `braces` and `sprintf-js`
-have no patched release. Raw `npm audit` still exits 1; this is not a clean-audit
-claim. No application runtime, image, installer, or dependency bundle is cleared.
+The original Task8/12/13 dependency reviews are retained as dated release evidence.
+On October17, 2026, the MCP source-boundary work extended the Python source-test
+environment from43 to54 exact pins without changing any previous package version.
+All54 exact package/version OSV queries returned zero findings. A fresh macOS arm64
+Python3.13 installation checked each selected wheel against the catalog of959 official PyPI
+artifact hashes and passed `pip check`. The current graph was not executed on Linux or
+hosted CI. Historical43pin Ubuntu results do not establish that expanded closure.
+
+The unchanged frontend retains two explicitly scoped development-tooling exceptions:
+`braces` and `sprintf-js`; its historical raw audit exits1. This slice did not repeat
+the frontend audit or change its inputs/exceptions. No application runtime, image,
+installer or dependency bundle is cleared.
 
 The machine-readable records are:
 
@@ -18,10 +23,10 @@ The machine-readable records are:
 
 | Input | Reviewed result |
 | --- | --- |
-| `scripts/requirements-preview.txt` | 43 exact pins, including pip and the Linux-specific SQLAlchemy dependency; hash checking required with 811 official PyPI artifact hashes |
-| Python vulnerability check | pip-audit 2.10.1 queried all 43 pins; zero findings and no ignored advisory IDs |
-| Python installation | Hash-verified fresh macOS arm64 installation and `pip check` passed; actual Ubuntu x86_64 installation/checks passed in Task 10 after adding the platform-specific pin |
-| Python source checks | 28 tests, compilation of 1,447 Python files, and Ruff passed locally and on Ubuntu in Task 10 |
+| `scripts/requirements-preview.txt` | 54 exact pins across the main file and included MCP SDK file;959 official PyPI artifact hashes; previous43pins unchanged |
+| Python vulnerability check | Current54pin OSV querybatch check: zero findings. Historical pip-audit43pin review retained separately |
+| Python installation | Current54pin fresh macOS arm64 install/pip check passed; expanded Linux/hosted checks remain pending. Task10 Ubuntu proof covered the historical43pin graph |
+| Python source checks | Current IAM/MCP boundary checks recorded with the candidate; historical Task10 Python/Ubuntu checks retain their original scope |
 | `frontend/package.json` and lockfile | 828 locked package entries, all with official npm registry URLs and SHA-512 integrity; 772 installed on the review host |
 | Frontend installation/tests | Fresh Node.js 22.23.3 `npm ci --ignore-scripts` and all 13 focused tests passed |
 | Frontend parser overrides | Tailwind utility generation, nested-selector transformation, and Next.js resolution of patched PostCSS passed |
@@ -46,7 +51,7 @@ Task 10's first actual Ubuntu run found that SQLAlchemy also requires `greenlet`
 on Linux x86_64. The earlier macOS arm64 resolution and cross-platform wheel
 download did not establish that platform's complete dependency closure. Added
 [`greenlet` 3.5.6](https://pypi.org/project/greenlet/3.5.6/) with all 79 unyanked
-release-artifact hashes, bringing the current list from 42 to 43 pins. Its MIT
+release-artifact hashes, bringing Task10’s list from42 to43pins. Its MIT
 and PSF-2.0 license files are recorded in the resolved inventory. Hash enforcement
 remains enabled; the initial installation failure was not skipped or suppressed.
 
@@ -146,3 +151,22 @@ the audit with fresh advisory data against the frozen inputs. Task 10
 rebuilt the independent repository from the reviewed source and verified private
 GitHub CI. Task 13 applied the actual public protections and refreezes only
 documentation/verification records before the source-preview tag and prerelease.
+
+
+## MCP protocol-test extension
+
+The selected1.x SDK is explicitly pinned to `mcp==1.30.0`; SDK2 uses a different
+API/dependency graph and was not selected or qualified. The eleven additional
+packages are MCP, httpx-sse, jsonschema, sse-starlette, uvicorn, attrs,
+jsonschema-specifications, referencing, rpds-py, python-multipart and click.
+[`requirements-mcp-sdk.txt`](../../scripts/requirements-mcp-sdk.txt) contains exact
+pins and148 official PyPI artifact hashes and is included by the existing preview
+manifest. Their installed license files and upstream MIT/BSD-3-Clause/Apache-2.0
+declarations are recorded in the dependency inventory. Dependencies retain those
+terms; no installed package implementation/native binary is published here.
+
+Real MCP initialization/discovery and unavailable-tool errors are required by
+`make preview-check`. The new graph has a fresh54package macOS installation and a
+current exact-version advisory check. Neither result qualifies all service/runtime
+requirements, every platform, provider operations or a redistributable bundle.
+The service SDK pin does not resolve the rest of its experimental runtime graph.
