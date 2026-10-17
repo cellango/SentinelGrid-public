@@ -420,6 +420,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/architecture/gateway-identity.md",
+      "class": "current_architecture",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
       "path": "docs/architecture/overview.md",
       "class": "current_architecture",
       "authority": "current_within_source_preview_scope"

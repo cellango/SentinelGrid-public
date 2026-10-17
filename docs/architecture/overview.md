@@ -23,7 +23,7 @@ identity boundaries, or an end-to-end event-to-response workflow.
 | Surface | Source entrypoint | Review boundary |
 | --- | --- | --- |
 | Main console and marketing prototypes | [frontend/src/app](../../frontend/src/app/) | Focused auth tests pass; full build/backend integration unqualified |
-| Browser/API boundary | [API gateway](../../backend/services/api_gateway/app/) | Inspect each proxy's authentication and tenant forwarding |
+| Browser/API boundary | [API gateway](../../backend/services/api_gateway/app/) | [Shared IAM receipt boundary](gateway-identity.md); mounted proxy/caller coverage remains open |
 | Identity | [IAM agent](../../backend/agents/iam_agent/app/) | Named mocked auth regressions; other admin and identity flows experimental |
 | Detection and response | [SIEM](../../backend/agents/siem_agent/), [detection service](../../backend/services/detection_service/), [SOAR](../../backend/agents/soar_agent/) | Source exists; no two-tenant event-to-response E2E certification |
 | Shared models and cloud code | [sg_core](../../backend/libs/sg_core/) | ORM/DDL contract checked offline; live migrations and provider operations excluded |

@@ -1,88 +1,29 @@
 """Security utilities: token parsing, tenant extraction, auth helpers, tenant isolation enforcement."""
 
-from typing import Optional, Any
+from typing import Optional
 from fastapi import HTTPException, Security, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-import os
-import httpx
 import logging
-from functools import lru_cache
+from sg_core.iam_verification import verify_iam_token
 from sg_core.service_metrics import get_service_metrics
-
-# IAM Agent configuration
-IAM_AGENT_URL = os.getenv("IAM_AGENT_URL", "http://iam_agent:8000")
 
 security = HTTPBearer(auto_error=False)
 logger = logging.getLogger(__name__)
 
 
 def verify_token(token: str) -> dict:
-    """
-    Verify JWT token using IAM Agent service.
-    
-    Returns validated token payload with tenant_id and roles.
-    """
-    if not token:
-        get_service_metrics().increment_counter("auth_failures_total", reason="missing_token")
-        raise HTTPException(status_code=401, detail="Missing token")
+    """Return the IAM-verified JWT identity; this grants no action authority."""
+    metrics = get_service_metrics()
     try:
-        logger.debug(f"🔍 [verify_token] Calling IAM Agent to validate token...")
-        with httpx.Client(timeout=5.0) as client:
-            response = client.post(
-                f"{IAM_AGENT_URL}/internal/iam/auth/validate-token",
-                json={"token": token}
-            )
-            response.raise_for_status()
-            result = response.json()
-            
-            logger.debug(f"🔍 [verify_token] IAM Agent response: valid={result.get('valid')}, tenant_id={result.get('tenant_id')}, user_id={result.get('user_id')}")
-            
-            if not result.get("valid"):
-                error = result.get("error", "Token validation failed")
-                logger.warning(f"🔍 [verify_token] Token validation failed: {error}")
-                get_service_metrics().increment_counter("auth_failures_total", reason="invalid_token")
-                get_service_metrics().increment_counter("token_validation_failures_total", reason="invalid_token")
-                raise HTTPException(status_code=401, detail=f"Invalid token: {error}")
-            
-            # Return payload with tenant_id and roles
-            payload = result.get("payload", {})
-            payload["tenant_id"] = result.get("tenant_id")
-            payload["roles"] = result.get("roles", [])
-            payload["user_id"] = result.get("user_id")
-            if result.get("plan_tier"):
-                payload["plan_tier"] = result.get("plan_tier")
-            
-            logger.debug(f"🔍 [verify_token] Token validated successfully: tenant_id={payload.get('tenant_id')}, user_id={payload.get('user_id')}, roles={payload.get('roles')}")
-            get_service_metrics().increment_counter("token_validation_success_total")
-            return payload
-            
-    except httpx.RequestError as e:
-        get_service_metrics().increment_counter("auth_failures_total", reason="iam_agent_unreachable")
-        get_service_metrics().increment_counter("token_validation_failures_total", reason="iam_agent_unreachable")
-        raise HTTPException(
-            status_code=503,
-            detail=f"Failed to connect to IAM Agent: {str(e)}"
-        )
-    except httpx.HTTPStatusError as e:
-        if e.response.status_code == 401:
-            get_service_metrics().increment_counter("auth_failures_total", reason="invalid_token")
-            get_service_metrics().increment_counter("token_validation_failures_total", reason="invalid_token")
-            raise HTTPException(status_code=401, detail="Invalid token")
-        get_service_metrics().increment_counter("auth_failures_total", reason="iam_agent_error")
-        get_service_metrics().increment_counter("token_validation_failures_total", reason="iam_agent_error")
-        raise HTTPException(
-            status_code=503,
-            detail=f"IAM Agent error: {str(e)}"
-        )
-    except HTTPException:
+        payload = verify_iam_token(token)
+    except HTTPException as exc:
+        reason = "missing_token" if token is None or token == "" else (
+            "invalid_token" if exc.status_code == 401 else "iam_agent_error")
+        metrics.increment_counter("auth_failures_total", reason=reason)
+        metrics.increment_counter("token_validation_failures_total", reason=reason)
         raise
-    except Exception as e:
-        get_service_metrics().increment_counter("auth_failures_total", reason="token_validation_error")
-        get_service_metrics().increment_counter("token_validation_failures_total", reason="token_validation_error")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Token validation error: {str(e)}"
-        )
+    metrics.increment_counter("token_validation_success_total")
+    return payload
 
 
 def get_tenant_id_from_token(token: str) -> Optional[str]:

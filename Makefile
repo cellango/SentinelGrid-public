@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -6,7 +6,7 @@ RUFF ?= ruff
 help:
 	@echo "SentinelGrid developer source preview (see RELEASE_SCOPE.md)"
 	@echo "  make install          - Install isolated source-review test dependencies"
-	@echo "  make preview-check    - Check paths, documentation, source hygiene, V013 schema, and IAM auth/policy and MCP boundary"
+	@echo "  make preview-check    - Check paths, documentation, source hygiene, V013 schema, and IAM auth/policy and MCP/identity boundaries"
 	@echo "  make preview-mcp       - Check discovery/protocol errors and unavailable legacy tools"
 	@echo "  make preview-iam-db    - Test audit/RLS in an owned disposable PostgreSQL cluster"
 	@echo "  make preview-secrets  - Scan candidate source with Gitleaks 8.30.1"
@@ -42,6 +42,10 @@ preview-check:
 	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_auth_api.py backend/agents/iam_agent/tests/test_token_validator.py backend/agents/iam_agent/tests/test_config_security.py backend/agents/iam_agent/tests/test_policy_enforcement.py backend/agents/iam_agent/tests/test_authorize_tenant_isolation.py backend/agents/iam_agent/tests/test_policies_tenant_session.py backend/agents/iam_agent/tests/test_audit_tenant_controls.py backend/agents/iam_agent/tests/test_entitlements_tenant_isolation.py backend/agents/iam_agent/tests/test_access_requests_authorization.py backend/agents/iam_agent/tests/test_anomaly_detection.py backend/agents/iam_agent/tests/test_automation_request_context.py backend/agents/iam_agent/tests/test_source_admission.py backend/agents/iam_agent/tests/test_iam_acceptance_boundaries.py backend/agents/iam_agent/tests/test_sync_jobs_request_context.py backend/agents/iam_agent/tests/test_ai_editor_controls.py backend/agents/iam_agent/tests/test_protocols_request_context.py backend/agents/iam_agent/tests/test_ai_chat_request_context.py backend/agents/iam_agent/tests/test_ai_features_request_context.py backend/agents/iam_agent/tests/test_ai_chat_service.py backend/agents/iam_agent/tests/test_scim_controls.py backend/agents/iam_agent/tests/test_nhi_controls.py backend/agents/iam_agent/tests/test_itdr_controls.py backend/agents/iam_agent/tests/test_role_sync_controls.py backend/agents/iam_agent/tests/test_role_directory.py backend/agents/iam_agent/tests/test_governance_controls.py backend/agents/iam_agent/tests/test_governance_tenant_isolation.py backend/agents/iam_agent/tests/test_access_request_controls.py backend/agents/iam_agent/tests/test_role_mappings_access_requests_tenant_isolation.py -q
 
 	$(MAKE) preview-mcp PYTHON="$(PYTHON)"
+	$(MAKE) preview-gateway-identity PYTHON="$(PYTHON)"
+
+preview-gateway-identity:
+	$(PYTHON) -m pytest -c backend/tests/gateway_identity/pytest.ini backend/tests/gateway_identity -q
 
 preview-mcp:
 	$(PYTHON) -m pytest -c backend/agents/mcp_server/tests/pytest.ini backend/agents/mcp_server/tests -q

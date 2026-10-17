@@ -100,3 +100,12 @@ durable audit, HTTP/OAuth, distributed limits, full gateway/caller compatibility
 complete runtime/feature equivalence. The additional hash-pinned MCP1.x protocol
 test graph belongs to the source-review environment; no deployment graph or SDK2
 compatibility is cleared. The frozen preview release remains unchanged.
+
+## Current shared identity verification
+
+The [delegated IAM client](docs/architecture/gateway-identity.md) checks a bounded,
+input-bound verification receipt and rejects transport/identity contradictions.
+Offline tests use real RSA signatures and the current IAM validator with mocked
+HTTP. Full gateway route adoption, browser credential conflicts, user/workload
+classification and service-caller authorization remain open; this is not a
+supported authentication runtime or action authority. Core MCP remains unavailable.
