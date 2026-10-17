@@ -1,3 +1,8 @@
+"""Metrics rendering unit tests with explicit admission override.
+
+These tests do not qualify scanner/global-data authority. The actual assembly
+boundary tests separately assert denial without any identity/admission override.
+"""
 import os
 import sys
 
@@ -7,6 +12,7 @@ from fastapi.testclient import TestClient
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.api import scanner_health
+from app.core.security import require_orchestrator_request
 from sg_core.service_metrics import get_service_metrics, reset_service_metrics
 
 
@@ -45,6 +51,7 @@ class _FakeAsyncClient:
 
 def _client():
     app = FastAPI()
+    app.dependency_overrides[require_orchestrator_request] = lambda: None
     app.include_router(scanner_health.router, prefix="/api/v1/orchestrator")
     return TestClient(app)
 

@@ -222,6 +222,65 @@ are test doubles. Rejections must precede scoped session creation; accepted read
 must carry the exact tenant and resource. This does not qualify SQL execution,
 full service startup, provider issuance or a deployed caller.
 
+## Orchestrator HTTP source boundary
+
+The [actual orchestrator](../../backend/services/orchestrator/app/main.py) now applies
+[a common gate](../../backend/services/orchestrator/app/core/security.py) to every
+FastAPI application route. Each of its six source routers also carries that gate
+so standalone router inclusion cannot restore an unqualified operation. Exact GET
+`/` and `/health` expose local metadata without data, provider or readiness probes.
+Schema/docs and unmatched method/path errors do not enter business handlers.
+
+The only admitted business source operation is GET
+`/api/v1/orchestrator/tenant/{tenant_id}/posture-score/history`. It requires a strict
+direct bearer, the existing delegated IAM verification receipt and signed user
+contract, matching `IAM_USER_CLIENT_BINDINGS`, plus an explicit
+`ORCHESTRATOR_POSTURE_HISTORY_READERS` JSON grant. Each grant names exact `issuer`,
+`client_id`, canonical UUID `tenant_id` and `subject_id`, and
+`permission: posture.read_history`. Grants must reference an owned user-client
+registration; duplicate grants and wildcards are rejected. Both policy lists
+default to empty. User classification or an administrator role alone is insufficient.
+The [policy model](../../backend/services/orchestrator/app/core/principal_policy.py)
+is owned configuration, not a token issuer or evidence of live provider registration.
+
+The application binds immutable verifier/policy snapshots from its own settings.
+`IAM_AGENT_URL`, `KEYCLOAK_CLIENT_ID`, `IAM_TOKEN_VALIDATION_TIMEOUT` and
+`IAM_VERIFIER_CA_BUNDLE` use the shared transport contract above. Forwarded
+identity fields cannot select that verifier. The path tenant must match the verified
+UUID exactly; encoded targets, conflicting/duplicate hints, forwarded actor/role/
+internal-token fields, bodies and unknown/duplicate query keys are rejected.
+Only one optional `limit` is accepted, from 1 through 90 (default 14).
+
+The history handler performs one parameterized SELECT from the fixed
+`public.posture_score_snapshot` source using the verified tenant and bounded limit.
+It does not compute/persist a score or call another service. Storage failures return
+503 rather than fabricated empty success; an actual empty result remains
+`{"items": []}`. This is source admission only. That legacy table is not part of the
+qualified Flyway profile: physical ownership, schema/model/Flyway adoption, SQL/RLS,
+installation and data compatibility remain required before supporting the read.
+This change creates no table, schema or migration and runs no legacy Alembic setup.
+
+The other twenty current operations return 503 before their handler dependencies:
+aggregate snapshots/dashboard/recommendations/queues, scoring/rescore, phishing
+analysis, response/remediation, execution status/report, scanner registry/health,
+readiness/global metrics and the synthetic internal alert stub. Some GETs write
+scores or call models; their method names do not make them effect-free. Required
+functionality remains restoration work with owned data/workload/operator/action
+contracts. Global readiness/metrics cannot be exposed as tenant data, and a shared
+credential plus arbitrary tenant cannot regain user authority. No workflow engine,
+provider effect, direct-library action authority or scheduler/workload admission is
+implemented by this gate. Direct component calls still require separate review.
+
+`make preview-orchestrator-identity` tests the actual assembly with current IAM RSA
+validation in an isolated process, replacing key/HTTP I/O and history storage. It
+checks accepted exact readers, foreign/forged/expired/unavailable authority, all
+unqualified operations, standalone aliases, query limits and store failure. No
+identity/admission override is used in these boundary tests. Existing scanner-metric
+and readiness component tests explicitly bypass HTTP admission or call the rendering
+functions directly; they do not qualify those routes. Local metadata is not a
+supported runtime/readiness claim. All other caller/provider/action, deployment
+and runtime qualifications remain open under root release scope.
+
 ## Qualification and remaining work
 
 `make preview-gateway-identity` retains the real generated RSA/current IAM validator

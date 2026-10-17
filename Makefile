@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -46,6 +46,10 @@ preview-check:
 	$(MAKE) preview-gateway-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-gateway PYTHON="$(PYTHON)"
 	$(MAKE) preview-workload-reads PYTHON="$(PYTHON)"
+	$(MAKE) preview-orchestrator-identity PYTHON="$(PYTHON)"
+
+preview-orchestrator-identity:
+	$(PYTHON) -m pytest -c backend/services/orchestrator/tests/pytest-identity.ini backend/services/orchestrator/tests/test_orchestrator_identity_boundary.py backend/services/orchestrator/tests/test_config_security.py -q
 
 preview-iam-identity:
 	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_request_context_identity.py backend/agents/iam_agent/tests/test_request_context_internal_token.py -q

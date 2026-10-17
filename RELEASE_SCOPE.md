@@ -136,3 +136,15 @@ added. Actual policy/access-request router checks use key, session/data and exis
 unit-harness Redis doubles. Other IAM/service callers, workload issuance, provider
 registration, SQL/RLS, action authorization and full runtime remain unqualified;
 blocked capabilities stay required restoration work.
+
+
+The [orchestrator HTTP gate](docs/architecture/gateway-identity.md#orchestrator-http-source-boundary)
+also covers its actual assembly and six standalone routers. Only local root/health
+metadata is public. Stored posture history has one bounded source read requiring an
+exact owned user/reader grant; its legacy physical table, Flyway/model ownership,
+SQL/RLS and runtime adoption remain unqualified. Store failures are unavailable,
+not empty success. The other twenty operations, including global readiness/metrics,
+model-backed GETs and response actions, remain unavailable and required restoration
+work. RSA/actual-assembly checks use key/HTTP/storage doubles. Component metric/probe
+checks are separate from route admission; no workload issuer or provider effect is
+qualified and the frozen published release remains unchanged.

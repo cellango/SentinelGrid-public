@@ -14,8 +14,9 @@ if os.path.exists(libs_path):
 
 from app.services.phishing_analyzer import PhishingAnalyzer
 from app.core.config import settings
+from app.core.security import require_orchestrator_request
 
-router = APIRouter(prefix="/api/v1/orchestrator", tags=["phishing"])
+router = APIRouter(prefix="/api/v1/orchestrator", tags=["phishing"], dependencies=[Depends(require_orchestrator_request)])
 
 
 class PhishingAnalysisRequest(BaseModel):

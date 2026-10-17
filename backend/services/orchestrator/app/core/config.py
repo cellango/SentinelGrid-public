@@ -1,7 +1,10 @@
 """Configuration for Orchestrator Service."""
 
 import os
-from pydantic import model_validator
+from pydantic import Field, model_validator
+from sg_core.iam_verification import IAMVerificationSettings
+from sg_core.user_principals import UserClientBinding
+from app.core.principal_policy import OrchestratorPrincipalSettings, PostureHistoryReader
 from pydantic_settings import SettingsConfigDict
 
 from sg_core.service_security import (
@@ -31,6 +34,13 @@ class Settings(ServiceSecuritySettings):
     AUTOMATED_RESPONSE_SERVICE_URL: str = os.getenv("AUTOMATED_RESPONSE_SERVICE_URL", "http://automated_response_service:8000")
     COMPLIANCE_SERVICE_URL: str = os.getenv("COMPLIANCE_SERVICE_URL", "http://compliance_service:8000")
     
+    # Owned verifier and exact user/read authority; all registrations default empty.
+    KEYCLOAK_CLIENT_ID: str = "sentinelgrid-web"
+    IAM_TOKEN_VALIDATION_TIMEOUT: float = Field(default=5.0, gt=0, le=10, allow_inf_nan=False)
+    IAM_VERIFIER_CA_BUNDLE: str | None = None
+    IAM_USER_CLIENT_BINDINGS: tuple[UserClientBinding, ...] = Field(default=(), max_length=256)
+    ORCHESTRATOR_POSTURE_HISTORY_READERS: tuple[PostureHistoryReader, ...] = Field(default=(), max_length=256)
+
     # Database
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL",
@@ -54,7 +64,19 @@ class Settings(ServiceSecuritySettings):
     def _validate_security_posture(self):
         super()._validate_security_posture()
         require_non_default_database_url(self.ENVIRONMENT, self.DATABASE_URL, "DATABASE_URL")
+        self.verification_settings()
+        self.principal_settings()
         return self
+
+    def verification_settings(self) -> IAMVerificationSettings:
+        names = {"ENVIRONMENT", "IAM_AGENT_URL", "KEYCLOAK_CLIENT_ID",
+                 "IAM_TOKEN_VALIDATION_TIMEOUT", "IAM_VERIFIER_CA_BUNDLE"}
+        return IAMVerificationSettings(_env_file=None, **self.model_dump(include=names))
+
+    def principal_settings(self) -> OrchestratorPrincipalSettings:
+        return OrchestratorPrincipalSettings(_env_file=None, ENVIRONMENT=self.ENVIRONMENT,
+            IAM_USER_CLIENT_BINDINGS=self.IAM_USER_CLIENT_BINDINGS,
+            ORCHESTRATOR_POSTURE_HISTORY_READERS=self.ORCHESTRATOR_POSTURE_HISTORY_READERS)
 
 
 settings = Settings()

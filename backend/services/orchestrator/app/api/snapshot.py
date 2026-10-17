@@ -5,11 +5,11 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.services.snapshot_service import SnapshotService
 from app.models.snapshot import SecuritySnapshot
-from app.core.security import get_current_tenant
+from app.core.security import get_current_tenant, require_orchestrator_request
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/tenant", tags=["snapshot"])
+router = APIRouter(prefix="/tenant", tags=["snapshot"], dependencies=[Depends(require_orchestrator_request)])
 
 
 def get_snapshot_service() -> SnapshotService:

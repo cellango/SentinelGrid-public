@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 import httpx
 
 from app.core.config import settings
+from app.core.security import require_orchestrator_request, get_current_tenant as get_tenant_id
 from app.services.ai_risk_summary_service import AiRiskSummaryService
 from app.services.posture_scoring import PostureScoringService
 from app.services.welcome_prioritization import (
@@ -20,47 +21,18 @@ from app.services.welcome_prioritization import (
 )
 from app.services.now_queue_service import NowQueueService
 from sg_core.circuit_breaker import AsyncCircuitBreaker
-from sg_core.service_security import build_internal_auth_headers, verify_internal_service_token
+from sg_core.service_security import build_internal_auth_headers
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/tenant", tags=["dashboard"])
+router = APIRouter(prefix="/tenant", tags=["dashboard"], dependencies=[Depends(require_orchestrator_request)])
 
 
-def verify_internal_token(
-    authorization: Optional[str] = Header(None),
-    x_internal_service_token: Optional[str] = Header(None, alias="X-Internal-Service-Token"),
-) -> bool:
-    """Verify internal service token."""
-    verify_internal_service_token(
-        settings.INTERNAL_SERVICE_TOKEN,
-        authorization=authorization,
-        x_internal_service_token=x_internal_service_token,
-        missing_detail="Missing authorization header",
-        invalid_detail="Invalid internal service token",
-    )
-    return True
+# Legacy helper names cannot establish caller/header-only tenant authority.
 
 
-async def get_tenant_id(
-    tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID"),
-) -> str:
-    """Extract tenant_id from header."""
-    if not tenant_id:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="X-Tenant-ID header is required"
-        )
-    
-    try:
-        UUID(tenant_id)
-    except ValueError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid tenant_id format (must be UUID)"
-        )
-    
-    return tenant_id
+def verify_internal_token(*args, **kwargs):
+    raise HTTPException(503, "Owned orchestrator workload contract required")
 
 
 _posture_scorer = PostureScoringService()

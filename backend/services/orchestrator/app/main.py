@@ -3,7 +3,8 @@
 import asyncio
 import os
 import sys
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
+from app.core.security import require_orchestrator_request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 from sqlalchemy import create_engine
@@ -27,8 +28,12 @@ PROMETHEUS_MEDIA_TYPE = "text/plain; version=0.0.4; charset=utf-8"
 app = FastAPI(
     title="SentinelGrid Orchestrator",
     description="Tenant and SOC orchestration service",
-    version=settings.VERSION
+    version=settings.VERSION,
+    dependencies=[Depends(require_orchestrator_request)],
 )
+
+app.state.iam_verification_settings = settings.verification_settings()
+app.state.orchestrator_principal_settings = settings.principal_settings()
 
 app.add_middleware(
     CORSMiddleware,

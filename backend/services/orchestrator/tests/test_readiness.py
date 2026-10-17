@@ -1,3 +1,10 @@
+"""Probe/metric component checks; direct function calls are not HTTP admission.
+
+Actual /ready and global metrics HTTP surfaces remain blocked by the separate
+assembly boundary tests until an owned operator contract is qualified.
+"""
+import asyncio
+import json
 import os
 import sys
 
@@ -24,17 +31,16 @@ def test_ready_returns_200_when_critical_dependencies_are_healthy(monkeypatch):
     monkeypatch.setattr(orchestrator_main, "probe_http_dependency", _healthy_http_probe)
     monkeypatch.setattr(orchestrator_main, "probe_database_engine_async", _healthy_db_probe)
 
-    with TestClient(orchestrator_main.app) as client:
-        response = client.get("/ready")
-        metrics_response = client.get("/metrics")
+    response = asyncio.run(orchestrator_main.readiness())
+    metrics_response = orchestrator_main.metrics()
 
     assert response.status_code == 200
-    payload = response.json()
+    payload = json.loads(response.body)
     assert payload["ready"] is True
     assert payload["status"] == "healthy"
     assert payload["dependencies"]["database"]["status"] == "healthy"
     assert payload["dependencies"]["iam_agent"]["status"] == "healthy"
-    metrics_payload = metrics_response.json()
+    metrics_payload = metrics_response
     assert metrics_payload["runtime"]["counters"]["readiness_checks_total"]["series"]["outcome=ready"] == 1
 
 
@@ -48,11 +54,10 @@ def test_ready_stays_green_when_only_noncritical_dependency_is_down(monkeypatch)
     monkeypatch.setattr(orchestrator_main, "probe_http_dependency", _http_probe)
     monkeypatch.setattr(orchestrator_main, "probe_database_engine_async", _healthy_db_probe)
 
-    with TestClient(orchestrator_main.app) as client:
-        response = client.get("/ready")
+    response = asyncio.run(orchestrator_main.readiness())
 
     assert response.status_code == 200
-    payload = response.json()
+    payload = json.loads(response.body)
     assert payload["ready"] is True
     assert payload["status"] == "degraded"
     assert payload["dependencies"]["siem_agent"]["critical"] is False
@@ -66,12 +71,11 @@ def test_metrics_prometheus_endpoint_includes_runtime_and_operation_series(monke
     monkeypatch.setattr(orchestrator_main, "probe_http_dependency", _healthy_http_probe)
     monkeypatch.setattr(orchestrator_main, "probe_database_engine_async", _healthy_db_probe)
 
-    with TestClient(orchestrator_main.app) as client:
-        ready_response = client.get("/ready")
-        metrics_response = client.get("/metrics/prometheus")
+    ready_response = asyncio.run(orchestrator_main.readiness())
+    metrics_response = orchestrator_main.metrics_prometheus()
 
     assert ready_response.status_code == 200
     assert metrics_response.status_code == 200
     assert metrics_response.headers["content-type"].startswith("text/plain")
-    assert 'readiness_checks_total{outcome="ready",service="orchestrator"} 1.0' in metrics_response.text
-    assert 'orchestrator_operation_queued_by_type{service="orchestrator",operation_type="scan"} 1' in metrics_response.text
+    assert 'readiness_checks_total{outcome="ready",service="orchestrator"} 1.0' in metrics_response.body.decode()
+    assert 'orchestrator_operation_queued_by_type{service="orchestrator",operation_type="scan"} 1' in metrics_response.body.decode()

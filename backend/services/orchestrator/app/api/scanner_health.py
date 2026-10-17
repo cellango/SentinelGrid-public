@@ -2,14 +2,15 @@
 
 import logging
 import os
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 import httpx
 
 from app.core.config import settings
+from app.core.security import require_orchestrator_request
 from sg_core.service_metrics import get_service_metrics
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/scanner", tags=["scanner-health"])
+router = APIRouter(prefix="/scanner", tags=["scanner-health"], dependencies=[Depends(require_orchestrator_request)])
 runtime_metrics = get_service_metrics(settings.SERVICE_NAME)
 
 REGISTRY_URL = os.getenv("SCANNER_ORCHESTRATOR_URL", "http://scanner_orchestrator:8000")

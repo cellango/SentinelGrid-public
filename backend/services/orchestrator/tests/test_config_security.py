@@ -8,6 +8,7 @@ def test_production_rejects_default_database_url():
     with pytest.raises(ValidationError, match="DATABASE_URL"):
         Settings(
             ENVIRONMENT="production",
+        IAM_AGENT_URL="https://iam.internal.test",
             CORS_ORIGINS=["https://app.sentinelgrid.com"],
             INTERNAL_SERVICE_TOKEN="orchestrator-prod-token",
             UPSTREAM_TLS_VERIFY=True,
@@ -18,6 +19,7 @@ def test_production_rejects_default_database_url():
 def test_production_accepts_non_default_database_url():
     settings = Settings(
         ENVIRONMENT="production",
+        IAM_AGENT_URL="https://iam.internal.test",
         CORS_ORIGINS=["https://app.sentinelgrid.com"],
         INTERNAL_SERVICE_TOKEN="orchestrator-prod-token",
         UPSTREAM_TLS_VERIFY=True,

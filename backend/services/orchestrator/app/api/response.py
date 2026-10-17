@@ -7,13 +7,13 @@ from datetime import UTC, datetime
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from pydantic import BaseModel
 
-from app.core.security import get_current_tenant
+from app.core.security import get_current_tenant, require_orchestrator_request
 from app.services.response_orchestrator import ResponseOrchestrator, ResponseType
 from app.services.metrics import metrics_tracker
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v1/orchestrator", tags=["orchestration"])
+router = APIRouter(prefix="/api/v1/orchestrator", tags=["orchestration"], dependencies=[Depends(require_orchestrator_request)])
 
 
 class OrchestrateAlertRequest(BaseModel):
