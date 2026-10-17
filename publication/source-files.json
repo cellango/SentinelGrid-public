@@ -671,6 +671,7 @@
     "backend/agents/iam_agent/tests/conftest.py",
     "backend/agents/iam_agent/tests/integration/test_integration.py",
     "backend/agents/iam_agent/tests/requirements.txt",
+    "backend/agents/iam_agent/tests/test_access_request_controls.py",
     "backend/agents/iam_agent/tests/test_access_requests_authorization.py",
     "backend/agents/iam_agent/tests/test_adaptive_auth.py",
     "backend/agents/iam_agent/tests/test_admin_auth_runtime.py",

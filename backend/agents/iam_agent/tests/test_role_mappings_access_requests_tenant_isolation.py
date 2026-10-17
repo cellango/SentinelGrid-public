@@ -19,6 +19,12 @@ class QuerySpy:
         self.criteria.extend(criteria)
         return self
 
+    def populate_existing(self):
+        return self
+
+    def with_for_update(self):
+        return self
+
     def first(self):
         return self.first_result
 
@@ -50,6 +56,9 @@ class FakeDB:
 
     def delete(self, obj):
         self.deleted.append(obj)
+
+    def rollback(self):
+        return None
 
     def commit(self):
         self.committed = True

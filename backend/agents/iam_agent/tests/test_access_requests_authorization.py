@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.api import access_requests
-from app.api.request_context import RequestContext, get_current_request_context, get_tenant_session
+from app.api.request_context import RequestContext, get_current_request_context, get_entitlement_session as get_tenant_session
 
 
 class QuerySpy:
@@ -18,6 +18,12 @@ class QuerySpy:
 
     def filter(self, *criteria):
         self.criteria.extend(criteria)
+        return self
+
+    def populate_existing(self):
+        return self
+
+    def with_for_update(self):
         return self
 
     def first(self):
@@ -47,6 +53,9 @@ class FakeDB:
 
     def add(self, obj):
         self.added.append(obj)
+
+    def rollback(self):
+        return None
 
     def commit(self):
         self.committed = True

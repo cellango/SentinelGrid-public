@@ -192,3 +192,53 @@ all downstream endpoints or live identity configuration. Shared/global grant pat
 and seed clones receive no cross-tenant exception in the new guards; their authorized
 sharing path and the older governance model/schema differences remain feature
 reconciliation work before runtime enablement.
+
+
+## Access request source and database checks
+
+The [access request API](../../backend/agents/iam_agent/app/api/access_requests.py)
+retains its routes and response fields, with these admission rules:
+
+- Creation uses the verified caller as requester and beneficiary. `requested_for`
+  remains a compatible field for that same UUID; another UUID returns 403, including
+  for administrators. On-behalf-of requests need a trusted directory membership path
+  before admission. Existing delegated rows can still be read, denied or cancelled
+  by authorized callers, but cannot be approved (409).
+- Only verified `TENANT_ADMIN`, `SOC_MANAGER` or `PLATFORM_ADMIN` roles can review,
+  preserving the existing reviewer-role set. An approver must differ from both
+  requester and beneficiary (403); these roles cannot bypass that check. Only the
+  requester can cancel. Read/history visibility remains tenant- and participant-
+  scoped, with the existing administrator exception inside the authenticated tenant.
+- Targets must be nonblank. An optional new expiration must include a timezone
+  and be in the future (422). Approval rechecks expiration and existing active grants
+  (409), using persisted request data rather than a replacement target in the review.
+- Review and cancellation lock and reload the tenant-scoped request row. Competing
+  transitions serialize; a request that is no longer pending returns 400. This
+  prevents two successful reviews of one request. It does not establish global
+  uniqueness across different requests or other grant writers.
+- Creation, approval, denial and cancellation commit the request, its history,
+  any created grant and audit events together. Failures attempt rollback and return
+  503. Audit/flush or pre-commit failures leave no transition. A lost acknowledgement
+  after the database commits is indeterminate to the caller: inspect the request
+  before retrying. A completed request cannot be approved again. Each committed transition records the actual
+  caller, beneficiary, target and old/new status; approval also records grant
+  creation. Responses are validated and detached from ORM loading before commit.
+  Admission rejections do not claim a durable transition event.
+
+The [ORM mappings](../../backend/agents/iam_agent/app/models/access_request.py)
+now match the **existing, unchanged IAM V3** columns, JSONB history metadata,
+defaults, checks and named indexes. There is no new database schema or migration
+in this change. The nullable legacy `requested_for` means the requester in API
+responses and approval; rows are not rewritten. Historical IAM V0–V3 and consolidated
+V001–V014 bytes remain unchanged. The IAM-only profile and separate-store rules above
+still apply; deploying against a different historical shape requires reconciliation.
+
+Required unit checks include admission and existing tenant-route regressions. The
+owned PostgreSQL suite also covers real V3/ORM compatibility, transitions, rejected
+cross-tenant IDs, audit and commit failures (including a lost commit acknowledgement),
+stale ORM state, legacy rows, simultaneous
+reviews and approval/cancellation contention. These are synthetic source/database
+results. Governance/certification/role synchronization, shared-definition admission,
+ITDR/NHI/SCIM/editor ports, provider effects, full Flyway adoption and hosted CI remain
+outside this qualification. A grant request approval is not the proposed exact
+provider-action approval protocol in the future case runtime.

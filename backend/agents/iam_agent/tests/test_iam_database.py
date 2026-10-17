@@ -21,10 +21,11 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import sessionmaker
 
 from sg_core.tenant_session import bind_tenant, install_tenant_pool_reset, tenant_session
-from app.api import entitlements, bulk_operations, request_context
+from app.api import entitlements, bulk_operations, request_context, access_requests
 from app.api.request_context import RequestContext
 from app.models.audit_event import IAMAuditEvent
 from app.models.entitlement import Entitlement
+from app.models.access_request import AccessRequest, AccessRequestHistory
 from app.services.audit_logger import AuditLogger
 from app.services.evaluation_engine import EvaluationContext, EvaluationEngine
 
@@ -135,7 +136,7 @@ def databases(cluster):
 def store(databases, monkeypatch):
     params, (engine, policy_engine) = databases
     with owner(params, "iam_test") as connection, connection.cursor() as cursor:
-        cursor.execute("TRUNCATE iam_audit_events,entitlements CASCADE")
+        cursor.execute("TRUNCATE iam_audit_events,entitlements,access_requests CASCADE")
         for tenant in (A, B):
             cursor.execute("INSERT INTO entitlements (id,tenant_id,resource_type,resource_id,action,granted_to_type,granted_to_id,granted_by) VALUES (%s,%s,'document','synthetic-doc','read','user',%s,%s)",
                            tuple(map(str,[GRANT if tenant == A else uuid4(), tenant, USER, USER])))
@@ -408,3 +409,250 @@ def test_iam_dependency_and_shared_helper_rebind_transactions(store,monkeypatch)
     session.rollback()
     assert visible(session)==[B]
     dependency.close()
+
+
+# Access requests: exact legacy V3 contracts and transactional admission.
+@pytest.mark.parametrize("model", [AccessRequest, AccessRequestHistory])
+def test_access_request_mapping_matches_existing_v3(databases, model):
+    _, (engine, _)=databases
+    catalog=inspect(engine); table=model.__table__
+    columns={c["name"]:c for c in catalog.get_columns(table.name,schema="public")}
+    assert set(columns)==set(table.columns.keys())
+    for field in table.columns:
+        assert columns[field.name]["nullable"]==field.nullable
+        assert (columns[field.name]["default"] is not None)==(field.server_default is not None)
+        assert str(columns[field.name]["type"].compile(dialect=engine.dialect)).lower()==str(field.type.compile(dialect=engine.dialect)).lower()
+    assert {r["name"] for r in catalog.get_check_constraints(table.name,schema="public")}=={c.name for c in table.constraints if c.name}
+    assert {r["name"] for r in catalog.get_indexes(table.name,schema="public")}=={i.name for i in table.indexes}
+
+
+def new_access_request(factory):
+    with tenant_session(factory,A) as session:
+        body=access_requests.AccessRequestCreate(tenant_id=A,resource_type="document",resource_id="requested-doc",action="read",justification="Synthetic request only")
+        return asyncio.run(access_requests.create_access_request(body,session,RequestContext(A,str(USER),())))
+
+
+def request_action(session, row, action):
+    caller=RequestContext(A,str(USER if action=="cancel" else B),("TENANT_ADMIN",))
+    if action=="cancel":return asyncio.run(access_requests.cancel_access_request(row.id,session,caller))
+    return asyncio.run(access_requests.review_access_request(row.id,access_requests.AccessRequestReview(decision=action),session,caller))
+
+
+def test_request_creation_persists_history_jsonb_and_audit(store):
+    _, _, factory, _=store
+    row=new_access_request(factory)
+    with tenant_session(factory,A) as session:
+        history=session.query(AccessRequestHistory).filter_by(request_id=row.id).one()
+        assert history.metadata_json=={} and history.performed_by==USER
+        audit=session.query(IAMAuditEvent).one()
+        assert audit.event_type=="access_request_created" and audit.performed_by==USER
+        assert audit.subject_id==USER and audit.changes["resource_id"]=="requested-doc"
+
+
+@pytest.mark.parametrize("action,expected", [("approve","approved"),("deny","denied"),("cancel","cancelled")])
+def test_request_transition_commits_history_and_audit(store, action, expected):
+    _, _, factory, _=store
+    row=new_access_request(factory)
+    with tenant_session(factory,A) as session:
+        result=request_action(session,row,action)
+        assert result.status==expected
+    with tenant_session(factory,A) as session:
+        request=session.get(AccessRequest,row.id)
+        assert request.status==expected
+        assert session.query(AccessRequestHistory).filter_by(request_id=row.id).count()==2
+        event=session.query(IAMAuditEvent).filter_by(event_type="access_request_"+expected).one()
+        assert event.performed_by==(USER if action=="cancel" else B)
+        assert event.changes["old_status"]=="pending" and event.changes["new_status"]==expected
+        grants=session.query(Entitlement).filter_by(resource_id="requested-doc").all()
+        assert len(grants)==(1 if action=="approve" else 0)
+        if grants:
+            assert request.entitlement_id==grants[0].id and grants[0].granted_by==B
+            assert grants[0].granted_to_id==USER
+            assert session.query(IAMAuditEvent).filter_by(entitlement_id=grants[0].id,event_type="created").count()==1
+
+
+@pytest.mark.parametrize("action", ["create","approve","deny","cancel"])
+def test_request_audit_failure_rolls_back_every_effect(store, action):
+    params, _, factory, _=store
+    row=new_access_request(factory) if action!="create" else None
+    with owner(params,"iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute("REVOKE INSERT ON iam_audit_events FROM sg_test_app")
+    try:
+        with pytest.raises(Exception) as error:
+            if row:
+                with tenant_session(factory,A) as session:request_action(session,row,action)
+            else:new_access_request(factory)
+        assert error.value.status_code==503
+        with tenant_session(factory,A) as session:
+            assert session.query(AccessRequest).count()==(1 if row else 0)
+            assert session.query(AccessRequestHistory).count()==(1 if row else 0)
+            assert session.query(IAMAuditEvent).count()==(1 if row else 0)
+            assert session.query(Entitlement).filter_by(resource_id="requested-doc").count()==0
+            if row:assert session.get(AccessRequest,row.id).status=="pending"
+    finally:
+        with owner(params,"iam_test") as connection, connection.cursor() as cursor:
+            cursor.execute("GRANT INSERT ON iam_audit_events TO sg_test_app")
+
+
+def test_request_commit_failure_rolls_back_grant_and_audits(store, monkeypatch):
+    _, _, factory, _=store
+    row=new_access_request(factory)
+    with tenant_session(factory,A) as session:
+        with monkeypatch.context() as patch:
+            def unavailable():raise RuntimeError("Synthetic commit outage")
+            patch.setattr(session,"commit",unavailable)
+            with pytest.raises(Exception) as error:request_action(session,row,"approve")
+            assert error.value.status_code==503
+    with tenant_session(factory,A) as session:
+        assert session.get(AccessRequest,row.id).status=="pending"
+        assert session.query(AccessRequestHistory).count()==1
+        assert session.query(IAMAuditEvent).count()==1
+        assert session.query(Entitlement).filter_by(resource_id="requested-doc").count()==0
+
+
+def test_legacy_null_beneficiary_can_be_read_and_reviewed_as_self(store):
+    params, _, factory, _=store
+    row=new_access_request(factory)
+    with owner(params,"iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute("UPDATE access_requests SET requested_for=NULL WHERE id=%s",(str(row.id),))
+    with tenant_session(factory,A) as session:
+        response=asyncio.run(access_requests.get_access_request(row.id,session,RequestContext(A,str(USER),())))
+        assert response.requested_for==USER
+    with tenant_session(factory,A) as session:
+        assert request_action(session,row,"approve").requested_for==USER
+    with tenant_session(factory,A) as session:
+        assert session.query(Entitlement).filter_by(resource_id="requested-doc").one().granted_to_id==USER
+
+
+@pytest.mark.parametrize("second_action", ["approve","cancel"])
+def test_competing_request_transitions_use_row_lock(store, monkeypatch, second_action):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+    import time
+    params, engine, factory, _=store
+    row=new_access_request(factory)
+    # A separate engine permits genuinely concurrent transactions, unlike the
+    # normal single-connection pool used to exercise tenant reuse elsewhere.
+    concurrent=create_engine(engine.url,pool_size=2,max_overflow=0)
+    install_tenant_pool_reset(concurrent)
+    sessions=sessionmaker(bind=concurrent)
+    staged,release=Event(),Event()
+    original=AuditLogger.log_entitlement_event
+    def hold(logger,event_type,*args,**kwargs):
+        result=original(logger,event_type,*args,**kwargs)
+        if event_type=="access_request_approved":
+            staged.set()
+            assert release.wait(10), "Concurrent test did not release first transition"
+        return result
+    monkeypatch.setattr(AuditLogger,"log_entitlement_event",hold)
+    def invoke(action):
+        try:
+            with tenant_session(sessions,A) as session:return request_action(session,row,action).status
+        except Exception as error:return error
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            first=pool.submit(invoke,"approve")
+            assert staged.wait(5)
+            second=pool.submit(invoke,second_action)
+            try:
+                deadline=time.monotonic()+5;blocked=False
+                while time.monotonic()<deadline:
+                    with owner(params,"iam_test") as connection, connection.cursor() as cursor:
+                        cursor.execute("SELECT count(*) FROM pg_stat_activity WHERE datname='iam_test' AND usename='sg_test_app' AND wait_event_type='Lock'")
+                        blocked=cursor.fetchone()[0]>0
+                    if blocked:break
+                    time.sleep(0.02)
+                assert blocked, "Competing transition must wait for the request row"
+            finally:release.set()
+            assert first.result(timeout=5)=="approved"
+            assert second.result(timeout=5).status_code==400
+        with tenant_session(factory,A) as session:
+            assert session.query(Entitlement).filter_by(resource_id="requested-doc").count()==1
+            assert session.query(AccessRequestHistory).count()==2
+            assert session.get(AccessRequest,row.id).status=="approved"
+    finally:
+        release.set();concurrent.dispose()
+
+
+@pytest.mark.parametrize("action", ["deny", "cancel"])
+def test_legacy_delegated_requests_can_be_closed_without_grant(store, action):
+    params, _, factory, _=store
+    row=new_access_request(factory)
+    with owner(params,"iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute("UPDATE access_requests SET requested_for=%s WHERE id=%s",(str(uuid4()),str(row.id)))
+    with tenant_session(factory,A) as session:
+        assert request_action(session,row,action).status in {"denied","cancelled"}
+    with tenant_session(factory,A) as session:
+        assert session.query(Entitlement).filter_by(resource_id="requested-doc").count()==0
+        assert session.query(AccessRequestHistory).count()==2
+        assert session.query(IAMAuditEvent).count()==2
+
+
+def test_request_review_reloads_stale_session_identity(store):
+    _, _, factory, _=store
+    row=new_access_request(factory)
+    with tenant_session(factory,A) as session:
+        session.expire_on_commit=False
+        stale=session.get(AccessRequest,row.id)
+        session.commit()
+        with tenant_session(factory,A) as other:request_action(other,row,"deny")
+        assert stale.status=="pending"
+        with pytest.raises(Exception) as error:request_action(session,row,"approve")
+        assert error.value.status_code==400
+    with tenant_session(factory,A) as session:
+        assert session.get(AccessRequest,row.id).status=="denied"
+        assert session.query(Entitlement).filter_by(resource_id="requested-doc").count()==0
+
+
+def test_foreign_request_id_cannot_be_reviewed_or_read(store):
+    _, _, factory, _=store
+    row=new_access_request(factory)
+    foreign=RequestContext(B,str(B),("PLATFORM_ADMIN",))
+    for operation in ("read","review","cancel","history"):
+        with tenant_session(factory,B) as session:
+            with pytest.raises(Exception) as error:
+                if operation=="read":asyncio.run(access_requests.get_access_request(row.id,session,foreign))
+                elif operation=="review":asyncio.run(access_requests.review_access_request(row.id,access_requests.AccessRequestReview(decision="approve"),session,foreign))
+                elif operation=="cancel":asyncio.run(access_requests.cancel_access_request(row.id,session,foreign))
+                else:asyncio.run(access_requests.get_access_request_history(row.id,session,foreign))
+            assert error.value.status_code==404
+    with tenant_session(factory,A) as session:
+        assert session.get(AccessRequest,row.id).status=="pending"
+        assert session.query(AccessRequestHistory).count()==1
+        assert session.query(IAMAuditEvent).count()==1
+
+
+def test_legacy_null_pending_request_blocks_duplicate_creation(store):
+    params, _, factory, _=store
+    row=new_access_request(factory)
+    with owner(params,"iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute("UPDATE access_requests SET requested_for=NULL WHERE id=%s",(str(row.id),))
+    with pytest.raises(Exception) as error:new_access_request(factory)
+    assert error.value.status_code==409
+    with tenant_session(factory,A) as session:
+        assert session.query(AccessRequest).count()==1
+        assert session.query(AccessRequestHistory).count()==1
+        assert session.query(IAMAuditEvent).count()==1
+
+
+def test_lost_commit_acknowledgement_requires_state_reconciliation(store, monkeypatch):
+    _, _, factory, _=store
+    row=new_access_request(factory)
+    with tenant_session(factory,A) as session:
+        original_commit=session.commit
+        with monkeypatch.context() as patch:
+            def lost_acknowledgement():
+                original_commit()
+                raise RuntimeError("Synthetic lost acknowledgement after server commit")
+            patch.setattr(session,"commit",lost_acknowledgement)
+            with pytest.raises(Exception) as error:request_action(session,row,"approve")
+            assert error.value.status_code==503
+    # A 503 is not proof of no effect. The durable row tells the caller what
+    # happened; a retry must not create another grant or another transition.
+    with tenant_session(factory,A) as session:
+        assert session.get(AccessRequest,row.id).status=="approved"
+        assert session.query(Entitlement).filter_by(resource_id="requested-doc").count()==1
+        assert session.query(AccessRequestHistory).count()==2
+        assert session.query(IAMAuditEvent).count()==3
+        with pytest.raises(Exception) as error:request_action(session,row,"approve")
+        assert error.value.status_code==400
