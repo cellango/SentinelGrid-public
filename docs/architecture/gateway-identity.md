@@ -554,3 +554,47 @@ The verifier limits decoded responses to 128 KiB and JWTs to 32 KiB. Phase timeo
 are not total deadlines. Live TLS, container/ingress/distributed behavior, SQL
 isolation, cookie-mutation CSRF/origin policy, rate limits and full dependency graphs
 remain unqualified. Root release scope continues to govern execution.
+
+
+## Observables detail source boundary
+
+The observables application preserves its nine route declarations. Root and health
+responses are local HTTP metadata, not storage or Cortex readiness. Only
+`GET /observables/{observable_id}` has a bounded stored-read source contract:
+strict direct bearer validation through current IAM, an owned
+`IAM_USER_CLIENT_BINDINGS` registration and an exact `OBSERVABLE_READERS` grant.
+Each grant binds issuer, client ID, tenant UUID, subject UUID and
+`permission: observable.read_owned`. Grants default empty; a role, header, shared
+internal token, debug flag, UUID or provider credential grants no authority.
+This permission covers the tenant's stored indicator values and TLP metadata;
+it does not grant enrichment, analyzer reports, writes or provider disclosure.
+Production verifier transport requires the configured HTTPS trust boundary.
+
+The detail route accepts a canonical non-nil observable UUID, no query or body,
+and no conflicting identity hints. Its explicit column SELECT binds both tenant
+and observable ID. It excludes arbitrary `enrichment_data` JSON and keeps that
+response field null. Values are bounded to 4,096 UTF-8 bytes and stored type,
+status and TLP values are checked. Real missing rows return 404; storage,
+ownership, malformed stored data or session-cleanup failure returns 503.
+No tracker, enrichment engine or Cortex client loads during HTTP startup.
+
+Six operations remain unavailable with 503 before identity/storage/provider
+dependencies: create, bulk create, search, enrich, analyzer-job reads and update.
+Their capabilities remain required. Legacy raw-session/tenant helpers and twelve
+direct tracker/enrichment/Cortex operations also deny before SQL, network or mock
+success. These restrictions do not implement the remaining operations.
+
+Tests use current IAM RSA verification with owned key/HTTP transports and a
+storage-session double; they qualify source admission and query construction.
+They do not qualify PostgreSQL, RLS, deployed callers, Cortex or enrichment effects.
+The legacy service-local SQL for `observables`/`observable_analyzers` is outside
+the consolidated Flyway lineage. Managed paired models/migrations, schema and
+read-role ownership, tenant/RLS tests, existing-data upgrades and restore remain
+required. Incident, phishing and playbook observable stores are distinct.
+
+Remaining work includes scoped caller/workload issuance, search body bounds,
+source-event ownership, TLP and analyzer disclosure policy, provider credentials,
+TLS/egress limits, idempotency, durable jobs/recovery, explicit partial/failure
+outcomes, receipts and independent effect verification. Missing Cortex config or
+failed analyzers must never produce a real completed outcome. Existing MCP wire
+names stay retained, but no MCP operation is admitted by this detail boundary.

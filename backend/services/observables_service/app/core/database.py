@@ -1,16 +1,16 @@
-"""Database configuration and session management."""
+"""Database connection and session management."""
 
 from typing import Generator
 
-from fastapi import Depends
-from sqlalchemy import create_engine, event, text
+from fastapi import HTTPException, Request
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import settings
-from app.core.security import get_tenant_id
+from app.core.security import get_current_tenant
+from sg_core.tenant_session import tenant_session, install_tenant_pool_reset
 
-# Create engine
 engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,
@@ -18,56 +18,34 @@ engine = create_engine(
     max_overflow=20,
 )
 
-# Create session factory
+install_tenant_pool_reset(engine)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Base class for models
 Base = declarative_base()
 
 
-@event.listens_for(engine, "connect")
-def _reset_tenant_on_connect(dbapi_connection, connection_record):
-    """Clear tenant RLS state when a new physical connection is created."""
-    cursor = dbapi_connection.cursor()
+def get_db() -> Generator[Session, None, None]:
+    """Legacy unscoped helper cannot establish observable operation authority."""
+    raise HTTPException(503, "Owned observable operation context required")
+    yield
+
+
+def get_tenant_db(tenant_id: str) -> Generator[Session, None, None]:
+    """A raw UUID or queue argument is not a verified operation context."""
+    raise HTTPException(503, "Owned observable workload or action contract required")
+    yield
+
+
+def get_tenant_session(request: Request) -> Generator[Session, None, None]:
+    """Resolve the actual owned request; direct raw UUID calls cannot open storage."""
+    if not isinstance(request, Request):
+        raise HTTPException(503, "Owned observable request context required")
+    tenant_id = get_current_tenant(request)
     try:
-        cursor.execute("SET app.current_tenant_id = ''")
-        cursor.execute("SET app.is_superadmin = 'false'")
-    finally:
-        cursor.close()
-
-
-def get_db() -> Session:
-    """Get database session."""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-def get_tenant_db(tenant_id) -> Generator[Session, None, None]:
-    """Yield a DB session with tenant-scoped RLS context applied."""
-    resolved_tenant = str(tenant_id)
-    db = SessionLocal()
-    try:
-        db.execute(text("SET LOCAL app.current_tenant_id = :tid"), {"tid": resolved_tenant})
-        db.execute(text("SET LOCAL app.is_superadmin = 'false'"))
-        yield db
-        db.commit()
-    except Exception:
-        db.rollback()
+        with tenant_session(SessionLocal, tenant_id) as db:
+            yield db
+    except HTTPException:
         raise
-    finally:
-        try:
-            db.execute(text("RESET app.current_tenant_id"))
-            db.execute(text("RESET app.is_superadmin"))
-        except Exception:
-            pass
-        db.close()
-
-
-def get_tenant_session(
-    tenant_id = Depends(get_tenant_id),
-) -> Generator[Session, None, None]:
-    """FastAPI dependency that returns a tenant-scoped DB session."""
-    yield from get_tenant_db(tenant_id)
+    except Exception:
+        raise HTTPException(503, "Owned observable store unavailable") from None
