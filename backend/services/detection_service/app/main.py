@@ -1,14 +1,12 @@
 """Detection Service - Main application."""
 
 import logging
-import atexit
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.core.config import settings
-from app.core.database import engine, Base
+from app.core.security import require_detection_request
 from app.api import rules
-from app.services.scheduler import start_scheduler, stop_scheduler
 
 logging.basicConfig(
     level=getattr(logging, settings.LOG_LEVEL.upper()),
@@ -16,27 +14,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Schema adoption requires the reviewed model/Flyway contract; no runtime DDL.
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifespan context manager for startup/shutdown events."""
-    # Startup
-    logger.info("Starting Detection Service...")
-    
-    # Start scheduler for periodic rule evaluation
-    start_scheduler()
-    
-    # Register cleanup
-    atexit.register(stop_scheduler)
-    
+    """HTTP source admission only; never auto-start or claim scheduler readiness."""
     yield
-    
-    # Shutdown
-    logger.info("Shutting down Detection Service...")
-    stop_scheduler()
 
 
 app = FastAPI(
@@ -44,7 +28,11 @@ app = FastAPI(
     description="Detection rules engine for security alerts",
     version=settings.VERSION,
     lifespan=lifespan,
+    dependencies=[Depends(require_detection_request)],
 )
+
+app.state.iam_verification_settings = settings.verification_settings()
+app.state.detection_principal_settings = settings.principal_settings()
 
 app.add_middleware(
     CORSMiddleware,

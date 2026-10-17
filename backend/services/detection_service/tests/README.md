@@ -1,76 +1,30 @@
-# Detection Service Tests
+# Detection Service tests
 
-> **Experimental component reference.** This monorepo publishes source for developer review. Commands and capability descriptions below are not a supported runtime or current release certification. Read [the root preview scope](../../../../RELEASE_SCOPE.md) first.
+This is experimental source for developer review. Read the
+[root release scope](../../../../RELEASE_SCOPE.md) and the
+[detection boundary](../../../../docs/architecture/gateway-identity.md#detection-scheduler-runtime-read-and-source-admission)
+for current source and runtime limits.
 
+From the repository root, run the required source target with the reviewed preview
+dependencies:
 
-## Overview
-
-This directory contains tests for the Detection Service, including:
-- Unit tests for individual detection rules
-- Unit tests for the rule engine
-- Integration tests for API endpoints
-- Tests for the scheduler functionality
-
-## Running Tests
-
-### Prerequisites
-
-Install test dependencies:
-```bash
-pip install pytest pytest-asyncio pytest-mock httpx
+```sh
+make preview-detection-identity PYTHON=.venv/bin/python
 ```
 
-### Run All Tests
+The target mounts the actual HTTP app/gate/projector with the current IAM RSA
+validator in a separate process, owned key/HTTP and runtime-state doubles. There
+are no identity/admission overrides or fake APScheduler modules. It verifies exact
+service-wide reader grants, unavailable state and operations, startup without DDL/
+scheduling, direct lifecycle/session denials and no provider effects. It does not
+start a real scheduler or qualify SDK, SQL/RLS, schema/data, rule evaluation or
+alert/incident/ticket delivery.
 
-```bash
-pytest tests/
-```
-
-### Run Specific Test Files
-
-```bash
-# Test rules only
-pytest tests/test_rules.py
-
-# Test rule engine only
-pytest tests/test_rule_engine.py
-
-# Test integration only
-pytest tests/test_integration.py
-
-# Test scheduler only
-pytest tests/test_scheduler.py
-```
-
-### Run with Coverage
-
-```bash
-pytest tests/ --cov=app --cov-report=html
-```
-
-## Test Structure
-
-- `conftest.py`: Shared fixtures (database session, test rules, sample events)
-- `test_rules.py`: Unit tests for individual detection rules
-- `test_rule_engine.py`: Unit tests for rule engine evaluation logic
-- `test_integration.py`: Integration tests for API endpoints
-- `test_scheduler.py`: Tests for background scheduler functionality
-
-## Mocking
-
-Tests use mocks for:
-- SIEM Agent API calls (event fetching)
-- Alert creation service
-- IAM Agent token validation
-- Database sessions
-
-## Test Database
-
-Tests use SQLite in-memory database by default (fast, isolated tests).
-
-To use PostgreSQL for tests:
-```bash
-export TEST_DATABASE_URL=postgresql://user:pass@localhost/test_db
-pytest tests/
-```
-
+The broader suite retains legacy rule/engine/integration tests with missing
+fixtures such as `db_session`, `test_tenant_id` and sample rule/event data. It is
+not a passing installation or runtime test. Earlier global scheduler/DDL substitutes
+were removed; header/override-based mutation success tests now assert explicit
+source unavailability. Rule and effect capabilities remain restoration requirements.
+The selected `/api/v1/rules` routes differ from old tests' `/api/v1/detection/rules`
+paths and from the SIEM Agent's separate versioned detection catalog. Full client/
+proxy/status/schema compatibility still needs reconciliation; no alias is implied.

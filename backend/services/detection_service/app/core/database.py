@@ -2,8 +2,8 @@
 
 from typing import Generator
 
-from fastapi import Depends
-from sqlalchemy import create_engine, text
+from fastapi import Depends, HTTPException
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -23,40 +23,17 @@ Base = declarative_base()
 
 
 def get_db():
-    """Dependency for getting database session."""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    """Unscoped legacy sessions do not establish detection operation authority."""
+    raise HTTPException(503, "Owned detection storage contract required")
+    yield
 
 
 def get_tenant_db(tenant_id: str) -> Generator[Session, None, None]:
-    """Yield a tenant-scoped session when the backend supports DB session context."""
-    db = SessionLocal()
-    is_postgres = getattr(getattr(db.bind, "dialect", None), "name", "") == "postgresql"
-
-    try:
-        if is_postgres:
-            db.execute(text("SET LOCAL app.current_tenant_id = :tenant_id"), {"tenant_id": str(tenant_id)})
-            db.execute(text("SET LOCAL app.is_superadmin = 'false'"))
-        yield db
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise
-    finally:
-        if is_postgres:
-            try:
-                db.execute(text("RESET app.current_tenant_id"))
-                db.execute(text("RESET app.is_superadmin"))
-            except Exception:
-                pass
-        db.close()
+    raise HTTPException(503, "Owned detection tenant and storage contract required")
+    yield
 
 
-def get_tenant_session(
-    tenant_id: str = Depends(get_current_tenant),
-) -> Generator[Session, None, None]:
-    """FastAPI dependency for authenticated tenant-scoped DB access."""
-    yield from get_tenant_db(tenant_id)
+def get_tenant_session(tenant_id: str = Depends(get_current_tenant)) -> Generator[Session, None, None]:
+    """Stored rule adoption remains unavailable pending model/Flyway reconciliation."""
+    raise HTTPException(503, "Owned detection rule storage contract required")
+    yield

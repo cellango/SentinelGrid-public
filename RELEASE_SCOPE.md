@@ -182,3 +182,16 @@ shared-token ingestion forwarding deny. Actual-assembly/current-IAM checks use k
 HTTP/session/result doubles without admission or provider-SDK substitutes. Managed
 schema/Flyway/RLS/data/encryption, real SDK/provider/OAuth/workload/delivery and full
 runtime qualification remain open.
+
+
+The [detection source boundary](docs/architecture/gateway-identity.md#detection-scheduler-runtime-read-and-source-admission)
+preserves 14 declarations. Only root metadata is public; scheduler status requires an
+exact registered service-wide reader and an already initialized runtime object.
+Uninitialized state returns 503. Twelve rule/health/lifecycle operations stay
+unavailable and required restoration. Import-time DDL and automatic scheduling are
+removed; direct lifecycle helpers cannot fabricate started/completed work. The
+tracked legacy model conflicts with the consolidated rule catalog shape; neither
+is changed. Current-IAM/actual-assembly checks use key/HTTP and runtime-state doubles,
+without identity/admission or scheduler-SDK replacements. Actual APScheduler,
+backing stores, model/Flyway/RLS/data, rule evaluation, downstream credentials/effects
+and full runtime remain unqualified; broader legacy fixture errors remain open.

@@ -465,6 +465,67 @@ accepted raw header or callback state now assert unavailability; global SDK/serv
 DDL substitutes were removed from their harness. Neither source tests nor health
 metadata establish provider, SQL/RLS, OAuth, ingestion or full runtime equivalence.
 
+## Detection scheduler runtime read and source admission
+
+The [actual detection application](../../backend/services/detection_service/app/main.py)
+and both routers use an [exact source gate](../../backend/services/detection_service/app/core/security.py)
+before handler dependencies. Only GET `/` exposes public local metadata. The existing
+GET `/api/v1/scheduler/status` requires a strict direct bearer, current IAM receipt/
+user contract, owned `IAM_USER_CLIENT_BINDINGS` registration and exact
+`DETECTION_SCHEDULER_READERS` grant naming issuer, client, canonical tenant/subject
+UUIDs, `service: detection-service`, `scope: service_runtime` and
+`permission: detection.read_scheduler_runtime`. Both policy lists default empty.
+A role, tenant reader, workload JWT or forwarded tenant cannot grant this service-
+wide view. The reader's tenant identifies the operator; it never selects a tenant
+scheduler. Matching hints are optional; conflicting/duplicate hints, forwarded
+actor/role/internal/API-key headers, queries, bodies and encoded/proxy-root targets
+are rejected. Raw query bytes are bounded to 64 even though no query is accepted.
+
+[The runtime projector](../../backend/services/detection_service/app/services/scheduler.py)
+only observes an already initialized server-owned runtime object. It never constructs
+or starts APScheduler. Uninitialized state or a failed store returns generic 503,
+not a fabricated stopped/empty success. A real initialized empty/stopped state
+retains that result. The projection exposes only boolean `running`, and job ID,
+name and next-run timestamp: at most 100 jobs, bounded single-line ID/name strings
+and timezone-aware next-run values. No job arguments, callable or credentials are
+returned. Runtime-object provenance, backing job-store access/ownership, actual SDK,
+worker lifecycle, registration and deployed operational ingress remain unqualified.
+Source tests inject a runtime-state object, rather than starting a real scheduler.
+
+All 14 existing method/path declarations remain. The other 12 operations are
+unavailable and required restoration work: all eight rule routes, including stored
+list/detail reads, health with global scheduler state, and start/stop/trigger.
+The tracked `DetectionRule` model expects legacy rule-type/pattern/enabled/severity
+fields, while consolidated `security_ops.detection_rules` has a versioned-catalog
+shape. Neither table is redefined here. Managed model/Flyway/data/version/read-role/
+RLS/upgrade/restore adoption must be resolved before stored-rule support. Runtime
+DDL and automatic scheduler startup/atexit cleanup are removed from the HTTP app.
+Direct lifecycle/job/one-time scheduling helpers raise an explicit unavailable-
+contract error before SQL, SDK construction or effects. They cannot report started
+or completed work while the old schema-mismatch no-op persists. Legacy raw-tenant/
+unscoped session and token-only helpers also deny in all environments.
+
+Rule evaluation, SIEM event search, alert/incident/ticket creation and SOC task
+submission remain required genuine capabilities. Their existing engine, pure
+algorithms and downstream sender code are unchanged and unqualified as worker or
+action authority. Restore exact user/workload/tenant/resource/source/body/target/
+version permissions, bounded event queries, verified provider credentials/TLS,
+replay/idempotency, durable acceptance and independently checked alert/effect
+outcomes. Global scheduling must not mix tenants or use a tenant inferred from the
+first alert. SIEM search errors must not become an empty success, and scheduler
+errors must not become completed work. No SDK install, new schema or engine
+replacement is provided; Temporal/case_runtime remains the selected architecture.
+
+`make preview-detection-identity` mounts the actual assembly/gate/projector, runs
+current IAM RSA validation in a separate process with key/HTTP doubles, and injects
+server runtime state without identity/admission or scheduler-SDK replacements. It
+checks owned global reads, unavailable/bad runtime data, all denied operations
+before storage/effects, signature/receipt/credential/hint/path/query cases, startup,
+standalone routers and direct lifecycle/session guards. Broader legacy rule tests
+still have missing fixtures and are not full-suite or runtime qualification. The
+[component test reference](../../backend/services/detection_service/tests/README.md)
+keeps those limits explicit.
+
 ## Qualification and remaining work
 
 `make preview-gateway-identity` retains the real generated RSA/current IAM validator

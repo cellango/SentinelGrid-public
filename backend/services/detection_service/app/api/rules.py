@@ -7,14 +7,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from app.core.database import get_tenant_session
-from app.core.security import get_current_tenant
-from app.models.rule import DetectionRule
-from app.engine.rule_engine import RuleEngine
-from app.services.alert_service import create_alerts
+from app.core.security import get_current_tenant, require_detection_request
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/rules", tags=["detection-rules"])
+router = APIRouter(prefix="/rules", tags=["detection-rules"], dependencies=[Depends(require_detection_request)])
 
 
 class RuleCreate(BaseModel):
@@ -57,6 +54,7 @@ async def create_rule(
     db: Session = Depends(get_tenant_session)
 ):
     """Create a new detection rule."""
+    from app.models.rule import DetectionRule
     # Validate rule type
     valid_types = ["failed_logins", "new_admin", "suspicious_cloud"]
     if rule_data.rule_type not in valid_types:
@@ -109,6 +107,7 @@ def list_rules(
     db: Session = Depends(get_tenant_session)
 ):
     """List all detection rules for the current tenant."""
+    from app.models.rule import DetectionRule
     query = db.query(DetectionRule).filter(DetectionRule.tenant_id == UUID(tenant_id))
     
     if enabled_only:
@@ -140,6 +139,7 @@ def get_rule(
     db: Session = Depends(get_tenant_session)
 ):
     """Get a specific detection rule."""
+    from app.models.rule import DetectionRule
     rule = db.query(DetectionRule).filter(
         DetectionRule.id == UUID(rule_id),
         DetectionRule.tenant_id == UUID(tenant_id)
@@ -173,6 +173,7 @@ def update_rule(
     db: Session = Depends(get_tenant_session)
 ):
     """Update a detection rule."""
+    from app.models.rule import DetectionRule
     rule = db.query(DetectionRule).filter(
         DetectionRule.id == UUID(rule_id),
         DetectionRule.tenant_id == UUID(tenant_id)
@@ -224,6 +225,7 @@ def delete_rule(
     db: Session = Depends(get_tenant_session)
 ):
     """Delete a detection rule."""
+    from app.models.rule import DetectionRule
     rule = db.query(DetectionRule).filter(
         DetectionRule.id == UUID(rule_id),
         DetectionRule.tenant_id == UUID(tenant_id)
@@ -247,6 +249,9 @@ async def evaluate_rule(
     db: Session = Depends(get_tenant_session)
 ):
     """Manually trigger evaluation of a rule."""
+    from app.models.rule import DetectionRule
+    from app.engine.rule_engine import RuleEngine
+    from app.services.alert_service import create_alerts
     rule = db.query(DetectionRule).filter(
         DetectionRule.id == UUID(rule_id),
         DetectionRule.tenant_id == UUID(tenant_id)
@@ -281,6 +286,8 @@ async def evaluate_all_rules(
     db: Session = Depends(get_tenant_session)
 ):
     """Evaluate all enabled rules for the current tenant."""
+    from app.engine.rule_engine import RuleEngine
+    from app.services.alert_service import create_alerts
     engine = RuleEngine(db)
     results = await engine.evaluate_all_rules(tenant_id)
     
@@ -319,6 +326,7 @@ def enable_baseline_rules(
     
     Creates or enables the specified baseline rules. Used during onboarding.
     """
+    from app.models.rule import DetectionRule
     valid_rule_keys = ["failed_logins", "new_admin", "suspicious_cloud"]
     if request.tenant_id != tenant_id:
         raise HTTPException(

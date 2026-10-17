@@ -4,9 +4,10 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.core.security import get_current_tenant
+from app.core.security import get_current_tenant, require_detection_request
 from app.services.scheduler import (
     get_scheduler,
+    read_scheduler_status,
     start_scheduler,
     stop_scheduler,
     evaluate_all_rules_job,
@@ -15,26 +16,16 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/scheduler", tags=["scheduler"])
+router = APIRouter(prefix="/scheduler", tags=["scheduler"], dependencies=[Depends(require_detection_request)])
 
 
 @router.get("/status")
 def get_scheduler_status():
-    """Get scheduler status."""
-    scheduler = get_scheduler()
-    
-    jobs = []
-    for job in scheduler.get_jobs():
-        jobs.append({
-            "id": job.id,
-            "name": job.name,
-            "next_run_time": job.next_run_time.isoformat() if job.next_run_time else None,
-        })
-    
-    return {
-        "running": scheduler.running,
-        "jobs": jobs,
-    }
+    """Observe only an already initialized runtime under exact service-wide authority."""
+    try:
+        return read_scheduler_status()
+    except Exception:
+        raise HTTPException(503, "Detection scheduler runtime unavailable") from None
 
 
 @router.post("/start")
