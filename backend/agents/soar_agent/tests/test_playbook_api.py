@@ -1,8 +1,13 @@
-"""Test suite for Playbook API endpoints."""
+"""Source admission contracts; CRUD effects remain required restoration work.
+
+An HTTP 500 is never accepted as a successful API contract. Positive signed reads
+and tenant/resource filters live in the actual identity-boundary suite.
+"""
 
 import pytest
 from fastapi.testclient import TestClient
 from uuid import uuid4
+from datetime import datetime, timezone
 from app.main import app
 from app.models import PlaybookCreate, WorkflowStructure
 
@@ -56,8 +61,8 @@ class TestPlaybookCRUD:
             json=sample_playbook_data.model_dump(),
             headers={"X-Tenant-ID": str(sample_tenant_id)}
         )
-        # Will fail without database, but validates endpoint exists
-        assert response.status_code in [201, 500]  # 500 = DB not connected, 201 = success
+        # Source selection rejects before database/service construction.
+        assert response.status_code == 503
 
     def test_list_playbooks(self, client, sample_tenant_id):
         """Test listing playbooks."""
@@ -65,8 +70,8 @@ class TestPlaybookCRUD:
             "/soar/playbooks",
             headers={"X-Tenant-ID": str(sample_tenant_id)}
         )
-        # Validates endpoint exists
-        assert response.status_code in [200, 500]
+        # Header-only requests cannot create a verified reader.
+        assert response.status_code == 401
 
     def test_get_playbook_not_found(self, client, sample_tenant_id):
         """Test getting non-existent playbook."""
@@ -75,7 +80,7 @@ class TestPlaybookCRUD:
             f"/soar/playbooks/{playbook_id}",
             headers={"X-Tenant-ID": str(sample_tenant_id)}
         )
-        assert response.status_code in [404, 500]
+        assert response.status_code == 401
 
     def test_copy_playbook(self, client, sample_tenant_id):
         """Test copying a playbook."""
@@ -85,7 +90,7 @@ class TestPlaybookCRUD:
             json={"new_name": "Copied Playbook"},
             headers={"X-Tenant-ID": str(sample_tenant_id)}
         )
-        assert response.status_code in [201, 404, 500]
+        assert response.status_code == 503
 
     def test_validate_playbook(self, client, sample_tenant_id):
         """Test validating a playbook."""
@@ -94,7 +99,7 @@ class TestPlaybookCRUD:
             f"/soar/playbooks/{playbook_id}/validate",
             headers={"X-Tenant-ID": str(sample_tenant_id)}
         )
-        assert response.status_code in [200, 404, 500]
+        assert response.status_code == 503
 
     def test_delete_playbook(self, client, sample_tenant_id):
         """Test deleting a playbook."""
@@ -103,7 +108,7 @@ class TestPlaybookCRUD:
             f"/soar/playbooks/{playbook_id}",
             headers={"X-Tenant-ID": str(sample_tenant_id)}
         )
-        assert response.status_code in [204, 404, 500]
+        assert response.status_code == 503
 
 
 class TestPlaybookValidation:
@@ -121,7 +126,7 @@ class TestPlaybookValidation:
             tenant_id=uuid4(),
             name="Invalid",
             workflow=WorkflowStructure(nodes=[], edges=[]),
-            version="1.0.0"
+            version="1.0.0", created_at=datetime.now(timezone.utc), updated_at=datetime.now(timezone.utc)
         )
         
         # Mock service to test validation logic

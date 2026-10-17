@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -47,6 +47,10 @@ preview-check:
 	$(MAKE) preview-gateway PYTHON="$(PYTHON)"
 	$(MAKE) preview-workload-reads PYTHON="$(PYTHON)"
 	$(MAKE) preview-orchestrator-identity PYTHON="$(PYTHON)"
+	$(MAKE) preview-soar-identity PYTHON="$(PYTHON)"
+
+preview-soar-identity:
+	$(PYTHON) -m pytest -c backend/agents/soar_agent/tests/pytest-identity.ini backend/agents/soar_agent/tests/test_soar_identity_boundary.py backend/agents/soar_agent/tests/test_config_security.py -q
 
 preview-orchestrator-identity:
 	$(PYTHON) -m pytest -c backend/services/orchestrator/tests/pytest-identity.ini backend/services/orchestrator/tests/test_orchestrator_identity_boundary.py backend/services/orchestrator/tests/test_config_security.py -q

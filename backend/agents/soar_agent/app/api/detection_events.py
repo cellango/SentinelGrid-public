@@ -5,16 +5,17 @@ from typing import Any, Dict, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Header, HTTPException, status
-from sg_core.service_security import verify_internal_service_token
 from sqlalchemy.orm import Session
 
 from app.core.database import get_tenant_db
 from app.core.config import settings
 from app.services.incident_creator import IncidentCreator
 
+from app.core.security import require_soar_request
+
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/detection-events", tags=["detection-events"])
+router = APIRouter(prefix="/detection-events", tags=["detection-events"], dependencies=[Depends(require_soar_request)])
 
 
 async def validate_webhook_auth(
@@ -23,31 +24,7 @@ async def validate_webhook_auth(
     x_internal_token: Optional[str] = Header(None, alias="X-Internal-Token"),
     x_tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID"),
 ) -> UUID:
-    """
-    Validate detection-event ingestion as authenticated internal-only traffic.
-    """
-    verify_internal_service_token(
-        settings.INTERNAL_SERVICE_TOKEN,
-        authorization=authorization,
-        x_internal_service_token=x_internal_service_token,
-        x_internal_token=x_internal_token,
-        missing_detail="Missing or invalid authorization header",
-        invalid_detail="Invalid internal service token",
-    )
-
-    if not x_tenant_id:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Missing X-Tenant-ID header"
-        )
-
-    try:
-        return UUID(str(x_tenant_id))
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid X-Tenant-ID header format",
-        ) from exc
+    raise HTTPException(503, "Owned SOAR webhook identity and effect contract required")
 
 
 def get_webhook_tenant_session(
@@ -68,10 +45,8 @@ async def ingest_detection_event(
     This endpoint is called by OpenSearch Alerting when a detection rule fires.
     It creates an incident in SOAR and optionally triggers a playbook.
     
-    Headers:
-        Authorization: Bearer {INTERNAL_SERVICE_TOKEN}
-        X-Tenant-ID: {tenant_uuid}
-    
+    Source admission is unavailable pending owned webhook/workload and effect contracts.
+
     Body:
         Detection event data from OpenSearch monitor
     

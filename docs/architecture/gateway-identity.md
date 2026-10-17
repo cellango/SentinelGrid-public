@@ -281,6 +281,70 @@ functions directly; they do not qualify those routes. Local metadata is not a
 supported runtime/readiness claim. All other caller/provider/action, deployment
 and runtime qualifications remain open under root release scope.
 
+## SOAR owned definition reads and source admission
+
+The [actual SOAR assembly](../../backend/agents/soar_agent/app/main.py) and all five
+routers now apply an [exact source gate](../../backend/agents/soar_agent/app/core/security.py)
+before handler dependencies. Only exact GET `/` and `/health` expose local metadata.
+GET `/soar/playbooks` and `/soar/playbooks/{playbook_id}` are the two admitted business
+source reads. A strict direct bearer, the current IAM receipt/user contract and
+`IAM_USER_CLIENT_BINDINGS` are required, together with an explicit
+`SOAR_PLAYBOOK_READERS` grant. Each grant names exact `issuer`, `client_id`, canonical
+UUID `tenant_id` and `subject_id`, and `permission: playbook.read_owned`. Grants must
+reference an owned user-client registration; both policy lists default to empty.
+A user UUID, administrator role, workload token or constructed context grants no
+read by itself. Verifier and policy snapshots come from SOAR's owned settings,
+using the same IAM origin/audience/timeout/CA rules as the other services above.
+
+[The owned reader](../../backend/agents/soar_agent/app/services/playbook_reader.py)
+performs tenant-only ORM SELECTs; detail reads additionally bind the resource UUID.
+It never constructs the legacy service that looks up `sg_admin` or merges global
+built-ins. A built-in flag cannot expose another tenant's row; contradictory row
+ownership fails closed. The existing logical definition/version projection is
+retained, with the installed `n8n_webhook_url` withheld and no stored-row mutation.
+This is not a general credential-redaction review of arbitrary saved workflow data.
+The shared catalog and its intended functionality remain separate restoration work.
+
+Conflicting/duplicate tenant/realm hints and forwarded actor/role/internal/API-key
+headers are rejected. Reads accept no body or encoded target. The list permits only
+one each of `category` (up to 50 characters), `is_template`, `skip` (0–10,000) and
+`limit` (1–100, default 100); queries are bounded to 4 KiB and validated before session
+creation. Detail accepts no query fields. Unknown/duplicate query keys cannot
+supply tenant or authority. A genuine empty list is returned unchanged, a missing
+owned detail is 404, and store/session failures return generic 503 without private
+diagnostics. Function-scoped session cleanup finishes before a response can succeed.
+
+The [session dependency](../../backend/agents/soar_agent/app/core/database.py) derives
+its tenant from this verified read context and uses the existing shared transaction/
+pool tenant-binding helper. The legacy raw-UUID session entrypoint is unavailable;
+`init_db` refuses runtime table creation. ORM mappings and the existing SOAR Flyway
+files are unchanged. Physical schema ownership/search path, ORM/Flyway adoption,
+least-privilege roles, real SQL/RLS, upgrades/data and complete installation remain
+required before supporting these reads. Source tests use storage/session doubles.
+
+The other 26 unique current operations stay unavailable and required restoration
+work: definition writes/approval/execution, shared/OOTB catalog and seeding, execution
+status, TheHive/analyzers/observables, webhooks/detection ingress, containment,
+enrichment and the internal execution stub. Independent webhook validators no
+longer promote API/shared credentials plus a tenant header into authority; query
+session helpers also deny. Enrichment clients are initialized lazily after admitted
+dependencies, not on module import. No model/provider/worker/queue or workflow engine
+is enabled. Direct component/library calls still require their own action authority.
+Two existing duplicate write declarations (copy/validate) remain blocked; full
+route/status/schema/client compatibility reconciliation is still required.
+
+`make preview-soar-identity` mounts the actual assembly and owned reader, with the
+current IAM RSA validator in a separate process, key/HTTP and session/query-result
+doubles, and no identity/admission override. It checks exact tenant/resource queries,
+foreign built-in rows, store/session failures, missing/forged/expired/foreign identity,
+raw credentials/hints/queries, all unavailable operations and standalone helpers.
+Legacy tests that treated header-only or shared-token calls as accepted now assert
+source denial. A legacy execution-unit model double is scoped to its own test module;
+those unit tests do not qualify real execution. Older database-integration fixtures
+still require an owned managed profile and are not advertised as passing runtime
+qualification. No workload issuer, live provider registration/client/grant policy,
+shared catalog, action approval/audit/effect or full feature migration is qualified.
+
 ## Qualification and remaining work
 
 `make preview-gateway-identity` retains the real generated RSA/current IAM validator

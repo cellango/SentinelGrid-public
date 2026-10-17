@@ -6,6 +6,9 @@ from typing import Optional
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sg_core.service_security import DEFAULT_INTERNAL_SERVICE_TOKEN
+from sg_core.iam_verification import IAMVerificationSettings
+from sg_core.user_principals import UserClientBinding
+from app.core.principal_policy import SOARPrincipalSettings, PlaybookReader
 
 DEFAULT_CORS_ORIGINS = [
     "http://localhost:3000",
@@ -61,6 +64,12 @@ class Settings(BaseSettings):
     KEYCLOAK_URL: str = os.getenv("KEYCLOAK_URL", "http://keycloak:8080")
     KEYCLOAK_REALM: str = os.getenv("KEYCLOAK_REALM", "sentinelgrid")
     
+    KEYCLOAK_CLIENT_ID: str = "sentinelgrid-web"
+    IAM_TOKEN_VALIDATION_TIMEOUT: float = Field(default=5.0, gt=0, le=10, allow_inf_nan=False)
+    IAM_VERIFIER_CA_BUNDLE: str | None = None
+    IAM_USER_CLIENT_BINDINGS: tuple[UserClientBinding, ...] = Field(default=(), max_length=256)
+    SOAR_PLAYBOOK_READERS: tuple[PlaybookReader, ...] = Field(default=(), max_length=256)
+
     # Playbook execution
     PLAYBOOK_EXECUTION_TIMEOUT: int = int(os.getenv("PLAYBOOK_EXECUTION_TIMEOUT", "3600"))  # 1 hour default
     
@@ -104,16 +113,23 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _validate_security_posture(self):
-        if self.ENVIRONMENT != "production":
-            return self
-
-        if not self.CORS_ORIGINS or any(origin == "*" for origin in self.CORS_ORIGINS):
-            raise ValueError("CORS_ORIGINS must be an explicit allowlist in production")
-
-        if self.INTERNAL_SERVICE_TOKEN == DEFAULT_INTERNAL_SERVICE_TOKEN:
-            raise ValueError("INTERNAL_SERVICE_TOKEN cannot use the default value in production")
-
+        if self.ENVIRONMENT == "production":
+            if not self.CORS_ORIGINS or any(origin == "*" for origin in self.CORS_ORIGINS):
+                raise ValueError("CORS_ORIGINS must be an explicit allowlist in production")
+            if self.INTERNAL_SERVICE_TOKEN == DEFAULT_INTERNAL_SERVICE_TOKEN:
+                raise ValueError("INTERNAL_SERVICE_TOKEN cannot use the default value in production")
+        self.verification_settings()
+        self.principal_settings()
         return self
+
+    def verification_settings(self) -> IAMVerificationSettings:
+        names = {"ENVIRONMENT", "IAM_AGENT_URL", "KEYCLOAK_CLIENT_ID",
+                 "IAM_TOKEN_VALIDATION_TIMEOUT", "IAM_VERIFIER_CA_BUNDLE"}
+        return IAMVerificationSettings(_env_file=None, **self.model_dump(include=names))
+
+    def principal_settings(self) -> SOARPrincipalSettings:
+        return SOARPrincipalSettings(_env_file=None, ENVIRONMENT=self.ENVIRONMENT,
+            IAM_USER_CLIENT_BINDINGS=self.IAM_USER_CLIENT_BINDINGS, SOAR_PLAYBOOK_READERS=self.SOAR_PLAYBOOK_READERS)
 
 
 settings = Settings()

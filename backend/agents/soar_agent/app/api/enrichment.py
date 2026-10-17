@@ -10,17 +10,22 @@ from app.core.database import get_tenant_db
 from app.services.enrichment_service import EnrichmentService
 from sg_core.schemas import TicketAIEnrichmentResponse
 
+from app.core.security import require_soar_request
+
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
-enrichment_service = EnrichmentService()
+router = APIRouter(dependencies=[Depends(require_soar_request)])
+def get_enrichment_service() -> EnrichmentService:
+    return EnrichmentService()
 
 
 def get_query_tenant_session(
     tenant_id: UUID = Query(..., description="Tenant ID"),
 ):
-    """Open a tenant-scoped DB session for query-derived tenant context."""
-    yield from get_tenant_db(str(tenant_id))
+    """Raw query tenant cannot authorize enrichment or containment."""
+    raise HTTPException(503, "Owned SOAR operation context required")
+    yield
+
 
 
 @router.post("/ticket/{ticket_id}", response_model=TicketAIEnrichmentResponse)
@@ -28,6 +33,7 @@ async def enrich_ticket(
     ticket_id: UUID,
     enrichment_type: str = Query("all", description="Type of enrichment: iam, vulnerability, cmdb, network, framework, all"),
     tenant_id: UUID = Query(..., description="Tenant ID"),
+    service: EnrichmentService = Depends(get_enrichment_service),
     db: Session = Depends(get_query_tenant_session)
 ):
     """
@@ -43,7 +49,7 @@ async def enrich_ticket(
         Enrichment result
     """
     try:
-        enrichment = await enrichment_service.enrich_ticket(
+        enrichment = await service.enrich_ticket(
             db, ticket_id, tenant_id, enrichment_type
         )
         return enrichment
@@ -58,10 +64,11 @@ async def enrich_ticket(
 async def get_enrichment(
     ticket_id: UUID,
     tenant_id: UUID = Query(..., description="Tenant ID"),
+    service: EnrichmentService = Depends(get_enrichment_service),
     db: Session = Depends(get_query_tenant_session)
 ):
     """Get enrichment data for a ticket."""
-    enrichment = enrichment_service.get_enrichment(db, ticket_id, tenant_id)
+    enrichment = service.get_enrichment(db, ticket_id, tenant_id)
     if not enrichment:
         raise HTTPException(status_code=404, detail="Enrichment not found")
     return enrichment

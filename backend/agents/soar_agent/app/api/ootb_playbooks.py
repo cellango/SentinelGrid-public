@@ -18,8 +18,10 @@ from app.services.playbook_seeder import (
 from sg_core.dependencies import service_tenant_dependency
 get_current_tenant = service_tenant_dependency('soar_service')
 
+from app.core.security import require_soar_request
+
 logger = logging.getLogger(__name__)
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_soar_request)])
 
 
 @router.get("/ootb", response_model=List[Playbook])

@@ -3,7 +3,7 @@
 from typing import List, Optional
 from uuid import UUID
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import asyncio
@@ -20,7 +20,8 @@ from app.models import (
 )
 from app.services.playbook_service import PlaybookService
 from app.core.database import get_tenant_session
-from app.core.security import get_current_tenant
+from app.core.security import get_current_tenant, require_soar_request, MAX_SKIP, MAX_LIMIT
+from app.services.playbook_reader import OwnedPlaybookReader
 from app.api import webhooks
 from app.api import ootb_playbooks
 # Enrichment functionality (merged from ai_enrichment_agent - Dec 3, 2025)
@@ -29,8 +30,12 @@ from app.api import enrichment
 app = FastAPI(
     title="SentinelGrid SOAR Agent",
     description="SOAR integration service - Playbook management, execution, and AI-powered enrichment",
-    version="0.2.0"
+    version="0.2.0",
+    dependencies=[Depends(require_soar_request)],
 )
+
+app.state.iam_verification_settings = settings.verification_settings()
+app.state.soar_principal_settings = settings.principal_settings()
 
 # CORS middleware
 app.add_middleware(
@@ -45,6 +50,10 @@ app.add_middleware(
 def get_playbook_service(db: Session = Depends(get_tenant_session)) -> PlaybookService:
     """Get playbook service."""
     return PlaybookService(db)
+
+
+def get_owned_playbook_reader(db: Session = Depends(get_tenant_session, scope="function")) -> OwnedPlaybookReader:
+    return OwnedPlaybookReader(db)
 
 
 @app.get("/")
@@ -80,43 +89,32 @@ def create_playbook(
 
 @app.get("/soar/playbooks", response_model=List[Playbook])
 def list_playbooks(
-    category: Optional[str] = None,
+    category: Optional[str] = Query(None, max_length=50),
     is_template: Optional[bool] = None,
-    skip: int = 0,
-    limit: int = 100,
+    skip: int = Query(0, ge=0, le=MAX_SKIP),
+    limit: int = Query(100, ge=1, le=MAX_LIMIT),
     tenant_id: UUID = Depends(get_current_tenant),
-    service: PlaybookService = Depends(get_playbook_service)
+    reader: OwnedPlaybookReader = Depends(get_owned_playbook_reader),
 ):
-    """List playbooks for tenant."""
+    """List only the verified tenant's owned definitions; shared catalog is separate."""
     try:
-        playbooks = service.list(
-            tenant_id=tenant_id,
-            category=category,
-            is_template=is_template,
-            skip=skip,
-            limit=limit
-        )
-        return playbooks
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to list playbooks: {str(e)}"
-        )
+        return reader.list_owned(tenant_id,category,is_template,skip,limit)
+    except Exception:
+        raise HTTPException(503, "Owned playbook store unavailable") from None
 
 
 @app.get("/soar/playbooks/{playbook_id}", response_model=Playbook)
 def get_playbook(
     playbook_id: UUID,
     tenant_id: UUID = Depends(get_current_tenant),
-    service: PlaybookService = Depends(get_playbook_service)
+    reader: OwnedPlaybookReader = Depends(get_owned_playbook_reader),
 ):
-    """Get playbook by ID."""
-    playbook = service.get_by_id(playbook_id, tenant_id)
-    if not playbook:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Playbook {playbook_id} not found"
-        )
+    """Read an exact owned definition without global built-in visibility."""
+    try:
+        playbook = reader.get_owned(playbook_id,tenant_id)
+    except Exception:
+        raise HTTPException(503, "Owned playbook store unavailable") from None
+    if playbook is None:raise HTTPException(404, "Playbook not found")
     return playbook
 
 

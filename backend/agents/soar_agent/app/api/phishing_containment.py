@@ -16,14 +16,18 @@ if os.path.exists(libs_path):
 from app.core.database import get_tenant_db
 from app.services.phishing_containment_playbook import PhishingContainmentPlaybook
 
-router = APIRouter(prefix="/api/v1/playbooks", tags=["phishing-containment"])
+from app.core.security import require_soar_request
+
+router = APIRouter(prefix="/api/v1/playbooks", tags=["phishing-containment"], dependencies=[Depends(require_soar_request)])
 
 
 def get_query_tenant_session(
     tenant_id: UUID = Query(..., description="Tenant ID"),
 ):
-    """Open a tenant-scoped DB session for query-derived tenant context."""
-    yield from get_tenant_db(str(tenant_id))
+    """Raw query tenant cannot authorize enrichment or containment."""
+    raise HTTPException(503, "Owned SOAR operation context required")
+    yield
+
 
 
 class ContainmentPlaybookRequest(BaseModel):

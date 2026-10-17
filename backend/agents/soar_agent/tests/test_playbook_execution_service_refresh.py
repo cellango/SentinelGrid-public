@@ -25,14 +25,13 @@ class _PlaybookExecutionORM:
 
 
 database_module.PlaybookExecutionORM = _PlaybookExecutionORM
-sys.modules["app.database"] = database_module
-
-# Ensure this suite imports the real service implementation even if another
-# test module has inserted a lightweight stub into sys.modules.
-sys.modules.pop("app.services.playbook_execution_service", None)
-
-from app.services.playbook_execution_service import PlaybookExecutionService
-import app.services.playbook_execution_service as playbook_execution_service_module
+from unittest.mock import patch
+import importlib.util
+spec = importlib.util.spec_from_file_location("soar_execution_refresh_unit_target", ROOT / "app/services/playbook_execution_service.py")
+playbook_execution_service_module = importlib.util.module_from_spec(spec)
+with patch.dict(sys.modules, {"app.database": database_module}):
+    spec.loader.exec_module(playbook_execution_service_module)
+PlaybookExecutionService = playbook_execution_service_module.PlaybookExecutionService
 from sg_agent_runtime.soc_case_runtime_client import SOCCaseRuntimeClient
 
 

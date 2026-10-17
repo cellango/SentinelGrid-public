@@ -148,3 +148,15 @@ model-backed GETs and response actions, remain unavailable and required restorat
 work. RSA/actual-assembly checks use key/HTTP/storage doubles. Component metric/probe
 checks are separate from route admission; no workload issuer or provider effect is
 qualified and the frozen published release remains unchanged.
+
+
+The [SOAR source gate](docs/architecture/gateway-identity.md#soar-owned-definition-reads-and-source-admission)
+also covers its actual app and five routers. Two tenant-owned definition reads
+require an exact registered reader and use tenant-only queries; installed webhook
+URLs are withheld. The other 26 unique operations, shared catalog, webhooks and
+execution remain unavailable and required restoration work. Raw tenant/query/API-
+or shared-token identity and runtime table initialization cannot enable them.
+Read-session failure cannot report success. Current-RSA/actual-assembly tests use
+key/HTTP/session/storage doubles; physical schema/Flyway/read-role/RLS, saved workflow
+redaction, live provider/caller and execution qualifications remain open. No engine
+replacement, supported runtime or change to the frozen published release is implied.

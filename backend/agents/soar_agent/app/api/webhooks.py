@@ -11,25 +11,18 @@ from app.core.database import get_tenant_db
 from app.core.config import settings
 from sg_core.models import Ticket, Incident
 
+from app.core.security import require_soar_request
+
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_soar_request)])
 
 
 def validate_thehive_webhook_auth(
     x_api_key: Optional[str] = Header(None),
     x_tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID"),
 ) -> UUID:
-    if x_api_key != settings.THEHIVE_API_KEY:
-        raise HTTPException(status_code=401, detail="Invalid API key")
-
-    if not x_tenant_id:
-        raise HTTPException(status_code=400, detail="Missing X-Tenant-ID header")
-
-    try:
-        return UUID(str(x_tenant_id))
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail="Invalid X-Tenant-ID header format") from exc
+    raise HTTPException(503, "Owned SOAR webhook identity and effect contract required")
 
 
 def get_thehive_tenant_session(

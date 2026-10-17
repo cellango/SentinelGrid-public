@@ -316,7 +316,8 @@ class PlaybookService:
             warnings=warnings
         )
 
-    def _to_model(self, db_playbook) -> Playbook:
+    @staticmethod
+    def _to_model(db_playbook) -> Playbook:
         """Convert database model to Pydantic model."""
         from app.models import WorkflowStructure, RetryPolicy
 

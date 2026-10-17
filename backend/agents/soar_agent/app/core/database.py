@@ -1,12 +1,14 @@
-from typing import Generator
-"""Database connection and session management."""
+"""Verified SOAR read sessions; legacy UUID and runtime DDL entrypoints deny."""
 
-from fastapi import Depends
-from sqlalchemy import create_engine, text
+from typing import Generator
+
+from fastapi import Depends, HTTPException
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import settings
 from app.core.security import get_current_tenant
+from sg_core.tenant_session import tenant_session, install_tenant_pool_reset
 
 # Create engine
 engine = create_engine(
@@ -14,8 +16,10 @@ engine = create_engine(
     pool_pre_ping=True,
     pool_size=10,
     max_overflow=20,
-    echo=False  # Set to True for SQL query logging
+    echo=False,  # Set to True for SQL query logging
 )
+
+install_tenant_pool_reset(engine)
 
 # Session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -34,36 +38,24 @@ def get_db() -> Generator[Session, None, None]:
 
 
 def get_tenant_db(tenant_id) -> Generator[Session, None, None]:
-    """Yield a tenant-scoped session when PostgreSQL RLS variables are available."""
-    db = SessionLocal()
-    is_postgres = getattr(getattr(db.bind, "dialect", None), "name", "") == "postgresql"
-
-    try:
-        if is_postgres:
-            db.execute(text("SET LOCAL app.current_tenant_id = :tenant_id"), {"tenant_id": str(tenant_id)})
-            db.execute(text("SET LOCAL app.is_superadmin = 'false'"))
-        yield db
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise
-    finally:
-        if is_postgres:
-            try:
-                db.execute(text("RESET app.current_tenant_id"))
-                db.execute(text("RESET app.is_superadmin"))
-            except Exception:
-                pass
-        db.close()
+    """Legacy raw-UUID entrypoint cannot establish workload request authority."""
+    raise HTTPException(503, "Owned SOAR workload context required")
+    yield  # Keep the dependency generator shape without opening a session.
 
 
 def get_tenant_session(
-    tenant_id = Depends(get_current_tenant),
+    tenant_id=Depends(get_current_tenant),
 ) -> Generator[Session, None, None]:
     """Tenant-scoped session wrapper for route-level isolation enforcement."""
-    yield from get_tenant_db(tenant_id)
+    try:
+        with tenant_session(SessionLocal, tenant_id) as db:
+            yield db
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(503, "Owned playbook store unavailable") from None
 
 
 def init_db():
-    """Initialize database (create tables)."""
-    Base.metadata.create_all(bind=engine)
+    """Legacy initializer: schema changes require the owned Flyway profile."""
+    raise RuntimeError("SOAR schema setup requires a reviewed Flyway profile")
