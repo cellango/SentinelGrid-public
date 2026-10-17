@@ -7,7 +7,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
-from app.api.request_context import get_tenant_session
+from app.api.ai_editor import get_editor_context
+from app.api.request_context import RequestContext, get_tenant_session
 from app.services.policy_service import PolicyService, PolicyCloneConflict
 from app.services.token_validator import TokenValidator
 from app.services.keycloak_client import KeycloakClient
@@ -283,72 +284,25 @@ async def evaluate_policy(
 @router.get("/{policy_id}/analyze", response_model=PolicyAnalysis)
 async def analyze_policy(
     policy_id: UUID,
-    policy_service: PolicyService = Depends(get_policy_service)
+    context: RequestContext = Depends(get_editor_context),
 ):
-    """Analyze a policy for issues and recommendations."""
-    policy = policy_service.get_policy(policy_id)
-    if not policy:
-        raise HTTPException(status_code=404, detail="Policy not found")
-    
-    # TODO: Implement policy analysis
-    # - Check for conflicts
-    # - Calculate complexity
-    # - Generate recommendations
-    
-    return PolicyAnalysis(
-        policy_id=policy_id,
-        total_rules=len(policy.policy_data.get("rules", [])),
-        active_rules=len(policy.policy_data.get("rules", [])),
-        complexity_score=0.5,
-        potential_conflicts=[],
-        recommendations=[]
-    )
+    """Unavailable legacy placeholder; use the explicit draft editor contract."""
+    raise HTTPException(status_code=501, detail="Legacy policy AI placeholders are unavailable; use /api/v1/ai/editor for drafts")
 
 
 @router.post("/{policy_id}/explain", response_model=PolicyExplanation)
 async def explain_policy(
     policy_id: UUID,
-    policy_service: PolicyService = Depends(get_policy_service)
+    context: RequestContext = Depends(get_editor_context),
 ):
-    """Get AI-generated explanation of a policy."""
-    policy = policy_service.get_policy(policy_id)
-    if not policy:
-        raise HTTPException(status_code=404, detail="Policy not found")
-    
-    # TODO: Integrate with AI service to generate explanation
-    # For now, return basic explanation
-    
-    rules_explained = []
-    for rule in policy.policy_data.get("rules", []):
-        rules_explained.append({
-            "rule_id": rule.get("id", ""),
-            "explanation": f"Rule {rule.get('id', '')}: {rule.get('description', 'No description')}"
-        })
-    
-    return PolicyExplanation(
-        summary=f"Policy '{policy.display_name}' with {len(policy.policy_data.get('rules', []))} rules",
-        rules_explained=rules_explained,
-        potential_issues=[],
-        recommendations=[]
-    )
+    """Unavailable legacy placeholder; use the explicit draft editor contract."""
+    raise HTTPException(status_code=501, detail="Legacy policy AI placeholders are unavailable; use /api/v1/ai/editor for drafts")
 
 
 @router.post("/generate", response_model=PolicyGenerationResult)
 async def generate_policy(
     request: PolicyGenerationRequest,
-    policy_service: PolicyService = Depends(get_policy_service)
+    context: RequestContext = Depends(get_editor_context),
 ):
-    """Generate a policy from natural language description."""
-    # TODO: Integrate with AI service to generate policy from description
-    # For now, return a basic policy structure
-    
-    return PolicyGenerationResult(
-        policy_dsl={
-            "id": "generated-policy",
-            "type": request.policy_type,
-            "scope": request.scope or "tenant",
-            "rules": []
-        },
-        explanation="This is a generated policy. Please review and customize.",
-        confidence=0.5
-    )
+    """Unavailable legacy placeholder; use the explicit draft editor contract."""
+    raise HTTPException(status_code=501, detail="Legacy policy AI placeholders are unavailable; use /api/v1/ai/editor for drafts")

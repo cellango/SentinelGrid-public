@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.api import ai_features
+from app.api.auth import get_keycloak_client
 from app.api.request_context import RequestContext, get_current_request_context
 
 
@@ -115,7 +116,7 @@ def test_detect_anomalies_rejects_foreign_body_tenant(
     ai_features_test_app,
     ai_features_client,
 ):
-    _override_dependency(ai_features_test_app, ai_features.get_keycloak_client, KeycloakClientSpy())
+    _override_dependency(ai_features_test_app, get_keycloak_client, KeycloakClientSpy())
     anomaly_service = AnomalyServiceSpy()
     _override_dependency(ai_features_test_app, ai_features.get_anomaly_service, anomaly_service)
 
@@ -134,7 +135,7 @@ def test_calculate_risk_score_rejects_foreign_body_tenant(
     ai_features_test_app,
     ai_features_client,
 ):
-    _override_dependency(ai_features_test_app, ai_features.get_keycloak_client, KeycloakClientSpy())
+    _override_dependency(ai_features_test_app, get_keycloak_client, KeycloakClientSpy())
     risk_service = RiskServiceSpy()
     _override_dependency(ai_features_test_app, ai_features.get_risk_service, risk_service)
 
@@ -154,7 +155,7 @@ def test_list_user_risk_scores_rejects_foreign_query_tenant(
     ai_features_test_app,
     ai_features_client,
 ):
-    _override_dependency(ai_features_test_app, ai_features.get_keycloak_client, KeycloakClientSpy())
+    _override_dependency(ai_features_test_app, get_keycloak_client, KeycloakClientSpy())
     risk_service = RiskServiceSpy()
     _override_dependency(ai_features_test_app, ai_features.get_risk_service, risk_service)
 
@@ -172,7 +173,7 @@ def test_get_recommendations_rejects_foreign_body_tenant(
     ai_features_test_app,
     ai_features_client,
 ):
-    _override_dependency(ai_features_test_app, ai_features.get_keycloak_client, KeycloakClientSpy())
+    _override_dependency(ai_features_test_app, get_keycloak_client, KeycloakClientSpy())
     engine = RecommendationEngineSpy()
     _override_dependency(ai_features_test_app, ai_features.get_recommendation_engine, engine)
 
@@ -192,7 +193,7 @@ def test_compliance_recommendations_default_to_authenticated_tenant(
     ai_features_client,
     request_context,
 ):
-    _override_dependency(ai_features_test_app, ai_features.get_keycloak_client, KeycloakClientSpy())
+    _override_dependency(ai_features_test_app, get_keycloak_client, KeycloakClientSpy())
     engine = RecommendationEngineSpy()
     _override_dependency(ai_features_test_app, ai_features.get_recommendation_engine, engine)
 
@@ -201,6 +202,5 @@ def test_compliance_recommendations_default_to_authenticated_tenant(
         headers={"authorization": "Bearer test-token"},
     )
 
-    assert response.status_code == 200
-    assert engine.compliance_calls[0][0] == str(request_context.tenant_id)
-    assert response.json()["total_count"] == 1
+    assert response.status_code == 501
+    assert engine.compliance_calls == []

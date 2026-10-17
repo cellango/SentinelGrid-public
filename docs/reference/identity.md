@@ -659,8 +659,8 @@ authentication/audit and no longer parses opaque SCIM credentials as user JWTs.
 The internal outbound SCIM configuration endpoint and SCIM-specific protocol list/
 connection-test placeholders now return 501 rather than claim configured/connected.
 The configuration endpoint no longer constructs an unnecessary provider client.
-Other generic protocol/integration paths remain separate acceptance work; these
-blocks are not universal protocol-store qualification.
+All generic protocol/integration routes and compatibility manager methods are also
+blocked as described below; no protocol-store or provider-write qualification is claimed.
 
 Tests use synthetic HTTP transport and an owned disposable PostgreSQL cluster for
 client/tenant/realm binding, scoped pagination, malformed/provider failures, unsupported
@@ -670,3 +670,88 @@ migration is required. Full provisioning needs durable action intent, exact auth
 resource/group ownership, PATCH/filter semantics, retries/reconciliation, secret
 lifecycle and independently verified provider effects. These capabilities require future implementation and qualification; no flag enables
 them here.
+
+
+## AI policy drafts and unavailable legacy bridges
+
+The [AI editor](../../backend/agents/iam_agent/app/api/ai_editor.py) is a partial,
+disabled-by-default policy drafting service. `IAM_ENABLE_AI_EDITOR=false` admits
+no assistance. Generation and explanation require a verified tenant UUID, actual
+user UUID, and TENANT_ADMIN, IAM_ADMIN or PLATFORM_ADMIN role. Body/model fields
+cannot supply tenant, realm, roles, approval, credentials or publication authority.
+The shared internal token alone has no administrator identity.
+
+`POST /api/v1/ai/editor/generate` supports only `mode=policy`, `policy_type=access`
+and `scope=tenant`. Its draft subset has 1–20 uniquely identified rules, each with
+1–8 role/group `includes` string conditions and one `allow` or `deny` action.
+Identifiers, text and priorities are bounded. Unknown fields, executable code,
+provider actions and approval/tenant metadata are rejected. The existing
+deterministic policy parser validates the draft too; this validates the supported
+structure, not correctness, least privilege or policy coverage. A role/group name
+in a draft is text, not proof of membership.
+
+`POST /explain` accepts the same subset and returns advisory text with stated
+limitations. Both operations require review. Responses identify the authenticated
+tenant and request, `published=false`, `enforced=false` and an empty policy effect
+list. No policy, playbook, grant or application is saved. Publication remains a
+separate authenticated administrator operation through the existing policy API;
+this editor cannot call it. The editor does not establish new policy-store or
+publication audit qualification. Model statements about approval or enforcement
+have no authority.
+
+Playbook generation, suggestions, analysis and natural-language validation remain
+unavailable (501). Unsupported scopes/types also return 501. The former policy
+`/generate`, `/{id}/explain` and `/{id}/analyze` placeholders now return 501 after
+verified administrator admission instead of producing invented confidence or
+empty findings. Existing policy CRUD and deterministic simulation remain separate.
+Clients must deliberately migrate to the draft contract; there is no silent
+fallback or automatic conversion of a ReactFlow graph into executable policy.
+
+The editor uses an explicit `IAM_AI_EDITOR_GATEWAY_URL` (HTTPS, no embedded
+credentials/query/fragment) and secret `IAM_AI_EDITOR_GATEWAY_TOKEN` (at least 32
+characters), supplied through deployment secret handling. The token is excluded
+from settings display/serialization. `LLM_MODEL_NAME` selects the configured model.
+It uses the existing chat-completions wire shape, with a server-derived tenant
+header, TLS verification, disabled redirects/environment proxies, 15-second HTTP
+phase timeouts, 64 KiB streamed response cap and 32 KiB parsed JSON/content bounds.
+These are not an overall deadline or a distributed rate/cost limit. It forwards no
+user bearer token, has no tools, shared cache, alternate provider or retries, and
+does not instantiate the legacy model factory. Gateway authentication, tenant
+isolation, model quality and live deployment still require qualification before
+operator enablement. Setting the flag alone does not qualify them.
+
+Model responses require one completed text choice and strict JSON: duplicate keys,
+non-finite numbers, markdown fences, truncated choices, tool calls and unknown
+contract fields fail. Parsed content is bounded to depth 10 and 2,000 values;
+HTTP ingress limits remain a deployment responsibility. Invalid model content is
+502; gateway/configuration failures are 503. No model failure becomes an empty
+successful draft, a confidence score or a claim of verification.
+
+Durable IAM audit intent precedes outbound model access. A second event records
+completion/failure with actual actor, tenant, operation and common request UUID.
+Audit stores no prompt, policy text, model output, gateway credential or provider
+exception. Audit failure returns 503 without a draft; preflight failure makes no
+model request. Lost completion acknowledgement can leave audit/model cost without
+delivery. Inspect audit before retry; retry can make another model request. Draft
+content is not persisted/recoverable here. Handled editor responses/errors use
+`Cache-Control: no-store`. The legacy best-effort middleware delegates these paths
+to their own audit and does not construct a realm client.
+
+The old IAM chat query bridge, automatic application onboarding and
+`/internal/iam/ai/*` risk/recommendation/anomaly dataset placeholders return 501.
+They lack qualified tenant-owned input datasets and must not expose realm-wide
+provider data or provision from conversational state. Chat conversation CRUD stays
+separate and is not a durable or per-user conversation system. The standalone
+anomaly detector and audited ITDR proposal API retain their existing bounded scope.
+
+All `/internal/iam/protocols/*` configuration/list/test/sync routes now return 501
+for authenticated tenant administrators (403 for non-admins or tenant mismatch).
+Their manager methods, including direct CRUD/sync/probe helpers, also return 501
+before provider calls. SAML/OAuth/LDAP/AD/Azure/Okta stubs no longer claim
+configured, active, updated, deleted or connected, return an invented empty store,
+or echo credentials/provider exceptions. Existing request paths/signatures remain
+for compatibility; the successful placeholder behavior is deliberately withdrawn.
+This restriction does not qualify other app/IdP/connectors or sync-job APIs.
+Future admission requires durable tenant-owned configuration, secret lifecycle,
+exact resource/action authority, provider tests, idempotency and verified effects.
+No feature flag enables these blocked operations.

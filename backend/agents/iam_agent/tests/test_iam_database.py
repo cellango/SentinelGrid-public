@@ -3068,3 +3068,107 @@ def test_scim_dependency_binds_configured_tenant_without_jwt_or_header_override(
         dep.close()
     with tenant_session(factory, A) as session:
         assert session.query(IAMAuditEvent).one().subject_id == USER
+
+
+# AI assistance owns audit only; synthetic model calls never save/enforce policy.
+from app.core.config import settings as editor_settings
+from app.models.ai_editor import GenerateRequest
+from app.services.ai_policy_service import AIPolicyService
+import json as editor_json
+
+class SyntheticEditorProvider:
+    def __init__(self, invalid=False):
+        self.calls = 0
+        self.invalid = invalid
+
+    async def generate(self, prompt, tenant):
+        self.calls += 1
+        if self.invalid:
+            return '{"published":true}'
+        return editor_json.dumps({"policy_dsl": {"id":"draft", "type":"access", "scope":"tenant", "rules":[
+            {"id":"r1", "conditions":[{"type":"role", "op":"includes", "value":"reader"}], "actions":[{"type":"deny"}]}]},
+            "explanation":"Synthetic draft only."})
+
+
+def editor_assist(session, provider):
+    return asyncio.run(AIPolicyService(session, provider=provider).assist(
+        'generate', GenerateRequest(description='Synthetic deny rule for readers'),
+        RequestContext(A, str(USER), ('TENANT_ADMIN',))))
+
+
+def test_editor_preflight_and_completion_are_durable_tenant_audit(store, monkeypatch):
+    _,_,factory,_ = store
+    monkeypatch.setattr(editor_settings, 'IAM_ENABLE_AI_EDITOR', True)
+    provider = SyntheticEditorProvider()
+    with tenant_session(factory, A) as session:
+        result = editor_assist(session, provider)
+        assert result['published'] is False and result['policy_effects_executed'] == []
+    with tenant_session(factory, A) as session:
+        rows = session.query(IAMAuditEvent).all()
+        assert {r.event_type for r in rows} == {'ai_editor_requested','ai_editor_completed'}
+        assert all(r.performed_by == USER and r.tenant_id == A and r.actor_type == 'user' for r in rows)
+        assert len({r.changes['request_id'] for r in rows}) == 1
+        assert session.get(Entitlement, GRANT).status == 'active'
+        assert 'Synthetic deny rule' not in str([r.changes for r in rows])
+    with tenant_session(factory, B) as session:
+        assert session.query(IAMAuditEvent).count() == 0
+    assert provider.calls == 1
+
+
+def test_editor_misbound_session_prevents_model_transmission(store, monkeypatch):
+    _,_,factory,_ = store
+    monkeypatch.setattr(editor_settings,'IAM_ENABLE_AI_EDITOR',True)
+    provider=SyntheticEditorProvider()
+    with tenant_session(factory,B) as session:
+        with pytest.raises(HTTPException) as error: editor_assist(session,provider)
+        assert error.value.status_code == 503
+    assert provider.calls == 0
+
+
+def test_editor_missing_audit_privilege_prevents_transmission(store, monkeypatch):
+    params,_,factory,_ = store
+    monkeypatch.setattr(editor_settings,'IAM_ENABLE_AI_EDITOR',True)
+    provider=SyntheticEditorProvider()
+    with owner(params,'iam_test') as connection, connection.cursor() as cursor:
+        cursor.execute('REVOKE INSERT ON iam_audit_events FROM sg_test_app')
+    try:
+        with tenant_session(factory,A) as session:
+            with pytest.raises(HTTPException) as error: editor_assist(session,provider)
+            assert error.value.status_code == 503
+    finally:
+        with owner(params,'iam_test') as connection, connection.cursor() as cursor:
+            cursor.execute('GRANT INSERT ON iam_audit_events TO sg_test_app')
+    assert provider.calls == 0
+
+
+def test_editor_invalid_model_is_audited_without_grant_changes(store, monkeypatch):
+    _,_,factory,_ = store
+    monkeypatch.setattr(editor_settings,'IAM_ENABLE_AI_EDITOR',True)
+    with tenant_session(factory,A) as session:
+        with pytest.raises(HTTPException) as error: editor_assist(session,SyntheticEditorProvider(invalid=True))
+        assert error.value.status_code == 502
+    with tenant_session(factory,A) as session:
+        assert {r.event_type for r in session.query(IAMAuditEvent).all()} == {'ai_editor_requested','ai_editor_failed'}
+        assert session.get(Entitlement,GRANT).status == 'active'
+
+
+@pytest.mark.parametrize('lost_ack',[False,True])
+def test_editor_completion_ack_loss_never_delivers_draft(store, monkeypatch,lost_ack):
+    _,_,factory,_ = store
+    monkeypatch.setattr(editor_settings,'IAM_ENABLE_AI_EDITOR',True)
+    provider=SyntheticEditorProvider()
+    with tenant_session(factory,A) as session:
+        commit=session.commit
+        commits=0
+        def fail_completion():
+            nonlocal commits
+            commits += 1
+            if commits == 1 or lost_ack: commit()
+            if commits == 2: raise RuntimeError('Synthetic lost acknowledgement')
+        with monkeypatch.context() as patch:
+            patch.setattr(session,'commit',fail_completion)
+            with pytest.raises(HTTPException) as error:editor_assist(session,provider)
+            assert error.value.status_code == 503
+    with tenant_session(factory,A) as session:
+        assert session.query(IAMAuditEvent).count() == (2 if lost_ack else 1)
+    assert provider.calls == 1

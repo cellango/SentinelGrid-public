@@ -76,6 +76,9 @@ class Settings(BaseSettings):
     
     # Database (for identity cache)
     DB_URL: Optional[str] = os.getenv("DB_URL")
+    IAM_ENABLE_AI_EDITOR: bool = False
+    IAM_AI_EDITOR_GATEWAY_URL: Optional[str] = None
+    IAM_AI_EDITOR_GATEWAY_TOKEN: Optional[SecretStr] = Field(default=None, repr=False, exclude=True)
     IAM_ENABLE_SERVICE_ACCOUNTS: bool = False  # IAM-local registry only; no provider/auth integration.
     IAM_ROLE_SYNC_REALMS: dict[str, str] = Field(default_factory=dict)
     IAM_DB_URL: Optional[str] = None  # Separate access-grant store; never inferred from DB_URL.

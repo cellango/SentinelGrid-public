@@ -82,9 +82,8 @@ def test_chat_defaults_to_authenticated_tenant(ai_chat_test_app, ai_chat_client,
         json={"query": "Who has access?"},
     )
 
-    assert response.status_code == 200
-    assert service.calls[0]["tenant_id"] == str(request_context.tenant_id)
-    assert service.calls[0]["user_id"] == request_context.user_id
+    assert response.status_code == 501
+    assert service.calls == []
 
 
 def test_create_and_list_conversations_use_authenticated_tenant(

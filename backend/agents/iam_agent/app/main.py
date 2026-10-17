@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from app.core.config import settings
 from app.core.database import engine as db_engine
 from app.api import auth, ai_chat, ai_features, automation, compliance, audit, protocols, sync_jobs, mfa, stats, payment, onboarding, agents, hardened_images, git_providers, git_scanning, iam_portal, leads, marketing, dashboard, realms, iam_orgs
+from app.api import ai_editor
 from app.api import policies as iam_policies
 # New IAM APIs (Dec 3, 2025 - 100% Implementation) - TEMPORARILY COMMENTED OUT
 # from app.api import users, roles, mfa_totp, audit_logs
@@ -193,6 +194,7 @@ app.include_router(iam_portal.router)
 app.include_router(iam_orgs.router)
 app.include_router(dashboard.router, prefix="/api/v1/iam")
 app.include_router(iam_policies.router)
+app.include_router(ai_editor.router)
 app.include_router(realms.router)  # Realm creation API - CRITICAL: All realm creation must go through this
 
 # Entitlement routers (merged from entitlement_agent - Dec 3, 2025)

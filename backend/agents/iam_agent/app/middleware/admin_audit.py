@@ -24,10 +24,15 @@ class AdminAuditMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: Callable):
         path = request.url.path
         method = request.method.upper()
-        # SCIM owns credential-bound service identity and transaction-coupled audit.
+        # SCIM/editor own their audit; unavailable AI/protocol paths must not
+        # initialize a legacy realm client before rejecting an operation.
         # Never reinterpret its opaque credential as a user JWT or initialize an
         # unrelated provider client in this best-effort middleware.
-        if path.startswith("/api/v1/scim/v2/"):
+        if (path.startswith(("/api/v1/scim/v2/", "/api/v1/ai/editor/",
+                             "/internal/iam/protocols", "/internal/iam/ai/"))
+                or path == "/internal/iam/chat"
+                or (path.startswith("/api/iam-portal/policies/")
+                    and path.rsplit("/", 1)[-1] in {"generate", "explain", "analyze"})):
             return await call_next(request)
 
         # Skip non-interesting endpoints

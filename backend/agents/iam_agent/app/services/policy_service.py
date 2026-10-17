@@ -298,7 +298,8 @@ class PolicyService:
             return policy.scope_id in {UUID(value) for value in context.entitlement_ids}
         raise ValueError("Unsupported policy scope")
 
-    def _parse_policy_dsl(self, data: Dict[str, Any]) -> PolicyDSL:
+    @classmethod
+    def _parse_policy_dsl(cls, data: Dict[str, Any]) -> PolicyDSL:
         dsl = PolicyDSL.model_validate(data)
         if not dsl.rules or len({r.id for r in dsl.rules}) != len(dsl.rules):
             raise ValueError("Policy requires uniquely identified rules")
@@ -306,10 +307,10 @@ class PolicyService:
             if not rule.id or not rule.actions:
                 raise ValueError("Rule requires an ID and actions")
             for action in rule.actions:
-                if action.type not in self._ACTIONS:
+                if action.type not in cls._ACTIONS:
                     raise ValueError("Unsupported policy action")
             for condition in rule.conditions:
-                if condition.type not in self._CONTEXT_FIELDS or condition.op not in self._OPERATORS or condition.field is not None:
+                if condition.type not in cls._CONTEXT_FIELDS or condition.op not in cls._OPERATORS or condition.field is not None:
                     raise ValueError("Unsupported condition")
                 if condition.value is None:
                     raise ValueError("Missing condition operand")

@@ -138,6 +138,7 @@ def request_context():
     return RequestContext(
         tenant_id=uuid4(),
         user_id=str(uuid4()),
+        roles=("TENANT_ADMIN",),
     )
 
 
@@ -211,9 +212,8 @@ def test_list_protocol_configurations_defaults_to_authenticated_tenant(
         headers={"authorization": "Bearer test-token"},
     )
 
-    assert response.status_code == 200
-    assert manager.list_calls[0][1] == str(request_context.tenant_id)
-    assert response.json()["configurations"][0]["tenant_id"] == str(request_context.tenant_id)
+    assert response.status_code == 501
+    assert manager.list_calls == []
 
 
 def test_test_protocol_connection_rejects_foreign_query_tenant(
