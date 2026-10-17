@@ -169,7 +169,7 @@ class Settings(BaseSettings):
     ENDPOINT_HEALTH_URL: str = os.getenv("ENDPOINT_HEALTH_URL") or ""
 
     # Lifecycle scheduler
-    LIFECYCLE_JOB_ENABLED: bool = os.getenv("LIFECYCLE_JOB_ENABLED", "true").lower() == "true"
+    LIFECYCLE_JOB_ENABLED: bool = False  # Legacy scheduler is unavailable even when true.
     LIFECYCLE_JOB_INTERVAL_SECONDS: int = int(os.getenv("LIFECYCLE_JOB_INTERVAL_SECONDS", "300"))
 
     # Privileged access defaults

@@ -441,3 +441,20 @@ authenticate machines or grant API/entitlement permissions. See the current
 for issuance, audit atomicity, rotation/revocation, local proof and uncertain-commit
 recovery. Provider/API-key/legacy adoption and final feature-equivalence decisions
 remain explicit follow-up gates; this migration does not claim those effects.
+
+
+### Catalog access is a separate admission decision
+
+Shared catalog `entitlements`/`user_entitlements`/`access_requests`/`approvals`
+and the separate IAM fine-grained grant/request lineage are distinct physical
+contracts. Matching names or UUID syntax are not data equivalence. The former
+portal access/lifecycle writers are blocked before SQL/provider effects; no adapter
+or data adoption is implied. Legacy sync jobs and the cross-tenant lifecycle loop
+are unavailable, including direct/preloaded entrypoints. See the
+[identity boundary](../reference/identity.md#legacy-catalog-access-and-identity-job-boundaries).
+
+These source guards preserve the existing migration/profile bytes and legacy data.
+They do not close full shared-baseline/Flyway/history/privilege qualification, other
+legacy writers or installation/adoption decisions. Keep those gates explicit before
+a runtime or migration-equivalence claim; a passing focused IAM SQL suite cannot
+stand in for them.

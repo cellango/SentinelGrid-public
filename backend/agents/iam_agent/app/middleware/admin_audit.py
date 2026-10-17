@@ -7,6 +7,7 @@ noise endpoints.
 """
 
 import logging
+import re
 from typing import Callable
 
 from fastapi import Request
@@ -30,6 +31,9 @@ class AdminAuditMiddleware(BaseHTTPMiddleware):
         # unrelated provider client in this best-effort middleware.
         if (path.startswith(("/api/v1/scim/v2/", "/api/v1/ai/editor/",
                              "/internal/iam/protocols", "/internal/iam/ai/"))
+                or path.startswith("/internal/iam/sync-jobs")
+                or (method in {"POST", "DELETE"} and re.fullmatch(
+                    r"/api/iam-portal/(?:users/(?:[^/]+/(?:birthrights/reapply|lifecycle|entitlements(?:/[^/]+)?|offboard)|bulk/actions|lifecycle/run)|access-requests(?:/[^/]+/(?:approve|deny))?)", path))
                 or path == "/internal/iam/chat"
                 or (path.startswith("/api/iam-portal/policies/")
                     and path.rsplit("/", 1)[-1] in {"generate", "explain", "analyze"})):

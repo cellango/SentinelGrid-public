@@ -3,6 +3,7 @@ Periodic lifecycle scheduler for start-date activation and end-date offboarding.
 """
 
 from __future__ import annotations
+from fastapi import HTTPException
 
 import asyncio
 import logging
@@ -52,73 +53,16 @@ def _get_due_tenants(db) -> list[dict]:
 
 
 async def run_lifecycle_once() -> Dict[str, Any]:
-    """Run lifecycle and privileged access expiry across all tenants with due actions."""
-    results: Dict[str, Any] = {}
-    db = SessionLocal()
-    try:
-        for row in _get_due_tenants(db):
-            tenant_id = UUID(str(row["tenant_id"]))
-            realm_name = row["realm_name"] or settings.KEYCLOAK_REALM
-            svc = IAMPortalService(db, tenant_id, realm_name)
-            try:
-                stats = await svc.apply_lifecycle_schedules(actor_id="system")
-                results[str(tenant_id)] = {"realm": realm_name, "stats": stats}
-            except Exception as e:  # pragma: no cover - defensive
-                logger.error("Lifecycle scheduler failed for tenant %s: %s", tenant_id, e, exc_info=True)
-                results[str(tenant_id)] = {"realm": realm_name, "error": str(e)}
-
-        # Expire privileged access requests that are past due (no new scheduler needed)
-        priv_rows = db.execute(
-            text(
-                """
-                SELECT par.tenant_id,
-                       COALESCE(t.slug, :default_realm) AS realm_name
-                FROM privileged_access_requests par
-                LEFT JOIN tenants t ON par.tenant_id = t.id
-                WHERE par.status = 'approved'
-                  AND par.expires_at IS NOT NULL
-                  AND par.expires_at <= now()
-                GROUP BY par.tenant_id, COALESCE(t.slug, :default_realm)
-                """
-            ),
-            {"default_realm": settings.KEYCLOAK_REALM},
-        ).mappings().all()
-
-        for row in priv_rows:
-            tenant_id = str(row["tenant_id"])
-            realm_name = row["realm_name"] or settings.KEYCLOAK_REALM
-            svc = PrivilegedAccessService()
-            try:
-                expired = await svc.expire_and_revoke(tenant_id, realm_name)
-                results.setdefault(tenant_id, {}).setdefault("privileged_access", {})["expired"] = expired
-            except Exception as e:  # pragma: no cover
-                logger.error("Privileged access expiry failed for tenant %s: %s", tenant_id, e, exc_info=True)
-                results.setdefault(tenant_id, {}).setdefault("privileged_access", {})["error"] = str(e)
-    finally:
-        db.close()
-    return results
+    raise HTTPException(status_code=501, detail="Legacy lifecycle scheduling is unavailable pending action and tenant qualification")
 
 
 async def _lifecycle_loop():
-    interval = max(30, settings.LIFECYCLE_JOB_INTERVAL_SECONDS or 300)
-    logger.info("Lifecycle scheduler loop starting (interval=%ss, enabled=%s)", interval, settings.LIFECYCLE_JOB_ENABLED)
-    while True:
-        try:
-            await run_lifecycle_once()
-        except Exception as e:  # pragma: no cover - defensive
-            logger.error("Lifecycle scheduler loop error: %s", e, exc_info=True)
-        await asyncio.sleep(interval)
+    raise HTTPException(status_code=501, detail="Legacy lifecycle scheduling is unavailable pending action and tenant qualification")
 
 
 def start_scheduler():
-    """Start the background lifecycle scheduler if enabled."""
-    global _scheduler_task
-    if not settings.LIFECYCLE_JOB_ENABLED:
-        logger.info("Lifecycle scheduler disabled via config; not starting.")
-        return
-    if _scheduler_task and not _scheduler_task.done():
-        return
-    _scheduler_task = asyncio.create_task(_lifecycle_loop())
+    logger.warning("Legacy lifecycle scheduler is unavailable; no background task started")
+    return
 
 
 async def stop_scheduler():

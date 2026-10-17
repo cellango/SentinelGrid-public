@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
-from app.api.request_context import get_tenant_session
+from app.api.request_context import get_tenant_session, RequestContext, get_current_request_context, ensure_request_has_any_role
 from app.api.policies import get_policy_administrator
 from app.services.iam_portal_service import IAMPortalService
 from app.models.iam_portal import (
@@ -114,6 +114,15 @@ def get_policy_admin_iam_service(
 def get_current_user_id(user_info: dict = Depends(get_current_user_info)) -> str:
     """Get current user ID from token."""
     return user_info["user_id"]
+
+
+def get_catalog_access_context(context: RequestContext = Depends(get_current_request_context)):
+    try:
+        UUID(str(context.user_id))
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=401, detail="A verified user UUID is required")
+    ensure_request_has_any_role(context, "TENANT_ADMIN", "IAM_ADMIN", "PLATFORM_ADMIN")
+    return context
 
 
 # ==================== Apps ====================
@@ -284,21 +293,9 @@ async def update_user(
 @router.post("/users/{user_id}/birthrights/reapply", response_model=UserInfo)
 async def reapply_birthrights(
     user_id: str,
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    actor_id: str = Depends(get_current_user_id),
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    """
-    Idempotent birthright reapply for a single user (default access profile only).
-
-    Useful for mover scenarios after attribute changes; does not remove any access.
-    """
-    try:
-        updated = await iam_service.reapply_birthrights(user_id, actor_id)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    if not updated:
-        raise HTTPException(status_code=400, detail="Failed to reapply birthrights")
-    return updated
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 @router.get("/users", response_model=List[UserInfo])
@@ -362,20 +359,9 @@ class TimelineEntry(AuditEntry):
 @router.post("/users/bulk/actions")
 async def bulk_user_actions(
     payload: BulkUserActionRequest,
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    actor_id: str = Depends(get_current_user_id)
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    """Perform bulk user actions (suspend, offboard, toggle privileged)."""
-    if not payload.user_ids:
-        raise HTTPException(status_code=400, detail="No user_ids provided")
-
-    try:
-        updated = await iam_service.bulk_update_users(payload.action, payload.user_ids, actor_id)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    if updated is None:
-        raise HTTPException(status_code=400, detail="Bulk action failed")
-    return {"action": payload.action, "updated": updated}
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 @router.get("/users/{user_id}", response_model=UserInfo)
@@ -585,13 +571,9 @@ async def get_lifecycle_schedule(
 async def set_lifecycle_schedule(
     user_id: str,
     payload: LifecycleSchedule,
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    actor_id: str = Depends(get_current_user_id),
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    updated = iam_service.set_lifecycle_schedule(user_id, payload.activate_at, payload.deactivate_at, actor_id)
-    if not updated:
-        raise HTTPException(status_code=400, detail="Failed to update lifecycle schedule")
-    return LifecycleSchedule(**updated)
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 @router.get("/users/{user_id}/audit", response_model=List[AuditEntry])
@@ -614,81 +596,35 @@ async def get_user_timeline(
 
 @router.post("/users/lifecycle/run")
 async def run_lifecycle_job(
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    actor_id: str = Depends(get_current_user_id),
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    """Execute scheduled lifecycle actions (activate/offboard) for this tenant."""
-    stats = await iam_service.apply_lifecycle_schedules(actor_id or "system")
-    return {"status": "ok", "results": stats}
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 @router.post("/users/{user_id}/entitlements", response_model=UserEntitlement)
 async def grant_entitlement_to_user(
     user_id: str,
     entitlement_data: UserEntitlementCreate,
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    actor_id: str = Depends(get_current_user_id)
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    """Grant entitlement to user."""
-    success = iam_service.grant_entitlement(
-        user_id,
-        entitlement_data.entitlement_id,
-        actor_id,
-        entitlement_data.expires_at
-    )
-    if not success:
-        raise HTTPException(status_code=400, detail="Failed to grant entitlement")
-    
-    # Return user entitlement
-    user = iam_service.get_user(user_id)
-    if user:
-        entitlement = next((e for e in user.entitlements if e.entitlement_id == entitlement_data.entitlement_id), None)
-        if entitlement:
-            return entitlement
-    
-    raise HTTPException(status_code=404, detail="Entitlement not found")
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 @router.delete("/users/{user_id}/entitlements/{entitlement_id}")
 async def revoke_entitlement_from_user(
     user_id: str,
     entitlement_id: UUID,
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    actor_id: str = Depends(get_current_user_id)
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    """Revoke entitlement from user."""
-    success = iam_service.revoke_entitlement(user_id, entitlement_id, actor_id)
-    if not success:
-        raise HTTPException(status_code=400, detail="Failed to revoke entitlement")
-    return {"message": "Entitlement revoked"}
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 @router.post("/users/{user_id}/offboard")
 async def offboard_user(
     user_id: str,
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    actor_id: str = Depends(get_current_user_id),
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    """
-    Offboard a user: revoke sessions, disable account, revoke entitlements, and audit.
-
-    Guardrails applied inside the service (e.g., last admin protection).
-    """
-    try:
-        report = await iam_service.offboard_user(user_id, actor_id or "system")
-        if not report:
-            raise HTTPException(status_code=400, detail="Failed to offboard user")
-        return {
-            "status": "ok",
-            "user_id": user_id,
-            "message": "User offboarded and assignments revoked",
-            "report": report,
-        }
-    except ValueError as err:
-        raise HTTPException(status_code=400, detail=str(err))
-    except Exception as exc:  # noqa: BLE001
-        logger.error("Error offboarding user %s: %s", user_id, exc, exc_info=True)
-        raise HTTPException(status_code=500, detail="Offboarding failed")
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 # ==================== Access Requests (Self-Service) ====================
@@ -696,14 +632,9 @@ async def offboard_user(
 @router.post("/access-requests", response_model=AccessRequest, status_code=status.HTTP_201_CREATED)
 async def create_access_request(
     request_data: AccessRequestCreate,
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    user_id: str = Depends(get_current_user_id)
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    """Create an access request."""
-    request = iam_service.create_access_request(request_data, user_id)
-    if not request:
-        raise HTTPException(status_code=400, detail="Failed to create access request")
-    return request
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 @router.get("/access-requests", response_model=List[AccessRequest])
@@ -734,28 +665,18 @@ async def get_access_request(
 async def approve_access_request(
     request_id: UUID,
     notes: Optional[str] = None,
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    approver_id: str = Depends(get_current_user_id)
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    """Approve an access request."""
-    success = iam_service.approve_access_request(request_id, approver_id, notes)
-    if not success:
-        raise HTTPException(status_code=400, detail="Failed to approve access request")
-    return {"message": "Access request approved"}
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 @router.post("/access-requests/{request_id}/deny")
 async def deny_access_request(
     request_id: UUID,
     notes: Optional[str] = None,
-    iam_service: IAMPortalService = Depends(get_iam_service),
-    approver_id: str = Depends(get_current_user_id)
+    context: RequestContext = Depends(get_catalog_access_context),
 ):
-    """Deny an access request."""
-    success = iam_service.deny_access_request(request_id, approver_id, notes)
-    if not success:
-        raise HTTPException(status_code=400, detail="Failed to deny access request")
-    return {"message": "Access request denied"}
+    raise HTTPException(status_code=501, detail="Catalog access/lifecycle operations require schema and provider-action qualification")
 
 
 # ==================== My Access (Self-Service Summary) ====================

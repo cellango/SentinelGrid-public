@@ -755,3 +755,52 @@ This restriction does not qualify other app/IdP/connectors or sync-job APIs.
 Future admission requires durable tenant-owned configuration, secret lifecycle,
 exact resource/action authority, provider tests, idempotency and verified effects.
 No feature flag enables these blocked operations.
+
+
+## Legacy catalog access and identity job boundaries
+
+Catalog entitlements in the shared `DB_URL` store describe application permissions
+and provider mappings. IAM grants in the separate `IAM_DB_URL` store describe
+resource/action/subject authorization. Their `entitlements` and `access_requests`
+names do not establish compatible rows, UUID ownership or approval semantics.
+There is no automatic conversion, cross-store grant or legacy approval adapter.
+Existing catalog data is retained; no runtime DDL or migration is introduced here.
+
+The old portal catalog grant/revoke, profile application, access-request creation/
+approval/denial, birthright reapply, offboarding, bulk actions and lifecycle scheduling/
+execution methods now return 501 before SQL/provider operations. Their ten mutating
+portal routes require verified user UUID and tenant administrator context, then
+return 501 before constructing the legacy service or database dependency. Non-admin
+and missing-user requests are rejected. Body subject/approver/role fields cannot
+override admission. These routes do not silently reinterpret catalog permission
+IDs as fine-grained IAM grants. The reviewed IAM grant/access-request/governance and
+role reconciliation APIs retain their separate documented contracts.
+
+The legacy `/internal/iam/sync-jobs` routes return 501 for authenticated tenant
+administrators and reject tenant mismatches/non-admins before any job/provider
+dependency. Manager CRUD/list/statistics/scheduling/retry helpers also return 501.
+A preloaded in-memory job or schedule cannot bypass the integration configuration
+block. Direct `SyncJob.execute` returns 501 before changing state or calling a
+connector; neither pending state nor a zero-count result means verified success.
+Standalone connector classes remain experimental source, not universally blocked
+or newly qualified by these guards.
+
+`LIFECYCLE_JOB_ENABLED` defaults to false. Setting it true cannot re-enable the
+unqualified cross-tenant lifecycle loop. Startup logs that it is unavailable and
+starts no task; explicit one-shot/loop calls return 501 before database lookup,
+realm fallback or privileged-access provider effects. No durable scheduler or
+Temporal implementation is added. Existing schedules/data are not deleted.
+Disabling that loop does not revoke provider access already granted or prove that
+previous JIT grants have expired. Existing installations need an explicit qualified
+expiry/revocation and reconciliation plan before adopting these changes; the
+source preview cannot serve as their access-expiry mechanism.
+
+The best-effort middleware skips these unavailable paths so it cannot construct
+an unrelated provider before their verified rejection. These rejections do not
+have a new durable audit event. Full catalog schema/history/ownership, existing
+installations, other user/provider/JIT/bootstrap writers, caller compatibility and
+complete feature equivalence remain acceptance work. Other legacy APIs and
+application startup are not certified; the source preview still advertises no
+supported runtime. Enabling these capabilities requires explicit schema/data and
+action-authority decisions, transaction-coupled audit and independently verified
+provider outcomes. Fail-closed behavior is not complete feature migration.

@@ -721,6 +721,7 @@
     "backend/agents/iam_agent/tests/test_governance_controls.py",
     "backend/agents/iam_agent/tests/test_governance_tenant_isolation.py",
     "backend/agents/iam_agent/tests/test_hardened_images_iam_orgs_tenant_isolation.py",
+    "backend/agents/iam_agent/tests/test_iam_acceptance_boundaries.py",
     "backend/agents/iam_agent/tests/test_iam_database.py",
     "backend/agents/iam_agent/tests/test_iam_portal_tenant_session.py",
     "backend/agents/iam_agent/tests/test_itdr_controls.py",

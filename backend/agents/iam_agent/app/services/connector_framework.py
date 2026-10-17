@@ -3,6 +3,7 @@ Connector Framework
 Base classes and interfaces for building integration connectors
 """
 
+from fastapi import HTTPException
 import logging
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Optional
@@ -170,42 +171,5 @@ class SyncJob:
         self.error = None
     
     def execute(self) -> Dict[str, Any]:
-        """Execute the sync job."""
-        self.status = SyncStatus.RUNNING
-        self.started_at = datetime.utcnow()
-        
-        try:
-            if self.sync_type == "users":
-                self.result = self.connector.sync_users(self.direction, self.filters)
-            elif self.sync_type == "groups":
-                self.result = self.connector.sync_groups(self.direction, self.filters)
-            elif self.sync_type == "full":
-                users_result = self.connector.sync_users(self.direction, self.filters)
-                groups_result = self.connector.sync_groups(self.direction, self.filters)
-                self.result = {
-                    "users": users_result,
-                    "groups": groups_result
-                }
-            else:
-                raise ValueError(f"Unknown sync type: {self.sync_type}")
-            
-            self.status = SyncStatus.SUCCESS
-            self.completed_at = datetime.utcnow()
-            
-        except Exception as e:
-            logger.error(f"Sync job {self.job_id} failed: {e}")
-            self.status = SyncStatus.FAILED
-            self.error = str(e)
-            self.completed_at = datetime.utcnow()
-        
-        return {
-            "job_id": self.job_id,
-            "status": self.status.value,
-            "result": self.result,
-            "error": self.error,
-            "duration_seconds": (
-                (self.completed_at - self.started_at).total_seconds()
-                if self.completed_at and self.started_at else None
-            )
-        }
+        raise HTTPException(status_code=501, detail="Legacy identity sync execution is unavailable")
 
