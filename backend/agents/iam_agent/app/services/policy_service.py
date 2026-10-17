@@ -409,14 +409,14 @@ class PolicyService:
                         tenant_id=row[10] if len(row) > 10 else None
                     ))
                 except Exception as row_error:
-                    logger.error(f"Failed to parse template row: {row_error}, row data: {row}")
-                    continue
+                    raise HTTPException(status_code=503, detail="Policy template data is invalid") from row_error
             
             logger.info(f"Loaded {len(templates)} policy templates (policy_type={policy_type})")
             return templates
-        except Exception as e:
-            logger.error(f"Failed to list templates: {e}", exc_info=True)
-            return []
+        except HTTPException:
+            raise
+        except Exception as error:
+            raise HTTPException(status_code=503, detail="Policy templates could not be loaded") from error
 
     def _get_sg_admin_tenant_id(self) -> Optional[UUID]:
         return None

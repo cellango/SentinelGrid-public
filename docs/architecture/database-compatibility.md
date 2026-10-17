@@ -458,3 +458,37 @@ They do not close full shared-baseline/Flyway/history/privilege qualification, o
 legacy writers or installation/adoption decisions. Keep those gates explicit before
 a runtime or migration-equivalence claim; a passing focused IAM SQL suite cannot
 stand in for them.
+
+
+### Physical IAM contract and migration-execution limits
+
+The owned PostgreSQL checks now compare the eleven current IAM ORM tables against
+the selected physical profile: exact columns, PostgreSQL types, nullability and
+primary-key columns. They caught and corrected `Entitlement.metadata` from JSON to
+JSONB and replaced its shared mutable Python default with a callable. This aligns
+the model with unchanged IAM V1 SQL; it does not alter a database, migration checksum
+or table. It does not certify every default/index/constraint, role/history or unknown
+legacy installation. Existing focused RLS/parent/audit/transaction tests remain separate.
+
+A rollback-only attempt of the complete shared V001 in the owned test installation
+stops because `pgcrypto` and `vector` are absent (SQLSTATE `0A000`). The attempt
+leaves no partial tables or Flyway history. This is an explicit installation blocker,
+not evidence that the whole shared lineage will pass after extensions are supplied.
+Actual Flyway migrate/validate/history/upgrade/restore was not performed, and no
+existing database or history was accessed. Shared D0 and adoption remain unqualified.
+
+The old `scripts/flyway_schema_only.sh` launcher now refuses every mode. It no longer
+supplies database credentials/default URLs, falls back to psql, launches Docker or
+invents `flyway_schema_history` rows with NULL checksums. Such rows cannot establish
+valid migration history. Unknown/populated/drifted histories still require explicit
+reconciliation; no automatic repair/baseline is introduced.
+
+The checksum-only IAM bundle tool still selects the same eight unchanged SQL files
+and connects to nothing. Its generated configuration now pins `defaultSchema=public`
+and `schemas=public`, with `createSchemas=false`; schema creation is not delegated
+to a connection's incidental search path. Baseline-on-migrate remains false and clean
+remains disabled. See Redgate's [default schema](https://documentation.red-gate.com/flyway/reference/configuration/flyway-namespace/flyway-default-schema-setting)
+and [schema creation](https://documentation.red-gate.com/flyway/reference/configuration/flyway-namespace/flyway-create-schemas-setting)
+settings. These are configuration constraints, not proof of an executed Flyway run.
+A reviewed installation procedure must qualify the runner, extensions, histories,
+ownership/least privileges and existing-grant expiry/reconciliation before adoption.

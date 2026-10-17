@@ -25,9 +25,10 @@ class IAMProfileTests(unittest.TestCase):
             self.assertIn("V016__public_role_grant_provenance.sql", files)
             self.assertIn("V017__public_service_account_registry.sql", files)
             self.assertFalse(any(name.startswith("V001__") for name in files))
-            self.assertIn(
-                "flyway.baselineOnMigrate=false", (dest / "flyway.conf").read_text()
-            )
+            config = (dest / "flyway.conf").read_text()
+            for expected in ("flyway.baselineOnMigrate=false", "flyway.defaultSchema=public",
+                             "flyway.schemas=public", "flyway.createSchemas=false"):
+                self.assertIn(expected, config)
 
     def test_drift_is_rejected_before_output_creation(self):
         with tempfile.TemporaryDirectory() as directory:

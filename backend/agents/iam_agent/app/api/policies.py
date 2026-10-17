@@ -26,8 +26,8 @@ security = HTTPBearer()
 
 def get_token_validator() -> TokenValidator:
     """Get token validator instance."""
-    keycloak_client = KeycloakClient()
-    return TokenValidator(keycloak_client)
+    # Verify signed claims without initializing a provider administrator client.
+    return TokenValidator(None)
 
 
 def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
@@ -237,9 +237,10 @@ async def list_templates(
                 result.append(t.__dict__)
         logger.info(f"📤 Returning {len(result)} templates")
         return result
-    except Exception as e:
-        logger.warning(f"Failed to load policy templates (returning empty): {e}")
-        return []
+    except HTTPException:
+        raise
+    except Exception as error:
+        raise HTTPException(status_code=503, detail="Policy templates could not be loaded") from error
 
 
 @router.get("/templates/list")

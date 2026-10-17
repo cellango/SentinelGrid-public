@@ -804,3 +804,56 @@ application startup are not certified; the source preview still advertises no
 supported runtime. Enabling these capabilities requires explicit schema/data and
 action-authority decisions, transaction-coupled audit and independently verified
 provider outcomes. Fail-closed behavior is not complete feature migration.
+
+
+## Main application source admission
+
+The main IAM assembly now uses an explicit list of method/path/endpoint identities
+in [source_admission.py](../../backend/agents/iam_agent/app/core/source_admission.py).
+This is a bounded source-review selection, not a supported runtime or a deployment
+permission. Existing handler authentication, roles, tenant sessions, feature flags,
+provider bindings and durable audit still apply. A matching module or URL prefix
+never admits a new endpoint or HTTP method. No request field, header, model output
+or environment switch extends this list.
+
+The selection covers signed-token validation/local introspection, the retired direct
+reset (410), canonical policy contracts, IAM-local grants/authorization, role
+reconciliation, access requests/governance, ITDR proposals, the disabled local NHI
+registry, partial SCIM and the disabled policy draft editor. An operation in the list
+may itself be unavailable, default-disabled or require credentials; listing it is
+not a claim of provider effects or readiness. Token and policy verification no longer
+initialize provider administrator clients.
+
+All other mounted legacy operations receive a verified-context dependency that
+returns 501 before their handler/provider/database dependencies. Missing/invalid
+identity is rejected. This includes login/signup/refresh, user/admin/realm/bootstrap,
+JIT, datasets/anomaly persistence, onboarding/cloud, catalog, billing/marketing,
+secret/device/network and other prototype APIs. They remain inspectable source;
+this change does not erase them, qualify their direct library calls or approve
+retiring their intended features. Standalone component tests are not proof that
+an operation is enabled in this assembly. Routing/validation failures can return
+other errors without entering the unqualified handler.
+
+Reviewed handlers register before legacy aliases. The canonical policy router owns
+shared policy URIs; conflicting legacy routes are omitted instead of shadowing it.
+Literal routes such as `/policies/templates` precede `/{policy_id}`. Template
+storage/decoding failures return 503, never an invented empty inventory. This is an
+explicit compatibility change; clients must use the canonical policy request/response
+contract. Unreviewed methods cannot be added through a partially overlapping alias.
+Nested/non-HTTP routes and router startup hooks require separate admission.
+
+Main startup no longer creates a Keycloak seeder, repairs user profiles, creates
+admin/demo/break-glass accounts, runs schema setup or launches legacy identity jobs.
+The old best-effort audit middleware is not installed; it must not initialize an
+unqualified store/provider before a rejection. Durable audit guarantees remain only
+those documented for each domain handler. Blocked routes do not gain a new durable
+rejection event. Bare diagnostic/readiness endpoints remain separate: connectivity
+probes are not migration, tenant or provider-effect qualification.
+
+Focused tests cover admission/denial ordering, real JIT/user/signup entrypoints,
+new-route/method/alias attempts, SCIM/editor route classes and no-task lifespan.
+Full app import in the isolated review environment remains blocked by the missing
+runtime dependency `bcrypt`; no network/database/startup action was allowed during
+that probe. A complete dependency/install/import/startup check and real deployment
+are still required. Direct Python/MCP/worker/script consumers are outside this HTTP
+selection and need their own action boundary; no universal provider safety is claimed.

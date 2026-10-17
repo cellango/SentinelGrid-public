@@ -29,7 +29,7 @@ class TokenValidator:
     jku/x5u and embedded JWK values can never supply a key or network destination.
     """
 
-    def __init__(self, keycloak_client: KeycloakClient):
+    def __init__(self, keycloak_client: KeycloakClient | None = None):
         self.keycloak_client = keycloak_client
         self.default_realm = settings.KEYCLOAK_REALM
         self.realm = self.default_realm  # compatibility for existing callers

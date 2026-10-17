@@ -35,6 +35,9 @@ def prepare(output: Path, *, root=ROOT, profile=PROFILE):
     (output / "flyway.conf").write_text(
         "flyway.locations=filesystem:sql\n"
         "flyway.table=flyway_schema_history\n"
+        "flyway.defaultSchema=public\n"
+        "flyway.schemas=public\n"
+        "flyway.createSchemas=false\n"
         "flyway.validateOnMigrate=true\n"
         "flyway.validateMigrationNaming=true\n"
         "flyway.baselineOnMigrate=false\n"

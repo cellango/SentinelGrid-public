@@ -1,7 +1,7 @@
 """Entitlement data model."""
 
-from sqlalchemy import Column, String, DateTime, Integer, JSON, Text
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, String, DateTime, Integer, Text
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 import uuid
 
@@ -27,7 +27,7 @@ class Entitlement(Base):
     expires_at = Column(DateTime(timezone=True), nullable=True, index=True)
     last_used_at = Column(DateTime(timezone=True), nullable=True)
     usage_count_90d = Column(Integer, default=0)
-    metadata_json = Column("metadata", JSON, default={})  # Column name in DB is 'metadata', but Python attribute avoids SQLAlchemy conflict
+    metadata_json = Column("metadata", JSONB, default=dict)  # Column name in DB is 'metadata', but Python attribute avoids SQLAlchemy conflict
     created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
     

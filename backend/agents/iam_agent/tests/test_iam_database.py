@@ -3172,3 +3172,75 @@ def test_editor_completion_ack_loss_never_delivers_draft(store, monkeypatch,lost
     with tenant_session(factory,A) as session:
         assert session.query(IAMAuditEvent).count() == (2 if lost_ack else 1)
     assert provider.calls == 1
+
+
+# Compare current ORM columns with the physical reviewed IAM lineage, rather than
+# accepting similarly named shared-catalog tables or metadata declarations alone.
+from app.models.service_account import ServiceAccount
+
+@pytest.mark.parametrize('model', [Entitlement, IAMAuditEvent, AccessRequest,
+    AccessRequestHistory, AuditCampaign, Certification, CertificationHistory,
+    AuditSchedule, RoleEntitlementPattern, RoleGrantBinding, ServiceAccount])
+def test_current_iam_orm_columns_match_physical_profile(store, model):
+    _,engine,_,_=store
+    table=model.__table__
+    assert table.schema=='public'
+    columns={c['name']:c for c in inspect(engine).get_columns(table.name,schema='public')}
+    assert set(columns)==set(table.columns.keys())
+    for column in table.columns:
+        actual=columns[column.name]
+        assert str(column.type.compile(dialect=engine.dialect))==str(actual['type'].compile(dialect=engine.dialect)), (table.name,column.name)
+        assert column.nullable==actual['nullable'], (table.name,column.name)
+    assert set(inspect(engine).get_pk_constraint(table.name,schema='public')['constrained_columns'])=={c.name for c in table.primary_key}
+
+
+def test_complete_shared_baseline_probe_does_not_certify_partial_tables(cluster, record_property):
+    # The fixture owns this fresh socket-only cluster. It contains no application
+    # data. A failed full V001 attempt is rolled back, not converted into a history.
+    connection=owner(cluster,'iam_test')
+    connection.autocommit=True
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("CREATE ROLE sg NOLOGIN NOSUPERUSER NOBYPASSRLS")
+            cursor.execute('CREATE DATABASE full_baseline_probe')
+    finally:
+        connection.close()
+    probe_connection=None
+    try:
+        probe_connection=owner(cluster,'full_baseline_probe')
+        with probe_connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT name FROM pg_available_extensions WHERE name IN ('pgcrypto','uuid-ossp','vector')")
+                available={r[0] for r in cursor.fetchall()}
+                missing={'pgcrypto','uuid-ossp','vector'}-available
+                record_property('missing_shared_baseline_extensions', ','.join(sorted(missing)))
+                record_property('full_shared_baseline_qualified', 'false')
+                if missing:
+                    with pytest.raises(psycopg2.Error) as error:
+                        cursor.execute((ROOT/'migrations_consolidated/V001__initial_schema.sql').read_text())
+                    assert error.value.pgcode=='0A000'
+                    record_property('baseline_failure_sqlstate', error.value.pgcode)
+                    connection.rollback()
+                    cursor.execute("SELECT count(*) FROM pg_tables WHERE schemaname NOT IN ('pg_catalog','information_schema')")
+                    assert cursor.fetchone()[0]==0
+                    cursor.execute("SELECT to_regclass('public.flyway_schema_history')")
+                    assert cursor.fetchone()[0] is None
+                else:
+                    # An installation with every extension probes the exact SQL;
+                    # SQL execution still does not qualify Flyway/history/adoption.
+                    cursor.execute((ROOT/'migrations_consolidated/V001__initial_schema.sql').read_text())
+                    connection.rollback()
+                    record_property('baseline_sql_probe', 'executed_then_rolled_back_no_history')
+                    cursor.execute("SELECT count(*) FROM pg_tables WHERE schemaname NOT IN ('pg_catalog','information_schema')")
+                    assert cursor.fetchone()[0]==0
+    finally:
+        if probe_connection is not None:
+            probe_connection.close()
+        connection=owner(cluster,'iam_test')
+        connection.autocommit=True
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute('DROP DATABASE full_baseline_probe')
+                cursor.execute('DROP ROLE sg')
+        finally:
+            connection.close()

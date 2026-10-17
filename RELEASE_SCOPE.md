@@ -56,3 +56,25 @@ routes/jobs in that runtime, prove clean-clone installation and Flyway upgrades,
 verify two-tenant denials and approval replay protection, and inject model/service
 failures without downstream mutations. Bind results to an exact commit before
 changing this scope.
+
+
+## Current IAM source selection
+
+The current main IAM assembly uses an explicit method/path/endpoint selection;
+unreviewed legacy routes are unavailable before handler dependencies, and startup
+does not seed Keycloak or launch identity jobs. Canonical policy routes take
+precedence over legacy aliases. See the
+[identity source-admission contract](docs/reference/identity.md#main-application-source-admission).
+This adds source controls, not a supported login, onboarding, billing, identity
+provider, worker or full-stack runtime. Existing component tests do not imply an
+operation is enabled in that assembly.
+
+Eleven IAM ORM column/type/nullability/primary-key mappings are checked against the
+owned physical profile. Full shared baseline/Flyway/history/install/restore and live
+provider qualification remain blocked; the isolated test installation lacks
+`pgcrypto`/`vector`, and guarded full-app import lacks the runtime dependency `bcrypt`.
+The legacy migration launcher refuses execution and cannot fabricate Flyway history.
+Existing installations also need explicit provider-grant expiry/reconciliation before
+adopting disabled legacy jobs. No schema/history/data adoption or feature-equivalence
+claim follows from passing source tests. The published preview tag remains its frozen
+snapshot; current branch checks do not rewrite that release's evidence.

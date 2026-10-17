@@ -35,8 +35,8 @@ def get_token_validator() -> TokenValidator:
     global _token_validator
     # Always create a new instance to ensure fresh code (for development)
     # In production, we might want to cache this
-    keycloak_client = get_keycloak_client()
-    _token_validator = TokenValidator(keycloak_client)
+    # JWKS verification requires no administrator client or admin-token exchange.
+    _token_validator = TokenValidator(None)
     return _token_validator
 
 

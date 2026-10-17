@@ -6,12 +6,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 
+from app.core.source_admission import include_source_router, source_review_lifespan
 from app.core.config import settings
 from app.core.database import engine as db_engine
 from app.api import auth, ai_chat, ai_features, automation, compliance, audit, protocols, sync_jobs, mfa, stats, payment, onboarding, agents, hardened_images, git_providers, git_scanning, iam_portal, leads, marketing, dashboard, realms, iam_orgs
 from app.api import ai_editor
 from app.api import policies as iam_policies
-# New IAM APIs (Dec 3, 2025 - 100% Implementation) - TEMPORARILY COMMENTED OUT
+# Additional legacy IAM API source (not admitted)
 # from app.api import users, roles, mfa_totp, audit_logs
 # Entitlement functionality (merged from entitlement_agent Dec 3, 2025)
 from app.api import entitlements, bulk_operations, role_mappings, authorize, governance, access_requests
@@ -29,11 +30,8 @@ from app.api import anomalies, reports, itdr, nhi
 from app.api import privileged_access, secrets, ztna, api_keys
 from app.api import gateway
 from app.api import state
-from app.services.keycloak_seeder import KeycloakSeeder, SeedingResult
 from app.services.keycloak_admin_client import KeycloakAdminClient
-from app.services.lifecycle_scheduler import start_scheduler, stop_scheduler
 from app.middleware.security import RateLimitMiddleware, SecurityHeadersMiddleware
-from app.middleware.admin_audit import AdminAuditMiddleware
 from sg_core.request_tracing import RequestTracingMiddleware, configure_logging
 from sg_core.service_health import (
     build_dependency_status,
@@ -46,7 +44,7 @@ logger = configure_logging(settings.SERVICE_NAME)
 runtime_metrics = get_service_metrics(settings.SERVICE_NAME)
 PROMETHEUS_MEDIA_TYPE = "text/plain; version=0.0.4; charset=utf-8"
 
-# Global seeding result
+# Legacy readiness metadata; automatic seeding is unavailable
 seeding_result = None
 
 
@@ -94,43 +92,7 @@ async def _build_readiness_payload() -> dict:
     return summarize_service_health(settings.SERVICE_NAME, settings.VERSION, dependencies, extra=extra)
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Lifespan context manager for startup and shutdown events."""
-    # Startup
-    logger.info("Starting IAM Agent service...")
-    
-    # Run Keycloak seeding in background
-    global seeding_result
-    seeder = KeycloakSeeder()
-    
-    # Run seeding asynchronously (don't block startup)
-    async def run_seeding():
-        global seeding_result
-        try:
-            seeding_result = await seeder.seed_all()
-        except Exception as e:
-            logger.error(f"Error during Keycloak seeding: {e}", exc_info=True)
-            seeding_result = None
-    
-    # Start seeding task
-    seeding_task = asyncio.create_task(run_seeding())
-    # Start lifecycle scheduler (non-blocking)
-    start_scheduler()
-    
-    yield
-    
-    # Shutdown
-    logger.info("Shutting down IAM Agent service...")
-    # Cancel seeding task if still running
-    if not seeding_task.done():
-        seeding_task.cancel()
-        try:
-            await seeding_task
-        except asyncio.CancelledError:
-            pass
-    # Stop lifecycle scheduler
-    await stop_scheduler()
+lifespan = source_review_lifespan
 
 
 # Create FastAPI app with lifespan
@@ -145,7 +107,8 @@ app = FastAPI(
 app.add_middleware(SecurityHeadersMiddleware)
 
 # Audit middleware (non-blocking)
-app.add_middleware(AdminAuditMiddleware)
+# Domain handlers own durable audit. Do not install the unqualified best-effort
+# middleware that can initialize a legacy provider/store before a route is denied.
 
 # Rate limiting middleware
 app.add_middleware(RateLimitMiddleware, redis_client=None)  # TODO: Add Redis client if available
@@ -160,87 +123,64 @@ app.add_middleware(
 )
 app.add_middleware(RequestTracingMiddleware, service_name=settings.SERVICE_NAME)
 
-# Include routers
-app.include_router(auth.router)  # Internal: /internal/iam/auth/*
-app.include_router(auth.public_router)  # Public: /api/v1/auth/*
-
-# New IAM APIs (Dec 3, 2025) - TEMPORARILY COMMENTED OUT (need Docker rebuild)
-# app.include_router(users.router)  # User management
-# app.include_router(roles.router)  # Role management
-# app.include_router(mfa_totp.router)  # TOTP MFA
-# app.include_router(audit_logs.router)  # Audit log queries
-
-# Existing routers
-app.include_router(ai_chat.router)
-app.include_router(ai_features.router)
-app.include_router(automation.router)
-app.include_router(compliance.router)
-app.include_router(audit.router)
-app.include_router(protocols.router)
-app.include_router(sync_jobs.router)
-app.include_router(mfa.router)  # Legacy MFA (biometric/adaptive)
-app.include_router(stats.router)
-app.include_router(payment.router)
-app.include_router(leads.router)
-app.include_router(marketing.router)
-app.include_router(marketing.internal_router)
-app.include_router(onboarding.router)
-app.include_router(onboarding.portal_router)
-app.include_router(agents.router)
-app.include_router(hardened_images.router)
-app.include_router(git_providers.router)
-app.include_router(git_scanning.router)
-app.include_router(iam_portal.router)
-app.include_router(iam_orgs.router)
-app.include_router(dashboard.router, prefix="/api/v1/iam")
-app.include_router(iam_policies.router)
-app.include_router(ai_editor.router)
-app.include_router(realms.router)  # Realm creation API - CRITICAL: All realm creation must go through this
-
-# Entitlement routers (merged from entitlement_agent - Dec 3, 2025)
-app.include_router(bulk_operations.router)
-app.include_router(entitlements.router)
-app.include_router(role_mappings.router)
-app.include_router(authorize.router)
-app.include_router(governance.router)
-app.include_router(access_requests.router)
-
-# Phase 1: User Lifecycle & Self-Service
-app.include_router(user_onboarding.router)
-app.include_router(organization.router)
-app.include_router(self_service.router)
-
-# Phase 2: Authentication Enhancements
-app.include_router(passwordless.router)
-app.include_router(webauthn.router)
-app.include_router(adaptive_auth.router)
-
-# Phase 3: SSO & App Catalog
-app.include_router(app_catalog.router)
-app.include_router(app_catalog.portal_router)
-app.include_router(app_assignments.router)
-app.include_router(apps.router)
-app.include_router(external_idp.router)
-app.include_router(scim.router)
-
-# Phase 4: Device & Endpoint Security
-app.include_router(devices.router)
-app.include_router(mdm.router)
-
-# Phase 5: Threat Protection & Analytics
-app.include_router(anomalies.router)
-app.include_router(itdr.router)
-app.include_router(nhi.router)
-app.include_router(reports.router)
-
-# Phase 6: Advanced Features
-app.include_router(privileged_access.router)
-app.include_router(secrets.router)
-app.include_router(ztna.router)
-app.include_router(api_keys.router)
-app.include_router(gateway.router)
-app.include_router(state.router)
-
+# Explicit bounded source operations register before blocked legacy aliases.
+include_source_router(app, 'auth.router', auth.router)
+include_source_router(app, 'auth.public_router', auth.public_router)
+include_source_router(app, 'bulk_operations.router', bulk_operations.router)
+include_source_router(app, 'entitlements.router', entitlements.router)
+include_source_router(app, 'role_mappings.router', role_mappings.router)
+include_source_router(app, 'authorize.router', authorize.router)
+include_source_router(app, 'governance.router', governance.router)
+include_source_router(app, 'access_requests.router', access_requests.router)
+include_source_router(app, 'iam_policies.router', iam_policies.router)
+include_source_router(app, 'ai_editor.router', ai_editor.router)
+include_source_router(app, 'scim.router', scim.router)
+include_source_router(app, 'itdr.router', itdr.router)
+include_source_router(app, 'nhi.router', nhi.router)
+include_source_router(app, 'ai_chat.router', ai_chat.router)
+include_source_router(app, 'ai_features.router', ai_features.router)
+include_source_router(app, 'automation.router', automation.router)
+include_source_router(app, 'compliance.router', compliance.router)
+include_source_router(app, 'audit.router', audit.router)
+include_source_router(app, 'protocols.router', protocols.router)
+include_source_router(app, 'sync_jobs.router', sync_jobs.router)
+include_source_router(app, 'mfa.router', mfa.router)
+include_source_router(app, 'stats.router', stats.router)
+include_source_router(app, 'payment.router', payment.router)
+include_source_router(app, 'leads.router', leads.router)
+include_source_router(app, 'marketing.router', marketing.router)
+include_source_router(app, 'marketing.internal_router', marketing.internal_router)
+include_source_router(app, 'onboarding.router', onboarding.router)
+include_source_router(app, 'onboarding.portal_router', onboarding.portal_router)
+include_source_router(app, 'agents.router', agents.router)
+include_source_router(app, 'hardened_images.router', hardened_images.router)
+include_source_router(app, 'git_providers.router', git_providers.router)
+include_source_router(app, 'git_scanning.router', git_scanning.router)
+include_source_router(app, 'iam_portal.router', iam_portal.router)
+include_source_router(app, 'iam_orgs.router', iam_orgs.router)
+include_source_router(app, 'dashboard.router', dashboard.router, prefix='/api/v1/iam')
+include_source_router(app, 'realms.router', realms.router)
+include_source_router(app, 'user_onboarding.router', user_onboarding.router)
+include_source_router(app, 'organization.router', organization.router)
+include_source_router(app, 'self_service.router', self_service.router)
+include_source_router(app, 'passwordless.router', passwordless.router)
+include_source_router(app, 'webauthn.router', webauthn.router)
+include_source_router(app, 'adaptive_auth.router', adaptive_auth.router)
+include_source_router(app, 'app_catalog.router', app_catalog.router)
+include_source_router(app, 'app_catalog.portal_router', app_catalog.portal_router)
+include_source_router(app, 'app_assignments.router', app_assignments.router)
+include_source_router(app, 'apps.router', apps.router)
+include_source_router(app, 'external_idp.router', external_idp.router)
+include_source_router(app, 'devices.router', devices.router)
+include_source_router(app, 'mdm.router', mdm.router)
+include_source_router(app, 'anomalies.router', anomalies.router)
+include_source_router(app, 'reports.router', reports.router)
+include_source_router(app, 'privileged_access.router', privileged_access.router)
+include_source_router(app, 'secrets.router', secrets.router)
+include_source_router(app, 'ztna.router', ztna.router)
+include_source_router(app, 'api_keys.router', api_keys.router)
+include_source_router(app, 'gateway.router', gateway.router)
+include_source_router(app, 'state.router', state.router)
 
 @app.get("/")
 async def root():
