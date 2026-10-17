@@ -598,3 +598,47 @@ TLS/egress limits, idempotency, durable jobs/recovery, explicit partial/failure
 outcomes, receipts and independent effect verification. Missing Cortex config or
 failed analyzers must never produce a real completed outcome. Existing MCP wire
 names stay retained, but no MCP operation is admitted by this detail boundary.
+
+
+## Wazuh stored inventory source boundary
+
+Wazuh Agent refers to installed vendor sensor software. Existing API, deployment
+and installed identities are preserved; this boundary introduces no reasoning agent.
+The application and both standalone routers retain seven route declarations.
+Only root metadata is public. `GET /api/v1/wazuh/agents` admits an exact registered
+user with current IAM verification and a `WAZUH_INVENTORY_READERS` grant binding
+issuer, client ID, tenant UUID, subject UUID and
+`permission: wazuh.read_owned_inventory`. `IAM_USER_CLIENT_BINDINGS` and grants
+default empty. Roles, forwarded headers, cached provider tokens, sensor labels,
+UUIDs and deployment names grant no identity, enrollment or lifecycle authority.
+
+The inventory read uses existing `public.endpoint_agents` columns from V001.
+Explicit SQL binds tenant and bounded pagination (`skip` 0–10,000, `limit` 1–100,
+default 100) with stable registration-date/ID ordering. Count is the number in
+this page. Stored status, version and keepalive are returned without a manager
+API call; they are not fresh connectivity or independently verified installation
+results. Arbitrary metadata and enrollment keys are excluded. Foreign, invalid
+or oversized results, store failure and cleanup failure return 503; only a real
+empty query returns an empty page. The storage dependency revalidates the actual
+request and rejects direct raw-tenant calls.
+
+Registration, live details, deletion, restart and provider health remain 503 before
+their dependencies. Legacy service and provider operations, including cached-token
+and generic-request paths, explicitly deny before SQL/provider effects. Direct
+factories and health cannot bypass that boundary. Root/startup do not create a
+provider client or disclose configured manager/database addresses. All original
+capabilities remain required restoration work.
+
+Tests use actual current IAM RSA verification with owned key/HTTP/session doubles;
+no identity admission override or real manager/database/sensor is involved. The
+existing table and V003 RLS target do not establish working read roles, tenant
+writers/event triggers, historical data, upgrades, recovery or deployed isolation.
+Those checks and actual caller/workload credential issuance/adoption remain open.
+Restore enrollment/key distribution, authoritative manager-to-sensor ownership,
+label/event/index tenancy, lifecycle approvals, protected targets, TLS/CA/egress,
+provider credential refresh, idempotency, durable intent/reconciliation/compensation,
+audit and independently verified effects before enabling provider operations.
+Provider deletion failure cannot become successful database-only removal; provider
+outage cannot be reported as an absent sensor. Operator health needs its own owned
+probe/ingress contract. Existing gateway package inventories, localStorage sensor
+lists, shell examples and labels alone do not prove enrollment or event isolation.

@@ -1,79 +1,137 @@
-"""Security utilities for authentication and authorization."""
+"""Wazuh HTTP source admission; no header-only, shared-token or body authority."""
 
-import logging
+from dataclasses import dataclass
 from uuid import UUID
-from fastapi import Depends, HTTPException, status, Header
-from typing import Optional
-import httpx
+from fastapi import HTTPException, Request, Security
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from app.core.principal_policy import WazuhPrincipalSettings
+from sg_core.iam_verification import IAMVerificationSettings
+from sg_core.request_credentials import request_bearer_token
+from sg_core.security import get_verified_request_identity
+from sg_core.user_principals import require_user_binding
 
-from app.core.config import settings
+LIST_PATH = "/api/v1/wazuh/agents"
+_BEARER_DOCUMENTATION = HTTPBearer(auto_error=False)
+_PUBLIC = frozenset({("GET", "/", "app.api.health", "root")})
+MAX_SKIP = 10000
+MAX_LIMIT = 100
 
-logger = logging.getLogger(__name__)
+
+class WazuhInventoryQuery(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True, hide_input_in_errors=True)
+    skip: int = Field(default=0, ge=0, le=MAX_SKIP)
+    limit: int = Field(default=100, ge=1, le=MAX_LIMIT)
 
 
-async def get_current_tenant(authorization: Optional[str] = Header(None)) -> UUID:
-    """
-    Extract tenant_id from JWT token via IAM Agent.
-    
-    This function validates the token and extracts the tenant_id claim.
-    All endpoints use this for multi-tenant isolation.
-    """
-    if not authorization:
+@dataclass(frozen=True)
+class WazuhReadContext:
+    """Constructing this object is not authentication or action authority."""
+
+    tenant_id: UUID
+    subject_id: UUID
+    permission: str
+
+
+def require_wazuh_request(request: Request) -> WazuhReadContext | None:
+    endpoint = request.scope.get("endpoint")
+    path = request.scope.get("path", "")
+    owner = (getattr(endpoint, "__module__", None), getattr(endpoint, "__name__", None))
+    if (request.method, path, *owner) in _PUBLIC:
+        return None
+    listing = path == LIST_PATH and owner == ("app.api.agents", "list_agents")
+    if request.method != "GET" or not listing:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authorization header required"
+            503,
+            "Wazuh operation requires an owned enrollment, provider or action contract",
         )
-    
-    # Extract token from "Bearer <token>" format
-    if not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authorization header format"
+    request_bearer_token(request)
+    if not isinstance(
+        getattr(request.app.state, "iam_verification_settings", None),
+        IAMVerificationSettings,
+    ):
+        raise HTTPException(503, "Wazuh verifier configuration unavailable")
+    identity = get_verified_request_identity(request)
+    policy = getattr(request.app.state, "wazuh_principal_settings", None)
+    if not isinstance(policy, WazuhPrincipalSettings):
+        raise HTTPException(503, "Wazuh identity configuration unavailable")
+    binding = require_user_binding(identity.payload(), config=policy)
+    if not any(
+        (b.issuer, b.client_id, b.tenant_id, b.subject_id, b.permission)
+        == (
+            binding.issuer,
+            binding.client_id,
+            identity.tenant_id,
+            identity.user_id,
+            "wazuh.read_owned_inventory",
         )
-    
-    token = authorization[7:]  # Remove "Bearer " prefix
-    
-    # Validate token with IAM Agent
+        for b in policy.WAZUH_INVENTORY_READERS
+    ):
+        raise HTTPException(403, "Owned Wazuh reader permission required")
+    raw = request.scope.get("raw_path")
     try:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f"{settings.IAM_AGENT_URL}/internal/iam/auth/validate-token",
-                json={"token": token},
-                timeout=5.0
-            )
-            
-            if response.status_code != 200:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid or expired token"
-                )
-            
-            result = response.json()
-            
-            if not result.get("valid"):
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail=result.get("error", "Token validation failed")
-                )
-            
-            tenant_id = result.get("tenant_id")
-            if not tenant_id:
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="No tenant_id in token - user not associated with tenant"
-                )
-            
-            return UUID(tenant_id)
-            
-    except httpx.RequestError as e:
-        logger.error(f"Failed to validate token with IAM Agent: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="IAM Agent unavailable"
+        encoded = path.encode("ascii")
+    except UnicodeError:
+        raise HTTPException(403, "Ambiguous Wazuh read target") from None
+    if (
+        request.scope.get("root_path")
+        or not isinstance(raw, bytes)
+        or raw != encoded
+        or b"%" in raw
+        or b"\\" in raw
+    ):
+        raise HTTPException(403, "Ambiguous Wazuh read target")
+    for name, expected in {
+        "x-tenant-id": identity.tenant_id,
+        "x-realm": binding.issuer.rsplit("/realms/", 1)[1],
+    }.items():
+        supplied = request.headers.getlist(name)
+        if len(supplied) > 1 or supplied and supplied[0] != expected:
+            raise HTTPException(403, "Conflicting identity context")
+    if any(
+        name in request.headers
+        for name in (
+            "x-user-id",
+            "x-roles",
+            "x-internal-token",
+            "x-internal-service-token",
+            "x-api-key",
         )
-    except ValueError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid tenant_id format"
-        )
+    ):
+        raise HTTPException(403, "Conflicting identity context")
+    if len(request.scope.get("query_string", b"")) > 64:
+        raise HTTPException(400, "Wazuh inventory read query too large")
+    query = request.query_params
+    allowed = {"skip", "limit"}
+    if any(name not in allowed or len(query.getlist(name)) != 1 for name in query):
+        raise HTTPException(400, "Unsupported or ambiguous Wazuh read query")
+    if listing:
+        try:
+            WazuhInventoryQuery.model_validate(dict(query))
+        except ValidationError:
+            raise HTTPException(422, "Invalid Wazuh read query") from None
+    if (
+        request.headers.get("content-length", "0") != "0"
+        or "transfer-encoding" in request.headers
+    ):
+        raise HTTPException(400, "Wazuh inventory read body is unsupported")
+    return WazuhReadContext(
+        UUID(identity.tenant_id), UUID(identity.user_id), "wazuh.read_owned_inventory"
+    )
 
+
+def get_current_tenant(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials | None = Security(_BEARER_DOCUMENTATION),
+) -> UUID:
+    context = require_wazuh_request(request)
+    if context is None:
+        raise HTTPException(503, "Tenant-scoped Wazuh operation required")
+    return context.tenant_id
+
+
+def require_owned_wazuh_operation():
+    """Raw UUIDs, stored sensor labels, cached tokens and provider secrets grant no authority."""
+    raise HTTPException(
+        503, "Owned Wazuh enrollment, workload and provider contract required"
+    )

@@ -9,7 +9,24 @@
 
 ---
 
-## Overview
+## Current source boundary
+
+Only root metadata and a configured, authenticated stored inventory read at
+`GET /api/v1/wazuh/agents` are admitted. The read requires owned user registration
+and an exact `wazuh.read_owned_inventory` reader grant. Its stored status/version/
+keepalive are not live Wazuh verification. Pagination defaults to100 and is bounded
+to100 records per page; count describes that page. Arbitrary metadata and sensor
+keys are excluded. Registration, live details, deletion, restart and health return
+503 pending owned enrollment/provider/action contracts. Direct legacy helpers also
+deny. No live manager, sensor, database/RLS or event pipeline has been qualified.
+
+Read [the current identity boundary](../../../docs/architecture/gateway-identity.md#wazuh-stored-inventory-source-boundary)
+for configuration, verification scope and restoration requirements. The reference
+below describes retained legacy/proposed behavior; its commands and guarantees
+are not an operational setup path for the current source boundary. Vendor Wazuh
+Agent names and installed endpoint identities remain unchanged.
+
+## Legacy capability reference
 
 This service provides a REST API for managing endpoint security agents. It integrates with the SentinelGrid Endpoint Manager (Wazuh Manager 4.8.0) to handle:
 
@@ -182,13 +199,13 @@ Response: {
    - Service only queries indices matching tenant's ID
    - Cannot access other tenants' data
 
-### Security Guarantees
+### Isolation requirements awaiting qualification
 
-✅ **Agent cannot forge tenant_id** - Labels are server-side only  
-✅ **No cross-tenant access** - Index patterns enforce isolation  
-✅ **Database RLS** - PostgreSQL queries filtered by tenant_id  
-✅ **API authorization** - All endpoints require valid JWT  
-✅ **Audit trail** - All operations logged with tenant_id  
+The following require evidence before deployment: authoritative sensor-to-tenant
+ownership, tamper-resistant event routing, cross-tenant index access denials,
+least-privilege database RLS, exact API/action authorization, and durable audit.
+Stored manager labels, index names and source test doubles alone do not establish
+these properties. Enrollment, lifecycle and provider operations remain unavailable.
 
 ---
 

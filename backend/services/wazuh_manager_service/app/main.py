@@ -6,16 +6,17 @@ Integrates with Wazuh Manager 4.8.0 for endpoint security.
 """
 
 import logging
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+from app.core.security import require_wazuh_request
 from app.api import agents, health
 
 # Configure logging
 logging.basicConfig(
     level=getattr(logging, settings.LOG_LEVEL),
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -23,10 +24,14 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="SentinelGrid Endpoint Manager Service",
     description="Agent management API for SentinelGrid Endpoint Protection (powered by Wazuh 4.8.0)",
+    dependencies=[Depends(require_wazuh_request)],
     version=settings.VERSION,
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
+
+app.state.iam_verification_settings = settings.verification_settings()
+app.state.wazuh_principal_settings = settings.principal_settings()
 
 # CORS middleware
 app.add_middleware(
@@ -48,8 +53,6 @@ async def startup_event():
     logger.info("=" * 60)
     logger.info("SentinelGrid Endpoint Manager Service Starting")
     logger.info(f"Version: {settings.VERSION}")
-    logger.info(f"Wazuh Manager URL: {settings.WAZUH_MANAGER_URL}")
-    logger.info(f"Database: {settings.DB_URL.split('@')[1] if '@' in settings.DB_URL else 'configured'}")
     logger.info("=" * 60)
 
 
@@ -61,10 +64,11 @@ async def shutdown_event():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         "app.main:app",
         host="0.0.0.0",
         port=8000,
         reload=True,
-        log_level=settings.LOG_LEVEL.lower()
+        log_level=settings.LOG_LEVEL.lower(),
     )
