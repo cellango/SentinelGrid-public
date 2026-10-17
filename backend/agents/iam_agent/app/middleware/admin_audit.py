@@ -24,6 +24,11 @@ class AdminAuditMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: Callable):
         path = request.url.path
         method = request.method.upper()
+        # SCIM owns credential-bound service identity and transaction-coupled audit.
+        # Never reinterpret its opaque credential as a user JWT or initialize an
+        # unrelated provider client in this best-effort middleware.
+        if path.startswith("/api/v1/scim/v2/"):
+            return await call_next(request)
 
         # Skip non-interesting endpoints
         if path in {"/", "/health"} or path.startswith("/docs") or path.startswith("/openapi"):

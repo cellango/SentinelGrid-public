@@ -47,9 +47,11 @@ class RoleDirectoryService:
             unavailable()
         return quote(realm, safe="")
 
-    async def _json(self, client, method, url, **kwargs):
+    async def _json(self, client, method, url, *, allow_missing=False, **kwargs):
         try:
             async with client.stream(method, url, **kwargs) as response:
+                if allow_missing and response.status_code == 404:
+                    raise HTTPException(status_code=404, detail="Directory entry not found")
                 if response.status_code != 200:
                     unavailable()
                 body = bytearray()

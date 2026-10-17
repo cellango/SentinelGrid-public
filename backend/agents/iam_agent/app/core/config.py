@@ -5,7 +5,8 @@ from dataclasses import dataclass
 from typing import Optional, Literal
 from urllib.parse import urlsplit
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, SecretStr, field_validator, model_validator
+from app.core.scim_config import SCIMClientBinding, validate_scim_bindings
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sg_core.service_security import (
     DEFAULT_INTERNAL_SERVICE_TOKEN,
@@ -270,13 +271,21 @@ class Settings(BaseSettings):
 
         return self
 
-    # SCIM security
-    SCIM_BEARER_TOKEN: Optional[str] = os.getenv("SCIM_BEARER_TOKEN")
-    SCIM_TENANT_TOKENS: Optional[str] = os.getenv("SCIM_TENANT_TOKENS")  # JSON or comma-separated tenant:token pairs
-    SCIM_DEFAULT_TENANT_ID: str = os.getenv("SCIM_DEFAULT_TENANT_ID", "demo")
-    SCIM_RATE_LIMIT_PER_MINUTE: int = int(os.getenv("SCIM_RATE_LIMIT_PER_MINUTE", "60"))
-    
+    # Explicit deployment-owned SCIM client/tenant/realm/read-permission bindings.
+    SCIM_CLIENT_BINDINGS: dict[str, SCIMClientBinding] = Field(default_factory=dict)
+    SCIM_RATE_LIMIT_PER_MINUTE: int = Field(default=60, ge=1, le=600)
+    # Deprecated inputs are retained as hidden secrets but provide no fallback.
+    SCIM_BEARER_TOKEN: SecretStr | None = Field(default=None, exclude=True)
+    SCIM_TENANT_TOKENS: SecretStr | None = Field(default=None, exclude=True)
+    SCIM_DEFAULT_TENANT_ID: str | None = None
+
+    @field_validator("SCIM_CLIENT_BINDINGS")
+    @classmethod
+    def validate_scim_clients(cls, value):
+        return validate_scim_bindings(value)
+
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
+
 
 
 settings = Settings()

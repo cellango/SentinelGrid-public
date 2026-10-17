@@ -3,6 +3,8 @@ Protocol Manager Service
 Manages SAML, OAuth, SCIM, and other protocol configurations
 """
 
+from fastapi import HTTPException
+
 import logging
 from typing import List, Dict, Any, Optional
 from datetime import datetime
@@ -161,44 +163,8 @@ class ProtocolManager:
         tenant_id: Optional[str] = None,
         config: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """
-        Configure SCIM 2.0 client for user provisioning.
-        
-        Args:
-            scim_endpoint: SCIM 2.0 endpoint URL
-            bearer_token: Bearer token for authentication
-            tenant_id: Tenant ID for multi-tenancy
-            config: Additional SCIM configuration
-        """
-        scim_config = {
-            "endpoint": scim_endpoint,
-            "bearer_token": bearer_token,
-            "version": "2.0",
-            "enabled": True,
-            "user_provisioning": config.get("user_provisioning", True) if config else True,
-            "group_provisioning": config.get("group_provisioning", True) if config else True,
-            "filter_support": config.get("filter_support", True) if config else True
-        }
-        
-        if config:
-            scim_config.update(config)
-        
-        try:
-            # TODO: Store SCIM configuration in database
-            # In Keycloak, SCIM can be configured via User Federation or custom providers
-            
-            logger.info(f"SCIM 2.0 client configured: {scim_endpoint}")
-            
-            return {
-                "scim_endpoint": scim_endpoint,
-                "protocol": ProtocolType.SCIM2.value,
-                "status": "configured",
-                "tenant_id": tenant_id,
-                "configured_at": datetime.utcnow().isoformat()
-            }
-        except Exception as e:
-            logger.error(f"Error configuring SCIM client: {e}")
-            raise
+        """No persistence or provider contract is admitted for outbound SCIM."""
+        raise HTTPException(status_code=501, detail="Outbound SCIM configuration is not implemented")
     
     def configure_ldap_federation(
         self,
@@ -278,6 +244,8 @@ class ProtocolManager:
         tenant_id: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """List all protocol configurations, optionally filtered by type."""
+        if protocol_type == ProtocolType.SCIM2:
+            raise HTTPException(status_code=501, detail="Outbound SCIM configuration and testing are not implemented")
         # TODO: Fetch from database or Keycloak
         configurations = []
         
@@ -329,6 +297,8 @@ class ProtocolManager:
         """
         Test connection to a protocol endpoint.
         """
+        if protocol_type == ProtocolType.SCIM2:
+            raise HTTPException(status_code=501, detail="Outbound SCIM configuration and testing are not implemented")
         try:
             # TODO: Implement connection testing based on protocol type
             if protocol_type == ProtocolType.LDAP:

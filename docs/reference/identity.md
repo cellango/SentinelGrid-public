@@ -43,9 +43,9 @@ real ephemeral RSA keys/signatures with mocked key transport; configuration test
 also retain TLS/production guards. They run in `make preview-check` alongside the
 existing mocked auth-route checks. This verifies the named source boundary, not
 live Keycloak configuration, all callers, RLS or an operational IAM deployment.
-Focused audit/session, ITDR proposal and local NHI controls are described below. SCIM/editor and full
-IAM acceptance remain separate migration slices; live provider/runtime qualification
-is pending.
+Focused audit/session, ITDR proposal, local NHI and SCIM User-read controls are
+described below. Editor and full IAM acceptance remain separate migration slices;
+live provider/runtime qualification is pending.
 
 The old direct-reset endpoint returns HTTP 410 in IAM and the frontend proxy;
 that removes the bypass and does not implement account recovery. The mocked tests
@@ -239,7 +239,7 @@ cross-tenant IDs, audit and commit failures (including a lost commit acknowledge
 stale ORM state, legacy rows, simultaneous
 reviews and approval/cancellation contention. These are synthetic source/database
 results. Governance/certification/role synchronization, shared-definition admission,
-SCIM/editor ports, provider effects, full Flyway adoption and hosted CI remain
+Editor ports, SCIM provisioning, provider effects, full Flyway adoption and hosted CI remain
 outside this qualification. A grant request approval is not the proposed exact
 provider-action approval protocol in the future case runtime.
 
@@ -324,8 +324,9 @@ scope and stale-target rejection, grace periods, missing/unresolved records, his
 and audit outages, atomic bulk rollback, uncertain commits and review/completion
 contention. This is focused synthetic qualification. Full shared D0/Flyway execution,
 unknown populated histories, hosted CI, live directory/provider effects and shared
-definitions require their separate gates. Current role synchronization, ITDR proposal
-and local NHI admission are described below; SCIM/editor admission remains open.
+definitions require their separate gates. Current role synchronization, ITDR proposals,
+local NHI and SCIM read admission are described below; editor and provisioning
+admission remain open.
 
 
 ## Role patterns, directory synchronization and sharing
@@ -573,3 +574,99 @@ RLS/immutable ownership, inventory bounds, audit rollback, uncertain commits and
 competing rotations. All SQL runs in a disposable owned cluster. Existing database
 migration, full Flyway/shared-baseline history, live identity/provider configuration,
 bootstrap privileges, hosted CI and whole-IAM migration acceptance remain open.
+
+
+## SCIM User reads and provisioning boundary
+
+The [SCIM adapter](../../backend/agents/iam_agent/app/api/scim.py) is a **partial,
+read-only preview**, not a complete SCIM provisioning implementation. Authenticated
+`GET /api/v1/scim/v2/Users` and `/Users/{uuid}` return bounded directory observations.
+User POST/PUT/PATCH/DELETE, all Group operations, Bulk and search POST return 501;
+no account, group, membership, password or credential is changed. Existing clients
+that relied on the older mutation paths must handle this explicit block.
+
+The public `/ServiceProviderConfig` contains generic capability metadata only.
+It reports PATCH, filtering, password changes, Bulk, sorting and ETags unsupported.
+Filters return 400 `invalidFilter`; projections and other unsupported query fields
+return 400 rather than being ignored. Complete schema/resource discovery and
+protocol interoperability remain unqualified. The protocol/schema references are
+[RFC 7644](https://www.rfc-editor.org/rfc/rfc7644.html) and
+[RFC 7643](https://www.rfc-editor.org/rfc/rfc7643.html).
+
+Deployment-owned `SCIM_CLIENT_BINDINGS` is a JSON object keyed by canonical client
+UUIDs. Each value requires a tenant UUID, explicit safe realm, SHA-256
+`credential_digest`, and explicit `permissions` (currently only `users.read`).
+An omitted permission list grants no read permission. The default object is empty,
+so no client can authenticate. Duplicate digests, unsafe realms, conflicting realms
+for one tenant, non-UUID identities, unsupported permissions and more than 64 clients
+are rejected. Digest fields are masked in settings representation/serialization.
+
+Provision dedicated high-entropy bearer credentials through approved secret handling;
+keep only their digests in this configuration. Credential generation, delivery,
+expiry/rotation and deployment configuration are operator tasks, not an API provided
+by this adapter. Removing a binding or changing its digest invalidates new requests;
+the binding is checked again after observation. A header/body/query cannot choose a
+tenant, realm, permission or provider credential. Keycloak JWTs, NHI credentials and
+the shared internal token have no automatic SCIM authority. Deprecated
+`SCIM_BEARER_TOKEN`, `SCIM_TENANT_TOKENS` and `SCIM_DEFAULT_TENANT_ID` provide **no
+fallback**, including the old demo slug. Migrate explicitly to the bound configuration;
+the old plaintext map is not silently reinterpreted.
+
+Valid bearer strings are bounded to 32–512 characters and compared by digest.
+Invalid credentials do not populate the rate cache. A locked process-local limiter
+keys authenticated client UUIDs and retains at most the configured clients; it never
+stores bearer tokens as keys. `SCIM_RATE_LIMIT_PER_MINUTE` accepts 1–600 (default 60).
+This does not establish distributed or anonymous-traffic rate controls. TLS at the
+SCIM ingress and operational credential security remain deployment gates.
+
+The [directory reader](../../backend/agents/iam_agent/app/services/scim_service.py)
+uses the configured client realm and existing deployment-owned Keycloak read
+credentials/TLS settings. It reuses the bounded HTTP reader with 10-second request
+timeouts, 1 MiB response caps, disabled redirects and environment proxies. The only
+outbound POST obtains a directory-read token. Resource data requests use GET.
+Exact UUID, boolean enabled state and one valid tenant attribute are required before
+projection. Foreign users are omitted from lists and return the same 404 as missing
+users on direct lookup. Malformed, missing or ambiguous membership fails; it is never
+rewritten from a request tenant. Tenant attributes must be administrator-controlled;
+real profile/read permissions, versions and TLS still need live qualification.
+
+Lists enumerate through an empty provider page, reject duplicate IDs and stop with
+400 `tooMany` above 100 observed realm accounts, including foreign accounts. They
+filter by tenant **before** sorting/pagination. `totalResults` counts the observed
+tenant inventory; `itemsPerPage` counts returned resources. `count=0` returns totals
+with no resources; negative counts mean zero, starts below one mean one and requested
+counts are capped at 100. Numeric inputs are bounded to signed 32-bit magnitude.
+Observations are not a transactional provider snapshot; concurrent provider changes
+can change subsequent pages/results. No provider failure becomes an empty success.
+
+Only known User fields are projected. Credentials, roles and arbitrary provider
+attributes never pass through. There is no invented `externalId`, `lastModified`
+or timestamp default; available creation time is rendered with an explicit timezone.
+Responses and handled errors use SCIM JSON/error envelopes with `Cache-Control:
+no-store`. This partial error handling does not qualify every unknown route or proxy.
+
+Admitted User reads and domain-service rejections commit audit before returning.
+Authentication, rate/header and route failures before admission have no durable event. The separate IAM session binds the verified SCIM tenant without requiring
+a user JWT or trusting `X-Tenant-ID`. Audit uses `actor_type=internal_service`, the
+configured client UUID and realm, real target UUID where known, outcome/count and
+empty provider-effect list. It invents no user actor and stores no credential digest,
+raw credential, request body/filter or provider error payload. Audit failure returns
+503 without User data. Lost acknowledgement can leave an audit record; a later read
+can create another record, with no provider effect to repeat.
+
+The legacy best-effort admin middleware delegates this SCIM path to its own client
+authentication/audit and no longer parses opaque SCIM credentials as user JWTs.
+The internal outbound SCIM configuration endpoint and SCIM-specific protocol list/
+connection-test placeholders now return 501 rather than claim configured/connected.
+The configuration endpoint no longer constructs an unnecessary provider client.
+Other generic protocol/integration paths remain separate acceptance work; these
+blocks are not universal protocol-store qualification.
+
+Tests use synthetic HTTP transport and an owned disposable PostgreSQL cluster for
+client/tenant/realm binding, scoped pagination, malformed/provider failures, unsupported
+operations, cache bounds/concurrency, durable actor audit, tenant RLS, audit privilege
+outages and uncertain commits. No schema/dependency changes or existing database
+migration is required. Full provisioning needs durable action intent, exact authority,
+resource/group ownership, PATCH/filter semantics, retries/reconciliation, secret
+lifecycle and independently verified provider effects. These capabilities require future implementation and qualification; no flag enables
+them here.

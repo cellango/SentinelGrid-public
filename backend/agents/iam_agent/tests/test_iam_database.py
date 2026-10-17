@@ -2864,3 +2864,207 @@ def test_nhi_inventory_limit_never_silently_truncates(store, nhi_enabled):
         with pytest.raises(HTTPException) as error:
             NHIService(session, ADMIN).list_service_accounts()
         assert error.value.status_code == 409
+
+
+# SCIM reads/unsupported operations use the existing bound, append-only IAM audit.
+from app.services.scim_service import SCIMContext, SCIMService, SCIMError
+from app.services import scim_service as scim_service_module
+from app.core.scim_config import SCIMClientBinding
+
+
+@pytest.fixture
+def scim_bound(monkeypatch):
+    import hashlib
+
+    client = uuid4()
+    digest = hashlib.sha256(b"synthetic-scim-credential-for-owned-db-test").hexdigest()
+    binding = SCIMClientBinding(
+        tenant_id=A,
+        realm="synthetic-scim",
+        credential_digest=digest,
+        permissions=["users.read"],
+    )
+    monkeypatch.setattr(
+        "app.core.config.settings.SCIM_CLIENT_BINDINGS", {str(client): binding}
+    )
+    return SCIMContext(client, A, "synthetic-scim", binding.permissions, digest)
+
+
+class SyntheticSCIMDirectory:
+    async def read(self, context, identity=None):
+        return [
+            {
+                "schemas": [scim_service_module.USER_SCHEMA],
+                "id": str(identity or USER),
+                "userName": "synthetic",
+                "active": True,
+            }
+        ]
+
+
+def scim_read(factory, context, operation="list_users", **kwargs):
+    with tenant_session(factory, context.tenant_id) as session:
+        return asyncio.run(
+            SCIMService(session, context, directory=SyntheticSCIMDirectory()).handle(
+                operation, **kwargs
+            )
+        )
+
+
+def test_scim_real_audit_carries_client_and_bound_tenant_without_user_fabrication(
+    store, scim_bound
+):
+    _, _, factory, _ = store
+    result = scim_read(factory, scim_bound)
+    assert result["totalResults"] == 1
+    with tenant_session(factory, A) as session:
+        row = session.query(IAMAuditEvent).one()
+        assert (
+            row.tenant_id == A
+            and row.actor_type == "internal_service"
+            and row.performed_by is None
+        )
+        assert row.metadata_json == {
+            "scim_client_id": str(scim_bound.client_id),
+            "directory_realm": "synthetic-scim",
+        }
+        assert row.decision == "allow" and row.changes["provider_effects"] == []
+        assert scim_bound.credential_digest not in str(row.metadata_json)
+    with tenant_session(factory, B) as session:
+        assert session.query(IAMAuditEvent).count() == 0
+
+
+@pytest.mark.parametrize(
+    "operation",
+    ["create_user", "replace_user", "patch_user", "delete_user", "group_put"],
+)
+def test_scim_blocked_provisioning_is_durably_denied_without_provider_calls(
+    store, scim_bound, operation
+):
+    _, _, factory, _ = store
+
+    class NoProvider:
+        async def read(self, *args):
+            raise AssertionError("No provider operation permitted")
+
+    with tenant_session(factory, A) as session:
+        with pytest.raises(SCIMError) as error:
+            asyncio.run(
+                SCIMService(session, scim_bound, directory=NoProvider()).handle(
+                    operation, identity=str(USER)
+                )
+            )
+        assert error.value.status_code == 501
+    with tenant_session(factory, A) as session:
+        row = session.query(IAMAuditEvent).one()
+        assert (
+            row.event_type == "scim_rejected"
+            and row.decision == "deny"
+            and row.subject_id == USER
+        )
+        assert (
+            session.query(Entitlement).count() == 1
+            and session.get(Entitlement, GRANT).status == "active"
+        )
+
+
+def test_scim_provider_failure_is_audited_without_false_empty_success(
+    store, scim_bound
+):
+    _, _, factory, _ = store
+
+    class Failure:
+        async def read(self, *args):
+            raise RuntimeError("Sensitive provider response")
+
+    with tenant_session(factory, A) as session:
+        with pytest.raises(SCIMError) as error:
+            asyncio.run(
+                SCIMService(session, scim_bound, directory=Failure()).handle(
+                    "list_users"
+                )
+            )
+        assert error.value.status_code == 503 and "Sensitive" not in error.value.detail
+    with tenant_session(factory, A) as session:
+        row = session.query(IAMAuditEvent).one()
+        assert row.decision == "deny" and row.changes["status"] == 503
+
+
+def test_scim_misbound_database_session_prevents_data_release(store, scim_bound):
+    _, _, factory, _ = store
+    with tenant_session(factory, B) as session:
+        with pytest.raises(SCIMError) as error:
+            asyncio.run(
+                SCIMService(
+                    session, scim_bound, directory=SyntheticSCIMDirectory()
+                ).handle("list_users")
+            )
+        assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        assert session.query(IAMAuditEvent).count() == 0
+
+
+def test_scim_audit_privilege_outage_prevents_data_release(store, scim_bound):
+    params, _, factory, _ = store
+    with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute("REVOKE INSERT ON iam_audit_events FROM sg_test_app")
+    try:
+        with pytest.raises(SCIMError) as error:
+            scim_read(factory, scim_bound)
+        assert error.value.status_code == 503
+    finally:
+        with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+            cursor.execute("GRANT INSERT ON iam_audit_events TO sg_test_app")
+    with tenant_session(factory, A) as session:
+        assert session.query(IAMAuditEvent).count() == 0
+
+
+@pytest.mark.parametrize("lost_ack", [False, True])
+def test_scim_uncertain_audit_commit_returns_error_and_no_user_payload(
+    store, scim_bound, monkeypatch, lost_ack
+):
+    _, _, factory, _ = store
+    with tenant_session(factory, A) as session:
+        original = session.commit
+
+        def fail():
+            if lost_ack:
+                original()
+            raise RuntimeError("Synthetic acknowledgement failure")
+
+        with monkeypatch.context() as patch:
+            patch.setattr(session, "commit", fail)
+            with pytest.raises(SCIMError) as error:
+                asyncio.run(
+                    SCIMService(
+                        session, scim_bound, directory=SyntheticSCIMDirectory()
+                    ).handle("list_users")
+                )
+            assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        assert session.query(IAMAuditEvent).count() == (1 if lost_ack else 0)
+
+
+def test_scim_dependency_binds_configured_tenant_without_jwt_or_header_override(
+    store, scim_bound, monkeypatch
+):
+    from app.api import scim as scim_api
+
+    _, _, factory, _ = store
+    monkeypatch.setattr(scim_api, "IAMSessionLocal", factory)
+    dep = scim_api.get_scim_session(scim_bound)
+    session = next(dep)
+    try:
+        assert session.execute(
+            text("SELECT current_setting('app.current_tenant_id')")
+        ).scalar_one() == str(A)
+        result = asyncio.run(
+            SCIMService(session, scim_bound, directory=SyntheticSCIMDirectory()).handle(
+                "get_user", identity=str(USER)
+            )
+        )
+        assert result["id"] == str(USER)
+    finally:
+        dep.close()
+    with tenant_session(factory, A) as session:
+        assert session.query(IAMAuditEvent).one().subject_id == USER

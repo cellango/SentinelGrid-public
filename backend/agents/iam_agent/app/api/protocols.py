@@ -102,22 +102,11 @@ async def configure_oauth2(
 @router.post("/scim", response_model=SCIMConfigResponse)
 async def configure_scim(
     request: SCIMConfigRequest,
-    request_context: RequestContext = Depends(get_current_request_context),
-    protocol_manager: ProtocolManager = Depends(get_protocol_manager)
+    request_context: RequestContext = Depends(get_current_request_context)
 ) -> SCIMConfigResponse:
-    """Configure SCIM 2.0 client."""
-    try:
-        result = protocol_manager.configure_scim_client(
-            scim_endpoint=request.scim_endpoint,
-            bearer_token=request.bearer_token,
-            tenant_id=_resolve_tenant_id(request_context, request.tenant_id),
-            config=request.config
-        )
-        return SCIMConfigResponse(**result)
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error configuring SCIM: {str(e)}")
+    """Outbound SCIM configuration is unavailable until storage/provider admission."""
+    _resolve_tenant_id(request_context, request.tenant_id)
+    raise HTTPException(status_code=501, detail="Outbound SCIM configuration is not implemented")
 
 
 @router.post("/ldap", response_model=LDAPConfigResponse)
