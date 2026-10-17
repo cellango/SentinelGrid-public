@@ -17,7 +17,8 @@ import sys
 import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../../libs"))
-from sg_core.dependencies import get_current_tenant
+from sg_core.dependencies import service_tenant_dependency
+get_current_tenant = service_tenant_dependency('ticketing_service')
 from sg_core.models import Incident
 from sg_events.workflow import (
     WorkflowEventType,

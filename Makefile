@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -6,7 +6,7 @@ RUFF ?= ruff
 help:
 	@echo "SentinelGrid developer source preview (see RELEASE_SCOPE.md)"
 	@echo "  make install          - Install isolated source-review test dependencies"
-	@echo "  make preview-check    - Check paths, documentation, source hygiene, V013 schema, and IAM auth/policy and MCP/identity boundaries"
+	@echo "  make preview-check    - Check paths, documentation, source hygiene, V013 schema, and IAM auth/policy and MCP/user/workload identity boundaries"
 	@echo "  make preview-mcp       - Check discovery/protocol errors and unavailable legacy tools"
 	@echo "  make preview-iam-db    - Test audit/RLS in an owned disposable PostgreSQL cluster"
 	@echo "  make preview-secrets  - Scan candidate source with Gitleaks 8.30.1"
@@ -44,6 +44,11 @@ preview-check:
 	$(MAKE) preview-mcp PYTHON="$(PYTHON)"
 	$(MAKE) preview-gateway-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-gateway PYTHON="$(PYTHON)"
+	$(MAKE) preview-workload-reads PYTHON="$(PYTHON)"
+
+preview-workload-reads:
+	$(PYTHON) -m pytest -c backend/tests/workload_reads/pytest.ini backend/tests/workload_reads -q
+	$(PYTHON) -m pytest -c backend/services/ticketing_service/tests/pytest-workload.ini backend/services/ticketing_service/tests/test_workload_read_boundary.py -q
 
 preview-gateway:
 	$(PYTHON) -m pytest -c backend/services/api_gateway/tests/pytest-identity.ini backend/services/api_gateway/tests/test_gateway_identity_boundary.py -q

@@ -112,3 +112,16 @@ remain blocked pending owned delegation. Offline positive data paths use spies;
 full proxy/action authorization, direct-service callers, live provider registration,
 SQL and runtime/feature equivalence remain open. A wider legacy gateway suite has
 existing failures and is not claimed passing. Core MCP remains unavailable.
+
+
+The same [identity source contract](docs/architecture/gateway-identity.md#direct-service-workload-reads)
+now includes request-bound, short-lived workload reads for three ticketing GET
+operations. Explicit owned issuer/client/subject/tenant/service/permission bindings
+default to empty. The old shared header-only tenant helper returns 503; ticketing,
+scanner and SOAR import sites use service-selected adapters. Writes, scanner
+artifact reads and SOAR's shared catalog remain unavailable pending their contracts.
+Existing gateway ticket callers cannot use these reads until signed workload
+issuance and forwarding migrate. These capabilities remain required restoration
+work. Offline tests mount the actual ticket router with current IAM verification
+and data/session spies; no real SQL, token issuer, deployed provider/caller,
+one-time replay protection or end-user action delegation is qualified.

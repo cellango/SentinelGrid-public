@@ -15,7 +15,8 @@ from app.services.playbook_seeder import (
     clone_builtin_playbook,
     seed_all_ootb_playbooks,
 )
-from sg_core.dependencies import get_current_tenant
+from sg_core.dependencies import service_tenant_dependency
+get_current_tenant = service_tenant_dependency('soar_service')
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

@@ -12,7 +12,8 @@ import logging
 import json as pyjson
 
 from sg_core.db import SessionLocal
-from sg_core.dependencies import get_current_tenant
+from sg_core.dependencies import service_tenant_dependency
+get_current_tenant = service_tenant_dependency('scanner_orchestrator')
 from sg_core.cloud.registry import CLOUD_RESOURCE_BASELINE_SCANNER_ID, resolve_scanner_alias
 
 S3_ENDPOINT = os.getenv("SCAN_ARTIFACT_S3_ENDPOINT")

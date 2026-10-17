@@ -33,7 +33,8 @@ from sqlalchemy import text
 
 from sg_core.db import SessionLocal
 from sg_core.jobs import handlers, parsers
-from sg_core.dependencies import get_current_tenant
+from sg_core.dependencies import service_tenant_dependency
+get_current_tenant = service_tenant_dependency('scanner_orchestrator')
 from sg_core.cloud.registry import CLOUD_RESOURCE_BASELINE_SCANNER_ID, resolve_scanner_alias
 from .api_scans import router as scans_router
 from .api_scans import _derive_fix_groups_from_findings

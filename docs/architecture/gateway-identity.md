@@ -1,8 +1,9 @@
 # Current delegated identity verification
 
 Status: shared verification receipt checks plus mounted-gateway user identity
-guards and strict browser credential resolution. Offline source checks only;
-full route authorization, workload delegation and a supported login remain open.
+guards, strict browser credential resolution and a bounded workload-read contract.
+Offline source checks only; complete route authorization, delegated actions and a
+supported login remain open.
 [Release scope](../../RELEASE_SCOPE.md) governs execution. The separate
 [identity reference](../reference/identity.md) describes tenant requirements.
 
@@ -120,6 +121,66 @@ shared credential and caller-selected tenant into user authority. Other downstre
 proxy/action contracts still require their own authorization and qualification;
 passing this identity gate does not qualify their effects or error semantics.
 
+## Direct-service workload reads
+
+[The read contract](../../backend/libs/sg_core/workload_reads.py) reuses the same
+IAM signature and receipt authority. It authenticates a registered workload reading
+its own tenant; it does not delegate an end user or grant write/action authority.
+Owned `SERVICE_READ_WORKLOAD_BINDINGS` JSON lists exact `issuer`, `client_id`,
+canonical UUID `subject_id` and `tenant_id`, `service_id`, `permission` and
+`contract: keycloak-workload-read-v1`. The immutable settings default to no bindings;
+unconfigured reads fail closed. Issuers require HTTPS outside development/test.
+
+A verified token must include `typ: Bearer`, `sg_principal_type: workload`,
+`sg_identity_contract: keycloak-workload-read-v1`, exact `azp`/subject/tenant, and
+`sg_permissions: ["ticketing.read"]`. Its audience set must be exactly the owned
+`KEYCLOAK_CLIENT_ID` and `urn:sentinelgrid:service:ticketing_service`. Actor/exchange
+claims are rejected; a signed role or user token supplies no workload permission.
+The lifetime and current age cannot exceed 60 seconds, and `jti` must be a non-nil
+canonical UUID. The signed `sg_request` object has exactly these fields:
+
+| Field | Required binding |
+| --- | --- |
+| `service_id` | Server-selected `ticketing_service` |
+| `method` | `GET` |
+| `path` | Exact concrete request path, including resource/tab identifiers |
+| `query_sha256` | SHA-256 hex digest of the exact raw query bytes, including order |
+
+The three current read declarations are GET `/api/v1/tickets`,
+`/api/v1/tickets/{ticket_id}` and `/api/v1/tickets/{ticket_id}/tabs/{tab_name}`.
+The service adapter checks both the owned route declaration and concrete target;
+unreviewed aliases cannot inherit admission. Encoded/ambiguous paths, read bodies,
+conflicting/duplicate tenant or realm hints and forwarded user/role/internal-token
+headers are rejected. Successful admission supplies the verified tenant to the
+existing ticket session and domain lookup; a caller header cannot select it.
+
+The [shared dependency](../../backend/libs/sg_core/dependencies.py) no longer
+accepts a tenant UUID from a header. Its legacy unscoped entrypoint returns 503.
+All five production import sites now use explicit service adapters: ticketing API
+and database, scanner API and entrypoint, and SOAR's built-in catalog API. Writes
+remain unavailable. Scanner artifact reads and SOAR shared-catalog reads also
+remain unavailable pending their object/credential and catalog-ownership reviews.
+The logical `soar_service` auth ID maps the existing `soar_agent` source folder;
+this change does not rename a deployment or installed identity.
+
+Existing gateway ticket proxies forward tenant hints without this workload token,
+so they cannot use these reads yet. Required gateway, scheduler and direct-call
+compatibility, scanner/SOAR operations and all mutations remain restoration work.
+No token issuer, workload credential provisioning, provider registration/mappers,
+end-user delegation or live caller adoption is supplied. The example user-client
+fragment above must not be repurposed as workload issuance. This is a local contract,
+not a claim of RFC 9068 compliance, DPoP or mTLS. The exact read can repeat until
+expiry; `jti` is a binding, not a consumed nonce. No one-time replay protection,
+durable read audit or provider/effect qualification is claimed.
+
+`make preview-workload-reads` checks positive registered RSA-signed reads and
+forged/foreign/expired/ambiguous/missing authority. A separate process mounts the
+actual ticket router and tenant dependency with the current IAM validator in an
+isolated namespace. Only key/HTTP I/O, SQL-session creation and domain data reads
+are test doubles. Rejections must precede scoped session creation; accepted reads
+must carry the exact tenant and resource. This does not qualify SQL execution,
+full service startup, provider issuance or a deployed caller.
+
 ## Qualification and remaining work
 
 `make preview-gateway-identity` retains the real generated RSA/current IAM validator
@@ -138,8 +199,8 @@ a comparison with the previous commit found no newly failing case after fixture
 isolation was updated. That suite is not advertised as passing. The loopback HTTP
 integration test and its runtime behavior remain outside these offline gates.
 
-Required work remains: direct-service/internal-token caller reconciliation,
-workload credentials/delegation, provider registration/drift and tenant-claim
+Required work remains: other direct-service/internal-token caller reconciliation,
+workload credential issuance/caller adoption and end-user delegation, provider registration/drift and tenant-claim
 qualification, complete proxy header/target/action/version/error contracts, and
 existing route/test migration. Core MCP tools remain unavailable. No provider
 effect or engine migration is enabled by these source controls.

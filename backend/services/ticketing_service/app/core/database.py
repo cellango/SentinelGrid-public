@@ -16,7 +16,8 @@ if os.path.exists(libs_path):
 
 # Shared ORM Base and models
 from sg_core.models import Base, Ticket, Alert
-from sg_core.dependencies import get_current_tenant
+from sg_core.dependencies import service_tenant_dependency
+get_current_tenant = service_tenant_dependency('ticketing_service')
 
 # Create engine
 engine = create_engine(
