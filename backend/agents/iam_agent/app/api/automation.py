@@ -15,12 +15,10 @@ from app.models.automation import (
     WorkflowTriggerRequest,
     WorkflowTriggerResponse
 )
-from app.services.keycloak_client import KeycloakClient
 from app.services.automated_responses import AutomatedResponseService
 from app.services.auto_remediation import AutoRemediationService
 from app.services.predictive_analytics import PredictiveAnalyticsService
 from app.services.workflow_integration import WorkflowIntegrationService
-from app.api.auth import get_keycloak_client
 
 router = APIRouter(prefix="/internal/iam/automation", tags=["automation"])
 
@@ -36,17 +34,15 @@ def _resolve_tenant_id(
 
 
 def get_automated_response_service(
-    keycloak_client: KeycloakClient = Depends(get_keycloak_client)
 ) -> AutomatedResponseService:
     """Get automated response service instance."""
-    return AutomatedResponseService(keycloak_client)
+    return AutomatedResponseService(None)
 
 
 def get_remediation_service(
-    keycloak_client: KeycloakClient = Depends(get_keycloak_client)
 ) -> AutoRemediationService:
     """Get auto-remediation service instance."""
-    return AutoRemediationService(keycloak_client)
+    return AutoRemediationService(None)
 
 
 def get_predictive_service() -> PredictiveAnalyticsService:

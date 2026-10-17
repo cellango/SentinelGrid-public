@@ -1,12 +1,12 @@
 """
 Workflow Integration Service
-Integrates IAM Agent with SOAR playbooks and workflow engines
+Legacy workflow compatibility; unqualified provider access is blocked.
 """
+
+from app.services.itdr_service import block_legacy_response
 
 import logging
 from typing import List, Dict, Any, Optional
-from datetime import datetime
-import httpx
 
 from app.core.config import settings
 
@@ -26,35 +26,8 @@ class WorkflowIntegrationService:
         incident_data: Dict[str, Any],
         tenant_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """
-        Trigger a SOAR playbook for IAM-related incidents.
-        
-        Common playbooks:
-        - user_compromise_response
-        - privilege_escalation_response
-        - access_violation_response
-        - compliance_remediation
-        """
-        try:
-            with httpx.Client(timeout=30.0) as client:
-                response = client.post(
-                    f"{self.soar_url}/internal/soar/playbooks/{playbook_id}/execute",
-                    json={
-                        "incident": incident_data,
-                        "tenant_id": tenant_id,
-                        "triggered_by": "iam_agent",
-                        "triggered_at": datetime.utcnow().isoformat()
-                    }
-                )
-                response.raise_for_status()
-                return response.json()
-                
-        except httpx.HTTPStatusError as e:
-            logger.error(f"Error triggering SOAR playbook: {e}")
-            raise
-        except Exception as e:
-            logger.error(f"Unexpected error triggering SOAR playbook: {e}")
-            raise
+        """Unavailable until the deterministic response boundary is qualified."""
+        block_legacy_response()
     
     def create_automated_approval_workflow(
         self,
@@ -63,39 +36,8 @@ class WorkflowIntegrationService:
         approval_rules: List[Dict[str, Any]],
         tenant_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """
-        Create an automated approval workflow for access requests.
-        
-        Approval rules can include:
-        - Risk-based approval (auto-approve low risk, require approval for high risk)
-        - Time-based approval (auto-approve during business hours)
-        - Manager approval requirements
-        - Policy-based approval
-        """
-        workflow_definition = {
-            "name": f"automated_approval_{request_type}",
-            "type": "approval_workflow",
-            "tenant_id": tenant_id,
-            "trigger": {
-                "type": "access_request",
-                "request_type": request_type
-            },
-            "steps": self._build_approval_steps(approval_rules, request_data),
-            "created_at": datetime.utcnow().isoformat()
-        }
-        
-        try:
-            with httpx.Client(timeout=30.0) as client:
-                response = client.post(
-                    f"{self.workflow_engine_url}/internal/workflows",
-                    json=workflow_definition
-                )
-                response.raise_for_status()
-                return response.json()
-                
-        except Exception as e:
-            logger.error(f"Error creating approval workflow: {e}")
-            raise
+        """Unavailable until the deterministic response boundary is qualified."""
+        block_legacy_response()
     
     def execute_remediation_workflow(
         self,
@@ -104,47 +46,15 @@ class WorkflowIntegrationService:
         remediation_steps: List[str],
         tenant_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """
-        Execute an automated remediation workflow.
-        """
-        workflow_execution = {
-            "workflow_type": "iam_remediation",
-            "violation_type": violation_type,
-            "violation_data": violation_data,
-            "remediation_steps": remediation_steps,
-            "tenant_id": tenant_id,
-            "executed_at": datetime.utcnow().isoformat()
-        }
-        
-        try:
-            with httpx.Client(timeout=30.0) as client:
-                response = client.post(
-                    f"{self.workflow_engine_url}/internal/workflows/execute",
-                    json=workflow_execution
-                )
-                response.raise_for_status()
-                return response.json()
-                
-        except Exception as e:
-            logger.error(f"Error executing remediation workflow: {e}")
-            raise
+        """Unavailable until the deterministic response boundary is qualified."""
+        block_legacy_response()
     
     def get_workflow_status(
         self,
         workflow_execution_id: str
     ) -> Dict[str, Any]:
-        """Get status of a workflow execution."""
-        try:
-            with httpx.Client(timeout=10.0) as client:
-                response = client.get(
-                    f"{self.workflow_engine_url}/internal/workflows/{workflow_execution_id}/status"
-                )
-                response.raise_for_status()
-                return response.json()
-                
-        except Exception as e:
-            logger.error(f"Error getting workflow status: {e}")
-            raise
+        """Unavailable until the deterministic response boundary is qualified."""
+        block_legacy_response()
     
     def create_risk_response_playbook(
         self,
@@ -153,35 +63,8 @@ class WorkflowIntegrationService:
         risk_details: Dict[str, Any],
         tenant_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """
-        Create and execute a risk response playbook.
-        """
-        playbook_name = f"risk_response_{risk_level}"
-        
-        playbook_data = {
-            "playbook": playbook_name,
-            "incident": {
-                "type": "iam_risk",
-                "severity": risk_level,
-                "user_id": user_id,
-                "details": risk_details,
-                "tenant_id": tenant_id
-            },
-            "auto_execute": risk_level in ["critical", "high"]
-        }
-        
-        try:
-            with httpx.Client(timeout=30.0) as client:
-                response = client.post(
-                    f"{self.soar_url}/internal/soar/playbooks/{playbook_name}/execute",
-                    json=playbook_data
-                )
-                response.raise_for_status()
-                return response.json()
-                
-        except Exception as e:
-            logger.error(f"Error creating risk response playbook: {e}")
-            raise
+        """Unavailable until the deterministic response boundary is qualified."""
+        block_legacy_response()
     
     def _build_approval_steps(
         self,
@@ -244,23 +127,6 @@ class WorkflowIntegrationService:
         review_data: Dict[str, Any],
         tenant_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """
-        Integrate with access review campaign workflows.
-        """
-        try:
-            with httpx.Client(timeout=30.0) as client:
-                response = client.post(
-                    f"{self.workflow_engine_url}/internal/workflows/access_review",
-                    json={
-                        "campaign_id": campaign_id,
-                        "review_data": review_data,
-                        "tenant_id": tenant_id
-                    }
-                )
-                response.raise_for_status()
-                return response.json()
-                
-        except Exception as e:
-            logger.error(f"Error integrating with access review workflow: {e}")
-            raise
+        """Unavailable until the deterministic response boundary is qualified."""
+        block_legacy_response()
 

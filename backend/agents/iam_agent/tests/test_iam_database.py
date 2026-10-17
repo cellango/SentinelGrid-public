@@ -2282,3 +2282,175 @@ def test_policy_templates_are_tenant_local_and_seeds_fail_explicitly(store):
         with pytest.raises(HTTPException) as error:
             portal.list_policy_bundles()
         assert error.value.status_code == 503
+
+
+# ITDR proposals reuse append-only IAM audit storage; no new runtime DDL.
+from app.schemas.itdr import ThreatSignal
+from app.services.itdr_service import ITDRService
+from fastapi import HTTPException
+
+
+class SyntheticITDRDirectory:
+    async def observe(self, tenant, user):
+        return [
+            RoleSnapshot(tenant, user, (), datetime.now(timezone.utc), "synthetic-itdr")
+        ]
+
+
+def itdr_setup(monkeypatch):
+    monkeypatch.setattr(
+        "app.core.config.settings.IAM_ROLE_SYNC_REALMS",
+        {str(A): "synthetic-itdr", str(B): "synthetic-itdr"},
+    )
+    return ThreatSignal(
+        user_id=USER,
+        threat_type="account_takeover",
+        context={
+            "password": "synthetic-only",
+            "nested": {"authorization": "synthetic-only"},
+            "source_ip": "192.0.2.1",
+        },
+    )
+
+
+def test_itdr_durable_receipt_actor_redaction_and_tenant_visibility(store, monkeypatch):
+    _, _, factory, _ = store
+    signal = itdr_setup(monkeypatch)
+    with tenant_session(factory, A) as session:
+        result = asyncio.run(
+            ITDRService(session, directory=SyntheticITDRDirectory()).propose(
+                [signal], ADMIN
+            )
+        )[0]
+    with tenant_session(factory, A) as session:
+        row = session.get(IAMAuditEvent, result.proposal_id)
+        assert (
+            row.event_type == "itdr_proposed"
+            and row.performed_by == B
+            and row.subject_id == USER
+        )
+        assert row.decision is None and row.changes["effects_executed"] == []
+        assert row.metadata_json["context"]["password"] == "[REDACTED]"
+        assert row.metadata_json["context"]["nested"]["authorization"] == "[REDACTED]"
+        assert row.metadata_json["signal_trust"] == "caller_assertion"
+        assert session.query(Entitlement).count() == 1
+        assert session.get(Entitlement, GRANT).status == "active"
+    with tenant_session(factory, B) as session:
+        assert session.get(IAMAuditEvent, result.proposal_id) is None
+    assert result.actions_executed == [] and result.soar_incident_id is None
+
+
+def test_itdr_second_audit_failure_rolls_back_entire_batch(store, monkeypatch):
+    _, _, factory, _ = store
+    signal = itdr_setup(monkeypatch)
+    original = AuditLogger.log_entitlement_event
+    calls = 0
+
+    def fail_second(logger, *args, **kwargs):
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            raise RuntimeError("Synthetic audit outage")
+        return original(logger, *args, **kwargs)
+
+    monkeypatch.setattr(AuditLogger, "log_entitlement_event", fail_second)
+    with tenant_session(factory, A) as session:
+        with pytest.raises(HTTPException) as error:
+            asyncio.run(
+                ITDRService(session, directory=SyntheticITDRDirectory()).propose(
+                    [signal, signal], ADMIN
+                )
+            )
+        assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        assert session.query(IAMAuditEvent).count() == 0
+
+
+def test_itdr_failed_directory_batch_commits_only_rejections(store, monkeypatch):
+    _, _, factory, _ = store
+    signal = itdr_setup(monkeypatch)
+
+    class Failure(SyntheticITDRDirectory):
+        async def observe(self, *args):
+            raise RuntimeError("Synthetic provider outage")
+
+    with tenant_session(factory, A) as session:
+        with pytest.raises(HTTPException) as error:
+            asyncio.run(
+                ITDRService(session, directory=Failure()).propose(
+                    [signal, signal], ADMIN
+                )
+            )
+        assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        rows = session.query(IAMAuditEvent).all()
+        assert len(rows) == 2 and all(
+            row.event_type == "itdr_rejected" and row.decision == "deny" for row in rows
+        )
+        assert all(row.changes["effects_executed"] == [] for row in rows)
+
+
+@pytest.mark.parametrize("lost_ack", [False, True])
+def test_itdr_commit_failure_never_returns_success_and_can_be_reconciled(
+    store, monkeypatch, lost_ack
+):
+    _, _, factory, _ = store
+    signal = itdr_setup(monkeypatch)
+    with tenant_session(factory, A) as session:
+        original = session.commit
+
+        def fail():
+            if lost_ack:
+                original()
+            raise RuntimeError("Synthetic acknowledgement failure")
+
+        with monkeypatch.context() as patch:
+            patch.setattr(session, "commit", fail)
+            with pytest.raises(HTTPException) as error:
+                asyncio.run(
+                    ITDRService(session, directory=SyntheticITDRDirectory()).propose(
+                        [signal], ADMIN
+                    )
+                )
+            assert (
+                error.value.status_code == 503
+                and "inspect audit state" in error.value.detail
+            )
+    with tenant_session(factory, A) as session:
+        assert session.query(IAMAuditEvent).count() == (1 if lost_ack else 0)
+
+
+def test_itdr_forced_rls_blocks_misbound_session_audit(store, monkeypatch):
+    _, _, factory, _ = store
+    signal = itdr_setup(monkeypatch)
+    with tenant_session(factory, B) as session:
+        with pytest.raises(HTTPException) as error:
+            asyncio.run(
+                ITDRService(session, directory=SyntheticITDRDirectory()).propose(
+                    [signal], ADMIN
+                )
+            )
+        assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        assert session.query(IAMAuditEvent).count() == 0
+
+
+def test_itdr_audit_permission_outage_blocks_proposal(store, monkeypatch):
+    params, _, factory, _ = store
+    signal = itdr_setup(monkeypatch)
+    with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute("REVOKE INSERT ON iam_audit_events FROM sg_test_app")
+    try:
+        with tenant_session(factory, A) as session:
+            with pytest.raises(HTTPException) as error:
+                asyncio.run(
+                    ITDRService(session, directory=SyntheticITDRDirectory()).propose(
+                        [signal], ADMIN
+                    )
+                )
+            assert error.value.status_code == 503
+    finally:
+        with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+            cursor.execute("GRANT INSERT ON iam_audit_events TO sg_test_app")
+    with tenant_session(factory, A) as session:
+        assert session.query(IAMAuditEvent).count() == 0

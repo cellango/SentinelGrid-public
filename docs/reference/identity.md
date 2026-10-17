@@ -412,3 +412,73 @@ HTTP transport supplies directory data; no live Keycloak or Redis instance is us
 Full shared baseline/Flyway/history/privilege adoption, hosted CI, live identity
 permissions/profile configuration, every other grant writer and overall IAM
 acceptance remain separate gates.
+
+
+## ITDR response proposal admission
+
+The [ITDR intake](../../backend/agents/iam_agent/app/api/itdr.py) retains
+`POST /internal/iam/itdr/enforce` and `/enforce/batch` as compatibility paths.
+They **record proposals only**. A successful response means the IAM audit commit
+was acknowledged; it never means an account, session, MFA policy, notification,
+review queue, WAF rule or SOAR incident changed. `actions_executed` stays empty,
+`auto_response_enabled` stays false and `soar_incident_id` stays null. No environment
+flag or body approval field enables effects. New callers should check `status`,
+`actions_recorded`, each action's outcome and `proposal_id`.
+
+The deterministic threat catalog contains ten proposal categories. Its severities
+and suggested actions are response recommendations, not validated detection facts
+or authority to execute. Caller-supplied threat/context data is retained as an
+unverified assertion. LOG_ALERT means an audit record only; SOC/user notification,
+human-review queuing and every enforcement action return **blocked**. No external
+message or incident is sent, and no automatic detection-to-effect path is admitted.
+
+Verified tenant/IAM/platform administrators with a user UUID may submit. The shared
+internal token has no user actor and cannot submit. Tenant UUIDs come from verified
+server context. Optional legacy body tenant/realm values must match that tenant and
+its server-owned `IAM_ROLE_SYNC_REALMS` mapping. The existing bounded directory
+reader must observe the exact subject UUID and tenant membership within 30 seconds,
+including immediately before audit commit. Missing maps, outages, redirects,
+foreign membership, malformed or stale observations cannot become success. These
+are read-only directory observations with the provider qualification limits above.
+
+Unknown threats, non-UUID subjects, extra authority/approval fields and unbounded
+batches are rejected. Batches contain 1–10 signals; each context allows at most
+2,048 encoded JSON bytes, six levels and 256 values. The body context cannot choose
+operations or credentials. Credential-like keys are redacted by the existing audit
+logger; callers must still avoid secrets in arbitrary free-text values. Context is
+not echoed in the response or written to application logs by this intake.
+
+[The service](../../backend/agents/iam_agent/app/services/itdr_service.py) commits
+all proposal records together using the existing separate IAM database and its
+append-only, forced-tenant audit table. Each receipt identifies the actual caller,
+subject, directory observation and response-map version. A provider verification
+failure commits rejection events only, then returns a generic 403/503; no proposal
+subset is committed. Input/authentication mismatches are rejected before provider
+access. Audit/commit failure returns 503 and attempts rollback. An acknowledgement
+lost after commit may leave durable records: inspect audit state before retry.
+Repeated submissions can create additional proposal records; no effect idempotency,
+approval workflow, incident tracking or distributed provider transaction is claimed.
+
+Overlapping legacy response executors in `automated_response`, `automated_responses`,
+`auto_remediation` and `workflow_integration` now return explicit 503 from their
+response methods and helpers, including old dry-run/placeholder paths. Those paths
+lack the admitted action ownership, tenant-bound provider contract or truthful
+receipt semantics. The anomaly API now derives tenant/actor from the verified request-context dependency.
+Anomaly detection can still return findings, with empty
+`actions_taken` and `response_status=blocked`; it does not call the old response
+executor. Detection/query/analytics paths outside this intake retain their separate
+experimental qualification limits. Existing clients of blocked methods need to
+handle 503 and submit proposals explicitly; no transparent execution fallback exists.
+
+Real provider effects require the planned shared action boundary: exact server-owned
+policy/approval, scoped provider credentials and target membership, durable action
+intent/reconciliation, independently verified effect receipts and failure/retry
+qualification. Temporal remains the selected future runtime behind `case_runtime`;
+this slice neither implements it nor reopens the deferred engine decision.
+
+Unit checks cover all ten categories, authority/size/scope negatives, synthetic HTTP
+provider errors and legacy bypass helpers. The owned PostgreSQL suite checks durable
+receipts, redaction, two-tenant visibility, forced RLS, batch rollback, audit permission
+outages and uncertain commit acknowledgement. No schema or dependency changes,
+existing database migration, live provider mutation, hosted CI or deployment is
+implied by this source qualification.

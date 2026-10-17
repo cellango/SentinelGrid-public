@@ -11,9 +11,9 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
+from app.api.request_context import RequestContext, get_current_request_context
 from app.services.anomaly_store import AnomalyStore
 from app.services.anomaly_detection import AnomalyDetectionService
-from app.services.automated_response import AutomatedResponseService
 
 logger = logging.getLogger(__name__)
 
@@ -59,24 +59,6 @@ class AcknowledgeAnomalyRequest(BaseModel):
 # Helper Functions
 # ============================================================================
 
-async def get_token_data(credentials: str) -> dict:
-    """Extract and validate token, return token data with tenant_id."""
-    from app.services.token_validator import TokenValidator
-    from app.services.keycloak_client import KeycloakClient
-    
-    keycloak_client = KeycloakClient()
-    validator = TokenValidator(keycloak_client)
-    result = validator.validate_token(credentials)
-    
-    if not result.get("valid"):
-        raise HTTPException(status_code=401, detail="Invalid token")
-    
-    if not result.get("tenant_id"):
-        raise HTTPException(status_code=403, detail="No tenant_id in token")
-    
-    return result
-
-
 # ============================================================================
 # Anomaly Endpoints
 # ============================================================================
@@ -89,15 +71,14 @@ async def list_anomalies(
     status: Optional[str] = Query(None, description="Filter by status"),
     page: int = Query(1, ge=1),
     limit: int = Query(50, ge=1, le=100),
-    authorization: str = Depends(lambda req: req.headers.get("authorization", "").replace("Bearer ", ""))
+    request_context: RequestContext = Depends(get_current_request_context)
 ):
     """
     List detected security anomalies.
     
     Can filter by user, type, severity, and status.
     """
-    token_data = await get_token_data(authorization)
-    tenant_id = token_data["tenant_id"]
+    tenant_id = str(request_context.tenant_id)
     
     try:
         detection_service = AnomalyDetectionService()
@@ -156,16 +137,15 @@ async def list_anomalies(
 async def acknowledge_anomaly(
     anomaly_id: str,
     request: AcknowledgeAnomalyRequest,
-    authorization: str = Depends(lambda req: req.headers.get("authorization", "").replace("Bearer ", ""))
+    request_context: RequestContext = Depends(get_current_request_context)
 ):
     """
     Acknowledge a security anomaly.
     
     Marks anomaly as acknowledged and optionally adds notes.
     """
-    token_data = await get_token_data(authorization)
-    tenant_id = token_data["tenant_id"]
-    user_id = token_data.get("user_id")
+    tenant_id = str(request_context.tenant_id)
+    user_id = request_context.user_id
     
     try:
         store = AnomalyStore()
@@ -184,15 +164,14 @@ async def acknowledge_anomaly(
 async def trigger_anomaly_detection(
     user_id: Optional[str] = None,
     time_window_hours: int = 24,
-    authorization: str = Depends(lambda req: req.headers.get("authorization", "").replace("Bearer ", ""))
+    request_context: RequestContext = Depends(get_current_request_context)
 ):
     """
     Manually trigger anomaly detection.
     
     Useful for on-demand security scans.
     """
-    token_data = await get_token_data(authorization)
-    tenant_id = token_data["tenant_id"]
+    tenant_id = str(request_context.tenant_id)
     
     logger.info(f"Manual anomaly detection triggered for tenant {tenant_id}")
     
@@ -204,23 +183,16 @@ async def trigger_anomaly_detection(
             time_window_hours=time_window_hours
         )
 
-        # Optionally trigger automated responses for fresh anomalies
-        response_service = AutomatedResponseService(store=detection_service.store)
+        # Detection does not authorize response effects. Submit selected assertions
+        # through the authenticated, audited ITDR proposal intake separately.
         actions_taken = []
-        for anomaly in new_anomalies:
-            if anomaly.get("risk_score", 0) >= 70:  # High risk
-                actions = await response_service.respond_to_anomaly(
-                    tenant_id=tenant_id,
-                    anomaly=anomaly
-                )
-                if actions:
-                    actions_taken.extend(actions)
 
         return {
             "success": True,
             "anomalies_detected": len(new_anomalies),
             "anomalies": new_anomalies,
             "actions_taken": actions_taken,
+            "response_status": "blocked",
         }
         
     except Exception as e:

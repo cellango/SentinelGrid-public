@@ -1,135 +1,85 @@
 """Tests for anomaly detection and automated response."""
 
 from datetime import datetime, timedelta
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
+from uuid import uuid4
+from fastapi import FastAPI
+from app.api import anomalies
+from app.api.request_context import RequestContext, get_current_request_context
 from app.services.anomaly_detection import AnomalyDetectionService
 
 
 @pytest.fixture
-def client():
-    """Create test client."""
-    # Override token dependency to avoid real validation
-    def _fake_token_dep():
-        return "test-token"
-
-    app.dependency_overrides = {
-        # FastAPI doesn't expose the lambda dep directly; override via header accessor
-        # by returning a dummy header extractor
-    }
-    return TestClient(app)
+def caller():
+    return RequestContext(uuid4(), str(uuid4()), ("TENANT_ADMIN",))
 
 
 @pytest.fixture
-def mock_token_data():
-    """Mock token data with tenant_id."""
-    return {
-        "valid": True,
-        "tenant_id": "test-tenant-123",
-        "user_id": "user-123",
-        "roles": ["TENANT_ADMIN"]
+def client(caller):
+    app = FastAPI()
+    app.include_router(anomalies.router)
+    app.dependency_overrides[get_current_request_context] = lambda: caller
+    with TestClient(app) as client:
+        yield client
+
+
+def test_list_anomalies(client, caller, monkeypatch):
+    service = Mock()
+    service.detect_anomalies = AsyncMock(return_value=[])
+    service.store.list_anomalies.return_value = {"items": [], "total": 0}
+    monkeypatch.setattr(anomalies, "AnomalyDetectionService", lambda: service)
+    result = client.get("/api/v1/security/anomalies")
+    assert result.status_code == 200 and result.json()["items"] == []
+    assert service.detect_anomalies.call_args.kwargs["tenant_id"] == str(
+        caller.tenant_id
+    )
+    assert service.store.list_anomalies.call_args.kwargs["tenant_id"] == str(
+        caller.tenant_id
+    )
+
+
+def test_acknowledge_anomaly(client, caller, monkeypatch):
+    store = Mock()
+    store.acknowledge.return_value = True
+    monkeypatch.setattr(anomalies, "AnomalyStore", lambda: store)
+    result = client.post(
+        "/api/v1/security/anomalies/synthetic-anomaly/acknowledge",
+        json={"notes": "Synthetic"},
+    )
+    assert result.status_code == 200
+    assert store.acknowledge.call_args.kwargs == {
+        "tenant_id": str(caller.tenant_id),
+        "anomaly_id": "synthetic-anomaly",
+        "actor": caller.user_id,
     }
 
 
-@patch('app.api.anomalies.get_token_data')
-@patch('app.api.anomalies.AnomalyDetectionService')
-@patch('app.api.anomalies.AutomatedResponseService')
-def test_list_anomalies(mock_auto, mock_service_class, mock_get_token, client, mock_token_data):
-    """Test list anomalies endpoint."""
-    mock_get_token.return_value = mock_token_data
-    
-    mock_service = Mock()
-    mock_service.detect_anomalies = AsyncMock(return_value=[])
-    mock_store = Mock()
-    mock_store.list_anomalies.return_value = {
-        "items": [
+def test_trigger_anomaly_detection(client, caller, monkeypatch):
+    service = Mock()
+    service.detect_anomalies = AsyncMock(
+        return_value=[
             {
-                "id": "anomaly-1",
-                "tenant_id": mock_token_data["tenant_id"],
-                "user_id": mock_token_data["user_id"],
-                "anomaly_type": "failed_logins",
-                "severity": "high",
-                "title": "Multiple Failed Login Attempts",
-                "description": "5 failed login attempts detected",
-                "risk_score": 75.0,
-                "metadata": {"failed_count": 5},
-                "status": "open",
-                "detected_at": datetime.utcnow()
+                "anomaly_type": "impossible_travel",
+                "severity": "critical",
+                "risk_score": 99,
             }
-        ],
-        "total": 1
-    }
-    mock_service.store = mock_store
-    mock_service_class.return_value = mock_service
-    mock_auto.return_value = Mock()
-    
-    response = client.get(
-        "/api/v1/security/anomalies",
-        headers={"Authorization": "Bearer test-token"}
+        ]
     )
-    
-    assert response.status_code == 200
-    data = response.json()
-    assert len(data["items"]) == 1
-    assert data["items"][0]["anomaly_type"] == "failed_logins"
-
-
-@patch('app.api.anomalies.AnomalyStore')
-@patch('app.api.anomalies.get_token_data')
-def test_acknowledge_anomaly(mock_get_token, mock_store_class, client, mock_token_data):
-    """Test acknowledge anomaly endpoint."""
-    mock_get_token.return_value = mock_token_data
-    mock_store = Mock()
-    mock_store.acknowledge.return_value = True
-    mock_store_class.return_value = mock_store
-    
-    response = client.post(
-        "/api/v1/security/anomalies/anomaly-123/acknowledge",
-        json={"notes": "Reviewed and resolved"},
-        headers={"Authorization": "Bearer test-token"}
+    monkeypatch.setattr(anomalies, "AnomalyDetectionService", lambda: service)
+    result = client.post("/api/v1/security/anomalies/detect")
+    assert result.status_code == 200
+    assert result.json()["anomalies_detected"] == 1
+    assert (
+        result.json()["actions_taken"] == []
+        and result.json()["response_status"] == "blocked"
     )
-    
-    assert response.status_code == 200
-    data = response.json()
-    assert data["success"] is True
-
-
-@patch('app.api.anomalies.get_token_data')
-@patch('app.api.anomalies.AnomalyDetectionService')
-@patch('app.api.anomalies.AutomatedResponseService')
-def test_trigger_anomaly_detection(mock_response_service, mock_detection_service, mock_get_token, client, mock_token_data):
-    """Test manual anomaly detection trigger."""
-    mock_get_token.return_value = mock_token_data
-    
-    mock_detection = Mock()
-    mock_detection.detect_anomalies = AsyncMock(return_value=[
-        {
-            "anomaly_type": "unusual_device",
-            "severity": "medium",
-            "title": "Unusual Device Detected",
-            "risk_score": 60.0
-        }
-    ])
-    mock_detection_service.return_value = mock_detection
-    
-    mock_response = Mock()
-    mock_response.respond_to_anomaly = AsyncMock(return_value=[])
-    mock_response_service.return_value = mock_response
-    
-    response = client.post(
-        "/api/v1/security/anomalies/detect",
-        json={"time_window_hours": 24},
-        headers={"Authorization": "Bearer test-token"}
+    assert service.detect_anomalies.call_args.kwargs["tenant_id"] == str(
+        caller.tenant_id
     )
-    
-    assert response.status_code == 200
-    data = response.json()
-    assert data["success"] is True
-    assert data["anomalies_detected"] == 1
 
 
 def test_impossible_travel_detection():
@@ -144,7 +94,12 @@ def test_impossible_travel_detection():
             "ip_address": "1.1.1.1",
             "user_agent": "ua",
             "device_id": None,
-            "geo": {"lat": 40.7128, "lon": -74.0060, "city": "New York", "country": "US"},
+            "geo": {
+                "lat": 40.7128,
+                "lon": -74.0060,
+                "city": "New York",
+                "country": "US",
+            },
         },
         {
             "user_id": "u1",
