@@ -23,7 +23,7 @@ from app.api import app_catalog, app_assignments, apps, external_idp, scim
 # Phase 4: Device & Endpoint Security
 from app.api import devices, mdm
 # Phase 5: Threat Protection & Analytics
-from app.api import anomalies, reports, itdr
+from app.api import anomalies, reports, itdr, nhi
 # Phase 6: Advanced Features
 from app.api import privileged_access, secrets, ztna, api_keys
 from app.api import gateway
@@ -228,6 +228,7 @@ app.include_router(mdm.router)
 # Phase 5: Threat Protection & Analytics
 app.include_router(anomalies.router)
 app.include_router(itdr.router)
+app.include_router(nhi.router)
 app.include_router(reports.router)
 
 # Phase 6: Advanced Features

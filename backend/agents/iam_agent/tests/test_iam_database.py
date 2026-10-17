@@ -264,6 +264,25 @@ def databases(cluster):
         assert cursor.fetchone()[0] == 0
         cursor.execute("SELECT count(*) FROM iam_audit_events")
         assert cursor.fetchone()[0] == 0
+        cursor.execute(
+            "CREATE TABLE nhi_service_accounts (id uuid PRIMARY KEY, tenant_id uuid, secret_hash varchar(255), metadata jsonb)"
+        )
+        cursor.execute(
+            "INSERT INTO nhi_service_accounts VALUES (%s,%s,'synthetic-legacy-digest','{\"unreviewed\":true}')",
+            (str(uuid4()), str(A)),
+        )
+        cursor.execute("SELECT to_jsonb(n) FROM nhi_service_accounts n")
+        legacy_nhi = cursor.fetchall()
+        cursor.execute(
+            (
+                ROOT
+                / "migrations_consolidated/V017__public_service_account_registry.sql"
+            ).read_text()
+        )
+        cursor.execute("SELECT to_jsonb(n) FROM nhi_service_accounts n")
+        assert cursor.fetchall() == legacy_nhi
+        cursor.execute("SELECT count(*) FROM iam_service_accounts")
+        assert cursor.fetchone()[0] == 0
     # Exact policy/catalog table declarations from the published dump, not a
     # claim that all V001-V013 extensions, histories and runners are qualified.
     dump = (ROOT / "migrations_consolidated/V001__initial_schema.sql").read_text()
@@ -294,6 +313,14 @@ def databases(cluster):
                 ROOT / "migrations_consolidated/V016__public_role_grant_provenance.sql"
             ).read_text()
         )
+        cursor.execute(
+            (
+                ROOT
+                / "migrations_consolidated/V017__public_service_account_registry.sql"
+            ).read_text()
+        )
+        cursor.execute("SELECT to_regclass('public.iam_service_accounts')")
+        assert cursor.fetchone()[0] is None
         cursor.execute("SELECT to_regclass('public.audit_campaigns')")
         assert cursor.fetchone()[0] is None
         cursor.execute(
@@ -331,7 +358,7 @@ def store(databases, monkeypatch):
     params, (engine, policy_engine) = databases
     with owner(params, "iam_test") as connection, connection.cursor() as cursor:
         cursor.execute(
-            "TRUNCATE iam_audit_events,entitlements,access_requests,audit_campaigns,audit_schedules,role_entitlement_patterns CASCADE"
+            "TRUNCATE iam_service_accounts,iam_audit_events,entitlements,access_requests,audit_campaigns,audit_schedules,role_entitlement_patterns CASCADE"
         )
         for tenant in (A, B):
             cursor.execute(
@@ -2454,3 +2481,386 @@ def test_itdr_audit_permission_outage_blocks_proposal(store, monkeypatch):
             cursor.execute("GRANT INSERT ON iam_audit_events TO sg_test_app")
     with tenant_session(factory, A) as session:
         assert session.query(IAMAuditEvent).count() == 0
+
+
+# IAM-local NHI lifecycle: no provider or machine-authentication integration.
+from app.models.service_account import ServiceAccount
+from app.services.nhi_service import NHIService
+from app.services import nhi_service as nhi_service_module
+
+
+@pytest.fixture
+def nhi_enabled(monkeypatch):
+    monkeypatch.setattr("app.core.config.settings.IAM_ENABLE_SERVICE_ACCOUNTS", True)
+
+
+def nhi_create(factory, caller=ADMIN, **changes):
+    with tenant_session(factory, caller.tenant_id) as session:
+        return NHIService(session, caller).create_service_account(
+            {"name": "synthetic-nhi", **changes}
+        )
+
+
+def nhi_change(factory, account, operation, version, caller=ADMIN):
+    with tenant_session(factory, caller.tenant_id) as session:
+        return NHIService(session, caller).transition(
+            account, operation, {"expected_version": version}
+        )
+
+
+def nhi_check(factory, account, secret, caller=ADMIN):
+    with tenant_session(factory, caller.tenant_id) as session:
+        return NHIService(session, caller).check_credentials(account.client_id, secret)
+
+
+def test_nhi_model_matches_reviewed_sql(databases):
+    test_governance_models_match_reviewed_sql(databases, ServiceAccount)
+
+
+def test_nhi_creation_is_local_tenant_owned_and_audited_without_secrets(
+    store, nhi_enabled
+):
+    import hashlib
+
+    _, _, factory, _ = store
+    issued = nhi_create(factory)
+    with tenant_session(factory, A) as session:
+        row = session.get(ServiceAccount, issued.id)
+        assert row.owner_user_id == B == row.created_by
+        assert (
+            row.secret_hash == hashlib.sha256(issued.client_secret.encode()).hexdigest()
+        )
+        assert row.secret_hash != issued.client_secret
+        events = session.query(IAMAuditEvent).all()
+        assert len(events) == 1 and events[0].event_type == "nhi_created"
+        assert events[0].performed_by == B and events[0].subject_id == row.id
+        assert issued.client_secret not in str(
+            events[0].changes
+        ) and row.secret_hash not in str(events[0].changes)
+        assert (
+            session.query(Entitlement).count() == 1
+        )  # no credential-to-permission shortcut
+    assert (
+        issued.provider_status == "not_integrated"
+        and issued.credential_scope == "local_registry_only"
+    )
+    assert nhi_check(factory, issued, issued.client_secret) is True
+    assert nhi_check(factory, issued, "synthetic-wrong-secret") is False
+
+
+def test_nhi_rotation_replaces_secret_and_stale_retry_cannot_rotate_again(
+    store, nhi_enabled
+):
+    _, _, factory, _ = store
+    first = nhi_create(factory)
+    rotated = nhi_change(factory, first.id, "rotate", 1)
+    assert (
+        rotated.credential_version == 2 and rotated.client_secret != first.client_secret
+    )
+    assert nhi_check(factory, first, first.client_secret) is False
+    assert nhi_check(factory, rotated, rotated.client_secret) is True
+    with pytest.raises(HTTPException) as error:
+        nhi_change(factory, first.id, "rotate", 1)
+    assert error.value.status_code == 409
+    with tenant_session(factory, A) as session:
+        assert session.get(ServiceAccount, first.id).credential_version == 2
+        assert (
+            session.query(IAMAuditEvent).filter_by(event_type="nhi_rotate").count() == 1
+        )
+
+
+def test_nhi_deactivation_clears_credentials_and_activation_issues_fresh_secret(
+    store, nhi_enabled
+):
+    _, _, factory, _ = store
+    first = nhi_create(factory)
+    inactive = nhi_change(factory, first.id, "deactivate", 1)
+    assert inactive.status == "inactive" and inactive.credential_expires_at is None
+    assert nhi_check(factory, first, first.client_secret) is False
+    with tenant_session(factory, A) as session:
+        assert session.get(ServiceAccount, first.id).secret_hash is None
+    renewed = nhi_change(factory, first.id, "activate", 2)
+    assert (
+        renewed.credential_version == 3 and renewed.client_secret != first.client_secret
+    )
+    assert nhi_check(factory, first, first.client_secret) is False
+    assert nhi_check(factory, renewed, renewed.client_secret) is True
+
+
+@pytest.mark.parametrize("status", ["active", "inactive"])
+def test_nhi_soft_delete_is_terminal_and_never_reactivates_a_credential(
+    store, nhi_enabled, status
+):
+    _, _, factory, _ = store
+    issued = nhi_create(factory)
+    version = 1
+    if status == "inactive":
+        nhi_change(factory, issued.id, "deactivate", version)
+        version += 1
+    deleted = nhi_change(factory, issued.id, "delete", version)
+    assert deleted.status == "deleted" and deleted.credential_expires_at is None
+    for operation in ["activate", "rotate", "deactivate", "delete"]:
+        with pytest.raises(HTTPException) as error:
+            nhi_change(factory, issued.id, operation, version + 1)
+        assert error.value.status_code == 409
+    assert nhi_check(factory, issued, issued.client_secret) is False
+    with pytest.raises(HTTPException) as error:
+        nhi_create(factory)
+    assert error.value.status_code == 409  # deletion does not free a historical name
+
+
+def test_nhi_expiry_uses_aware_time_and_expiring_list_includes_expired_records(
+    store, nhi_enabled, monkeypatch
+):
+    _, _, factory, _ = store
+
+    class Past(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime.now(timezone.utc) - timedelta(days=400)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(nhi_service_module, "datetime", Past)
+        issued = nhi_create(factory, rotation_days=1)
+    assert nhi_check(factory, issued, issued.client_secret) is False
+    with tenant_session(factory, A) as session:
+        service = NHIService(session, ADMIN)
+        assert service.get_service_account(issued.id).credential_expired is True
+        assert [r.id for r in service.list_service_accounts(within_days=0)] == [
+            issued.id
+        ]
+
+
+def test_nhi_other_tenant_cannot_read_rotate_or_check_same_client(store, nhi_enabled):
+    _, _, factory, _ = store
+    issued = nhi_create(factory)
+    foreign = RequestContext(B, str(USER), ("PLATFORM_ADMIN",))
+    with tenant_session(factory, B) as session:
+        service = NHIService(session, foreign)
+        assert service.list_service_accounts() == []
+        with pytest.raises(HTTPException) as error:
+            service.get_service_account(issued.id)
+        assert error.value.status_code == 404
+    with pytest.raises(HTTPException) as error:
+        nhi_change(factory, issued.id, "rotate", 1, foreign)
+    assert error.value.status_code == 404
+    assert nhi_check(factory, issued, issued.client_secret, foreign) is False
+    assert nhi_check(factory, issued, issued.client_secret) is True
+
+
+def test_nhi_same_names_in_different_tenants_are_distinct(store, nhi_enabled):
+    _, _, factory, _ = store
+    first = nhi_create(factory)
+    second = nhi_create(factory, RequestContext(B, str(USER), ("TENANT_ADMIN",)))
+    assert first.id != second.id and first.client_id != second.client_id
+
+
+@pytest.mark.parametrize(
+    "operation", ["create", "rotate", "deactivate", "activate", "delete"]
+)
+def test_nhi_audit_outage_rolls_back_entire_lifecycle_change(
+    store, nhi_enabled, monkeypatch, operation
+):
+    _, _, factory, _ = store
+    issued = None
+    if operation != "create":
+        issued = nhi_create(factory)
+    if operation == "activate":
+        nhi_change(factory, issued.id, "deactivate", 1)
+    version = 2 if operation == "activate" else 1
+    original = AuditLogger.log_entitlement_event
+
+    def fail(logger, event, *args, **kwargs):
+        if event == "nhi_" + ("created" if operation == "create" else operation):
+            raise RuntimeError("Synthetic audit outage")
+        return original(logger, event, *args, **kwargs)
+
+    monkeypatch.setattr(AuditLogger, "log_entitlement_event", fail)
+    with pytest.raises(HTTPException) as error:
+        if operation == "create":
+            nhi_create(factory)
+        else:
+            nhi_change(factory, issued.id, operation, version)
+    assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        if operation == "create":
+            assert session.query(ServiceAccount).count() == 0
+        else:
+            row = session.get(ServiceAccount, issued.id)
+            assert row.credential_version == version
+            assert row.status == ("inactive" if operation == "activate" else "active")
+    if operation not in {"create", "activate"}:
+        assert nhi_check(factory, issued, issued.client_secret) is True
+
+
+@pytest.mark.parametrize("lost_ack", [False, True])
+def test_nhi_uncertain_rotation_requires_inspection_and_new_explicit_version(
+    store, nhi_enabled, monkeypatch, lost_ack
+):
+    _, _, factory, _ = store
+    issued = nhi_create(factory)
+    with tenant_session(factory, A) as session:
+        commit = session.commit
+
+        def fail():
+            if lost_ack:
+                commit()
+            raise RuntimeError("Synthetic acknowledgement failure")
+
+        with monkeypatch.context() as patch:
+            patch.setattr(session, "commit", fail)
+            with pytest.raises(HTTPException) as error:
+                NHIService(session, ADMIN).transition(
+                    issued.id, "rotate", {"expected_version": 1}
+                )
+            assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        version = session.get(ServiceAccount, issued.id).credential_version
+    assert version == (2 if lost_ack else 1)
+    assert nhi_check(factory, issued, issued.client_secret) is (not lost_ack)
+    repaired = nhi_change(factory, issued.id, "rotate", version)
+    assert nhi_check(factory, repaired, repaired.client_secret) is True
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("tenant_id", B),
+        ("owner_user_id", USER),
+        ("client_id", "sa-forged"),
+        ("credential_version", 99),
+    ],
+)
+def test_nhi_database_guards_ownership_and_version_even_with_admin_flag(
+    store, nhi_enabled, field, value
+):
+    _, _, factory, _ = store
+    issued = nhi_create(factory)
+    with tenant_session(factory, A) as session:
+        session.execute(text("SELECT set_config('app.is_superadmin','true',true)"))
+        row = session.get(ServiceAccount, issued.id)
+        setattr(row, field, value)
+        with pytest.raises(DBAPIError):
+            session.flush()
+        session.rollback()
+    with tenant_session(factory, A) as session:
+        assert session.get(ServiceAccount, issued.id).credential_version == 1
+
+
+def test_nhi_rls_cannot_be_widened_by_permissive_policy_and_rows_cannot_be_hard_deleted(
+    store, nhi_enabled
+):
+    params, _, factory, _ = store
+    issued = nhi_create(factory)
+    with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute(
+            "CREATE POLICY synthetic_unsafe_all ON iam_service_accounts USING(true) WITH CHECK(true)"
+        )
+    try:
+        with tenant_session(factory, B) as session:
+            assert session.query(ServiceAccount).count() == 0
+            assert (
+                session.execute(
+                    text("UPDATE iam_service_accounts SET status=status")
+                ).rowcount
+                == 0
+            )
+        with tenant_session(factory, A) as session:
+            assert (
+                session.execute(text("DELETE FROM iam_service_accounts")).rowcount == 0
+            )
+            with pytest.raises(DBAPIError):
+                session.execute(text("TRUNCATE iam_service_accounts"))
+            session.rollback()
+    finally:
+        with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+            cursor.execute("DROP POLICY synthetic_unsafe_all ON iam_service_accounts")
+
+
+def test_nhi_concurrent_rotations_accept_one_version_only(store, nhi_enabled):
+    from concurrent.futures import ThreadPoolExecutor
+
+    _, engine, factory, _ = store
+    issued = nhi_create(factory)
+    concurrent = create_engine(engine.url, pool_size=2, max_overflow=0)
+    install_tenant_pool_reset(concurrent)
+    sessions = sessionmaker(bind=concurrent)
+
+    def attempt():
+        try:
+            return nhi_change(sessions, issued.id, "rotate", 1)
+        except HTTPException as error:
+            return error.status_code
+
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results = list(pool.map(lambda _: attempt(), range(2)))
+        assert sum(isinstance(r, int) and r == 409 for r in results) == 1
+        success = next(r for r in results if not isinstance(r, int))
+        assert (
+            success.credential_version == 2
+            and nhi_check(factory, success, success.client_secret) is True
+        )
+        with tenant_session(factory, A) as session:
+            assert (
+                session.query(IAMAuditEvent).filter_by(event_type="nhi_rotate").count()
+                == 1
+            )
+    finally:
+        concurrent.dispose()
+
+
+def test_nhi_proof_audit_outage_does_not_return_credential_success(
+    store, nhi_enabled, monkeypatch
+):
+    _, _, factory, _ = store
+    issued = nhi_create(factory)
+    monkeypatch.setattr(
+        AuditLogger,
+        "log_entitlement_event",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            RuntimeError("Synthetic audit outage")
+        ),
+    )
+    with pytest.raises(HTTPException) as error:
+        nhi_check(factory, issued, issued.client_secret)
+    assert error.value.status_code == 503
+
+
+def test_nhi_misbound_session_cannot_create_another_tenant_account(store, nhi_enabled):
+    _, _, factory, _ = store
+    with tenant_session(factory, B) as session:
+        with pytest.raises(HTTPException) as error:
+            NHIService(session, ADMIN).create_service_account(
+                {"name": "synthetic-misbound"}
+            )
+        assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        assert session.query(ServiceAccount).count() == 0
+        assert session.query(IAMAuditEvent).count() == 0
+
+
+def test_nhi_inventory_limit_never_silently_truncates(store, nhi_enabled):
+    params, _, factory, _ = store
+    with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+        rows = []
+        for index in range(101):
+            identity = uuid4()
+            rows.append(
+                (
+                    str(identity),
+                    str(A),
+                    "Synthetic " + str(index),
+                    "sa-" + str(identity),
+                    str(USER),
+                    str(USER),
+                )
+            )
+        cursor.executemany(
+            "INSERT INTO iam_service_accounts (id,tenant_id,name,client_id,owner_user_id,created_by,status) VALUES (%s,%s,%s,%s,%s,%s,'inactive')",
+            rows,
+        )
+    with tenant_session(factory, A) as session:
+        with pytest.raises(HTTPException) as error:
+            NHIService(session, ADMIN).list_service_accounts()
+        assert error.value.status_code == 409

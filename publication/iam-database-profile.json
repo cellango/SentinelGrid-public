@@ -8,9 +8,10 @@
     "Historical IAM V0-V3 bytes retained solely for the existing separate grant-store lineage; V0 is comments only",
     "New V014 remains in consolidated authority and never rewrites legacy audit rows or catalog entitlements",
     "Unknown populated databases, missing/drifted histories, role provisioning and deployment require explicit reconciliation; the bundle does not execute Flyway or connect",
-    "Application catalog DB retains its independent V001-V016 history; never mix those histories or use repair/ignore-missing to adopt",
+    "Application catalog DB retains its independent V001-V017 history; never mix those histories or use repair/ignore-missing to adopt",
     "V015 preserves existing governance JSON/status data, adds campaign updated_at and intersects history link guards; shared catalog profile is unchanged when audit_campaigns is absent",
-    "V016 opts historical role patterns out of auto-grants and adds service-owned provenance with tenant/subject guards; global role patterns remain blocked"
+    "V016 opts historical role patterns out of auto-grants and adds service-owned provenance with tenant/subject guards; global role patterns remain blocked",
+    "V017 adds a disabled-by-default IAM-local service-account credential registry with tenant/lifecycle guards; no private runtime table adoption, OAuth provider client or API-key authentication integration"
   ],
   "migrations": [
     {
@@ -40,6 +41,10 @@
     {
       "path": "backend/migrations_consolidated/V016__public_role_grant_provenance.sql",
       "sha256": "847464bee17fd1330dd0fb9b85b8a79a6231a6ae1eae903a7d94cc7c8f3798e5"
+    },
+    {
+      "path": "backend/migrations_consolidated/V017__public_service_account_registry.sql",
+      "sha256": "9425b080e0edf7deae907604b8b29dddd6c35d72a8d75b007fc4b340f3f1ee87"
     }
   ]
 }

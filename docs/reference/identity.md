@@ -43,7 +43,7 @@ real ephemeral RSA keys/signatures with mocked key transport; configuration test
 also retain TLS/production guards. They run in `make preview-check` alongside the
 existing mocked auth-route checks. This verifies the named source boundary, not
 live Keycloak configuration, all callers, RLS or an operational IAM deployment.
-Focused audit/session controls are described below. ITDR/NHI/SCIM/editor and full
+Focused audit/session, ITDR proposal and local NHI controls are described below. SCIM/editor and full
 IAM acceptance remain separate migration slices; live provider/runtime qualification
 is pending.
 
@@ -239,7 +239,7 @@ cross-tenant IDs, audit and commit failures (including a lost commit acknowledge
 stale ORM state, legacy rows, simultaneous
 reviews and approval/cancellation contention. These are synthetic source/database
 results. Governance/certification/role synchronization, shared-definition admission,
-ITDR/NHI/SCIM/editor ports, provider effects, full Flyway adoption and hosted CI remain
+SCIM/editor ports, provider effects, full Flyway adoption and hosted CI remain
 outside this qualification. A grant request approval is not the proposed exact
 provider-action approval protocol in the future case runtime.
 
@@ -308,8 +308,8 @@ has no cascading grant/campaign foreign keys.
 adds only campaign `updated_at` and its trigger, plus a restrictive history-link
 guard requiring the certification's exact entitlement. Historical campaign timestamps
 start at migration time. V001–V014 and IAM V0–V3 are unchanged; existing JSON,
-statuses, decisions and IDs are not converted or backfilled. The profile now selects
-IAM V0–V3 plus consolidated V014–V015. In the shared catalog profile V015 makes no
+statuses, decisions and IDs are not converted or backfilled. Current selected files
+are pinned by the [IAM profile](../../publication/iam-database-profile.json). In the shared catalog profile V015 makes no
 change when `audit_campaigns` is absent; it never merges the two stores.
 
 Only campaigns/certifications explicitly created by this adapter carry its contract
@@ -323,8 +323,9 @@ checks populated-row preservation, model/DDL contracts, pattern/reviewer selecti
 scope and stale-target rejection, grace periods, missing/unresolved records, history
 and audit outages, atomic bulk rollback, uncertain commits and review/completion
 contention. This is focused synthetic qualification. Full shared D0/Flyway execution,
-unknown populated histories, hosted CI, live directory/provider effects, role-pattern
-synchronization, shared definitions and ITDR/NHI/SCIM/editor admission remain open.
+unknown populated histories, hosted CI, live directory/provider effects and shared
+definitions require their separate gates. Current role synchronization, ITDR proposal
+and local NHI admission are described below; SCIM/editor admission remains open.
 
 
 ## Role patterns, directory synchronization and sharing
@@ -482,3 +483,93 @@ receipts, redaction, two-tenant visibility, forced RLS, batch rollback, audit pe
 outages and uncertain commit acknowledgement. No schema or dependency changes,
 existing database migration, live provider mutation, hosted CI or deployment is
 implied by this source qualification.
+
+
+## Non-human identity: local registry and credential lifecycle
+
+The [NHI API](../../backend/agents/iam_agent/app/api/nhi.py) implements a bounded
+**IAM-local registry**, disabled by default. `IAM_ENABLE_SERVICE_ACCOUNTS=true`
+opts into these local operations only. It does not create Keycloak/OAuth/cloud
+clients, enable machine login, assign permissions or integrate certificate identity.
+Responses explicitly carry `credential_scope=local_registry_only` and
+`provider_status=not_integrated`. This is partial NHI source qualification.
+
+`/api/v1/nhi/service-accounts` supports create/list/get and an expiring-credential
+view. Its existing `/{id}/rotate`, `/deactivate`, `/activate` and DELETE paths now
+require JSON `expected_version` (the current `credential_version`) and accept an
+optional bounded reason. Callers of the earlier candidate interface must adopt that
+version contract. UUID paths, typed status/expiry filters, 1–365 rotation days and
+bounded names/descriptions/reasons are enforced. Lists fail 409 above 100 matching
+accounts rather than silently truncating; expiry windows accept 0–365 days and
+include already-expired active records.
+
+Verified `TENANT_ADMIN`, `IAM_ADMIN` or `PLATFORM_ADMIN` users with a user UUID manage
+the current tenant's registry. A platform role remains tenant scoped. Owner and
+creator are the actual verified caller on creation; request bodies cannot choose
+tenant, owner, actor, roles, provider or metadata. Other authorized administrators
+in that same tenant can manage lifecycle. Ownership/definition transfers are not
+admitted. The shared internal token cannot create or manage these identities.
+Disabled access returns 501 before storage; database errors return 503, never a
+fabricated empty inventory or not-found result.
+
+Creation, rotation and reactivation generate a fresh local secret using 48 random
+bytes from [Python secrets](https://docs.python.org/3.13/library/secrets.html).
+Only its SHA-256 digest is stored; these are generated high-entropy credentials,
+not user-chosen passwords. Plaintext appears only in the acknowledged issuance
+response. Read/list/audit responses omit both plaintext and digest. Issuance/read
+responses set `Cache-Control: no-store` and `Pragma: no-cache`. Generated secrets
+never enter audit snapshots or application logs. Avoid secrets in free-text inputs;
+there is no general secret detector for arbitrary description/reason text.
+
+The [local service](../../backend/agents/iam_agent/app/services/nhi_service.py)
+has an administrator-side credential-proof method using constant-time digest
+comparison, current database state and aware expiry checks. This method is not a
+public endpoint, token exchange or permission decision. It audits its local proof
+result under the verified administrator's identity and grants no roles, JWTs,
+entitlements or API scopes. Current authentication still rejects these opaque
+secrets as bearer JWTs. A future machine-authentication consumer must qualify its
+own authority, rate limits, credential handling and operation scope before adoption.
+
+Rotation replaces the digest and invalidates the previous local proof. Deactivation
+clears the digest/expiry. Reactivation requires an inactive record and issues a new
+secret, so it cannot revive old credentials. Soft deletion clears credentials,
+retains history/name reservation and is terminal. These changes affect this local
+registry only: they do not revoke an external provider token or terminate sessions.
+Expiry is checked on each local proof; no background scheduler is introduced.
+
+Row locks reload current state and require the exact expected version. One of two
+competing rotations succeeds; the stale request returns 409. Account, version,
+credential and actual-actor audit updates commit together. Audit/storage failure
+rolls back and returns 503 without a credential receipt. If commit acknowledgement
+is lost, a credential may have changed without its plaintext reaching the caller.
+Inspect the registry's current version and explicitly rotate at that version; the
+lost plaintext cannot be recovered. Repeating the old version cannot rotate again.
+Creation has the same uncertainty; find the retained name/ID before recovery.
+
+[V017](../../backend/migrations_consolidated/V017__public_service_account_registry.sql)
+and its [ORM](../../backend/agents/iam_agent/app/models/service_account.py) add
+`public.iam_service_accounts` in the separate IAM store. Forced restrictive tenant
+RLS, lifecycle/credential constraints, an immutable-ownership/version trigger and
+blocked hard deletion guard that contract. Operational roles still need explicit
+least privileges; RLS is not protection against a privileged database owner or
+superuser. The migration does not adopt or change a private runtime-created
+`nhi_service_accounts` table, and it leaves shared catalog `api_keys` untouched.
+Unknown legacy ownership/data/history needs explicit reconciliation. No startup
+or request path creates tables. The IAM profile now selects eight files through
+V017; the shared catalog profile makes no change when the IAM grant domain is absent.
+
+The legacy `/api/v1/api-keys` create/list/rotate/revoke operations now return 503
+under verified context. Their old implementation minted strings, returned an empty
+list and claimed revocation without persistence/authentication. Neither an environment
+flag nor the NHI registry makes those API keys valid. Scope/rate-limit storage and
+actual authentication remain blocked pending their own implementation and acceptance.
+The bootstrap seeder also stops retrieving a client secret merely to print it.
+Its other provider privileges/bootstrap operations remain separate deployment gates.
+
+Unit and owned PostgreSQL tests cover the disabled default, actor/tenant input
+forgery, secret response boundaries, complete local lifecycle, expiry, old/stale
+credentials, two tenants, populated legacy preservation, ORM/DDL parity, restrictive
+RLS/immutable ownership, inventory bounds, audit rollback, uncertain commits and
+competing rotations. All SQL runs in a disposable owned cluster. Existing database
+migration, full Flyway/shared-baseline history, live identity/provider configuration,
+bootstrap privileges, hosted CI and whole-IAM migration acceptance remain open.

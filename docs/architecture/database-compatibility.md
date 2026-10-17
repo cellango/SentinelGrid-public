@@ -308,8 +308,8 @@ The focused IAM migration keeps two physical database contracts separate:
 
 | Store | Table identity and caller | Migration history |
 | --- | --- | --- |
-| Shared application `DB_URL` | `public.entitlements` is the app catalog; `public.policies` is policy DSL. Catalog/Portal/policy sessions and the authorization policy reader use this store. | Exact consolidated V001–V013 plus V014–V015; the full extension/owner/runner baseline remains a D0 gate. |
-| Separate `IAM_DB_URL` | `public.entitlements` is fine-grained grants; grant, role-mapping, access-request/governance session adapters and `public.iam_audit_events` use this store. | Historical IAM V0–V3 retained byte for byte, plus consolidated V014–V015 in the explicitly selected IAM profile. No shared V001 is imported. |
+| Shared application `DB_URL` | `public.entitlements` is the app catalog; `public.policies` is policy DSL. Catalog/Portal/policy sessions and the authorization policy reader use this store. | Exact consolidated V001–V017; the full extension/owner/runner baseline remains a D0 gate. |
+| Separate `IAM_DB_URL` | `public.entitlements` is fine-grained grants; grant, role-mapping, access-request/governance session adapters and `public.iam_audit_events` use this store. | Historical IAM V0–V3 retained byte for byte, plus consolidated V014–V017 in the explicitly selected IAM profile. No shared V001 is imported. |
 
 The [reviewed profile](../../publication/iam-database-profile.json) pins selected
 source paths and SHA-256 values. `python scripts/prepare_iam_flyway.py --output
@@ -325,11 +325,12 @@ migration source or startup runner.
 
 For an existing IAM database, inventory its actual history table, checksums,
 columns/constraints/policies, owner/privileges, rows and backup first. Exact historical
-lineage can validate then advance through V014–V015. Missing/drifted history, a private V126
+lineage can validate then advance through the selected V014–V017 migrations.
+Missing/drifted history, a private V126
 variant, an unreviewed earlier shape or an unknown populated database must stop for
 explicit reconciliation; do not repair checksums, auto-baseline, ignore missing
 versions or manufacture history. Fresh synthetic tests execute exact V1–V3 SQL and
-V014–V015; V0 contains only provisioning comments. The shared-policy fixture uses the
+V014–V017; V0 contains only provisioning comments. The shared-policy fixture uses the
 exact named table declarations from V001. This verifies SQL behavior, **not** an
 end-to-end Flyway execution or the complete shared baseline. D0 and hosted runner
 qualification remain required before enabling a deployment.
@@ -372,8 +373,8 @@ existing SQL; they add no scheduler or second migration source. V015 also inters
 the V014 history guards with the exact certification/entitlement link. It leaves the
 shared catalog unchanged when the IAM campaign table is absent.
 
-The selected IAM bundle now contains six unchanged reviewed source files: V0–V3
-and consolidated V014–V015. Old migration bytes are preserved. Validate the actual
+The current IAM bundle is selected by the [checksum profile](../../publication/iam-database-profile.json);
+V015 remains in that lineage. Old migration bytes are preserved. Validate the actual
 history and privilege/catalog contract before advancing a real database; no automatic
 baseline, repair or runtime DDL is introduced. An application rollback retains the
 additive timestamp and guards; no destructive downgrade is part of this change.
@@ -397,8 +398,8 @@ holds trusted ownership and target/source snapshots; tenant/subject/parent guard
 and an immutable managed-target trigger prevent accidental cross-scope reuse.
 No legacy metadata is promoted into provenance. Global definitions remain blocked.
 
-The IAM-only profile now selects seven reviewed files, V0–V3 plus consolidated
-V014–V016. Existing migration bytes are unchanged. V016 is a no-op in the shared
+V016 remains in the checksum-selected IAM lineage described below. Existing
+migration bytes are unchanged. V016 is a no-op in the shared
 catalog when the separate IAM pattern table is absent. Tests upgrade populated
 legacy definitions and exercise the new behavior with a nonowner/NOBYPASSRLS role;
 no existing database was accessed or migrated, and Flyway itself was not executed.
@@ -412,3 +413,31 @@ Tenant-local policy-template query tests use the exact V001 table declaration an
 prove service filtering, not full template-table RLS or its other callers. Shared
 publication, other writers and full application D0/Flyway/hosted/live-provider
 qualification remain open.
+
+
+## IAM-local non-human identity registry
+
+[V017](../../backend/migrations_consolidated/V017__public_service_account_registry.sql)
+pairs the explicit `public.iam_service_accounts` ORM with new consolidated Flyway
+DDL in the separate IAM profile. It retains the existing shared/catalog and IAM
+histories, adding only this local identity registry where the reviewed IAM role/grant
+domain is present. The checksum-selected IAM bundle now has eight files (IAM V0–V3
+and consolidated V014–V017). All previous SQL bytes remain unchanged. The bundle
+preparation tool does not connect or execute Flyway, and automatic baselining stays
+disabled. Unknown populated/drifted histories remain an adoption gate.
+
+This new table intentionally avoids adopting the private runtime-created
+`nhi_service_accounts` shape or repurposing shared `api_keys`. The owned-cluster test
+retains a populated legacy witness byte-for-byte and verifies an empty new registry;
+it does not establish compatibility with all unknown installations. Forced tenant
+RLS intersects permissive policies, hard deletion is blocked, and a trigger protects
+immutable ownership/definition and monotonic credential transitions. PostgreSQL
+superusers/BYPASSRLS, operational role privileges, backup retention of old digests and
+all other writers require their own controls. No API/startup DDL is introduced.
+
+The local registry is disabled by default and does not provision provider accounts,
+authenticate machines or grant API/entitlement permissions. See the current
+[NHI lifecycle contract](../reference/identity.md#non-human-identity-local-registry-and-credential-lifecycle)
+for issuance, audit atomicity, rotation/revocation, local proof and uncertain-commit
+recovery. Provider/API-key/legacy adoption and final feature-equivalence decisions
+remain explicit follow-up gates; this migration does not claim those effects.

@@ -1006,30 +1006,10 @@ class KeycloakSeeder:
                     logger.warning(f"Failed to assign roles: {assign_response.status_code}")
                     result.add_error("service_account", f"Failed to assign roles: {assign_response.status_code}")
             
-            # Get and log client secret (for reference)
-            secret_url = f"{self.keycloak_url}/admin/realms/{self.realm_name}/clients/{client_id}/client-secret"
-            secret_response = httpx.get(
-                secret_url,
-                headers={
-                    "Authorization": f"Bearer {admin_token}",
-                    "Content-Type": "application/json"
-                },
-                timeout=10.0,
-                verify=settings.KEYCLOAK_VERIFY_TLS
-            )
-            
-            if secret_response.status_code == 200:
-                secret_data = secret_response.json()
-                secret_value = secret_data.get("value", "")
-                if secret_value:
-                    logger.info(f"✅ Service account configured. Client secret: {secret_value}")
-                    logger.warning("⚠️  IMPORTANT: Store this secret securely and update KEYCLOAK_CLIENT_SECRET environment variable")
-                    logger.warning(f"⚠️  Full client secret for sentinelgrid-iam-agent: {secret_value}")
-                else:
-                    logger.warning("Client secret not found - may need to regenerate")
-            else:
-                logger.warning(f"Could not retrieve client secret: {secret_response.status_code}")
-            
+            # Configure secrets through the deployment's approved secret store.
+            # Bootstrap must never retrieve a client secret merely to log it.
+            logger.info("Use approved secret management for credentials; client secrets are not logged")
+
             result.add_updated("service_account:configured")
             
         except Exception as e:
