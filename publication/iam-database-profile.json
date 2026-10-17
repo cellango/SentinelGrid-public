@@ -8,7 +8,8 @@
     "Historical IAM V0-V3 bytes retained solely for the existing separate grant-store lineage; V0 is comments only",
     "New V014 remains in consolidated authority and never rewrites legacy audit rows or catalog entitlements",
     "Unknown populated databases, missing/drifted histories, role provisioning and deployment require explicit reconciliation; the bundle does not execute Flyway or connect",
-    "Application catalog DB retains its independent V001-V014 history; never mix those histories or use repair/ignore-missing to adopt"
+    "Application catalog DB retains its independent V001-V015 history; never mix those histories or use repair/ignore-missing to adopt",
+    "V015 preserves existing governance JSON/status data, adds campaign updated_at and intersects history link guards; shared catalog profile is unchanged when audit_campaigns is absent"
   ],
   "migrations": [
     {
@@ -30,6 +31,10 @@
     {
       "path": "backend/migrations_consolidated/V014__public_iam_audit_and_tenant_guards.sql",
       "sha256": "3c5ab510583fe92b5e59d5a1e1447e7fce17e96340f4e2ff796575d6da5b4775"
+    },
+    {
+      "path": "backend/migrations_consolidated/V015__public_governance_contract.sql",
+      "sha256": "e67fec4d06d0d3a7f1b5dfda009b0d56e13ecfe624e211791e180c8f999c92b2"
     }
   ]
 }

@@ -308,8 +308,8 @@ The focused IAM migration keeps two physical database contracts separate:
 
 | Store | Table identity and caller | Migration history |
 | --- | --- | --- |
-| Shared application `DB_URL` | `public.entitlements` is the app catalog; `public.policies` is policy DSL. Catalog/Portal/policy sessions and the authorization policy reader use this store. | Exact consolidated V001–V013 plus new V014; the full extension/owner/runner baseline remains a D0 gate. |
-| Separate `IAM_DB_URL` | `public.entitlements` is fine-grained grants; grant, role-mapping, access-request/governance session adapters and `public.iam_audit_events` use this store. | Historical IAM V0–V3 retained byte for byte, plus new consolidated V014 in the explicitly selected IAM profile. No shared V001 is imported. |
+| Shared application `DB_URL` | `public.entitlements` is the app catalog; `public.policies` is policy DSL. Catalog/Portal/policy sessions and the authorization policy reader use this store. | Exact consolidated V001–V013 plus V014–V015; the full extension/owner/runner baseline remains a D0 gate. |
+| Separate `IAM_DB_URL` | `public.entitlements` is fine-grained grants; grant, role-mapping, access-request/governance session adapters and `public.iam_audit_events` use this store. | Historical IAM V0–V3 retained byte for byte, plus consolidated V014–V015 in the explicitly selected IAM profile. No shared V001 is imported. |
 
 The [reviewed profile](../../publication/iam-database-profile.json) pins selected
 source paths and SHA-256 values. `python scripts/prepare_iam_flyway.py --output
@@ -325,11 +325,11 @@ migration source or startup runner.
 
 For an existing IAM database, inventory its actual history table, checksums,
 columns/constraints/policies, owner/privileges, rows and backup first. Exact historical
-lineage can validate then advance to V014. Missing/drifted history, a private V126
+lineage can validate then advance through V014–V015. Missing/drifted history, a private V126
 variant, an unreviewed earlier shape or an unknown populated database must stop for
 explicit reconciliation; do not repair checksums, auto-baseline, ignore missing
 versions or manufacture history. Fresh synthetic tests execute exact V1–V3 SQL and
-V014; V0 contains only provisioning comments. The shared-policy fixture uses the
+V014–V015; V0 contains only provisioning comments. The shared-policy fixture uses the
 exact named table declarations from V001. This verifies SQL behavior, **not** an
 end-to-end Flyway execution or the complete shared baseline. D0 and hosted runner
 qualification remain required before enabling a deployment.
@@ -354,8 +354,35 @@ never drop audit history as a schema downgrade.
 
 The current checks use a new private socket-only PostgreSQL cluster and synthetic
 records. They prove the named audit, grant and tenant transaction paths with a
-least-privilege role. Current grant CRUD/authorization is covered; older campaign,
-certification, role-pattern and editor ORM/API differences are not thereby qualified.
+least-privilege role. Current grant CRUD/authorization is covered. The governance adapter described below
+extends that focused scope; role-pattern/editor contracts and arbitrary legacy
+governance adoption are not thereby qualified.
 The [identity reference](../reference/identity.md#persistent-audit-and-tenant-database-checks)
 describes semantics, tested versions and limits. These focused results do not close
 D0, all domain compatibility, runtime/engine qualification or overall IAM acceptance.
+
+
+### Governance compatibility extension
+
+The paired campaign model and V015 add `audit_campaigns.updated_at` with an update
+trigger; existing rows receive migration time for that new field. The API maps its
+typed campaign/configuration and certification fields onto the preserved IAM V1
+JSON/status/decision columns. The schedule and certification-history mappings reflect
+existing SQL; they add no scheduler or second migration source. V015 also intersects
+the V014 history guards with the exact certification/entitlement link. It leaves the
+shared catalog unchanged when the IAM campaign table is absent.
+
+The selected IAM bundle now contains six unchanged reviewed source files: V0–V3
+and consolidated V014–V015. Old migration bytes are preserved. Validate the actual
+history and privilege/catalog contract before advancing a real database; no automatic
+baseline, repair or runtime DDL is introduced. An application rollback retains the
+additive timestamp and guards; no destructive downgrade is part of this change.
+
+Synthetic tests preserve populated legacy governance rows while upgrading and
+exercise the API adapter under the nonowner/NOBYPASSRLS role. Unmarked or unsupported
+legacy configurations are not silently adopted: current API lists select its explicit
+contract and mutations require valid scope/reviewer/target snapshots. Review the
+[identity reference](../reference/identity.md#governance-campaign-and-certification-checks)
+for supported behavior and limitations. These results do not establish full shared
+baseline/Flyway-runner, hosted PostgreSQL-16 CI, real identity/provider or existing-
+environment qualification.

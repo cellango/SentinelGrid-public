@@ -152,7 +152,7 @@ The individual and bulk grant-create/update/revoke paths couple changes and even
 in one transaction; bulk items use savepoints and report success only after the
 outer commit. Grant mutations require a verified tenant administrator and user UUID;
 a body `granted_by` value or a previous grantor cannot impersonate the current actor.
-Other legacy governance/editor/provider writers still need their feature acceptance.
+Other role/editor/provider writers still need their feature acceptance. Governance checks follow below.
 
 The [shared transaction helper](../../backend/libs/sg_core/tenant_session.py) validates
 a UUID before opening a session and binds parameterized transaction-local `set_config`
@@ -190,8 +190,8 @@ and synthetic upgrade. They do not certify the complete V001–V013 application
 baseline/Flyway runner, arbitrary populated legacy databases, all views/functions,
 all downstream endpoints or live identity configuration. Shared/global grant patterns
 and seed clones receive no cross-tenant exception in the new guards; their authorized
-sharing path and the older governance model/schema differences remain feature
-reconciliation work before runtime enablement.
+sharing path remains feature reconciliation work before runtime enablement. The
+governance compatibility boundary is described below.
 
 
 ## Access request source and database checks
@@ -242,3 +242,86 @@ results. Governance/certification/role synchronization, shared-definition admiss
 ITDR/NHI/SCIM/editor ports, provider effects, full Flyway adoption and hosted CI remain
 outside this qualification. A grant request approval is not the proposed exact
 provider-action approval protocol in the future case runtime.
+
+
+## Governance campaign and certification checks
+
+The [governance API](../../backend/agents/iam_agent/app/api/governance.py) uses a
+[deterministic service](../../backend/agents/iam_agent/app/services/governance_service.py)
+and [typed DTOs](../../backend/agents/iam_agent/app/schemas/governance.py) over the
+separate IAM grant store. No model output supplies reviewer or tenant authority.
+The campaign, certification, history and schedule ORM mappings now match historical
+IAM V1 storage. The schedule mapping does not start a scheduler.
+
+| API field or state | Existing IAM storage and compatibility |
+| --- | --- |
+| Campaign dates, reviewer type, grace days and entitlement patterns | Explicit versioned `scope`, `review_config` and `schedule` JSON; patterns persist and constrain selection |
+| Campaign `pending` / `in_progress` | Database `draft` / `active`; start/complete endpoints own those transitions |
+| Certification `user_id` | Beneficiary of the joined tenant-scoped **user** grant; role/group UUIDs are not treated as users |
+| `reviewer_id`, `review_date`, `comments` | Existing `certifier_id`, `decision_date`, `justification` |
+| `approved` / `retained` | Database status `approved`, decision `approve`; metadata preserves the API's distinct review outcome |
+| `revoked` | Database status `revoked`, decision `revoke`, with an audited grant-status change when needed |
+
+Only verified `TENANT_ADMIN`, `IAM_ADMIN` or `PLATFORM_ADMIN` users can create,
+read or manage campaigns. All operations remain inside the authenticated tenant.
+Certification lists restrict ordinary callers to their own beneficiary/reviewer
+records. Pending queues use the assigned reviewer and active campaigns; supplying
+another reviewer UUID requires a current administrator role. Filtering cannot grant
+decision authority. Certification requires the exact persisted reviewer UUID.
+
+Self mode is an explicit attestation of an existing user grant by its beneficiary;
+it creates no access. Admin mode assigns the verified administrator who starts the
+campaign, requires independence from every selected beneficiary, and rechecks the
+current administrator role when deciding. Manager assignment returns 409 until a
+trusted directory mapping is implemented. There is no fallback to self review.
+Campaign patterns use `resource_type:resource_id:action`, with `*` only as a complete
+field. Selection includes active, unexpired user grants, with at most 500 records;
+role/group certification is unsupported. Up to 100 bounded patterns and bulk IDs
+between 1 and 500 are accepted; bulk IDs must be distinct.
+
+Dates require timezones and an increasing interval. Start requires the current
+time inside that interval. Draft configuration can be edited; starting freezes it.
+General PUT cannot start or complete a campaign, and active configuration edits
+return 409. Cancellation closes review admission. Certification approval/retention
+cannot retain inactive, expired or overdue access and cannot recreate a revoked
+grant. Changes to the grant target or membership fields after assignment require
+reconciliation before decision or completion. Completion rejects missing/extra
+certifications and unresolved legacy statuses.
+
+The explicit completion call may revoke pending grants only when configured grace
+days (0–3650) have elapsed after the campaign end. It does not launch a background
+job. Without eligible revocation, all certifications must be resolved first.
+Locks follow campaign → certification → grant order, with refreshed ORM state, so
+review and completion cannot race to contradictory outcomes. Bulk decisions share
+one transaction and never report a committed subset on failure.
+
+Campaign changes, certification history, grant revocations and actual-actor audit
+events commit together. Failures attempt rollback and return 503. A lost commit
+acknowledgement can leave a durable decision; inspect state before retry. Confirmed
+revocations invalidate existing read caches after commit; cache invalidation remains
+best effort. Authorization itself reads current grants, independent of that cache.
+Validated responses do not reload ORM rows after commit. Legacy certification
+history retains its cascading retention limits; the separate append-only IAM audit
+has no cascading grant/campaign foreign keys.
+
+[V015](../../backend/migrations_consolidated/V015__public_governance_contract.sql)
+adds only campaign `updated_at` and its trigger, plus a restrictive history-link
+guard requiring the certification's exact entitlement. Historical campaign timestamps
+start at migration time. V001–V014 and IAM V0–V3 are unchanged; existing JSON,
+statuses, decisions and IDs are not converted or backfilled. The profile now selects
+IAM V0–V3 plus consolidated V014–V015. In the shared catalog profile V015 makes no
+change when `audit_campaigns` is absent; it never merges the two stores.
+
+Only campaigns/certifications explicitly created by this adapter carry its contract
+marker. Lists select that contract; access by an unreconciled legacy campaign ID
+returns 409. Unsupported continuous/scheduled/delegated configurations remain in
+storage and need explicit adoption; a marker is a compatibility discriminator,
+not an authorization credential. No legacy row is silently enabled by migration.
+
+Unit checks cover admission and body/filter bypasses. The owned PostgreSQL suite
+checks populated-row preservation, model/DDL contracts, pattern/reviewer selection,
+scope and stale-target rejection, grace periods, missing/unresolved records, history
+and audit outages, atomic bulk rollback, uncertain commits and review/completion
+contention. This is focused synthetic qualification. Full shared D0/Flyway execution,
+unknown populated histories, hosted CI, live directory/provider effects, role-pattern
+synchronization, shared definitions and ITDR/NHI/SCIM/editor admission remain open.

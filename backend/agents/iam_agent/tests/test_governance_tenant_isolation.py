@@ -28,6 +28,12 @@ class QuerySpy:
         self.criteria.extend(criteria)
         return self
 
+    def populate_existing(self):
+        return self
+
+    def with_for_update(self, **kwargs):
+        return self
+
     def first(self):
         return self.first_result
 
@@ -56,6 +62,9 @@ class FakeDB:
     def add(self, obj):
         self.added.append(obj)
 
+    def rollback(self):
+        return None
+
     def commit(self):
         self.committed = True
 
@@ -68,6 +77,7 @@ def request_context():
     return RequestContext(
         tenant_id=uuid4(),
         user_id=str(uuid4()),
+        roles=("TENANT_ADMIN",),
     )
 
 
