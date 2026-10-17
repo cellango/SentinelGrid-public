@@ -1,5 +1,6 @@
 """IAM Portal Service - Business logic for IAM portal operations."""
 
+from fastapi import HTTPException
 import logging
 import asyncio
 from typing import Optional, List, Dict, Any
@@ -370,13 +371,6 @@ class IAMPortalService:
         )
 
     def _get_admin_tenant_id(self) -> Optional[UUID]:
-        """Fetch the sg_admin tenant ID (global policy source)."""
-        try:
-            row = self.db.execute(text("SELECT id FROM tenants WHERE slug = :slug LIMIT 1"), {"slug": "sg_admin"}).fetchone()
-            if row:
-                return UUID(str(row[0]))
-        except Exception as e:
-            logger.error(f"Failed to fetch sg_admin tenant id: {e}", exc_info=True)
         return None
 
     def list_policies(self, policy_type: Optional[str] = None) -> List[Policy]:
@@ -403,35 +397,7 @@ class IAMPortalService:
             return []
 
     def list_policy_bundles(self, policy_type: Optional[str] = None) -> List[Policy]:
-        """
-        List global policies from sg_admin (used as cloneable bundles).
-        """
-        admin_tenant_id = self._get_admin_tenant_id()
-        if not admin_tenant_id:
-            logger.error("Global tenant (sg_admin) not found; returning empty bundles list")
-            return []
-
-        try:
-            params = {"t": str(admin_tenant_id)}
-            filter_clause = ""
-            if policy_type:
-                filter_clause = "AND policy_type = :ptype"
-                params["ptype"] = policy_type
-
-            rows = self.db.execute(
-                text(f"""
-                    SELECT id, tenant_id, name, display_name, description, policy_type, scope, scope_id, policy_data,
-                           is_active, priority, created_at, updated_at, created_by, is_template, approval_required, approval_status
-                    FROM policies
-                    WHERE tenant_id = :t {filter_clause}
-                    ORDER BY priority ASC, created_at DESC
-                """),
-                params,
-            ).fetchall()
-            return [self._policy_from_row(r) for r in rows]
-        except Exception as e:
-            logger.error(f"Failed to list policy bundles: {e}", exc_info=True)
-            return []
+        raise HTTPException(status_code=503, detail="Shared policy publication and cloning require explicit admission")
 
     def get_policy(self, policy_id: UUID) -> Optional[Policy]:
         try:
@@ -458,97 +424,7 @@ class IAMPortalService:
             return None
 
     def clone_policy_bundle(self, bundle_id: UUID, new_name: Optional[str] = None, new_display_name: Optional[str] = None, user_id: Optional[str] = None) -> Optional[Policy]:
-        """
-        Clone a policy from sg_admin into the current tenant.
-        """
-        admin_tenant_id = self._get_admin_tenant_id()
-        if not admin_tenant_id:
-            logger.error("Global tenant (sg_admin) not found; cannot clone bundle")
-            return None
-
-        try:
-            src = self.db.execute(
-                text("""
-                    SELECT id, tenant_id, name, display_name, description, policy_type, scope, scope_id, policy_data,
-                           is_active, priority, created_at, updated_at, created_by, is_template, approval_required, approval_status
-                    FROM policies
-                    WHERE id = :id AND tenant_id = :t
-                """),
-                {"id": str(bundle_id), "t": str(admin_tenant_id)},
-            ).fetchone()
-
-            if not src:
-                logger.error(f"Bundle {bundle_id} not found in sg_admin")
-                return None
-
-            dest_name = new_name or f"{src[2]}-{self.tenant_id}"
-            dest_display = new_display_name or f"{src[3]} (cloned)"
-            now_ts = datetime.now(timezone.utc)
-            new_id = uuid4()
-
-            inserted = self.db.execute(
-                text("""
-                    INSERT INTO policies (id, tenant_id, name, display_name, description, policy_type, scope, scope_id,
-                                          policy_data, is_active, priority, created_by, created_at, updated_at,
-                                          is_template, approval_required, approval_status)
-                    VALUES (:id, :tenant_id, :name, :display_name, :description, :policy_type, :scope, :scope_id,
-                            :policy_data, :is_active, :priority, :created_by, :created_at, :updated_at,
-                            :is_template, :approval_required, :approval_status)
-                    ON CONFLICT (tenant_id, name) DO NOTHING
-                    RETURNING id
-                """),
-                {
-                    "id": str(new_id),
-                    "tenant_id": str(self.tenant_id),
-                    "name": dest_name,
-                    "display_name": dest_display,
-                    "description": src[4],
-                    "policy_type": src[5],
-                    "scope": src[6],
-                    "scope_id": src[7],
-                    "policy_data": src[8],
-                    "is_active": True,
-                    "priority": src[10],
-                    "created_by": user_id or "clone",
-                    "created_at": now_ts,
-                    "updated_at": now_ts,
-                    "is_template": False,
-                    "approval_required": src[15],
-                    "approval_status": "approved",
-                },
-            ).fetchone()
-
-            # If conflict prevented insert, fetch existing row so UI can still render it
-            if not inserted:
-                existing = self.db.execute(
-                    text("""
-                        SELECT id, tenant_id, name, display_name, description, policy_type, scope, scope_id, policy_data,
-                               is_active, priority, created_at, updated_at, created_by, is_template, approval_required, approval_status
-                        FROM policies
-                        WHERE tenant_id = :t AND name = :name
-                        LIMIT 1
-                    """),
-                    {"t": str(self.tenant_id), "name": dest_name},
-                ).fetchone()
-                if not existing:
-                    return None
-                return self._policy_from_row(existing)
-
-            # Return the newly inserted clone
-            cloned = self.db.execute(
-                text("""
-                    SELECT id, tenant_id, name, display_name, description, policy_type, scope, scope_id, policy_data,
-                           is_active, priority, created_at, updated_at, created_by, is_template, approval_required, approval_status
-                    FROM policies
-                    WHERE id = :id
-                    LIMIT 1
-                """),
-                {"id": str(inserted[0])},
-            ).fetchone()
-            return self._policy_from_row(cloned) if cloned else None
-        except Exception as e:
-            logger.error(f"Failed to clone policy bundle: {e}", exc_info=True)
-            return None
+        raise HTTPException(status_code=503, detail="Shared policy publication and cloning require explicit admission")
 
     def create_policy(self, payload: PolicyCreate, created_by: Optional[str] = None) -> Optional[Policy]:
         try:

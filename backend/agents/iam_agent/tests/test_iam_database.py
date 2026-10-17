@@ -35,6 +35,11 @@ from app.models.audit_campaign import AuditCampaign
 from app.models.certification import Certification
 from app.models.certification_history import CertificationHistory
 from app.models.audit_schedule import AuditSchedule
+from app.models.role_entitlement_pattern import RoleEntitlementPattern
+from app.models.role_grant_binding import RoleGrantBinding
+from app.services.role_directory_service import RoleSnapshot
+from app.services import role_sync_service
+from app.api import role_mappings
 from app.api import governance
 from app.services import governance_service as governance_service
 from datetime import datetime, timedelta, timezone
@@ -236,6 +241,27 @@ def databases(cluster):
             (str(legacy_campaign),),
         )
         assert cursor.fetchone()[0]
+        cursor.execute(
+            "INSERT INTO role_entitlement_patterns (role_name,tenant_id,entitlement_pattern) VALUES ('legacy',%s,'document:legacy:read'),('global',NULL,'document:global:read')",
+            (str(A),),
+        )
+        cursor.execute(
+            "SELECT to_jsonb(r) FROM role_entitlement_patterns r ORDER BY id"
+        )
+        role_before = cursor.fetchall()
+        cursor.execute(
+            (
+                ROOT / "migrations_consolidated/V016__public_role_grant_provenance.sql"
+            ).read_text()
+        )
+        cursor.execute(
+            "SELECT to_jsonb(r)-'auto_grant'-'created_by' FROM role_entitlement_patterns r ORDER BY id"
+        )
+        assert cursor.fetchall() == role_before
+        cursor.execute("SELECT auto_grant,created_by FROM role_entitlement_patterns")
+        assert all(value == (False, None) for value in cursor.fetchall())
+        cursor.execute("SELECT count(*) FROM iam_role_grants")
+        assert cursor.fetchone()[0] == 0
         cursor.execute("SELECT count(*) FROM iam_audit_events")
         assert cursor.fetchone()[0] == 0
     # Exact policy/catalog table declarations from the published dump, not a
@@ -243,7 +269,13 @@ def databases(cluster):
     dump = (ROOT / "migrations_consolidated/V001__initial_schema.sql").read_text()
     with owner(cluster, "catalog_test") as connection, connection.cursor() as cursor:
         cursor.execute('CREATE EXTENSION "uuid-ossp"')
-        for name in ("policies", "policy_rules", "policy_evaluations", "entitlements"):
+        for name in (
+            "policies",
+            "policy_rules",
+            "policy_evaluations",
+            "entitlements",
+            "policy_templates",
+        ):
             declaration = re.search(
                 r"CREATE TABLE public\." + name + r" \(.*?\n\);", dump, re.S
             ).group()
@@ -255,6 +287,11 @@ def databases(cluster):
         cursor.execute(
             (
                 ROOT / "migrations_consolidated/V015__public_governance_contract.sql"
+            ).read_text()
+        )
+        cursor.execute(
+            (
+                ROOT / "migrations_consolidated/V016__public_role_grant_provenance.sql"
             ).read_text()
         )
         cursor.execute("SELECT to_regclass('public.audit_campaigns')")
@@ -294,7 +331,7 @@ def store(databases, monkeypatch):
     params, (engine, policy_engine) = databases
     with owner(params, "iam_test") as connection, connection.cursor() as cursor:
         cursor.execute(
-            "TRUNCATE iam_audit_events,entitlements,access_requests,audit_campaigns,audit_schedules CASCADE"
+            "TRUNCATE iam_audit_events,entitlements,access_requests,audit_campaigns,audit_schedules,role_entitlement_patterns CASCADE"
         )
         for tenant in (A, B):
             cursor.execute(
@@ -305,7 +342,7 @@ def store(databases, monkeypatch):
             )
     with owner(params, "catalog_test") as connection, connection.cursor() as cursor:
         cursor.execute(
-            "TRUNCATE policies,policy_rules,policy_evaluations,iam_audit_events"
+            "TRUNCATE policies,policy_rules,policy_evaluations,iam_audit_events,policy_templates"
         )
         for tenant in (A, B):
             cursor.execute(
@@ -1762,3 +1799,486 @@ def test_governance_revocation_invalidates_read_cache_after_durable_commit(
     with tenant_session(factory, A) as session:
         governance_service.certify(session, REVIEWER, ids, "revoked", None)
     assert calls == [(str(GRANT), str(A))]
+
+
+# Role synchronization owns grants through a separate table, never body metadata.
+class SyntheticRoleDirectory:
+    def __init__(self, roles=("reader",), *, user=USER, tenant=A, age=0):
+        self.snapshots = [
+            RoleSnapshot(
+                tenant,
+                user,
+                tuple(roles),
+                datetime.now(timezone.utc) - timedelta(seconds=age),
+                "synthetic-test",
+            )
+        ]
+
+    async def observe(self, tenant, identity=None):
+        return self.snapshots
+
+
+def role_pattern(factory, role="reader", target="document:role-doc:read"):
+    with tenant_session(factory, A) as session:
+        return role_sync_service.pattern_change(
+            session,
+            ADMIN,
+            role_mappings.RolePatternCreate(
+                role_name=role, tenant_id=A, entitlement_pattern=target, created_by=USER
+            ),
+        )
+
+
+def role_sync(factory, directory):
+    with tenant_session(factory, A) as session:
+        return asyncio.run(
+            role_sync_service.RoleSyncService(
+                session, directory=directory
+            ).sync_user_roles_to_entitlements(USER, A, USER, request_context=ADMIN)
+        )
+
+
+@pytest.mark.parametrize("model", [RoleEntitlementPattern, RoleGrantBinding])
+def test_role_models_match_reviewed_sql(databases, model):
+    test_governance_models_match_reviewed_sql(databases, model)
+
+
+def test_role_pattern_actor_crud_and_audit_are_compatible(store):
+    _, _, factory, _ = store
+    row = role_pattern(factory)
+    assert row.created_by == B and row.auto_grant and row.enabled
+    with pytest.raises(Exception) as error:
+        role_pattern(factory)
+    assert error.value.status_code == 409
+    with tenant_session(factory, A) as session:
+        changed = role_sync_service.pattern_change(
+            session,
+            ADMIN,
+            role_mappings.RolePatternUpdate(auto_grant=False),
+            identity=row.id,
+        )
+        assert not changed.auto_grant
+        role_sync_service.pattern_change(session, ADMIN, identity=row.id, delete=True)
+    with tenant_session(factory, A) as session:
+        assert session.get(RoleEntitlementPattern, row.id) is None
+        assert {e.event_type for e in session.query(IAMAuditEvent)} == {
+            "role_pattern_created",
+            "role_pattern_updated",
+            "role_pattern_deleted",
+        }
+        assert {e.performed_by for e in session.query(IAMAuditEvent)} == {B}
+
+
+def test_role_sync_creates_owned_grant_with_verified_actor_and_retries_idempotently(
+    store,
+):
+    _, _, factory, _ = store
+    pattern = role_pattern(factory)
+    result = role_sync(factory, SyntheticRoleDirectory())
+    assert result["entitlements_created"] == 1 and result["errors"] == []
+    result = role_sync(factory, SyntheticRoleDirectory())
+    assert result["entitlements_created"] == 0 and result["entitlements_existing"] == 1
+    with tenant_session(factory, A) as session:
+        binding = session.query(RoleGrantBinding).one()
+        grant = session.get(Entitlement, binding.entitlement_id)
+        assert grant.granted_by == binding.created_by == B
+        assert (
+            binding.tenant_id == A
+            and binding.subject_id == USER
+            and binding.roles == ["reader"]
+        )
+        assert binding.pattern_ids == [str(pattern.id)]
+        assert session.query(IAMAuditEvent).filter_by(event_type="created").count() == 1
+        assert (
+            session.query(IAMAuditEvent)
+            .filter_by(event_type="role_grant_bound")
+            .one()
+            .performed_by
+            == B
+        )
+
+
+def test_overlapping_roles_do_not_revoke_remaining_authority(store):
+    _, _, factory, _ = store
+    role_pattern(factory)
+    role_pattern(factory, "editor")
+    role_sync(factory, SyntheticRoleDirectory(("reader", "editor")))
+    result = role_sync(factory, SyntheticRoleDirectory(("reader",)))
+    assert result["entitlements_revoked"] == 0
+    with tenant_session(factory, A) as session:
+        binding = session.query(RoleGrantBinding).one()
+        assert (
+            binding.roles == ["reader"]
+            and session.get(Entitlement, binding.entitlement_id).status == "active"
+        )
+    result = role_sync(factory, SyntheticRoleDirectory(()))
+    assert result["entitlements_revoked"] == 1
+    result = role_sync(factory, SyntheticRoleDirectory(("reader",)))
+    assert result["entitlements_created"] == 0 and result["entitlements_blocked"] == 1
+    with tenant_session(factory, A) as session:
+        assert (
+            session.get(
+                Entitlement, session.query(RoleGrantBinding).one().entitlement_id
+            ).status
+            == "revoked"
+        )
+
+
+def test_manual_or_legacy_metadata_never_creates_sync_ownership(store):
+    _, _, factory, _ = store
+    role_pattern(factory, target="document:synthetic-doc:read")
+    with tenant_session(factory, A) as session:
+        session.get(Entitlement, GRANT).metadata_json = {
+            "source": "role_sync",
+            "role": "reader",
+            "contract": "iam_role_sync_v1",
+        }
+    assert role_sync(factory, SyntheticRoleDirectory())["entitlements_existing"] == 1
+    role_sync(factory, SyntheticRoleDirectory(()))
+    with tenant_session(factory, A) as session:
+        assert session.get(Entitlement, GRANT).status == "active"
+        assert session.query(RoleGrantBinding).count() == 0
+
+
+@pytest.mark.parametrize(
+    "directory", [SyntheticRoleDirectory(tenant=B), SyntheticRoleDirectory(age=60)]
+)
+def test_unverified_or_stale_observation_cannot_grant(store, directory):
+    _, _, factory, _ = store
+    role_pattern(factory)
+    with pytest.raises(Exception) as error:
+        role_sync(factory, directory)
+    assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        assert session.query(RoleGrantBinding).count() == 0
+
+
+def test_directory_outage_does_not_mean_role_removal(store):
+    _, _, factory, _ = store
+    role_pattern(factory)
+    role_sync(factory, SyntheticRoleDirectory())
+
+    class Unavailable:
+        async def observe(self, *args):
+            raise HTTPException(status_code=503, detail="Synthetic directory outage")
+
+    from fastapi import HTTPException
+
+    with pytest.raises(HTTPException):
+        role_sync(factory, Unavailable())
+    with tenant_session(factory, A) as session:
+        assert (
+            session.get(
+                Entitlement, session.query(RoleGrantBinding).one().entitlement_id
+            ).status
+            == "active"
+        )
+
+
+@pytest.mark.parametrize("table", ["iam_audit_events", "iam_role_grants"])
+def test_role_sync_write_failure_cannot_commit_grant_or_ownership(store, table):
+    params, _, factory, _ = store
+    role_pattern(factory)
+    with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute(
+            sql.SQL("REVOKE INSERT ON {} FROM sg_test_app").format(
+                sql.Identifier(table)
+            )
+        )
+    try:
+        with pytest.raises(Exception) as error:
+            role_sync(factory, SyntheticRoleDirectory())
+        assert error.value.status_code == 503
+        with tenant_session(factory, A) as session:
+            assert session.query(RoleGrantBinding).count() == 0
+            assert (
+                session.query(Entitlement).filter_by(resource_id="role-doc").count()
+                == 0
+            )
+            assert (
+                session.query(IAMAuditEvent).count() == 1
+            )  # The earlier definition creation only.
+    finally:
+        with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+            cursor.execute(
+                sql.SQL("GRANT INSERT ON {} TO sg_test_app").format(
+                    sql.Identifier(table)
+                )
+            )
+
+
+def test_role_removal_audit_failure_keeps_grant_and_sources(store):
+    params, _, factory, _ = store
+    role_pattern(factory)
+    role_sync(factory, SyntheticRoleDirectory())
+    with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute("REVOKE INSERT ON iam_audit_events FROM sg_test_app")
+    try:
+        with pytest.raises(Exception) as error:
+            role_sync(factory, SyntheticRoleDirectory(()))
+        assert error.value.status_code == 503
+        with tenant_session(factory, A) as session:
+            binding = session.query(RoleGrantBinding).one()
+            assert (
+                binding.roles == ["reader"]
+                and session.get(Entitlement, binding.entitlement_id).status == "active"
+            )
+    finally:
+        with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+            cursor.execute("GRANT INSERT ON iam_audit_events TO sg_test_app")
+
+
+def test_revoke_requires_verified_role_absence(store):
+    _, _, factory, _ = store
+    role_pattern(factory)
+    role_sync(factory, SyntheticRoleDirectory())
+    with tenant_session(factory, A) as session:
+        service = role_sync_service.RoleSyncService(
+            session, directory=SyntheticRoleDirectory()
+        )
+        with pytest.raises(Exception) as error:
+            asyncio.run(
+                service.revoke_user_entitlements_for_role(
+                    USER, "reader", A, request_context=ADMIN
+                )
+            )
+        assert error.value.status_code == 409
+    with tenant_session(factory, A) as session:
+        service = role_sync_service.RoleSyncService(
+            session, directory=SyntheticRoleDirectory(())
+        )
+        assert (
+            asyncio.run(
+                service.revoke_user_entitlements_for_role(
+                    USER, "reader", A, request_context=ADMIN
+                )
+            )["entitlements_revoked"]
+            == 1
+        )
+
+
+def test_pattern_deletion_does_not_orphan_managed_grants(store):
+    _, _, factory, _ = store
+    pattern = role_pattern(factory)
+    role_sync(factory, SyntheticRoleDirectory())
+    with tenant_session(factory, A) as session:
+        role_sync_service.pattern_change(
+            session, ADMIN, identity=pattern.id, delete=True
+        )
+    assert role_sync(factory, SyntheticRoleDirectory())["entitlements_revoked"] == 1
+
+
+def test_bulk_roles_are_atomic_and_reconcile_former_members(store):
+    _, _, factory, _ = store
+    role_pattern(factory)
+    role_sync(factory, SyntheticRoleDirectory())
+    directory = SyntheticRoleDirectory(())
+    directory.snapshots.append(
+        RoleSnapshot(
+            A, uuid4(), ("reader",), datetime.now(timezone.utc), "synthetic-test"
+        )
+    )
+    with tenant_session(factory, A) as session:
+        result = asyncio.run(
+            role_sync_service.RoleSyncService(
+                session, directory=directory
+            ).sync_role_to_all_users("reader", A, request_context=ADMIN)
+        )
+        assert (
+            result["users_processed"] == 2
+            and result["entitlements_created"] == 1
+            and result["entitlements_revoked"] == 1
+        )
+    directory.snapshots.append(
+        RoleSnapshot(
+            A,
+            uuid4(),
+            ("reader",),
+            datetime.now(timezone.utc) - timedelta(seconds=60),
+            "synthetic-test",
+        )
+    )
+    with tenant_session(factory, A) as session:
+        before = session.query(RoleGrantBinding).count()
+        session.commit()
+        with pytest.raises(Exception) as error:
+            asyncio.run(
+                role_sync_service.RoleSyncService(
+                    session, directory=directory
+                ).sync_role_to_all_users("reader", A, request_context=ADMIN)
+            )
+        assert error.value.status_code == 503
+        assert session.query(RoleGrantBinding).count() == before
+
+
+def test_global_definitions_remain_invisible_and_cannot_grant(store):
+    params, _, factory, _ = store
+    identity = uuid4()
+    with owner(params, "iam_test") as connection, connection.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO role_entitlement_patterns (id,role_name,tenant_id,entitlement_pattern,auto_grant) VALUES (%s,'reader',NULL,'document:global:read',true)",
+            (str(identity),),
+        )
+    role_sync(factory, SyntheticRoleDirectory())
+    with tenant_session(factory, A) as session:
+        session.execute(text("SELECT set_config('app.is_superadmin','true',true)"))
+        assert session.get(RoleEntitlementPattern, identity) is None
+        assert session.query(RoleGrantBinding).count() == 0
+
+
+@pytest.mark.parametrize("foreign", [True, False])
+def test_binding_cannot_cross_tenant_or_subject_even_with_admin_flag(store, foreign):
+    _, _, factory, _ = store
+    with tenant_session(factory, A) as session:
+        session.execute(text("SELECT set_config('app.is_superadmin','true',true)"))
+        with pytest.raises(DBAPIError):
+            with session.begin_nested():
+                session.add(
+                    RoleGrantBinding(
+                        tenant_id=B if foreign else A,
+                        subject_id=USER if foreign else B,
+                        entitlement_id=GRANT,
+                        target={},
+                        roles=[],
+                        pattern_ids=[],
+                        created_by=B,
+                    )
+                )
+                session.flush()
+
+
+def test_managed_grant_target_cannot_be_repurposed_by_generic_writer(store):
+    _, _, factory, _ = store
+    role_pattern(factory)
+    role_sync(factory, SyntheticRoleDirectory())
+    with tenant_session(factory, A) as session:
+        identity = session.query(RoleGrantBinding).one().entitlement_id
+        with pytest.raises(DBAPIError):
+            with session.begin_nested():
+                grant = session.get(Entitlement, identity)
+                grant.resource_id = "replacement-target"
+                session.flush()
+        assert session.get(Entitlement, identity).resource_id == "role-doc"
+
+
+def test_role_sync_commit_failure_and_lost_ack_are_reconciled(store, monkeypatch):
+    _, _, factory, _ = store
+    role_pattern(factory)
+    with tenant_session(factory, A) as session:
+        with monkeypatch.context() as patch:
+
+            def unavailable():
+                raise RuntimeError("Synthetic pre-commit outage")
+
+            patch.setattr(session, "commit", unavailable)
+            with pytest.raises(Exception) as error:
+                asyncio.run(
+                    role_sync_service.RoleSyncService(
+                        session, directory=SyntheticRoleDirectory()
+                    ).sync_user_roles_to_entitlements(USER, A, request_context=ADMIN)
+                )
+            assert error.value.status_code == 503
+    with tenant_session(factory, A) as session:
+        assert session.query(RoleGrantBinding).count() == 0
+        session.commit()
+        original = session.commit
+        with monkeypatch.context() as patch:
+
+            def lost_ack():
+                original()
+                raise RuntimeError("Synthetic acknowledgement loss")
+
+            patch.setattr(session, "commit", lost_ack)
+            with pytest.raises(Exception) as error:
+                asyncio.run(
+                    role_sync_service.RoleSyncService(
+                        session, directory=SyntheticRoleDirectory()
+                    ).sync_user_roles_to_entitlements(USER, A, request_context=ADMIN)
+                )
+            assert error.value.status_code == 503
+    assert role_sync(factory, SyntheticRoleDirectory())["entitlements_created"] == 0
+    with tenant_session(factory, A) as session:
+        assert session.query(RoleGrantBinding).count() == 1
+
+
+def test_competing_role_syncs_serialize_and_create_one_grant(store, monkeypatch):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+    import time
+
+    params, engine, factory, _ = store
+    role_pattern(factory)
+    concurrent = create_engine(engine.url, pool_size=2, max_overflow=0)
+    install_tenant_pool_reset(concurrent)
+    sessions = sessionmaker(bind=concurrent)
+    staged, release = Event(), Event()
+    original = AuditLogger.log_entitlement_event
+
+    def hold(logger, event_type, *args, **kwargs):
+        event = original(logger, event_type, *args, **kwargs)
+        if event_type == "role_grant_bound":
+            staged.set()
+            assert release.wait(10)
+        return event
+
+    monkeypatch.setattr(AuditLogger, "log_entitlement_event", hold)
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            first = pool.submit(role_sync, sessions, SyntheticRoleDirectory())
+            assert staged.wait(5)
+            second = pool.submit(role_sync, sessions, SyntheticRoleDirectory())
+            try:
+                deadline = time.monotonic() + 5
+                blocked = False
+                while time.monotonic() < deadline:
+                    with (
+                        owner(params, "iam_test") as connection,
+                        connection.cursor() as cursor,
+                    ):
+                        cursor.execute(
+                            "SELECT count(*) FROM pg_stat_activity WHERE datname='iam_test' AND usename='sg_test_app' AND wait_event_type='Lock'"
+                        )
+                        blocked = cursor.fetchone()[0] > 0
+                    if blocked:
+                        break
+                    time.sleep(0.02)
+                assert blocked
+            finally:
+                release.set()
+            assert first.result(timeout=5)["entitlements_created"] == 1
+            assert second.result(timeout=5)["entitlements_created"] == 0
+        with tenant_session(factory, A) as session:
+            assert session.query(RoleGrantBinding).count() == 1
+    finally:
+        release.set()
+        concurrent.dispose()
+
+
+def test_policy_templates_are_tenant_local_and_seeds_fail_explicitly(store):
+    from app.services.policy_service import PolicyService
+    from app.services.iam_portal_service import IAMPortalService
+    from fastapi import HTTPException
+
+    params, _, _, policies = store
+    with owner(params, "catalog_test") as connection, connection.cursor() as cursor:
+        for tenant, name in [(A, "own"), (B, "foreign"), (None, "global")]:
+            cursor.execute(
+                "INSERT INTO policy_templates (id,name,display_name,policy_type,template_data,tenant_id) VALUES (%s,%s,'Synthetic','access','{}',%s)",
+                (str(uuid4()), name, str(tenant) if tenant else None),
+            )
+    with tenant_session(policies, A) as session:
+        service = PolicyService(session, A, "synthetic")
+        assert [template.name for template in service.list_templates()] == ["own"]
+        for method in [
+            service.list_seed_policies,
+            lambda: service.clone_seed_policy(uuid4(), str(B)),
+        ]:
+            with pytest.raises(HTTPException) as error:
+                method()
+            assert error.value.status_code == 503
+        portal = IAMPortalService.__new__(IAMPortalService)
+        portal.db = session
+        portal.tenant_id = A
+        with pytest.raises(HTTPException) as error:
+            portal.list_policy_bundles()
+        assert error.value.status_code == 503

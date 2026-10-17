@@ -1,5 +1,6 @@
 """IAM Policy Service - Policy management and evaluation."""
 
+from fastapi import HTTPException
 import logging
 import json
 from typing import Optional, List, Dict, Any
@@ -382,29 +383,11 @@ class PolicyService:
                 policy_filter = " AND policy_type = :policy_type"
                 params["policy_type"] = policy_type
 
-            if self.sg_admin_tenant_id and self.tenant_id != self.sg_admin_tenant_id:
-                params["sg_admin_tenant"] = str(self.sg_admin_tenant_id)
-                query = f"""
-                    SELECT id, name, display_name, description, policy_type, template_data, is_system, category, created_at, updated_at, tenant_id
-                    FROM policy_templates pt
-                    WHERE pt.tenant_id = :tenant_id {policy_filter}
-                    UNION ALL
-                    SELECT id, name, display_name, description, policy_type, template_data, is_system, category, created_at, updated_at, tenant_id
-                    FROM policy_templates pt
-                    WHERE (pt.tenant_id IS NULL OR pt.tenant_id = :sg_admin_tenant) {policy_filter}
-                      AND NOT EXISTS (
-                        SELECT 1 FROM policy_templates t
-                        WHERE t.tenant_id = :tenant_id AND t.name = pt.name
-                      )
-                    ORDER BY category, display_name
-                """
-            else:
-                query = f"""
-                    SELECT id, name, display_name, description, policy_type, template_data, is_system, category, created_at, updated_at, tenant_id
-                    FROM policy_templates
-                    WHERE (tenant_id IS NULL OR tenant_id = :tenant_id){policy_filter}
-                    ORDER BY category, display_name
-                """
+            query = f"""
+                SELECT id, name, display_name, description, policy_type, template_data, is_system, category, created_at, updated_at, tenant_id
+                FROM policy_templates WHERE tenant_id = :tenant_id {policy_filter}
+                ORDER BY category, display_name
+            """
 
             result = self.db.execute(text(query), params)
             
@@ -435,14 +418,7 @@ class PolicyService:
             return []
 
     def _get_sg_admin_tenant_id(self) -> Optional[UUID]:
-        """Return sg_admin tenant id if present (used for shared templates)."""
-        try:
-            result = self.db.execute(
-                text("SELECT id FROM tenants WHERE slug = 'sg_admin' LIMIT 1")
-            ).scalar()
-            return UUID(str(result)) if result else None
-        except Exception:
-            return None
+        return None
     
     def create_policy_from_template(self, template_id: UUID, name: str, display_name: str, created_by: str) -> Optional[Policy]:
         """Create a policy from a template."""
@@ -469,41 +445,7 @@ class PolicyService:
     
     # ==================== Helper Methods ====================
     def list_seed_policies(self) -> List[Policy]:
-        """List shared seed policies from sg_admin tenant (if available)."""
-        if not self.sg_admin_tenant_id:
-            return []
-        try:
-            result = self.db.execute(
-                text("""
-                    SELECT id, name, display_name, description, policy_type, scope, scope_id, policy_data, is_active, priority, created_by, created_at, updated_at
-                    FROM policies
-                    WHERE tenant_id = :seed_tenant
-                    ORDER BY policy_type, priority ASC
-                """),
-                {"seed_tenant": str(self.sg_admin_tenant_id)}
-            )
-            seeds: List[Policy] = []
-            for row in result:
-                seeds.append(Policy(
-                    id=UUID(str(row[0])),
-                    tenant_id=self.sg_admin_tenant_id,
-                    name=row[1],
-                    display_name=row[2],
-                    description=row[3],
-                    policy_type=row[4],
-                    scope=row[5],
-                    scope_id=UUID(str(row[6])) if row[6] else None,
-                    policy_data=row[7],
-                    is_active=row[8],
-                    priority=row[9],
-                    created_by=row[10],
-                    created_at=row[11],
-                    updated_at=row[12]
-                ))
-            return seeds
-        except Exception as e:
-            logger.error(f"Failed to list seed policies: {e}", exc_info=True)
-            return []
+        raise HTTPException(status_code=503, detail="Shared policy publication and cloning require explicit admission")
 
     def _row_to_policy(self, row) -> Policy:
         """Convert a raw DB row to a Policy model."""
@@ -595,65 +537,7 @@ class PolicyService:
         name_override: Optional[str] = None,
         display_name_override: Optional[str] = None,
     ) -> Optional[Policy]:
-        """Clone a seed policy from sg_admin into the current tenant."""
-        if not self.sg_admin_tenant_id:
-            logger.warning("sg_admin tenant not found; cannot clone seed policies")
-            return None
-        try:
-            seed = self.db.execute(
-                text("""
-                    SELECT id, name, display_name, description, policy_type, scope, scope_id, policy_data, is_active, priority, created_by, created_at, updated_at
-                    FROM policies
-                    WHERE tenant_id = :seed_tenant AND id = :pid
-                    LIMIT 1
-                """),
-                {"seed_tenant": str(self.sg_admin_tenant_id), "pid": str(seed_policy_id)}
-            ).fetchone()
-            if not seed:
-                return None
-            target_name = name_override or f"{seed[1]}-{self.tenant_id}"
-            target_display_name = display_name_override or seed[2] or seed[1]
-
-            # If a policy with the same name already exists, treat it as idempotent unless the user asked for a custom name.
-            existing = self.db.execute(
-                text(
-                    """
-                    SELECT id, name, display_name, description, policy_type, scope, scope_id, policy_data, is_active, priority, created_by, created_at, updated_at
-                    FROM policies
-                    WHERE tenant_id = :tenant_id AND name = :name
-                    LIMIT 1
-                    """
-                ),
-                {"tenant_id": str(self.tenant_id), "name": target_name},
-            ).fetchone()
-            if existing:
-                if name_override:
-                    raise PolicyCloneConflict("A policy with this name already exists.")
-                return self._row_to_policy(existing)
-
-            normalized_dsl = self._normalize_seed_policy_data(seed_policy_id, seed[7], seed[4], seed[5])
-            if not normalized_dsl:
-                logger.error(f"Seed policy {seed_policy_id} could not be normalized; skipping clone")
-                return None
-
-            policy_data = PolicyCreate(
-                name=target_name,
-                display_name=target_display_name,
-                description=seed[3],
-                policy_type=seed[4],
-                scope=seed[5],
-                scope_id=UUID(str(seed[6])) if seed[6] else None,
-                policy_data=normalized_dsl,
-                is_active=seed[8],
-                priority=seed[9]
-            )
-            return self.create_policy(policy_data, created_by)
-        except PolicyCloneConflict:
-            raise
-        except Exception as e:
-            logger.error(f"Failed to clone seed policy {seed_policy_id}: {e}", exc_info=True)
-            self.db.rollback()
-            return None
+        raise HTTPException(status_code=503, detail="Shared policy publication and cloning require explicit admission")
     
     def _validate_policy_dsl(self, policy_data: Dict[str, Any]) -> bool:
         """Reject unsupported DSL at authoring time and again during evaluation."""

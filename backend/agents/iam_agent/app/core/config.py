@@ -75,6 +75,7 @@ class Settings(BaseSettings):
     
     # Database (for identity cache)
     DB_URL: Optional[str] = os.getenv("DB_URL")
+    IAM_ROLE_SYNC_REALMS: dict[str, str] = Field(default_factory=dict)
     IAM_DB_URL: Optional[str] = None  # Separate access-grant store; never inferred from DB_URL.
     
     # Redis (for caching JWKS)
@@ -178,6 +179,19 @@ class Settings(BaseSettings):
         "ORG_ADMIN",
         "SECURITY_ADMIN",
     ]
+
+    @field_validator("IAM_ROLE_SYNC_REALMS")
+    @classmethod
+    def _role_sync_realms(cls, values):
+        from uuid import UUID
+        import re
+        result = {}
+        for tenant, realm in values.items():
+            key = str(UUID(tenant))
+            if key in result or realm in {".", ".."} or not re.fullmatch(r"[A-Za-z0-9_.-]{1,255}", realm):
+                raise ValueError("Role sync requires unique tenant UUIDs and explicit realm names")
+            result[key] = realm
+        return result
 
     @field_validator("KEYCLOAK_ISSUER_BASE_URLS")
     @classmethod

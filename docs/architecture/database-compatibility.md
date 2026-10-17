@@ -386,3 +386,29 @@ contract and mutations require valid scope/reviewer/target snapshots. Review the
 for supported behavior and limitations. These results do not establish full shared
 baseline/Flyway-runner, hosted PostgreSQL-16 CI, real identity/provider or existing-
 environment qualification.
+
+
+### Role provenance extension
+
+V016 pairs the role-pattern/provenance mappings with one additive IAM migration.
+Historical role definitions retain their original fields; new auto-grant admission
+defaults false and historical actors remain NULL. The new `iam_role_grants` table
+holds trusted ownership and target/source snapshots; tenant/subject/parent guards
+and an immutable managed-target trigger prevent accidental cross-scope reuse.
+No legacy metadata is promoted into provenance. Global definitions remain blocked.
+
+The IAM-only profile now selects seven reviewed files, V0–V3 plus consolidated
+V014–V016. Existing migration bytes are unchanged. V016 is a no-op in the shared
+catalog when the separate IAM pattern table is absent. Tests upgrade populated
+legacy definitions and exercise the new behavior with a nonowner/NOBYPASSRLS role;
+no existing database was accessed or migrated, and Flyway itself was not executed.
+Unknown histories need the same explicit reconciliation, backup and role-review gates.
+An application rollback retains these additive columns/table/guards; no destructive
+downgrade or automatic baseline is included.
+
+The [identity reference](../reference/identity.md#role-patterns-directory-synchronization-and-sharing)
+defines supported reconciliation, observation limits and blocked sharing paths.
+Tenant-local policy-template query tests use the exact V001 table declaration and
+prove service filtering, not full template-table RLS or its other callers. Shared
+publication, other writers and full application D0/Flyway/hosted/live-provider
+qualification remain open.

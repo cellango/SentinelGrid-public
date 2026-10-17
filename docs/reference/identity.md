@@ -325,3 +325,90 @@ and audit outages, atomic bulk rollback, uncertain commits and review/completion
 contention. This is focused synthetic qualification. Full shared D0/Flyway execution,
 unknown populated histories, hosted CI, live directory/provider effects, role-pattern
 synchronization, shared definitions and ITDR/NHI/SCIM/editor admission remain open.
+
+
+## Role patterns, directory synchronization and sharing
+
+The [role API](../../backend/agents/iam_agent/app/api/role_mappings.py) and
+[role reconciliation service](../../backend/agents/iam_agent/app/services/role_sync_service.py)
+require verified `TENANT_ADMIN`, `IAM_ADMIN` or `PLATFORM_ADMIN` context and a user
+UUID. Body `created_by`/`granted_by` fields remain compatible inputs but provide no
+authority. Tenant UUIDs come from that context; an omitted pattern tenant means the
+current tenant. It never creates a global definition. Reads, writes and deletes stay
+tenant scoped, and definition changes share their audit transaction.
+
+Role/pattern storage matches IAM V1's lengths, priority, enabled flag, indexes and
+uniqueness. [V016](../../backend/migrations_consolidated/V016__public_role_grant_provenance.sql)
+adds explicit `auto_grant` (false for historical rows) and nullable `created_by` (no
+invented historical actor). New definitions record the actual caller. Whole-field `*`
+is supported in `resource_type:resource_id:action`; embedded globs, empty fields and
+unresolved tenant placeholders are rejected. Definitions are explicit user-grant
+rules. Editing/disabling/deleting a definition does not itself run reconciliation.
+
+The [directory reader](../../backend/agents/iam_agent/app/services/role_directory_service.py)
+is disabled until deployment-owned `IAM_ROLE_SYNC_REALMS` maps tenant UUID strings
+to realm names. This JSON setting has an empty default; there is no fallback to the
+generic realm or request-supplied realm. Configure it through environment/secret
+configuration without committing credentials. The existing Keycloak URL, TLS and
+admin authentication settings apply. Production requires the existing HTTPS/TLS and
+service-account controls, plus a least-privilege directory-read account and an
+administrator-controlled, non-user-editable tenant attribute. Those real provider
+permissions/profile settings still need deployment qualification.
+
+Directory observations require an exact user UUID, one matching `tenant_id`
+attribute, a boolean enabled flag and valid effective realm-role names. Disabled
+users yield no roles. Transport errors, redirects, malformed/missing membership,
+oversized responses and expired observations fail; they never become empty-role
+success. Redirects and environment proxies are disabled on these directory requests.
+Each response is capped at 1 MiB; reads use a 10-second timeout. Realm enumeration
+continues through an empty page and rejects duplicates or more than 100 accounts.
+Valid foreign-tenant accounts in a shared realm are excluded, never relabelled.
+Role observations are bounded at 100 realm roles per user and checked within 30
+seconds before mutation and commit. They are observations, not a distributed lock
+on Keycloak state. Client-role and group/composite behavior require live provider
+qualification; no instantaneous revocation guarantee follows from these tests.
+
+Single-user synchronization reconciles all observed realm roles against enabled,
+explicitly opted-in tenant patterns. Bulk role synchronization enumerates the bounded
+realm, selects present and previously managed members, and commits one operation.
+An unverified former member blocks bulk reconciliation. Limits are 500 patterns,
+500 stored user grants and 500 grant creates/revocations per operation. Over-limit
+work fails without a committed subset; inventories do not silently truncate.
+
+[Service-owned provenance](../../backend/agents/iam_agent/app/models/role_grant_binding.py)
+in `public.iam_role_grants` distinguishes managed grants from manual or legacy ones.
+Request metadata cannot establish that ownership. Overlapping role sources share
+one grant; losing one source preserves another. Losing the last applicable source
+revokes an active managed grant. Revoked, expired or suspended rows are not silently
+reactivated when a role returns. Manual grants and old `source=role_sync` metadata
+are not adopted or revoked automatically. Existing legacy ownership requires explicit
+reconciliation before it can be managed by this service.
+
+V016 forces RLS and intersects tenant, user-subject and entitlement links for the
+new provenance table. Its grant trigger prevents a managed target/beneficiary/expiry/
+grantor from being repurposed through a generic writer; ownership transfer is not
+an admitted API. Status/usage changes remain possible under their existing authority.
+Tenant/user transaction locks serialize competing syncs; grant/provenance/actual-
+actor audit writes commit together. Audit, provenance or pre-commit failure rolls
+back the operation. An acknowledgement lost after commit requires state inspection;
+retries reuse the durable ownership instead of creating another grant. Confirmed
+changes invalidate read caches after commit; authorization still reads current DB
+grants. Directory realm, roles and observation time are retained in scoped audit.
+These operations write the IAM database; they do not assign/remove Keycloak roles.
+
+Global patterns remain inaccessible under the restrictive tenant guards. Both policy
+bundle services explicitly return 503 for seed listing/cloning until an authorized
+shared-publication contract is implemented. An `sg_admin` slug is not that contract,
+and no bypass identity or tenant flag is introduced. Policy-template reads now select
+only the authenticated tenant, excluding NULL/global and other tenants. This verifies
+the named service query, not universal `policy_templates` table RLS or all template
+writers; those broader database/caller gates remain open.
+
+Unit and owned PostgreSQL checks cover directory transport and membership failures,
+legacy opt-out/preservation, model/DDL parity, verified actors, two tenants, exact
+ownership links, metadata forgery, role overlap/removal, sticky denials, audit and
+provenance outages, bulk rollback, uncertain commits and concurrent syncs. Synthetic
+HTTP transport supplies directory data; no live Keycloak or Redis instance is used.
+Full shared baseline/Flyway/history/privilege adoption, hosted CI, live identity
+permissions/profile configuration, every other grant writer and overall IAM
+acceptance remain separate gates.
