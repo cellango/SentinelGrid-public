@@ -125,3 +125,14 @@ issuance and forwarding migrate. These capabilities remain required restoration
 work. Offline tests mount the actual ticket router with current IAM verification
 and data/session spies; no real SQL, token issuer, deployed provider/caller,
 one-time replay protection or end-user action delegation is qualified.
+
+
+IAM's [shared user context](docs/architecture/gateway-identity.md#iam-in-process-user-identity)
+also applies that owned user contract directly after the current in-process RSA
+validator, with no self-verification RPC. Static internal credentials plus tenant
+headers no longer create IAM authority. Policy user-info and scoped sessions share
+one immutable identity; direct cookie-only/session-marker authentication is not
+added. Actual policy/access-request router checks use key, session/data and existing
+unit-harness Redis doubles. Other IAM/service callers, workload issuance, provider
+registration, SQL/RLS, action authorization and full runtime remain unqualified;
+blocked capabilities stay required restoration work.

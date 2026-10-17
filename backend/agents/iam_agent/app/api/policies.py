@@ -8,7 +8,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
 from app.api.ai_editor import get_editor_context
-from app.api.request_context import RequestContext, get_tenant_session
+from app.api.request_context import get_current_user_info, RequestContext, get_tenant_session
 from app.services.policy_service import PolicyService, PolicyCloneConflict
 from app.services.token_validator import TokenValidator
 from app.services.keycloak_client import KeycloakClient
@@ -28,20 +28,6 @@ def get_token_validator() -> TokenValidator:
     """Get token validator instance."""
     # Verify signed claims without initializing a provider administrator client.
     return TokenValidator(None)
-
-
-def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
-    """Get current user info from token."""
-    validator = get_token_validator()
-    result = validator.validate_token(credentials.credentials)
-    if not result.get("valid"):
-        raise HTTPException(status_code=401, detail="Invalid token")
-    return {
-        "roles": result.get("roles") or [],
-        "user_id": result.get("user_id") or result.get("payload", {}).get("sub"),
-        "tenant_id": result.get("tenant_id") or result.get("payload", {}).get("tenant_id"),
-        "realm_name": result.get("payload", {}).get("iss", "").split("/realms/")[-1] if "/realms/" in result.get("payload", {}).get("iss", "") else "sentinelgrid",
-    }
 
 
 def get_policy_service(

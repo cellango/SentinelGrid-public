@@ -121,6 +121,47 @@ shared credential and caller-selected tenant into user authority. Other downstre
 proxy/action contracts still require their own authorization and qualification;
 passing this identity gate does not qualify their effects or error semantics.
 
+## IAM in-process user identity
+
+IAM's [shared request context](../../backend/agents/iam_agent/app/api/request_context.py)
+now uses the same owned `IAM_USER_CLIENT_BINDINGS` and signed user contract as the
+gateway. Its current `TokenValidator(None)` remains the RSA/issuer/key authority;
+IAM does not call its own validation endpoint. The shared
+[receipt checks](../../backend/libs/sg_core/iam_verification.py) also check the
+in-process result against the exact submitted claims, tenant/subject/roles,
+audience and expiry. Parsing that token or constructing a result/context is not
+signature verification. Contradictory or unavailable results fail closed without
+returning raw validator diagnostics. Unavailable trusted keys currently return 401.
+
+Direct IAM requires an explicit bearer. Cookie-only and browser session-marker
+forms stay at the gateway; this change does not expand direct cookie-authenticated
+mutation entrypoints. A matching bearer and access cookie is unambiguous, while
+duplicate/malformed/conflicting credentials are rejected. The opaque internal
+service credential plus a tenant header no longer establishes an IAM request
+context. Workload JWTs, actor/exchange claims and unknown clients/tenants cannot
+enter this user contract. Registration policy defaults to empty.
+
+The immutable context contains the verified UUID tenant/subject, roles and owned
+realm; optional email/username come only from signed claims. A server-private
+request cache binds it to the exact token, not public request state. Conflicting
+or duplicate tenant/realm hints and forwarded user/role/internal-token hints are
+rejected, including when the context is reused. Canonical and legacy IAM Portal
+policy user-info import names project this same context used by tenant sessions;
+they no longer run separate token validators or log full validation payloads.
+
+`make preview-iam-identity` mounts the actual policy and access-request routers
+with generated RSA tokens and the current IAM validator. It checks positive
+same-tenant data paths, one consistent identity for session/service/user info,
+user-specific access-request filters, unavailable policy, forged/expired/foreign
+credentials, hint conflicts, workload/static-token mutation attempts and retained
+source-admission denial. Keys, session creation and domain data are test doubles;
+the existing IAM unit harness supplies a Redis double. This is not real SQL/RLS,
+full IAM startup, live provider registration/grant qualification or action authority.
+Existing source selection and domain authorization/action restrictions remain.
+SCIM retains its separate owned read-client contract. Other legacy IAM validators
+and direct-library/worker callers still require reconciliation; this section does
+not clear every IAM entrypoint or restore scheduled/workload operations.
+
 ## Direct-service workload reads
 
 [The read contract](../../backend/libs/sg_core/workload_reads.py) reuses the same

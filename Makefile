@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -41,10 +41,14 @@ preview-check:
 	$(RUFF) check --select F821 backend SentinelGridAIShield SentinelGridPenTestAgent SentinelGridPostureAgent scripts
 	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_auth_api.py backend/agents/iam_agent/tests/test_token_validator.py backend/agents/iam_agent/tests/test_config_security.py backend/agents/iam_agent/tests/test_policy_enforcement.py backend/agents/iam_agent/tests/test_authorize_tenant_isolation.py backend/agents/iam_agent/tests/test_policies_tenant_session.py backend/agents/iam_agent/tests/test_audit_tenant_controls.py backend/agents/iam_agent/tests/test_entitlements_tenant_isolation.py backend/agents/iam_agent/tests/test_access_requests_authorization.py backend/agents/iam_agent/tests/test_anomaly_detection.py backend/agents/iam_agent/tests/test_automation_request_context.py backend/agents/iam_agent/tests/test_source_admission.py backend/agents/iam_agent/tests/test_iam_acceptance_boundaries.py backend/agents/iam_agent/tests/test_sync_jobs_request_context.py backend/agents/iam_agent/tests/test_ai_editor_controls.py backend/agents/iam_agent/tests/test_protocols_request_context.py backend/agents/iam_agent/tests/test_ai_chat_request_context.py backend/agents/iam_agent/tests/test_ai_features_request_context.py backend/agents/iam_agent/tests/test_ai_chat_service.py backend/agents/iam_agent/tests/test_scim_controls.py backend/agents/iam_agent/tests/test_nhi_controls.py backend/agents/iam_agent/tests/test_itdr_controls.py backend/agents/iam_agent/tests/test_role_sync_controls.py backend/agents/iam_agent/tests/test_role_directory.py backend/agents/iam_agent/tests/test_governance_controls.py backend/agents/iam_agent/tests/test_governance_tenant_isolation.py backend/agents/iam_agent/tests/test_access_request_controls.py backend/agents/iam_agent/tests/test_role_mappings_access_requests_tenant_isolation.py -q
 
+	$(MAKE) preview-iam-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-mcp PYTHON="$(PYTHON)"
 	$(MAKE) preview-gateway-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-gateway PYTHON="$(PYTHON)"
 	$(MAKE) preview-workload-reads PYTHON="$(PYTHON)"
+
+preview-iam-identity:
+	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_request_context_identity.py backend/agents/iam_agent/tests/test_request_context_internal_token.py -q
 
 preview-workload-reads:
 	$(PYTHON) -m pytest -c backend/tests/workload_reads/pytest.ini backend/tests/workload_reads -q

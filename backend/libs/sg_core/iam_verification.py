@@ -200,6 +200,30 @@ def _receipt(result: dict, submitted: dict, audience: str) -> dict:
     return {**payload, "tenant_id": tenant, "sub": subject, "user_id": subject, "roles": roles.copy()}
 
 
+def checked_validation_result(token: str, result: dict, *, audience: str) -> dict:
+    """Check an authoritative in-process IAM result using the same receipt rules.
+
+    This function does not verify signatures. Call it only after the owned IAM
+    TokenValidator; a request-supplied result or parsed JWT never authenticates.
+    It supplies no HTTP fallback and cannot select an issuer/key destination.
+    """
+    try:
+        submitted = _submitted_claims(token)
+    except (ValueError, TypeError, UnicodeError, RecursionError):
+        raise _invalid() from None
+    try:
+        if not isinstance(result, dict):
+            raise ValueError("Invalid validator result")
+        result = {**result}
+        if isinstance(result.get("expires_at"), datetime):
+            result["expires_at"] = result["expires_at"].isoformat()
+        return _receipt(result, submitted, audience)
+    except HTTPException:
+        raise
+    except (ValueError, TypeError, OSError, OverflowError, RecursionError):
+        raise HTTPException(503, _UNAVAILABLE) from None
+
+
 def verify_iam_token(token: str, *, config: IAMVerificationSettings | None = None) -> dict:
     """Obtain a bounded, input-bound receipt. Never fall back to decoding locally."""
     if token is None or token == "":

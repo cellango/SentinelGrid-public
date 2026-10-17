@@ -17,7 +17,8 @@ must use the authenticated tenant UUID and reject mismatches.
 
 The [IAM validator](../../backend/agents/iam_agent/app/services/token_validator.py)
 now uses PyJWT's RS256 signature, exact issuer, audience and time validation, with
-required subject and tenant UUID claims. It rejects unsigned/wrong-algorithm tokens,
+required subject and tenant claims. The shared user context additionally requires
+non-nil UUID subject/tenant identity and an owned user-client registration. It rejects unsigned/wrong-algorithm tokens,
 untrusted issuer origins/realm paths, missing or incompatible signing keys and
 invalid claim types. Identity comes from verified claims; email domains and realm
 names cannot remap a tenant. Failed validation has no authenticated payload.
@@ -59,6 +60,14 @@ Those runtimes are excluded from supported execution. Do not translate old
 "resolved" tenant-attribute notes or production signoffs into a current security
 claim. Use [SECURITY.md](../../SECURITY.md) for private findings; no product
 credentials are needed to run the supported preview checks.
+
+The [shared IAM user context](../architecture/gateway-identity.md#iam-in-process-user-identity)
+now requires a strict direct bearer, the current in-process RSA validator, coherent
+input-bound result and an owned `keycloak-user-v1` issuer/client/tenant registration.
+It rejects opaque internal credentials and workload tokens. Policy user information
+and tenant sessions share this immutable verified identity. The source gate still
+blocks unreviewed operations; provider/caller/action and runtime qualification
+remain open. `make preview-iam-identity` verifies this bounded source contract.
 
 ## IAM authorization and policy source checks
 
@@ -435,7 +444,7 @@ human-review queuing and every enforcement action return **blocked**. No externa
 message or incident is sent, and no automatic detection-to-effect path is admitted.
 
 Verified tenant/IAM/platform administrators with a user UUID may submit. The shared
-internal token has no user actor and cannot submit. Tenant UUIDs come from verified
+internal token is not admitted by the shared request context and cannot submit. Tenant UUIDs come from verified
 server context. Optional legacy body tenant/realm values must match that tenant and
 its server-owned `IAM_ROLE_SYNC_REALMS` mapping. The existing bounded directory
 reader must observe the exact subject UUID and tenant membership within 30 seconds,

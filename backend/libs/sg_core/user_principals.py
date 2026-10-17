@@ -80,7 +80,7 @@ def get_user_principal_settings():
 
 def require_user_binding(payload: dict, config: UserPrincipalSettings | None = None) -> UserClientBinding:
     try:
-        config = config or get_user_principal_settings()
+        config = config if config is not None else get_user_principal_settings()
     except (ValueError, TypeError, OSError):
         raise HTTPException(503, "User identity configuration unavailable") from None
     if not isinstance(config, UserPrincipalSettings) or not config.IAM_USER_CLIENT_BINDINGS:

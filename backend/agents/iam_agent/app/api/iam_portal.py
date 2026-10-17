@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
-from app.api.request_context import get_tenant_session, RequestContext, get_current_request_context, ensure_request_has_any_role
+from app.api.request_context import get_current_user_info, get_tenant_session, RequestContext, get_current_request_context, ensure_request_has_any_role
 from app.api.policies import get_policy_administrator
 from app.services.iam_portal_service import IAMPortalService
 from app.models.iam_portal import (
@@ -42,28 +42,6 @@ def get_token_validator() -> TokenValidator:
     """Get token validator instance."""
     keycloak_client = KeycloakClient()
     return TokenValidator(keycloak_client)
-
-
-def get_current_user_info(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
-    """Get current user info from token."""
-    validator = get_token_validator()
-    result = validator.validate_token(credentials.credentials)
-    if not result.get("valid"):
-        raise HTTPException(status_code=401, detail="Invalid token")
-    
-    user_info = {
-        "roles": result.get("roles") or [],
-        "user_id": result.get("user_id") or result.get("payload", {}).get("sub"),
-        "tenant_id": result.get("tenant_id") or result.get("payload", {}).get("tenant_id"),
-        "realm_name": result.get("payload", {}).get("iss", "").split("/realms/")[-1] if "/realms/" in result.get("payload", {}).get("iss", "") else "sentinelgrid",
-        "email": result.get("email") or result.get("payload", {}).get("email"),
-        "username": result.get("username") or result.get("payload", {}).get("preferred_username")
-    }
-    
-    logger.debug(f"🔍 [get_current_user_info] Extracted user_info: user_id={user_info['user_id']}, tenant_id={user_info['tenant_id']}, realm_name={user_info['realm_name']}, email={user_info['email']}")
-    logger.debug(f"🔍 [get_current_user_info] Full token result: {result}")
-    
-    return user_info
 
 
 def get_iam_service(

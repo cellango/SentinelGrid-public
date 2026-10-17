@@ -70,6 +70,23 @@ def request_token(request: Request) -> str:
     return token
 
 
+def request_bearer_token(request: Request) -> str:
+    """Strict direct-service bearer; cookies/markers alone cannot authenticate.
+
+    Matching bearer plus cookie remains unambiguous. The shared resolver rejects
+    duplicate/malformed/conflicting credentials before the selected token is used.
+    """
+    token = request_token(request)
+    auth = [v for k, v in request.scope.get("headers", []) if k.lower() == b"authorization"]
+    if len(auth) != 1:
+        _reject("Direct-service bearer required")
+    # Syntax and ASCII were checked by request_token/resolve_credentials.
+    supplied = auth[0].decode("ascii").strip(" \t").partition(" ")[2]
+    if supplied != token or supplied.lower() == SESSION_AUTH_MARKER:
+        _reject("Direct-service bearer required")
+    return token
+
+
 class AuthCookieMiddleware:
     """Preserve bearer, cookie and frontend-marker wire forms without ambiguity.
 
