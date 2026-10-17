@@ -70,9 +70,14 @@ provider, worker or full-stack runtime. Existing component tests do not imply an
 operation is enabled in that assembly.
 
 Eleven IAM ORM column/type/nullability/primary-key mappings are checked against the
-owned physical profile. Full shared baseline/Flyway/history/install/restore and live
-provider qualification remain blocked; the isolated test installation lacks
-`pgcrypto`/`vector`, and guarded full-app import lacks the runtime dependency `bcrypt`.
+owned physical profile. An owned PostgreSQL17.5/Flyway11.20.2 probe now verifies the
+unchanged eight-file separate IAM profile, real checksummed history, repeat migration,
+drift/missing-version rejection and refusal to baseline a populated database. See
+the [exact qualification scope](docs/architecture/database-compatibility.md#separate-iam-profile-actual-flyway-verification).
+Full shared baseline/install/restore, deployment and live provider qualification
+remain open: the local installation lacks `pgcrypto`/`vector`. The source-review
+environment cannot import the full app; a temporary bcrypt overlay next stops at
+missing `redis`, with no project dependency or environment changes.
 The legacy migration launcher refuses execution and cannot fabricate Flyway history.
 Existing installations also need explicit provider-grant expiry/reconciliation before
 adopting disabled legacy jobs. No schema/history/data adoption or feature-equivalence

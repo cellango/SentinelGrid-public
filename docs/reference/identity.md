@@ -852,8 +852,10 @@ probes are not migration, tenant or provider-effect qualification.
 
 Focused tests cover admission/denial ordering, real JIT/user/signup entrypoints,
 new-route/method/alias attempts, SCIM/editor route classes and no-task lifespan.
-Full app import in the isolated review environment remains blocked by the missing
-runtime dependency `bcrypt`; no network/database/startup action was allowed during
-that probe. A complete dependency/install/import/startup check and real deployment
-are still required. Direct Python/MCP/worker/script consumers are outside this HTTP
+Full app import in the isolated source-review environment stops at missing `bcrypt`.
+A checksum-verified bcrypt4.3.0 wheel in a separate temporary overlay progresses
+to missing `redis`; adding one dependency does not establish a complete runtime.
+The project environment and dependency manifests were unchanged. Both probes denied
+network/database/process/background effects and never ran startup. A reproducible
+complete dependency/install/import/startup check and real deployment remain required. Direct Python/MCP/worker/script consumers are outside this HTTP
 selection and need their own action boundary; no universal provider safety is claimed.

@@ -402,7 +402,8 @@ V016 remains in the checksum-selected IAM lineage described below. Existing
 migration bytes are unchanged. V016 is a no-op in the shared
 catalog when the separate IAM pattern table is absent. Tests upgrade populated
 legacy definitions and exercise the new behavior with a nonowner/NOBYPASSRLS role;
-no existing database was accessed or migrated, and Flyway itself was not executed.
+no existing database was accessed or migrated. Those focused tests applied SQL
+directly; the later separate-profile Flyway verification is recorded below.
 Unknown histories need the same explicit reconciliation, backup and role-review gates.
 An application rollback retains these additive columns/table/guards; no destructive
 downgrade or automatic baseline is included.
@@ -470,12 +471,13 @@ the model with unchanged IAM V1 SQL; it does not alter a database, migration che
 or table. It does not certify every default/index/constraint, role/history or unknown
 legacy installation. Existing focused RLS/parent/audit/transaction tests remain separate.
 
-A rollback-only attempt of the complete shared V001 in the owned test installation
-stops because `pgcrypto` and `vector` are absent (SQLSTATE `0A000`). The attempt
-leaves no partial tables or Flyway history. This is an explicit installation blocker,
-not evidence that the whole shared lineage will pass after extensions are supplied.
-Actual Flyway migrate/validate/history/upgrade/restore was not performed, and no
-existing database or history was accessed. Shared D0 and adoption remain unqualified.
+The SQL-only rollback probe of the complete shared V001 stops because `pgcrypto`
+and `vector` are absent (SQLSTATE `0A000`), leaving no partial tables/history. A later
+actual Flyway attempt also fails at the missing extension; its legitimate empty
+history table contains no applied version and the failed baseline creates no
+application tables. Full shared D0, populated upgrades/restores and adoption remain
+unqualified. Supplying extensions alone is not evidence that the whole lineage passes.
+No existing database or history was accessed.
 
 The old `scripts/flyway_schema_only.sh` launcher now refuses every mode. It no longer
 supplies database credentials/default URLs, falls back to psql, launches Docker or
@@ -489,6 +491,40 @@ and `schemas=public`, with `createSchemas=false`; schema creation is not delegat
 to a connection's incidental search path. Baseline-on-migrate remains false and clean
 remains disabled. See Redgate's [default schema](https://documentation.red-gate.com/flyway/reference/configuration/flyway-namespace/flyway-default-schema-setting)
 and [schema creation](https://documentation.red-gate.com/flyway/reference/configuration/flyway-namespace/flyway-create-schemas-setting)
-settings. These are configuration constraints, not proof of an executed Flyway run.
-A reviewed installation procedure must qualify the runner, extensions, histories,
-ownership/least privileges and existing-grant expiry/reconciliation before adoption.
+settings. The following bounded verification exercises that configuration; a reviewed
+deployment still needs its exact runner, prerequisites, privileges and adoption plan.
+
+### Separate IAM profile: actual Flyway verification
+
+On October 17, 2026, checksum-verified Flyway OSS **11.20.2** migrated and validated
+the unchanged eight-file IAM profile against an owned PostgreSQL **17.5** cluster.
+The cluster used only loopback/private sockets and generated SCRAM credentials;
+the migrator was a non-superuser database owner with no BYPASSRLS. No existing
+database, deployment runner, live provider or application runtime was accessed.
+
+All eight versions **0, 1, 2, 3, 14, 15, 16, 17** have successful history entries
+with non-NULL checksums. V0 contains comments only; V2 creates `public.tenant_references`
+and is included. IAM tables use **`public` in the separate `IAM_DB_URL` database**,
+not an `iam` schema. For example, its `public.entitlements`, `public.iam_audit_events`,
+`public.iam_role_grants` and `public.iam_service_accounts` must never be confused with objects
+in the shared catalog database. Names/UUIDs cannot establish cross-store ownership.
+
+A second migrate executed zero migrations. Modified SQL and a missing applied
+version failed validation; restoring the copied files restored valid history.
+The original migration sources and stored history stayed unchanged. A synthetic
+populated database with no history was rejected without automatic baselining,
+history creation or loss of its witness row. No repair, missing-version ignore,
+partial baseline or synthetic checksum entry was used.
+
+For this runner, `validate -outputType=json` returned process exit code zero even
+when the JSON reported `validationSuccessful=false`. The acceptance probe required
+`validationSuccessful=true` with no invalid migrations, and `success=true` for
+migration; exit code alone was insufficient. See the official
+[validation contract](https://documentation.red-gate.com/flyway/reference/commands/validate)
+and [JSON output parameter](https://documentation.red-gate.com/flyway/reference/command-line-parameters).
+
+This verifies the separate IAM profile with that exact local tool pair. It does
+not qualify the retained Compose Flyway10 images, every default/index/FK/check/RLS,
+deployment privileges, populated upgrade/restore, the full shared profile, existing
+grant expiry/reconciliation, or complete application/feature equivalence. These
+remain explicit acceptance gates before installation or private-source retirement.
