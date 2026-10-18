@@ -4,6 +4,10 @@ The issuer owns static claims. The client never supplies request claims to the t
 endpoint and checks the actual signed token with the existing IAM/read contract.
 """
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import hashlib
 import json
 import math
@@ -16,7 +20,7 @@ from uuid import UUID
 
 from fastapi import HTTPException, Request
 import httpx
-from pydantic import BaseModel, ConfigDict, Field, SecretStr, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from sg_core.iam_verification import IAMVerificationSettings
 from sg_core.workload_reads import (
@@ -26,6 +30,12 @@ from sg_core.workload_reads import (
     get_workload_read_context,
     service_audience,
 )
+
+if TYPE_CHECKING:
+    from sg_core.workload_registration import (
+        LocalCredentialLease,
+        IssuerRegistrationReader,
+    )
 
 PATH = "/api/v1/tickets"
 QUERY = b"status=open&limit=3"
@@ -215,22 +225,22 @@ class FixedTicketReadClient:
     def __init__(
         self,
         config: FixedTicketReadSettings,
-        secret: SecretStr,
+        secret: LocalCredentialLease,
         verifier: IAMVerificationSettings,
+        *,
+        registration: IssuerRegistrationReader | None = None,
     ):
+        from sg_core.workload_registration import LocalCredentialLease
+
         if (
             not isinstance(config, FixedTicketReadSettings)
-            or not isinstance(secret, SecretStr)
+            or not isinstance(secret, LocalCredentialLease)
             or not isinstance(verifier, IAMVerificationSettings)
         ):
             raise ValueError("Typed owned caller configuration required")
-        value = secret.get_secret_value()
-        if not 1 <= len(value) <= 4096 or any(
-            ord(c) < 33 or ord(c) == 127 for c in value
-        ):
-            raise ValueError("Owned machine credential unavailable")
         self._config = config
-        self._secret = secret
+        self._credential_lease = secret
+        self._registration = registration
         self._verifier = verifier
 
     def fetch(self) -> list[dict]:
@@ -238,6 +248,15 @@ class FixedTicketReadClient:
         if not config.enabled:
             raise HTTPException(503, "Fixed workload read is disabled")
         try:
+            from sg_core.workload_registration import IssuerRegistrationReader
+
+            if not isinstance(self._registration, IssuerRegistrationReader):
+                raise ValueError("Owned issuer readback required")
+            version, credential = self._credential_lease.snapshot(config.binding)
+            observation = self._registration.inspect(config, self._verifier)
+            if not observation.enabled:
+                raise ValueError("Issuer client is disabled")
+            self._credential_lease.require_current(config.binding, version)
             verify = (
                 ssl.create_default_context(cafile=config.ca_bundle)
                 if config.ca_bundle
@@ -254,7 +273,7 @@ class FixedTicketReadClient:
                     "POST",
                     config.binding.issuer + "/protocol/openid-connect/token",
                     auth=httpx.BasicAuth(
-                        config.binding.client_id, self._secret.get_secret_value()
+                        config.binding.client_id, credential.get_secret_value()
                     ),
                     data={"grant_type": "client_credentials"},
                     headers={"Accept": "application/json"},
@@ -300,6 +319,7 @@ class FixedTicketReadClient:
                 context = get_workload_read_context(Request(scope), "ticketing_service")
                 if context.expires_at <= time.time() + 1:
                     raise ValueError("Machine token expires before dispatch")
+                self._credential_lease.require_current(config.binding, version)
                 client.cookies.clear()  # Issuer cookies must not cross into the data transport.
                 with client.stream(
                     "GET",

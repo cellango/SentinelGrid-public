@@ -4,6 +4,8 @@ Issuer and HTTP/key transport are synthetic; no real Keycloak, issuer provisioni
 secret store, SQL, provider, browser delegation or production caller is qualified.
 """
 
+from copy import deepcopy
+from datetime import datetime, timedelta, timezone
 import base64
 import hashlib
 import json
@@ -29,6 +31,13 @@ from app.api import tickets
 from app.core import database
 from sg_core import iam_verification, workload_read_client
 from sg_core.iam_verification import IAMVerificationSettings
+from sg_core.workload_registration import (
+    LocalCredentialLease,
+    IssuerReadbackSettings,
+    IssuerRegistrationReader,
+    MANAGEMENT_CONTRACT,
+    MANAGEMENT_PERMISSION,
+)
 from sg_core.workload_reads import (
     WorkloadReadBinding,
     WorkloadReadSettings,
@@ -50,6 +59,10 @@ TENANT = "11111111-1111-4111-8111-111111111111"
 SUBJECT = "22222222-2222-4222-8222-222222222222"
 RESOURCE = "33333333-3333-4333-8333-333333333333"
 FOREIGN = "44444444-4444-4444-8444-444444444444"
+CLIENT_UUID = "55555555-5555-4555-8555-555555555555"
+MANAGEMENT_SUBJECT = "66666666-6666-4666-8666-666666666666"
+MANAGEMENT_CLIENT = "registration-reader"
+ADMIN = "https://identity.internal.test/admin/realms/synthetic"
 SECRET = "SYNTHETIC_NOT_A_REAL_CLIENT_SECRET"
 BINDING = dict(
     issuer=ISSUER,
@@ -137,9 +150,121 @@ def boundary(monkeypatch, keys):
     jwk = json.loads(RSAAlgorithm.to_jwk(keys[0].public_key()))
     jwk.update(kid="read-key", alg="RS256", use="sig")
 
+    # Synthetic provider metadata includes an explicit association. Stock24 user
+    # GET omits it; no fixture claims selected-version compatibility.
+    actual = deepcopy(fragment)
+    actual.update(id=CLIENT_UUID, enabled=True)
+    cp = "/clients/" + CLIENT_UUID
+    up = "/users/" + SUBJECT
+    state.registration = {
+        cp: actual,
+        cp + "/protocol-mappers/models": deepcopy(fragment["protocolMappers"]),
+        up: dict(
+            id=SUBJECT,
+            enabled=True,
+            serviceAccountClientId="ticket-reader",
+            username="service-account-ticket-reader",
+        ),
+        cp + "/default-client-scopes": [],
+        cp + "/optional-client-scopes": [],
+        up + "/groups": [],
+        up + "/role-mappings/realm/composite": [],
+        cp + "/scope-mappings": {},
+        up + "/role-mappings": {},
+    }
+    state.admin_status = 200
+    state.admin_content = None
+    state.admin_hook = None
+    state.token_hook = None
+    state.management_claims = dict(
+        iss=ISSUER,
+        sub=MANAGEMENT_SUBJECT,
+        azp=MANAGEMENT_CLIENT,
+        aud=["review-client", "realm-management"],
+        typ="Bearer",
+        tenant_id=TENANT,
+        iat=int(time.time()) - 1,
+        exp=int(time.time()) + 59,
+        jti=str(uuid4()),
+        sg_principal_type="workload",
+        sg_identity_contract=MANAGEMENT_CONTRACT,
+        sg_permissions=[MANAGEMENT_PERMISSION],
+        sg_registration_target=dict(
+            issuer=ISSUER,
+            client_uuid=CLIENT_UUID,
+            client_id="ticket-reader",
+            subject_id=SUBJECT,
+            tenant_id=TENANT,
+        ),
+        resource_access={"realm-management": {"roles": ["view-clients", "view-users"]}},
+    )
+    state.readback_config = IssuerReadbackSettings(
+        enabled=True,
+        target=config,
+        client_uuid=CLIENT_UUID,
+        management_issuer=ISSUER,
+        management_client_id=MANAGEMENT_CLIENT,
+        management_subject_id=MANAGEMENT_SUBJECT,
+        expected_client_enabled=True,
+    )
+    state.lease = LocalCredentialLease(
+        binding,
+        SecretStr(SECRET),
+        version=1,
+        expires_at=datetime.now(timezone.utc) + timedelta(minutes=5),
+    )
+
+    def configure_management(*, forged=False):
+        token = jwt.encode(
+            state.management_claims,
+            keys[1] if forged else keys[0],
+            algorithm="RS256",
+            headers={"kid": "read-key"},
+        )
+        state.management_token = token
+        state.reader = IssuerRegistrationReader(
+            state.readback_config, SecretStr(token), verifier
+        )
+        state.caller = FixedTicketReadClient(
+            config, state.lease, verifier, registration=state.reader
+        )
+
+    state.configure_management = configure_management
+
     def handler(request):
         state.requests.append(request)
+        if str(request.url).startswith(ADMIN):
+            assert (
+                request.method == "GET"
+                and not request.content
+                and not request.url.query
+            )
+            assert (
+                request.headers["authorization"] == "Bearer " + state.management_token
+            )
+            assert "cookie" not in request.headers
+            path = request.url.path.removeprefix("/admin/realms/synthetic")
+            assert (
+                path in state.registration
+            )  # No search, secrets or auto-creating GET.
+            if state.admin_hook:
+                state.admin_hook(path)
+            if state.admin_content is not None:
+                return httpx.Response(
+                    state.admin_status,
+                    content=state.admin_content,
+                    headers={"Content-Type": "application/json"},
+                )
+            return httpx.Response(
+                state.admin_status,
+                json=state.registration[path],
+                headers={
+                    "Set-Cookie": "metadata=private; Domain=internal.test; Path=/; Secure"
+                },
+            )
         if str(request.url) == ISSUER + "/protocol/openid-connect/token":
+            if state.token_hook:
+                state.token_hook()
             assert (
                 request.method == "POST"
                 and request.content == b"grant_type=client_credentials"
@@ -279,7 +404,7 @@ def boundary(monkeypatch, keys):
         return HTTP_CLIENT(transport=httpx.MockTransport(handler), **kwargs)
 
     monkeypatch.setattr(httpx, "Client", factory)
-    state.caller = FixedTicketReadClient(config, SecretStr(SECRET), verifier)
+    configure_management()
     yield state
     server.close()
     forbidden.assert_not_called()
@@ -293,7 +418,7 @@ def test_positive_issuer_client_actual_router_and_current_IAM_roundtrip(boundary
     b = boundary
     result = b.caller.fetch()
     assert result[0]["id"] == RESOURCE and result[0]["tenant_id"] == TENANT
-    assert len(b.requests) == 4 and len(b.opened) == 1
+    assert len(b.requests) == 14 and len(b.opened) == 1
     b.lookup.assert_called_once_with(
         db=b.db,
         tenant_id=UUID(TENANT),
@@ -303,7 +428,9 @@ def test_positive_issuer_client_actual_router_and_current_IAM_roundtrip(boundary
         limit=3,
         offset=0,
     )
-    assert SECRET not in repr(b.caller) and SECRET not in repr(b.caller._secret)
+    assert SECRET not in repr(b.caller) and SECRET not in repr(
+        b.caller._credential_lease
+    )
 
 
 def test_genuine_empty_page_is_honest_and_each_read_acquires_a_fresh_token(boundary):
@@ -320,7 +447,7 @@ def test_disabled_default_stops_before_token_IAM_or_data_transport(boundary):
         binding=b.binding, service_origin="https://ticket.internal.test"
     )
     with pytest.raises(HTTPException):
-        FixedTicketReadClient(config, SecretStr(SECRET), b.verifier).fetch()
+        FixedTicketReadClient(config, b.lease, b.verifier).fetch()
     assert not b.requests and not b.opened and not b.clients
 
 
@@ -397,7 +524,8 @@ def test_unexpected_token_response_rejected_before_IAM(boundary, change):
     b.token_response = change
     with pytest.raises(HTTPException):
         b.caller.fetch()
-    assert len(b.requests) == 1 and not b.opened
+    assert sum(r.url.path.endswith("/token") for r in b.requests) == 1 and not b.opened
+    assert sum(r.url.host == "iam.internal.test" for r in b.requests) == 1
 
 
 @pytest.mark.parametrize(
@@ -415,7 +543,8 @@ def test_malformed_ambiguous_or_oversized_token_JSON_is_unavailable(boundary, co
     b.token_content = content
     with pytest.raises(HTTPException):
         b.caller.fetch()
-    assert len(b.requests) == 1 and not b.opened
+    assert sum(r.url.path.endswith("/token") for r in b.requests) == 1 and not b.opened
+    assert sum(r.url.host == "iam.internal.test" for r in b.requests) == 1
 
 
 @pytest.mark.parametrize("status", [301, 302, 307, 400, 401, 403, 429, 500])
@@ -426,7 +555,8 @@ def test_token_failures_and_redirects_do_not_trigger_fallback_or_retry(
     b.token_status = status
     with pytest.raises(HTTPException):
         b.caller.fetch()
-    assert len(b.requests) == 1 and not b.opened
+    assert sum(r.url.path.endswith("/token") for r in b.requests) == 1 and not b.opened
+    assert sum(r.url.host == "iam.internal.test" for r in b.requests) == 1
 
 
 @pytest.mark.parametrize("status", [301, 302, 401, 403, 429, 500])

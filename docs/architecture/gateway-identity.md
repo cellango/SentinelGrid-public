@@ -652,8 +652,8 @@ The [reference client](../../backend/libs/sg_core/workload_read_client.py) and
 cover one machine-only request: GET `/api/v1/tickets?status=open&limit=3`.
 `FixedTicketReadSettings` requires the existing exact workload binding and an
 owned HTTPS data origin, defaults disabled, and accepts no dynamic path, query,
-tenant, body or user delegation. The credential is injected separately as a
-`SecretStr`; configuration/fragment output contains no secret. No application,
+tenant, body or user delegation. The credential is injected separately in a process-local `LocalCredentialLease`
+wrapping `SecretStr`; configuration/fragment output contains no secret. No application,
 gateway, job or MCP tool automatically creates this caller.
 
 The fragment generator always emits a disabled confidential service-account client
@@ -674,9 +674,10 @@ image references; their actual mapper, scope, client-policy and token behavior
 must be qualified separately. Existing admin service accounts, NHI registry
 credentials and the user-client example do not satisfy this workload contract.
 
-When explicitly instantiated with enabled owned configuration, each fetch requests
-`client_credentials` at the configured issuer using a separate injected machine
-credential. No target/tenant/permission claims are sent as token-request inputs.
+When explicitly instantiated with enabled owned configuration, each fetch first
+requires fresh authenticated registration readback and a current local credential
+lease as described below, then requests `client_credentials` at the configured
+issuer using that separate machine credential. No target/tenant/permission claims are sent as token-request inputs.
 The returned access token must pass the existing current-IAM signature/receipt
 and complete workload-read admission before any data request. Refresh/ID tokens,
 nonempty scopes, malformed/duplicate/oversized JSON and inconsistent credentials
@@ -693,8 +694,8 @@ They do not establish that Keycloak emitted those claims or that any client,
 credential or mapper was provisioned. There is no new signer, runtime token-issuance
 endpoint, NHI-to-Keycloak bridge, token exchange or user-to-machine promotion.
 
-Remaining gates include authenticated issuer/client/service-account readback and
-drift checks; safe disabled provisioning and secret custody/rotation/revocation;
+Remaining gates include selected-version issuer/client/service-account readback
+and drift qualification; safe disabled provisioning and secret custody/rotation/revocation;
 real token/JWKS/lifespan/scope/claim tests on the selected version; receiver and
 caller registration adoption; real ticket storage/read-role/RLS/data behavior;
 TLS/ingress/operational limits; and accountable read audit. A broader or dynamic
@@ -703,3 +704,72 @@ scheduler, worker/provider/action callers and every currently unavailable operat
 retain their restoration requirements. Jti is not a consumed nonce; these reads
 may repeat within expiry. Live effects, one-time replay protection, DPoP/mTLS and
 production readiness are not claimed.
+
+
+## Issuer-registration readback and local credential lifecycle
+
+The deterministic [registration reader](../../backend/libs/sg_core/workload_registration.py)
+defaults disabled. Each enabled fixed-ticket fetch must use this reader afresh,
+before requesting a workload token. A caller cannot substitute a cached observation,
+constructed dataclass, client UUID or service-account name for readback. Settings bind
+the exact issuer, internal client UUID, client ID, subject UUID, tenant UUID and
+expected enabled state; the management client/subject must be distinct. Disabled
+registration inspection is supported, but cannot authorize token acquisition.
+
+The management bearer is separately injected, verified through unchanged current
+IAM, short lived (at most60 seconds), and uses the proposed signed contract
+`keycloak-registration-read-v1`. Required claims are `sg_principal_type: workload`,
+`sg_permissions: [iam.read_workload_registration]`, and `sg_registration_target`
+containing exactly `issuer`, `client_uuid`, `client_id`, `subject_id`, `tenant_id`.
+Issuer/azp/sub/tenant must match owned settings. Audiences are exactly the IAM
+verifier audience and `realm-management`; no realm roles, delegation or scopes
+are admitted. This source profile requires exactly the ordered client roles
+`view-clients`, `view-users` under `resource_access.realm-management.roles`.
+These claims describe a proposed management registration, not a provisioned one.
+Broad admin credentials, NHI proofs, workload read tokens and user tokens cannot
+replace it. These role names alone do not establish provider-side per-client
+least privilege; selected-version fine-grained authorization remains required.
+
+Only owned HTTPS GET targets under `/admin/realms/{owned-realm}` are queried:
+`/clients/{client-uuid}`, its `/protocol-mappers/models`, `/default-client-scopes`,
+`/optional-client-scopes`, `/scope-mappings`; `/users/{subject-uuid}`, its `/groups`,
+`/role-mappings/realm/composite` and `/role-mappings`. There is no name search,
+secret endpoint or provisioning call. TLS/CA/timeouts, disabled redirects/ambient
+proxies, expiry checks between requests, bounded strict JSON and cleared cookies
+constrain this transport. Reviewed fragment fields and exact mapper names/types/
+config must match; conflicting embedded mappers, subject/tenant/association drift,
+inherited scopes/groups/roles or direct grants fail closed before token acquisition.
+This is a sequence of observations, not an atomic provider snapshot or a complete
+attestation of every Keycloak policy. The returned observation contains identifiers,
+state, timestamp and policy hash, with no token, secret or raw provider response.
+
+**Known provider compatibility gate:** Keycloak24.0.5's
+[service-account GET implementation](https://github.com/keycloak/keycloak/blob/24.0.5/services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java)
+can create an absent service account. This reader never calls that endpoint.
+The exact user GET must instead expose an authenticated `serviceAccountClientId`
+association matching the client ID, in addition to the exact subject UUID and
+expected service-account name. The reviewed24.0.5
+[user GET](https://github.com/keycloak/keycloak/blob/24.0.5/services/src/main/java/org/keycloak/services/resources/admin/UserResource.java)
+and [representation conversion](https://github.com/keycloak/keycloak/blob/24.0.5/server-spi-private/src/main/java/org/keycloak/models/utils/ModelToRepresentation.java)
+do not supply that association. Stock24 therefore fails closed with this profile;
+no stock24/25/26 compatibility or deployable readback adapter is claimed. A
+selected-version read-only association mechanism must be qualified before use;
+missing association must never be inferred from a name or configured UUID.
+Synthetic tests explicitly supply that relationship and also test its absence.
+See the [24.0.5 Admin REST reference](https://www.keycloak.org/docs-api/24.0.5/rest-api/index.html)
+for the other read resources; no live issuer was contacted during these tests.
+
+`LocalCredentialLease` binds an injected protected secret to the exact workload
+registration, a positive version and an aware future expiry. Local replacement
+requires the expected current version and a different secret; local revocation
+is terminal. Expiry/revocation/binding/version are checked before readback, after
+readback before token acquisition, and immediately before data dispatch. A change
+during readback stops minting; a change during token acquisition stops data dispatch.
+These are in-memory checks, not durable custody, provider rotation/revocation,
+restart recovery, distributed synchronization or cancellation of an in-flight
+HTTP request. Previously issued tokens can remain valid until their own expiry.
+No token or secret persistence/cache/logging is added. Real protected distribution,
+provider lifecycle/idempotency/recovery/audit, management-token provisioning and
+per-client authorization, version-specific issuer qualification, data/RLS and
+deployed caller adoption remain open. The receiver/current IAM and all production
+callers are unchanged; the disabled default and fixed GET boundary remain intact.
