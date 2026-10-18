@@ -1,7 +1,7 @@
 {
   "format_version": 1,
   "review_date": "2026-10-18",
-  "status": "bounded_single_node_local_H2_qualification_passed",
+  "status": "bounded_baseline_passed_controlled_adoption_gates_failed",
   "candidate": "26.0.6",
   "production_version_selected": false,
   "distribution_url": "https://repo.maven.apache.org/maven2/org/keycloak/keycloak-quarkus-dist/26.0.6/keycloak-quarkus-dist-26.0.6.zip",
@@ -557,7 +557,7 @@
   },
   "cleanup": {
     "all_processes_exited": true,
-    "processes": 7,
+    "processes": 9,
     "private_lab_removed": true,
     "no_existing_services_or_data_accessed": true
   },
@@ -576,11 +576,14 @@
     "cryptography": "50.0.2"
   },
   "qualification_source_sha256": {
-    "qualification/java/LabDatabase.java": "2ba1051a981453de3673f56781c66f78a72a5d386800e875e4abfc5e3840ffff",
-    "qualification/java/LabTrigger.java": "db9fca0986e7eaf79647c253781163ecd66f92a61500b22176fcf0e34f4d6707",
-    "qualification/run_local.py": "e0b6840b666b0d8b7ba9f9b92293dd2e3b37262231d7fcc778ebd9b4c840d3e4"
+    "qualification/controlled_failures.py": "6c6d00c759391a64dc8a0bef12c715094ace00a4999d7b430f6a9da6f72d30e6",
+    "qualification/java/LabDatabase.java": "bb1feb619c5c021e13d844906df01c5647a58ddfa6798632f43c9ff1ea646062",
+    "qualification/java/LabStatementListener.java": "613b5d71ace498143525c087a5b10128db7afe790df58b6261ceb99a09cc1896",
+    "qualification/java/LabTrigger.java": "f2fec42a0369f145601bc54b2a3c76e2a6ce7efbba78fcb5498e8da4a70b53fe",
+    "qualification/run_local.py": "9abab89ffa45f722329bfebc546c71f0019959ad612a9263de1da81e5f0ab25e"
   },
   "remaining_required": [
+    "Failed consistency/cache and SQL coverage gates in controlled-failures-review.json must be resolved before the remaining adoption work",
     "Controlled mutation/delete/rebind transaction races and cache-staleness evidence; repeated reads are not an atomic snapshot",
     "Vendor persistence failure/rollback, statement-level/zero-row/schema/DDL and delayed-write instrumentation; observer rollback calibration is not provider rollback qualification",
     "PostgreSQL, distributed cache, supported-maintained-version and full SPI/security/transitive-license/image qualification",
@@ -591,5 +594,11 @@
     "Real workload token/JWKS/mappers/claim/drift/tenant proof; application ticket model/Flyway/read-role/RLS/data/operational adoption",
     "Every original ancestor/Task6 R01-R10 and unavailable feature restoration acceptance remains required"
   ],
-  "closed_configuration_evidence": "Explicit empty grants and explicit disabled SPI in runtime; omitted/default config checked in SDK suite"
+  "closed_configuration_evidence": "Explicit empty grants and explicit disabled SPI in runtime; omitted/default config checked in SDK suite",
+  "baseline_repeated_after_controlled_experiments": true,
+  "controlled_failure_review": "controlled-failures-review.json",
+  "controlled_experiment_count": 18,
+  "failed_controlled_gates": 9,
+  "adoption_blocked": true,
+  "full_provider_runtime_qualification": false
 }

@@ -25,6 +25,8 @@ public final class LabTrigger implements Trigger {
             table
                 + "\t"
                 + (oldRow == null ? "INSERT" : newRow == null ? "DELETE" : "UPDATE")
+                + "\t"
+                + LabStatementListener.source()
                 + "\n",
             StandardOpenOption.CREATE,
             StandardOpenOption.APPEND);

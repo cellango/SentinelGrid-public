@@ -1,0 +1,633 @@
+{
+  "format_version": 1,
+  "review_date": "2026-10-18",
+  "status": "adoption_gates_failed_experiments_completed",
+  "source_candidate": "26.0.6",
+  "database": "new isolated single-node persistent H2 2.3.230/local cache/JPA",
+  "provider_artifact_unchanged": true,
+  "provider_jar_sha256": "c87cc395f671ee575b1547d7b659e630010f6e3d2d8decb7fda084534c48f852",
+  "native_authentication_and_query_results_not_overridden": true,
+  "existing_guard_and_application_callers_unchanged": true,
+  "baseline_runtime_scenarios_repeated": 46,
+  "baseline_runtime_passed": true,
+  "baseline_protected_row_attempts": 0,
+  "baseline_protected_persistent_changes": 0,
+  "experiments": [
+    {
+      "case": "statement_and_row_observer_calibration",
+      "experiment_completed": true,
+      "gate_passed": false,
+      "zero_row_update_statement_detected": true,
+      "rolled_back_update_row_detected": true,
+      "DDL_create_alter_drop_detected": true,
+      "parse_failure_rejected_by_JDBC": true,
+      "parse_failure_database_callback_visible": false,
+      "executed_statement_and_row_paths_calibrated": true,
+      "fixture_write_statements": {
+        "READ": 2,
+        "CREATE": 2,
+        "ALTER": 1,
+        "INSERT": 1,
+        "DROP": 2,
+        "UPDATE": 2,
+        "TRANSACTION": 2
+      },
+      "persistent_snapshot_unchanged": true,
+      "health": {
+        "errors": 0,
+        "epochs": 1,
+        "events": 14260,
+        "current_process_events_at_call": 14259
+      }
+    },
+    {
+      "case": "cold_read_sql_profile",
+      "experiment_completed": true,
+      "gate_passed": true,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344425
+      },
+      "required_observed_state": {
+        "client_enabled": true,
+        "subject_enabled": true
+      },
+      "protected_persistent_changes_during_observation": [],
+      "statement_starts": {
+        "READ": 11,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {},
+      "fixture_protected_row_attempts": 0,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "warm_read_sql_profile",
+      "experiment_completed": true,
+      "gate_passed": true,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344425
+      },
+      "required_observed_state": {
+        "client_enabled": true,
+        "subject_enabled": true
+      },
+      "protected_persistent_changes_during_observation": [],
+      "statement_starts": {
+        "READ": 3,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {},
+      "fixture_protected_row_attempts": 0,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "committed_client_disable_before_warm_read",
+      "experiment_completed": true,
+      "gate_passed": false,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344426
+      },
+      "required_observed_state": {
+        "client_enabled": false,
+        "subject_enabled": true
+      },
+      "protected_persistent_changes_during_observation": [],
+      "statement_starts": {
+        "READ": 3,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {},
+      "fixture_protected_row_attempts": 0,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "committed_subject_disable_before_read",
+      "experiment_completed": true,
+      "gate_passed": true,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": false,
+        "observed_at": 1792344427
+      },
+      "required_observed_state": {
+        "client_enabled": true,
+        "subject_enabled": false
+      },
+      "protected_persistent_changes_during_observation": [],
+      "statement_starts": {
+        "READ": 11,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {},
+      "fixture_protected_row_attempts": 0,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "supported_admin_client_disable_during_query",
+      "experiment_completed": true,
+      "gate_passed": false,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344429
+      },
+      "required_observed_state": {
+        "client_enabled": false,
+        "subject_enabled": true
+      },
+      "pause": "START\tSERVICE_ACCOUNT_LOOKUP\t1",
+      "committed_fixture_changes": [
+        "CLIENT_ATTRIBUTES",
+        "CLIENT"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "supported_native_Admin_REST",
+      "observation_write_attribution_complete": false,
+      "write_attribution_limit": "Admin REST SQL shares the unmarked channel; this case measures freshness only",
+      "statement_starts": {
+        "READ": 50,
+        "TRANSACTION": 18,
+        "INSERT": 5,
+        "UPDATE": 1,
+        "DELETE": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 8,
+      "unmarked_protected_row_attempts": 2,
+      "fixture_statement_starts": {},
+      "fixture_protected_row_attempts": 0,
+      "service_account_query_starts": 3
+    },
+    {
+      "case": "client_disable_during_first_association_query",
+      "experiment_completed": true,
+      "gate_passed": false,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344430
+      },
+      "required_observed_state": {
+        "client_enabled": false,
+        "subject_enabled": true
+      },
+      "pause": "START\tSERVICE_ACCOUNT_LOOKUP\t1",
+      "committed_fixture_changes": [
+        "CLIENT"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 6,
+        "SESSION_SETTING": 1,
+        "UPDATE": 1,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 2,
+        "UPDATE": 1
+      },
+      "fixture_protected_row_attempts": 1,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "subject_disable_during_first_association_query",
+      "experiment_completed": true,
+      "gate_passed": false,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344431
+      },
+      "required_observed_state": {
+        "client_enabled": true,
+        "subject_enabled": false
+      },
+      "pause": "START\tSERVICE_ACCOUNT_LOOKUP\t1",
+      "committed_fixture_changes": [
+        "USER_ENTITY"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 6,
+        "SESSION_SETTING": 1,
+        "UPDATE": 1,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 2,
+        "UPDATE": 1
+      },
+      "fixture_protected_row_attempts": 1,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "client_rename_during_first_association_query",
+      "experiment_completed": true,
+      "gate_passed": false,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344432
+      },
+      "required_observed_state": null,
+      "pause": "START\tSERVICE_ACCOUNT_LOOKUP\t1",
+      "committed_fixture_changes": [
+        "CLIENT"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 6,
+        "SESSION_SETTING": 1,
+        "UPDATE": 1,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 2,
+        "UPDATE": 1
+      },
+      "fixture_protected_row_attempts": 1,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "subject_rebind_start_1",
+      "experiment_completed": true,
+      "gate_passed": true,
+      "response": {
+        "status": 503
+      },
+      "required_observed_state": null,
+      "pause": "START\tSERVICE_ACCOUNT_LOOKUP\t1",
+      "committed_fixture_changes": [
+        "USER_ENTITY"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 6,
+        "SESSION_SETTING": 1,
+        "UPDATE": 1,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 2,
+        "UPDATE": 1
+      },
+      "fixture_protected_row_attempts": 1,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "subject_rebind_end_2",
+      "experiment_completed": true,
+      "gate_passed": false,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344434
+      },
+      "required_observed_state": null,
+      "pause": "END\tSERVICE_ACCOUNT_LOOKUP\t2",
+      "committed_fixture_changes": [
+        "USER_ENTITY"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 6,
+        "SESSION_SETTING": 1,
+        "UPDATE": 1,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 2,
+        "UPDATE": 1
+      },
+      "fixture_protected_row_attempts": 1,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "subject_delete_start_1",
+      "experiment_completed": true,
+      "gate_passed": true,
+      "response": {
+        "status": 503
+      },
+      "required_observed_state": null,
+      "pause": "START\tSERVICE_ACCOUNT_LOOKUP\t1",
+      "committed_fixture_changes": [
+        "USER_ENTITY"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 6,
+        "SESSION_SETTING": 1,
+        "DELETE": 8,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 2,
+        "DELETE": 8
+      },
+      "fixture_protected_row_attempts": 1,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "same_name_recreation_start_1",
+      "experiment_completed": true,
+      "gate_passed": true,
+      "response": {
+        "status": 503
+      },
+      "required_observed_state": null,
+      "pause": "START\tSERVICE_ACCOUNT_LOOKUP\t1",
+      "committed_fixture_changes": [
+        "USER_ENTITY"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 9,
+        "SESSION_SETTING": 2,
+        "DELETE": 8,
+        "INSERT": 1,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 4,
+        "DELETE": 8,
+        "INSERT": 1
+      },
+      "fixture_protected_row_attempts": 2,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "subject_delete_end_2",
+      "experiment_completed": true,
+      "gate_passed": false,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344438
+      },
+      "required_observed_state": null,
+      "pause": "END\tSERVICE_ACCOUNT_LOOKUP\t2",
+      "committed_fixture_changes": [
+        "USER_ENTITY"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 6,
+        "SESSION_SETTING": 1,
+        "DELETE": 8,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 2,
+        "DELETE": 8
+      },
+      "fixture_protected_row_attempts": 1,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "same_name_recreation_end_2",
+      "experiment_completed": true,
+      "gate_passed": false,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344439
+      },
+      "required_observed_state": null,
+      "pause": "END\tSERVICE_ACCOUNT_LOOKUP\t2",
+      "committed_fixture_changes": [
+        "USER_ENTITY"
+      ],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 9,
+        "SESSION_SETTING": 2,
+        "DELETE": 8,
+        "INSERT": 1,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 4,
+        "DELETE": 8,
+        "INSERT": 1
+      },
+      "fixture_protected_row_attempts": 2,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "concurrent_fixture_rollback",
+      "experiment_completed": true,
+      "gate_passed": true,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344440
+      },
+      "required_observed_state": {
+        "client_enabled": true,
+        "subject_enabled": true
+      },
+      "pause": "START\tSERVICE_ACCOUNT_LOOKUP\t1",
+      "committed_fixture_changes": [],
+      "fixture_committed_before_read_resumed": true,
+      "mutation_path": "tagged_lab_JDBC",
+      "observation_write_attribution_complete": true,
+      "write_attribution_limit": null,
+      "statement_starts": {
+        "READ": 6,
+        "SESSION_SETTING": 1,
+        "TRANSACTION": 4,
+        "UPDATE": 1
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 2,
+        "TRANSACTION": 2,
+        "UPDATE": 1
+      },
+      "fixture_protected_row_attempts": 1,
+      "service_account_query_starts": 2
+    },
+    {
+      "case": "persistent_database_loss_and_recovery",
+      "experiment_completed": true,
+      "gate_passed": true,
+      "response": {
+        "status": 503
+      },
+      "protected_persistent_changes_after_recovery": [],
+      "health_before_failure": {
+        "errors": 0,
+        "epochs": 1,
+        "events": 34972,
+        "current_process_events_at_call": 34971
+      },
+      "abrupt_death_statement_END_and_exception_callbacks_unavailable": true,
+      "statement_starts": {
+        "READ": 5,
+        "SESSION_SETTING": 1,
+        "OTHER": 1
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {
+        "READ": 2,
+        "OTHER": 1
+      },
+      "fixture_protected_row_attempts": 0,
+      "service_account_query_starts": 1
+    },
+    {
+      "case": "post_recovery_native_retry",
+      "experiment_completed": true,
+      "gate_passed": true,
+      "response": {
+        "status": 200,
+        "client_enabled": true,
+        "subject_enabled": true,
+        "observed_at": 1792344446
+      },
+      "required_observed_state": {
+        "client_enabled": true,
+        "subject_enabled": true
+      },
+      "protected_persistent_changes_during_observation": [],
+      "statement_starts": {
+        "READ": 11,
+        "TRANSACTION": 2
+      },
+      "unmarked_write_or_unknown_statement_starts": 0,
+      "unmarked_protected_row_attempts": 0,
+      "fixture_statement_starts": {},
+      "fixture_protected_row_attempts": 0,
+      "service_account_query_starts": 2
+    }
+  ],
+  "experiment_count": 18,
+  "experiments_completed": true,
+  "adoption_gate_passed": false,
+  "failed_gates": [
+    "statement_and_row_observer_calibration",
+    "committed_client_disable_before_warm_read",
+    "supported_admin_client_disable_during_query",
+    "client_disable_during_first_association_query",
+    "subject_disable_during_first_association_query",
+    "client_rename_during_first_association_query",
+    "subject_rebind_end_2",
+    "subject_delete_end_2",
+    "same_name_recreation_end_2"
+  ],
+  "existing_application_and_Python_guard_unchanged": true,
+  "no_authentication_or_query_result_override": true,
+  "statement_listener_limits": "Pinned H2 prepared-command callbacks; parse/recompile and abrupt-process-death gaps remain. No general SQL engine or cluster clearance.",
+  "final_observer_health": {
+    "errors": 0,
+    "epochs": 2,
+    "events": 36097,
+    "current_process_events_at_call": 1121
+  },
+  "cleanup": {
+    "all_processes_exited": true,
+    "processes": 9,
+    "private_lab_removed": true,
+    "no_existing_services_or_data_accessed": true
+  },
+  "qualification_source_sha256": {
+    "qualification/controlled_failures.py": "6c6d00c759391a64dc8a0bef12c715094ace00a4999d7b430f6a9da6f72d30e6",
+    "qualification/java/LabDatabase.java": "bb1feb619c5c021e13d844906df01c5647a58ddfa6798632f43c9ff1ea646062",
+    "qualification/java/LabStatementListener.java": "613b5d71ace498143525c087a5b10128db7afe790df58b6261ceb99a09cc1896",
+    "qualification/java/LabTrigger.java": "f2fec42a0369f145601bc54b2a3c76e2a6ce7efbba78fcb5498e8da4a70b53fe",
+    "qualification/run_local.py": "9abab89ffa45f722329bfebc546c71f0019959ad612a9263de1da81e5f0ab25e"
+  },
+  "interpretation": [
+    "18 experiments completed;9 adoption gates fail. Completion is not a qualification pass. CLI exit2 is intentional for unmet gates.",
+    "Connection-local fixture marker avoids H2 leading-comment callback truncation. SQL text, parameters and fixture nonce are not logged.",
+    "The stale-before-request client witness uses an adversarial direct JDBC cache bypass; it is not a supported production writer.",
+    "The supported native Admin REST writer also commits disable before the paused request resumes; that request still returns enabled state. Its writes share the unmarked SQL channel and cannot be attributed to the observer.",
+    "Other tagged JDBC windows record zero unmarked protected row attempts and zero unmarked mutating/unknown prepared-command starts. This does not cover every SQL attempt.",
+    "Repeated model/query reads can retain cached or managed entities. Late rebind/delete/recreate can return the earlier association. These reject latest-state-at-response/revalidation claims; they do not alone define or refute every possible linearizable point-in-time contract.",
+    "A fresh/atomic/version/fencing contract covering observation and later token acquisition must be decided and qualified before adoption. No existing acceptance is weakened.",
+    "Callbacks observe prepared command execution, zero-row DML, rollback and nested DDL. A client-rejected parse-time failure is not visible in these H2 server callbacks; pre-command, abrupt-death, broader delayed effects and other statement coverage remain unqualified.",
+    "Observer pauses occur inside the real database before/after queries. Deliberate fixture commits/rollback and forced death affect only new synthetic state; no authenticated result or query result is injected.",
+    "Actual database loss during the query returns generic no-store503; restart/recovery preserves protected fingerprints and a fresh native retry succeeds. This is not general provider transaction rollback, cluster or PostgreSQL qualification."
+  ],
+  "remaining_required": [
+    "Architecture consistency/read-version/fencing decision and remediation plan preserving the before-token/non-creation boundary; do not merely relax the failed gates",
+    "Full statement/parse/recompile/error/delayed-effect instrumentation; preserve all existing row/SQL witnesses",
+    "Cache/transaction/issuer generation/CAS/revocation and controlled mutation requalification after the chosen repair",
+    "All previously required actual federation, transport/profile/version/cluster/security/license/adapter/custody/lifecycle/data/operational and Task6/ancestor restoration gates remain open"
+  ],
+  "full_provider_runtime_qualification": false,
+  "production_or_caller_adoption_approved": false
+}

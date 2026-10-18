@@ -15,6 +15,7 @@ import signal
 import socket
 import ssl
 import subprocess
+import sys
 import tempfile
 import time
 import zipfile
@@ -27,6 +28,11 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
 
 parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument(
+    "--controlled-failures",
+    action="store_true",
+    help="Measure controlled races and persistent failures; exit2 when adoption gates fail",
+)
 parser.add_argument("--disposable-local-only", action="store_true", required=True)
 parser.add_argument("--distribution-zip", type=Path, required=True)
 parser.add_argument("--provider-jar", type=Path, required=True)
@@ -68,6 +74,8 @@ atexit.register(lambda: shutil.rmtree(LAB) if LAB.exists() else None)
 (O / "lab-location.private.json").write_text(
     json.dumps(dict(root=str(LAB), new_disposable_only=True)) + "\n"
 )
+QUALIFICATION_EXIT = 0
+sys.dont_write_bytecode = True
 PROCS = []
 RESULTS = []
 env = {k: v for k, v in os.environ.items() if k in {"HOME", "TMPDIR", "LANG", "LC_ALL"}}
@@ -108,6 +116,12 @@ env.update(
     SG_LAB_JDBC=f"jdbc:h2:tcp://127.0.0.1:{dbport}/./sglab;NON_KEYWORDS=VALUE;DB_CLOSE_DELAY=-1",
     SG_LAB_DB_PASSWORD=DBPWD,
 )
+if args.controlled_failures:
+    (LAB / "statement-observer-owned").write_text("fresh disposable lab")
+    env["SG_LAB_FIXTURE_NONCE"] = secrets.token_hex(24)
+    env["SG_LAB_JDBC"] += (
+        ";DATABASE_EVENT_LISTENER='ai.sentinelgrid.keycloak.lab.LabStatementListener'"
+    )
 DBPROC = None
 KC = None
 attempt = 0
@@ -639,6 +653,11 @@ try:
     )
     probe("valid_real_issuer_and_JPA", tok, 200)
     print(json.dumps(dict(positive_runtime_passed=True, tables=tables)), flush=True)
+    if args.controlled_failures:
+        from controlled_failures import run as controlled_run
+
+        controlled = controlled_run(globals())
+        QUALIFICATION_EXIT = 0 if controlled["adoption_gate_passed"] else 2
 
     # Runs only inside lab.py's newly created realm. All fixture changes precede measurement.
     import concurrent.futures
@@ -942,6 +961,10 @@ except BaseException as e:
 finally:
     for p in reversed(PROCS):
         stop(p)
+    if args.controlled_failures:
+        for name in ["statements.tsv", "writes.tsv"]:
+            if (LAB / name).exists():
+                shutil.copyfile(LAB / name, O / ("lab-" + name))
     for log in LAB.glob("*.log"):
         shutil.copyfile(log, O / ("lab-" + log.name.replace(".log", ".private.log")))
     cleanup = dict(
@@ -956,3 +979,6 @@ finally:
     cleanup["private_lab_removed"] = not LAB.exists()
     (O / "cleanup.private.json").write_text(json.dumps(cleanup, indent=2) + "\n")
     print(json.dumps(cleanup), flush=True)
+
+if QUALIFICATION_EXIT:
+    raise SystemExit(QUALIFICATION_EXIT)

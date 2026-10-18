@@ -4,10 +4,15 @@ Date: October 18, 2026.
 Status: **proposed for isolated prototype qualification**. No runtime adoption,
 provider installation or caller adoption is approved by this document. An isolated
 [source prototype](../../../infra/keycloak/keycloak_registration_connector/README.md)
-now passes 88 native/SDK checks and 46 measured scenarios in a new single-node
-Keycloak 26.0.6/H2 lab. Protected row writes and persistent changes were absent in
-those windows; controlled mutation races/cache freshness, broader runtime and
-deployment qualification remain pending. See its linked runtime review and runner.
+passes 88 native/SDK checks at its unchanged provider source. Its 46 baseline
+runtime scenarios passed again, but a subsequent controlled study completed
+18 experiments with **9 failed adoption gates**. Native admin disable can commit
+during a read that still reports enabled state; repeated queries also retain
+older associations in late-mutation cases. Pinned SQL callbacks miss parse-time
+failures. The [controlled evidence](../../../infra/keycloak/keycloak_registration_connector/controlled-failures-review.json)
+and component README govern the exact scope. A consistency/version/fencing and
+instrumentation decision is required before caller adoption; this ADR remains
+proposed and the current guard remains closed.
 
 ## Context and evidence
 
@@ -170,6 +175,28 @@ proof, tenant tests, ticket SQL/RLS and deployed caller adoption remain required
 | Read-only database access from SentinelGrid | Couples application credentials to vendor storage/schema; not selected |
 | Mint a workload token first and use sub/azp as association proof | Changes the required before-token-acquisition boundary; not selected |
 | Minimal provider model read | Preferred prototype: preserves the boundary and can return only scoped association fields; adds a versioned extension and qualification burden |
+
+## Consistency evidence requiring a further decision
+
+The controlled lab uses new synthetic state and actual native authentication,
+JPA, SQL and cache behavior, with private database query barriers. A supported
+Admin REST disable commits before a paused observation resumes, yet the response
+can retain `client_enabled: true`. An adversarial direct-SQL cache-bypass update
+before a warm request also remains invisible. Rebind/delete/recreate before the
+first association query deny; after the second query, the earlier association can
+be returned. These are limits of latest-state/final-revalidation claims, not an
+agreed atomic snapshot contract or a demonstrated exploit through a current caller.
+`observed_at` is a response-time clock, not a persistent revision or lease.
+
+Define an explicit consistency point and enforceable generation/version/fencing
+boundary across readback and later token acquisition, including deletion/recreation,
+disablement, revocation, ABA, retry and crash recovery. Preserve the required
+before-token non-creating proof; neither a new cache-bypass query nor an observation
+alone proves a later acquisition cannot race. Evaluate a fresh consistent provider
+snapshot and issuer-side conditional acquisition together before choosing a repair.
+Do not reinterpret the failed witnesses as passes or enable a caller from them.
+Full SQL attempt coverage also needs evidence beyond the pinned callback subset.
+No superseding contract or implementation is selected by this evidence update.
 
 ## Qualification and migration gates
 

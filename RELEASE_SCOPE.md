@@ -203,3 +203,8 @@ adds an opt-in qualification runner for a new disposable synthetic Keycloak/H2
 instance. It is outside the supported preview commands and production scope. Its
 recorded local results do not enable the current caller or supersede the proposed
 association ADR's remaining adoption gates. Existing environments are never targets.
+
+The optional controlled-failure mode deliberately terminates its own new H2
+process and records unresolved consistency and statement-coverage gates. Completing
+those experiments is not an adoption pass; current callers and guards remain
+unchanged. See the component's controlled review before considering integration.

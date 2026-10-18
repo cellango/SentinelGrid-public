@@ -49,7 +49,8 @@ admitted. The target subject's actual internal-client link must match the exact
 client UUID, and the reciprocal existing account must identify the same subject.
 Names are not proof. Missing/deleted/rebound/foreign/federated/inconsistent state
 or SDK failure returns generic503. Repeated exact lookups reject observed changes;
-they do not establish an atomic or cache-fresh snapshot. Disabled client/subject
+they do not establish an atomic or cache-fresh snapshot. The controlled experiments
+below demonstrate committed changes that these repeated reads do not observe. Disabled client/subject
 state can be reported without enabling it. The proposed later caller adapter must
 apply its own expected inspection/dispatch state policy before token acquisition.
 
@@ -59,7 +60,9 @@ no-store/no-cache headers. Realm ID is an owned provider identifier; tenant UUID
 is checked attribution from the owned grant, not inferred native tenancy. No
 secret/token/username/profile/raw provider representation is returned. There are
 no provision/repair/credential/write/schema/export helpers or name-search fallback.
-This observation grants no data read, action or token-acquisition authority.
+The response-time `observed_at` clock is not a database snapshot timestamp,
+revision or freshness/fencing proof. This observation grants no data read, action
+or token-acquisition authority.
 
 ## Isolated source checks
 
@@ -160,15 +163,78 @@ clearance remain open. The vendor reports that this extension SPI is internal.
 The lab required explicit CDI veto for the factory-owned resource and normalization
 of an empty root base path; authorization remains factory/grant owned.
 
+## Controlled consistency and failure experiments — adoption blocked
+
+**18 experiments completed; 9 adoption gates failed.** The same thin provider
+artifact then passed the 46 baseline runtime scenarios again. The
+[controlled review](controlled-failures-review.json) distinguishes experiment
+completion from gate success. Add `--controlled-failures` to the command above
+for this mode. The current result exits **2** after cleanup because gates remain
+unmet; an unexpected harness failure also writes a separate failure record.
+Default source-preview CI does not run this experimental lab.
+
+This mode adds a pinned H2 statement listener, private-file query barriers and
+connection-local fixture attribution. It pauses actual service-account SELECTs
+before the first or after the second query while a separate connection commits
+an owned synthetic mutation. It changes neither bearer admission nor query results.
+A native Admin REST mutation is also tested. The listener logs process/sequence,
+operation category, channel and query shape, with no SQL text or parameters.
+A health function checks observer I/O failures and per-process sequence gaps.
+The connection marker uses the pinned H2 thread-local session through reflection;
+this internal test API is not an application or deployment dependency.
+
+| Experiment | Recorded result | Meaning |
+| --- | --- | --- |
+| Disable client directly in the lab DB before a warm request | 200 with `client_enabled: true` | Adversarial cache-bypass witness; direct DB writes are not a supported production writer |
+| Disable client through native Admin REST during the first association query | 200 with `client_enabled: true` after the admin commit | Repeated lookups do not guarantee revalidation of the committed state |
+| Disable subject or rename client during the read | Earlier successful observation can survive | Latest-state/freshness gate fails |
+| Rebind, delete or recreate subject before the first query | 503 | These early changes are detected |
+| Rebind, delete or recreate after the second query | Earlier association can be returned | No latest-state-at-response or final-revalidation guarantee |
+| Kill this lab's H2 process during the query, then recover it | Generic no-store 503; protected fingerprints unchanged after recovery; native retry 200 | Real persistence failure is unavailable, with bounded recovery evidence |
+
+The late-mutation experiments challenge latest-state-at-response/revalidation
+claims. They do not alone settle every possible linearizable point-in-time
+contract. No such consistency contract or issuer-side fence is established here.
+A new decision must define the snapshot/version/fencing boundary across observation
+and later token acquisition, preserve non-creation and disabled-state requirements,
+and qualify its implementation. Refreshing one cached object or relaxing these
+failed gates is insufficient. The current Python missing-association guard remains
+closed; no adapter, caller or production installation is enabled.
+
+Statement calibration detects prepared zero-row UPDATEs, a rolled-back row UPDATE
+and nested CREATE/ALTER/DROP work, all separated from observation requests. A
+client-rejected parse-time failure produces **no corresponding H2 callback**.
+Pre-command/recompile failures, abrupt-death callbacks and broader delayed effects
+therefore remain coverage gaps. A leading-comment truncation behavior was also
+found during calibration; fixture SQL is trimmed and attributed through a session
+variable instead of comments. These are pinned callback observations, not complete
+SQL audit or absence-of-attempts proof.
+
+Tagged JDBC observation windows show zero unmarked protected row attempts and
+zero unmarked mutating/unknown prepared-command starts. Intentional fixture
+writes are recorded separately. Native Admin REST SQL shares the unmarked channel,
+so that experiment measures freshness and does **not** clear observation write
+attribution. The baseline 46 windows again have zero protected row changes/attempts.
+Bookkeeping activity, fixture mutation and a failure of observation consistency
+are distinct results; none is hidden behind a single passing test count.
+
+Controlled mode deliberately terminates only its newly created H2 process. A
+private temporary backup of the fixed synthetic subject and direct FK rows allows
+fixture restoration for deletion/recreation tests. That file, all new realms,
+secrets, databases and process groups are removed on normal completion/failure;
+all nine processes exited in the recorded run. Keep reports private. The earlier
+cleanup limitation for externally killed harness processes still applies.
+
 ## Remaining qualification
 
 This is one node, one historical version, H2 and local cache. Sequential cache
 clears/restarts and concurrent reads do not prove an atomic association snapshot,
 concurrent deletion/rebinding safety, distributed cache freshness or PostgreSQL/
 cluster compatibility. A non-null federation marker is rejected; an actual custom/
-federated storage provider has not been exercised. Controlled transaction races,
-stale-cache/rollback behavior, statement-level/zero-row/schema/DDL and delayed write instrumentation, full
-HTTP framing/proxy/root-path/redirect/timeout boundaries, additional issuer/profile
+federated storage provider has not been exercised. Resolution and requalification
+of the failed controlled consistency gates,
+provider transaction/cache/rollback guarantees, complete statement/parse/recompile/
+delayed-effect coverage, full HTTP framing/proxy/root-path/redirect/timeout boundaries, additional issuer/profile
 failure cases and a maintained deployment/version/security/license review remain
 required. Unsupported state stays unavailable. Do not enable an adapter from this
 local result alone.
