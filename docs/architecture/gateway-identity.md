@@ -207,8 +207,9 @@ this change does not rename a deployment or installed identity.
 Existing gateway ticket proxies forward tenant hints without this workload token,
 so they cannot use these reads yet. Required gateway, scheduler and direct-call
 compatibility, scanner/SOAR operations and all mutations remain restoration work.
-No token issuer, workload credential provisioning, provider registration/mappers,
-end-user delegation or live caller adoption is supplied. The example user-client
+No live token issuer, workload credential provisioning, applied provider registration,
+end-user delegation or deployed caller adoption is supplied. A disabled fixed-target
+issuer-fragment/reference-client foundation is described below. The example user-client
 fragment above must not be repurposed as workload issuance. This is a local contract,
 not a claim of RFC 9068 compliance, DPoP or mTLS. The exact read can repeat until
 expiry; `jti` is a binding, not a consumed nonce. No one-time replay protection,
@@ -642,3 +643,63 @@ Provider deletion failure cannot become successful database-only removal; provid
 outage cannot be reported as an absent sensor. Operator health needs its own owned
 probe/ingress contract. Existing gateway package inventories, localStorage sensor
 lists, shell examples and labels alone do not prove enrollment or event isolation.
+
+
+## Fixed-target workload issuer/client foundation
+
+The [reference client](../../backend/libs/sg_core/workload_read_client.py) and
+[disabled Keycloak fragment](../../infra/keycloak/workload-read-client.example.json)
+cover one machine-only request: GET `/api/v1/tickets?status=open&limit=3`.
+`FixedTicketReadSettings` requires the existing exact workload binding and an
+owned HTTPS data origin, defaults disabled, and accepts no dynamic path, query,
+tenant, body or user delegation. The credential is injected separately as a
+`SecretStr`; configuration/fragment output contains no secret. No application,
+gateway, job or MCP tool automatically creates this caller.
+
+The fragment generator always emits a disabled confidential service-account client
+with browser/password flows, broad scope and refresh-token use disabled. Its owned
+hardcoded access-token mappers bind the tenant, workload kind/contract, read
+permission, fixed request and the two exact audiences. Default/optional scopes
+are empty. It never maps or fabricates issuer, subject, azp, issued-at, expiry or
+jti. The issuer-created service-account subject must be read back and match the
+separately owned receiver/caller registration. The proposed client lifespan is30
+seconds; the existing receiver still rejects tokens with lifetime/age above60.
+
+Keycloak's [mapper reference](https://www.keycloak.org/admin-api/protocol-mappers)
+and the reviewed [24.0.5 hardcoded mapper](https://github.com/keycloak/keycloak/blob/24.0.5/services/src/main/java/org/keycloak/protocol/oidc/mappers/HardcodedClaim.java)
+with [JSON type conversion](https://github.com/keycloak/keycloak/blob/24.0.5/services/src/main/java/org/keycloak/protocol/oidc/mappers/OIDCAttributeMapperHelper.java)
+support the proposed static JSON claims. This is a source-informed configuration
+proposal, not a verified Keycloak import. The repository contains24.x/25.x/26.x
+image references; their actual mapper, scope, client-policy and token behavior
+must be qualified separately. Existing admin service accounts, NHI registry
+credentials and the user-client example do not satisfy this workload contract.
+
+When explicitly instantiated with enabled owned configuration, each fetch requests
+`client_credentials` at the configured issuer using a separate injected machine
+credential. No target/tenant/permission claims are sent as token-request inputs.
+The returned access token must pass the existing current-IAM signature/receipt
+and complete workload-read admission before any data request. Refresh/ID tokens,
+nonempty scopes, malformed/duplicate/oversized JSON and inconsistent credentials
+fail closed. Both transports use owned TLS/CA/timeouts, ignore ambient proxies,
+and reject redirects. Issuer cookies are cleared before the data request. The
+fixed GET forwards only its bearer credential and normal HTTP metadata, checks
+a bounded tenant-owned page, and never turns issuer/IAM/data failure into an
+empty success. Tokens are acquired afresh and are not cached or logged.
+
+Tests exercise the reference client, actual ticket router/dependencies and current
+IAM RSA validator in a separate process. The proposed mapper output feeds a
+synthetic issuer fixture; HTTP/key transport and storage/domain reads are doubles.
+They do not establish that Keycloak emitted those claims or that any client,
+credential or mapper was provisioned. There is no new signer, runtime token-issuance
+endpoint, NHI-to-Keycloak bridge, token exchange or user-to-machine promotion.
+
+Remaining gates include authenticated issuer/client/service-account readback and
+drift checks; safe disabled provisioning and secret custody/rotation/revocation;
+real token/JWKS/lifespan/scope/claim tests on the selected version; receiver and
+caller registration adoption; real ticket storage/read-role/RLS/data behavior;
+TLS/ingress/operational limits; and accountable read audit. A broader or dynamic
+request-binding issuer needs its own reviewed contract. Existing gateway/user,
+scheduler, worker/provider/action callers and every currently unavailable operation
+retain their restoration requirements. Jti is not a consumed nonce; these reads
+may repeat within expiry. Live effects, one-time replay protection, DPoP/mTLS and
+production readiness are not claimed.

@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity preview-workload-issuer
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -53,6 +53,10 @@ preview-check:
 	$(MAKE) preview-detection-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-observables-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-wazuh-identity PYTHON="$(PYTHON)"
+	$(MAKE) preview-workload-issuer PYTHON="$(PYTHON)"
+
+preview-workload-issuer:
+	$(PYTHON) -m pytest -c backend/tests/workload_issuer/pytest.ini backend/tests/workload_issuer -q
 
 preview-wazuh-identity:
 	$(PYTHON) -m pytest -c backend/services/wazuh_manager_service/tests/pytest-identity.ini backend/services/wazuh_manager_service/tests -q
