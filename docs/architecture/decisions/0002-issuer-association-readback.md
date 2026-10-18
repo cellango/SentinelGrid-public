@@ -2,7 +2,10 @@
 
 Date: October 18, 2026.
 Status: **proposed for isolated prototype qualification**. No runtime adoption,
-provider installation, dependency or caller change is approved by this document.
+provider installation or caller adoption is approved by this document. An isolated
+[source prototype](../../../infra/keycloak/keycloak_registration_connector/README.md)
+now compiles and passes native-authentication/SDK fixture checks; server, database
+non-mutation and deployment qualification remain pending.
 
 ## Context and evidence
 
@@ -46,7 +49,8 @@ the [pinned provider interface](https://github.com/keycloak/keycloak/blob/26.0.6
 is the compatibility input. Current documentation is guidance, not a guarantee
 that packaging/authentication details match a historical version.
 
-No provider was run for this review. The local Docker daemon was unavailable.
+The initial source review ran no provider server; its local Docker daemon was unavailable.
+The subsequent prototype tests also run no server or database.
 Version26.0.6 is selected only for the first reproducible compatibility prototype
 because it already appears in the test manifest. It is **not** selected as a
 production version or recommended upgrade. Before any deployment, separately
@@ -62,7 +66,8 @@ models and must never call the account-creating Admin REST resource. No direct
 application access to the Keycloak database, custom vendor table, token signer,
 account provisioning, refresh or token-exchange path is added.
 
-The proposed route, absent from the current source and runtime, is:
+The isolated prototype implements the resource below. It is not installed in a
+server or adopted by any current Python client:
 
 `GET /realms/{realm}/sentinelgrid-registration/v1/clients/{client_uuid}/association`
 
@@ -126,7 +131,7 @@ The current `IssuerRegistrationReader` still requires the stock user response's
 association and fails closed when missing. Existing metadata-read management
 contract/audiences and its Admin REST targets remain unchanged.
 
-If the prototype passes, a separately reviewed adapter will combine fresh existing
+After full provider-runtime qualification, a separately reviewed adapter will combine fresh existing
 metadata readback with this association observation. It will use a **separate scoped
 association bearer**, verified through unchanged current IAM before calling the
 owned route. Metadata-reader and association-provider credentials have distinct

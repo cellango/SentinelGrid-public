@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "review_date": "2026-10-17",
+  "review_date": "2026-10-18",
   "source_scope": "Selected source paths only; local caches, installed dependencies and private artifacts excluded.",
   "manifests": [
     {
@@ -856,6 +856,12 @@
       "scope": "supported_preview"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/pom.xml",
+      "kind": "maven_pom",
+      "sha256": "609f71d81217ca068fd233d632cb420ebbefe4adaab0a5fced9774575169a68d",
+      "scope": "isolated_historical_Keycloak_source_prototype_only_no_runtime_clearance"
+    },
+    {
       "path": "scripts/requirements-mcp-sdk.txt",
       "kind": "python_requirements",
       "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873",
@@ -898,7 +904,8 @@
     "python_requirements": 53,
     "npm_manifest": 3,
     "helm_chart_manifest": 1,
-    "npm_lock": 2
+    "npm_lock": 2,
+    "maven_pom": 1
   },
   "runtime_risks": {
     "status": "not_resolved_or_cleared_for_execution",

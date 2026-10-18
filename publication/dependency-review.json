@@ -114,5 +114,24 @@
     "provider_runtime_cleared": false,
     "frontend_inputs_or_audit_changed": false,
     "prior_freeze_refresh_is_historical": true
+  },
+  "isolated_keycloak_association_prototype": {
+    "review_date": "2026-10-18",
+    "manifest": "infra/keycloak/keycloak_registration_connector/pom.xml",
+    "manifest_sha256": "609f71d81217ca068fd233d632cb420ebbefe4adaab0a5fced9774575169a68d",
+    "artifact_inventory": "infra/keycloak/keycloak_registration_connector/dependency-artifacts.json",
+    "artifact_inventory_sha256": "cf154fd2696f79d3343ffa4ec014dd7a94cdc315e797b43472b851bf19275a72",
+    "scope": "Isolated native-authentication/source fixture only; no server/provider installation or supported runtime expansion",
+    "Keycloak_source_candidate": "26.0.6",
+    "project_artifacts": 206,
+    "scopes": {
+      "provided": 190,
+      "test": 16
+    },
+    "declared_license_metadata_missing": 0,
+    "upstream_implementations_bundled": false,
+    "security_advisory_clearance": false,
+    "runtime_and_bundle_redistribution_clearance": false,
+    "existing_application_dependency_graphs_unchanged": true
   }
 }

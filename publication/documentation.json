@@ -2015,6 +2015,11 @@
       "authority": "experimental_reference"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/README.md",
+      "class": "experimental_component_reference",
+      "authority": "experimental_reference"
+    },
+    {
       "path": "infra/nginx/README.md",
       "class": "experimental_component_reference",
       "authority": "experimental_reference"
@@ -2143,7 +2148,7 @@
   "counts_by_class": {
     "repository_reference": 3,
     "repository_entrypoint": 6,
-    "experimental_component_reference": 97,
+    "experimental_component_reference": 98,
     "contributor_instructions": 1,
     "documentation_index": 1,
     "current_architecture": 9,

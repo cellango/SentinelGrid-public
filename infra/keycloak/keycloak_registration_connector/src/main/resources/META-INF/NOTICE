@@ -1,0 +1,6 @@
+SentinelGrid keycloak_registration_connector
+
+Original SentinelGrid provider source is licensed under Apache-2.0; see LICENSE.
+This prototype thin JAR includes original provider classes and metadata only.
+Keycloak SDK and test implementations are separate dependencies with their own terms.
+Source build/dependency records are in the component source directory; no runtime or redistribution qualification is implied.
