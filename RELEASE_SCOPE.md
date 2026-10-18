@@ -214,3 +214,10 @@ adds an ordered remediation plan only. Its snapshot, durable generation, complet
 writer fence and native non-creating acquisition are unimplemented. All nine
 controlled-study gates remain failed; no caller, schema, configuration or
 production version is changed by this documentation.
+
+The opt-in [SQL attempt observer](infra/keycloak/keycloak_registration_connector/qualification/attempts/README.md)
+is confined to new disposable synthetic labs. It calibrates JDBC/server parsing,
+recompile, errors, transactions, row attempts, attribution and deliberately failed
+log/crash evidence. Its scoped controls and 46 baseline cases pass; whole-runtime
+coverage and all nine earlier provider gates remain open. No application or
+provider implementation, schema, dependency, default or deployment changes.

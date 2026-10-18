@@ -33,6 +33,8 @@ parser.add_argument(
     action="store_true",
     help="Measure controlled races and persistent failures; exit2 when adoption gates fail",
 )
+parser.add_argument("--attempt-calibration", action="store_true",
+                    help="Trace pinned JDBC/server attempts; exit2 for unmet observer gates")
 parser.add_argument("--disposable-local-only", action="store_true", required=True)
 parser.add_argument("--distribution-zip", type=Path, required=True)
 parser.add_argument("--provider-jar", type=Path, required=True)
@@ -44,6 +46,8 @@ parser.add_argument(
     help="New private directory outside the checkout",
 )
 args = parser.parse_args()
+if args.attempt_calibration and args.controlled_failures:
+    parser.error("Use one separately bounded qualification mode at a time")
 S = Path(__file__).resolve().parent.parent
 O = args.report_dir.expanduser().resolve()
 if O.is_relative_to(S.parents[2]):
@@ -116,7 +120,7 @@ env.update(
     SG_LAB_JDBC=f"jdbc:h2:tcp://127.0.0.1:{dbport}/./sglab;NON_KEYWORDS=VALUE;DB_CLOSE_DELAY=-1",
     SG_LAB_DB_PASSWORD=DBPWD,
 )
-if args.controlled_failures:
+if args.controlled_failures or args.attempt_calibration:
     (LAB / "statement-observer-owned").write_text("fresh disposable lab")
     env["SG_LAB_FIXTURE_NONCE"] = secrets.token_hex(24)
     env["SG_LAB_JDBC"] += (
@@ -469,6 +473,10 @@ try:
     run([J / "bin/jar", "--create", "--file", observer, "-C", classes, "."], timeout=30)
     shutil.copyfile(observer, home / "providers/lab-observer.jar")
     classpath = str(h2) + os.pathsep + str(observer)
+    if args.attempt_calibration:
+        from attempts.observer import build as build_attempt_observer
+
+        build_attempt_observer(globals())
     (LAB / "db").mkdir()
     DBPROC = launch(
         [
@@ -658,6 +666,11 @@ try:
 
         controlled = controlled_run(globals())
         QUALIFICATION_EXIT = 0 if controlled["adoption_gate_passed"] else 2
+
+    if args.attempt_calibration:
+        from attempts.observer import calibrate as calibrate_attempts
+
+        calibrate_attempts(globals())
 
     # Runs only inside lab.py's newly created realm. All fixture changes precede measurement.
     import concurrent.futures
@@ -951,6 +964,8 @@ try:
     )
 
 except BaseException as e:
+    if isinstance(e, subprocess.CalledProcessError):
+        (O / "lab-tool-failure.private.log").write_text(e.stderr or "")
     (O / "runtime-failure.private.json").write_text(
         json.dumps(
             dict(error=type(e).__name__, message=str(e), lab_only=True), indent=2
@@ -961,7 +976,7 @@ except BaseException as e:
 finally:
     for p in reversed(PROCS):
         stop(p)
-    if args.controlled_failures:
+    if args.controlled_failures or args.attempt_calibration:
         for name in ["statements.tsv", "writes.tsv"]:
             if (LAB / name).exists():
                 shutil.copyfile(LAB / name, O / ("lab-" + name))
@@ -979,6 +994,16 @@ finally:
     cleanup["private_lab_removed"] = not LAB.exists()
     (O / "cleanup.private.json").write_text(json.dumps(cleanup, indent=2) + "\n")
     print(json.dumps(cleanup), flush=True)
+
+if args.attempt_calibration:
+    from attempts.observer import analyze as analyze_attempts
+
+    evidence = analyze_attempts(O, protected_values=(env["SG_LAB_ATTEMPT_CANARY"],
+                                                      env["SG_LAB_FIXTURE_NONCE"],
+                                                      ADMINPWD, MGMTSECRET, c["secret"]))
+    QUALIFICATION_EXIT = 0 if evidence["all_attribution_and_observer_health_gates_passed"] else 2
+    print(json.dumps(dict(attempt_events=evidence["events"],
+                          observer_gate_passed=evidence["all_attribution_and_observer_health_gates_passed"])), flush=True)
 
 if QUALIFICATION_EXIT:
     raise SystemExit(QUALIFICATION_EXIT)

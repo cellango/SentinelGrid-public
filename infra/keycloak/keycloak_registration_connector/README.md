@@ -249,3 +249,18 @@ rights, protected provider rotation/revocation/CAS/recovery, actual workload tok
 JWKS/mappers/drift/tenant proof and ticket SQL/RLS/data/caller adoption. The current
 Python reader/default-disabled/missing-association guard, IAM, receiver, reference
 client, lease, metadata profile and production deployments remain unchanged.
+
+## SQL attempt calibration
+
+The opt-in [attempt observer](qualification/attempts/README.md) adds JDBC and
+server parse/recompile/error/row/transaction tracing in a new disposable lab.
+Its [review](attempts-review.json) records 17 fixture cases, 14 passing detection
+checks, 11 offline fault controls and all 46 retained native baseline scenarios
+passing. Native request-context identity and exact TCP frame correlation separate
+observations from supported Admin writes through commit. The deliberate logger
+failure/crash tails and unresolved startup/background scopes retain their failed
+whole-log evidence gate. All nine earlier provider gates remain open; the new
+interleaved native disable still returns earlier enabled state. The provider JAR
+and existing application/guard/defaults remain unchanged. ADR 0003 R2 source/API/
+writer/storage/conditional-issuance feasibility is next, with every prior gate
+retained. No provider/caller deployment is enabled.

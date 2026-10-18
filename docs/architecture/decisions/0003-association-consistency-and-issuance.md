@@ -265,6 +265,22 @@ known effects in fresh synthetic state and demonstrate detection. Prove the
 instrumentation preserves the uninstrumented provider's behavior. H2 evidence
 does not establish PostgreSQL, other driver, cluster or production coverage.
 
+## Bounded R1 evidence update
+
+The [lab-only attempt observer](../../../infra/keycloak/keycloak_registration_connector/qualification/attempts/README.md)
+now supplies bounded JDBC/server/row/transaction calibration and native request
+attribution through commit. Its [review](../../../infra/keycloak/keycloak_registration_connector/attempts-review.json)
+records 17 fixture cases, all 14 detection checks and all 46 retained baseline
+cases passing, plus 11 offline evidence fault controls. It resolves a shared CDI
+proxy attribution collision by keying the backing request context. Deliberate
+log loss/process death and unclassified startup/background/API scopes remain
+uncleared whole-log evidence. An earlier unexplained valid-read 503 is retained.
+The new native disable experiment still reports earlier enabled state; all nine
+original failed gates and their original attribution ambiguity remain unchanged.
+R2 source/API/version/writer/storage feasibility is next, carrying the remaining
+R1 limits and every R3–R7 requirement. This adds instrumentation only; the proposed
+consistency/issuance contract and current provider/caller behavior are unchanged.
+
 ## Safety, compatibility and operations gates
 
 All future runtime work is confined to **new disposable synthetic loopback labs**

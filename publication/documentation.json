@@ -2025,6 +2025,11 @@
       "authority": "experimental_reference"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/qualification/attempts/README.md",
+      "class": "experimental_component_reference",
+      "authority": "bounded_experiment_not_runtime_adoption"
+    },
+    {
       "path": "infra/nginx/README.md",
       "class": "experimental_component_reference",
       "authority": "experimental_reference"

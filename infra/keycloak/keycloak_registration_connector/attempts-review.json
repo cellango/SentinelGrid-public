@@ -1,0 +1,162 @@
+{
+  "format_version": 1,
+  "review_date": "2026-10-18",
+  "status": "bounded_SQL_attempt_calibration_passed_global_gates_open",
+  "scope": "New disposable loopback Keycloak26.0.6, H2 2.3.230 TCP/local JPA/cache, Java21; historical compatibility experiment only",
+  "source_base_commit": "043919d18d12bb9897a68b82d67bbdc9194ff16e",
+  "provider_JAR_unchanged": true,
+  "provider_jar_sha256": "c87cc395f671ee575b1547d7b659e630010f6e3d2d8decb7fda084534c48f852",
+  "vendor_JARs_unchanged": true,
+  "no_authentication_query_parameter_result_or_transaction_outcome_override": true,
+  "application_guard_defaults_grants_IAM_receiver_lease_schemas_dependencies_unchanged": true,
+  "source_inputs_sha256": {
+    "qualification/attempts/java/AttemptAgent.java": "171385a78720173049389b63a1c34929e0f8cb13fb0bb23b2fcb2bac1bd1b3b5",
+    "qualification/attempts/java/AttemptCalibration.java": "166b5390be204cac990b580a939161d72bbb32677dd9cb83b3beb3ed8d73e872",
+    "qualification/attempts/java/AttemptLog.java": "6c71a4af72cbb30ead7776635c5288d33467a8debb7615408b8d46a1429985dd",
+    "qualification/attempts/observer.py": "a2a48a53317d764f9d131a3593e82e17247091cbcea59aaa47b6b52b3363dac1",
+    "qualification/attempts/test_evidence.py": "a973f511e6fd0cea15d41876052430cf9a50eac430df9552a2453df04a42e4c0",
+    "qualification/controlled_failures.py": "6c6d00c759391a64dc8a0bef12c715094ace00a4999d7b430f6a9da6f72d30e6",
+    "qualification/java/LabDatabase.java": "bb1feb619c5c021e13d844906df01c5647a58ddfa6798632f43c9ff1ea646062",
+    "qualification/java/LabStatementListener.java": "613b5d71ace498143525c087a5b10128db7afe790df58b6261ceb99a09cc1896",
+    "qualification/java/LabTrigger.java": "f2fec42a0369f145601bc54b2a3c76e2a6ce7efbba78fcb5498e8da4a70b53fe",
+    "qualification/run_local.py": "6e35cd04dd420dfe0c4b30c9ef2384fa713349832de58bb3b39153b6d7769271"
+  },
+  "observer_build_inputs": {
+    "h2_sha256": "9a3734cb0799fb53d5c8bb159422ff41bb1e1ad938e340880e3b4e35b4b3c69f",
+    "byte_buddy_version": "1.14.18",
+    "byte_buddy_sha256": "52117af1696a53aa77c131353074ada25ccbdf2df511f2af33fad6704fa95104",
+    "byte_buddy_already_in_verified_vendor_distribution": true,
+    "byte_buddy_license_files_sha256": {
+      "META-INF/licenses/ASM": "337e92fd361effe495d03978a34a3cd44681a63b8329adfd99c8996b306b2a8c",
+      "META-INF/NOTICE": "cfb119f8db2decb24e756fddec0e089029eaa73a7be594b2dd9676433d95d6e5",
+      "META-INF/LICENSE": "cac19581b5f6770c5013e5acdbceb9d553547718240ba15600d690ba6d766626"
+    },
+    "observer_JARs_not_distributed": true,
+    "all_lab_source_original_Apache_2_0": true
+  },
+  "baseline_runtime_scenarios_repeated": 46,
+  "baseline_runtime_passed": true,
+  "native_SDK_tests_inherited_not_rerun": 88,
+  "application_focused_tests_inherited_not_rerun": 2074,
+  "named_fixture_cases": [
+    "valid_select",
+    "sql_and_parameter_canary",
+    "server_parse_failure",
+    "client_missing_parameter",
+    "client_bad_bind_index",
+    "constraint_failure",
+    "zero_row_update_delete",
+    "row_rollback",
+    "savepoint_rollback",
+    "batch_partial_failure",
+    "merge_update",
+    "ddl_implicit_commit",
+    "nested_internal_ddl",
+    "prepared_statement_recompile",
+    "delayed_effect_after_response",
+    "client_closed_connection_commit",
+    "server_authorization_failure"
+  ],
+  "detection_checks": {
+    "server_parse_failure_observed": true,
+    "client_bind_failure_observed": true,
+    "zero_row_update_delete_observed": true,
+    "rollback_row_attempt_retained": true,
+    "nested_internal_DDL_observed": true,
+    "recompile_method_and_nested_parse_observed": true,
+    "delayed_background_row_attempt_observed": true,
+    "actual_dead_server_commit_failure_observed": true,
+    "known_abrupt_process_tail_rejected": true,
+    "native_observer_rows_separated_from_Admin": true,
+    "pooled_connection_changes_route_without_stale_origin": true,
+    "row_events_have_actual_session_and_transaction_id": true,
+    "logger_failure_and_missing_record_are_rejected": true,
+    "SQL_bind_and_credential_redaction_probe": true
+  },
+  "bounded_calibration_gate_passed": true,
+  "offline_evidence_fault_control_tests": 11,
+  "events": 1185761,
+  "process_epochs": 124,
+  "native_route_contexts": 206,
+  "native_route_contexts_all_closed": true,
+  "protocol_client_frames": 154785,
+  "protocol_server_frames": 154783,
+  "protocol_opcode_mismatches": 0,
+  "unmatched_server_frames": 0,
+  "duplicate_protocol_keys": 0,
+  "claimed_native_route_frames_without_server_receipt": 0,
+  "pooled_connections_with_multiple_known_origins": 6,
+  "scoped_observer_server_entries": 2127,
+  "scoped_observer_mutating_or_unknown_server_entries": 0,
+  "scoped_observer_row_attempts": 0,
+  "scoped_native_Admin_row_attempts": {
+    "CLIENT_ATTRIBUTES": 9,
+    "CLIENT": 11,
+    "PROTOCOL_MAPPER_CONFIG": 50,
+    "PROTOCOL_MAPPER": 7,
+    "USER_ENTITY": 8,
+    "USER_ROLE_MAPPING": 2
+  },
+  "scoped_native_issuer_row_attempts": {
+    "PROTOCOL_MAPPER": 6,
+    "PROTOCOL_MAPPER_CONFIG": 36
+  },
+  "unclassified_startup_background_or_unmatched_HTTP_server_entries": 87093,
+  "row_events_without_session_or_transaction_id": 0,
+  "known_logger_failure_detected": true,
+  "known_abrupt_process_tail_rejected": true,
+  "unexpected_sequence_gaps": 0,
+  "SQL_bind_and_credential_probe_leaks": 0,
+  "deferred_effect_deadline_seconds": 4,
+  "actual_database_death_commit_failure_and_recovery": true,
+  "committed_fingerprints_equal_across_actual_database_crash": true,
+  "new_native_Admin_mutation_during_query_still_returns_earlier_enabled_state": true,
+  "prior_18_experiments_and_9_failed_case_gates_retained": true,
+  "prior_native_Admin_attribution_not_reclassified": true,
+  "full_runtime_attribution_and_health_gate_passed": false,
+  "complete_unbounded_absence_of_attempts_proof": false,
+  "full_provider_runtime_qualification": false,
+  "production_or_caller_adoption_approved": false,
+  "cleanup": {
+    "all_processes_exited": true,
+    "processes": 10,
+    "private_lab_removed": true,
+    "no_existing_services_or_data_accessed": true
+  },
+  "diagnostic_attempts_retained": [
+    {
+      "attempt": 1,
+      "status": "46baseline_passed_but_request_commit_attribution_incomplete"
+    },
+    {
+      "attempt": 2,
+      "status": "valid_read_503_unexplained"
+    },
+    {
+      "attempt": 3,
+      "status": "tracing_stackmap_VerifyError_corrected"
+    },
+    {
+      "attempt": 4,
+      "status": "46baseline_passed_shared_CDI_proxy_attribution_collision"
+    },
+    {
+      "attempt": 5,
+      "status": "bounded_calibration_and_46baseline_passed_backing_context_identity_used"
+    }
+  ],
+  "remaining_required": [
+    "Every original consistency/issuer/association/adapter/custody/data/restoration requirement remains open; no existing witness relabeled",
+    "R2 exact maintained-version API, snapshot, complete writer fence/storage, native non-creating conditional issuance and stock-path compatibility feasibility/decision",
+    "Unexplained valid-read diagnostic503, startup/background/unmatched HTTP attribution, additional JDBC/API/storage paths, incomplete abrupt-death tails and finite delayed-effect bounds remain limitations",
+    "R3-R7 prototypes/full retained qualification/caller compatibility/custody/data/actual adoption, PostgreSQL/distributed cache/custom federation/transport/operational/version/security/license/image gates"
+  ],
+  "primary_sources": [
+    "https://github.com/h2database/h2database/blob/version-2.3.230/h2/src/main/org/h2/command/Parser.java",
+    "https://github.com/h2database/h2database/blob/version-2.3.230/h2/src/main/org/h2/engine/SessionRemote.java",
+    "https://github.com/h2database/h2database/blob/version-2.3.230/h2/src/main/org/h2/server/TcpServerThread.java",
+    "https://github.com/keycloak/keycloak/blob/26.0.6/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java",
+    "https://github.com/keycloak/keycloak/blob/26.0.6/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java",
+    "https://github.com/keycloak/keycloak/blob/26.0.6/server-spi/src/main/java/org/keycloak/utils/KeycloakSessionUtil.java"
+  ]
+}

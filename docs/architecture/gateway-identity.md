@@ -789,6 +789,10 @@ review and ADR0002 for the exact witnesses. The proposed
 defines the intended snapshot/issuance points, stock account/mapper fallback gap,
 writer-fence prerequisites and ordered remediation gates. It adopts no API or
 compatibility change; the nine failed gates remain open.
+The [bounded SQL calibration](../../infra/keycloak/keycloak_registration_connector/qualification/attempts/README.md)
+adds lab tracing and native request-through-commit attribution; all 46 baseline
+cases pass. Whole-log health/coverage and all nine original provider gates remain
+open. The current provider and Python guard are unchanged.
 No application deployment or caller adapter is supplied; the current guard stays
 closed. Historical 26.0.6 remains a compatibility candidate. All other provider,
 credential, metadata-rights, data and caller adoption gates remain required.
