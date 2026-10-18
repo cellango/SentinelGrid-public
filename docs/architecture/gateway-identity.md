@@ -773,3 +773,12 @@ provider lifecycle/idempotency/recovery/audit, management-token provisioning and
 per-client authorization, version-specific issuer qualification, data/RLS and
 deployed caller adoption remain open. The receiver/current IAM and all production
 callers are unchanged; the disabled default and fixed GET boundary remain intact.
+
+
+The [non-creating association proposal](decisions/0002-issuer-association-readback.md)
+records source findings for all three pinned Keycloak versions and a separately
+scoped provider-model read prototype. It is proposed for isolated qualification;
+no provider extension or client adapter is implemented. The current guard remains
+unchanged. Its first source compatibility candidate is the existing26.0.6 test pin,
+not a production-version recommendation. Runtime non-creation, provider grants,
+protected credentials and caller integration remain unqualified.

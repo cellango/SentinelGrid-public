@@ -2080,6 +2080,7 @@
     "docs/architecture/cloud-providers.md",
     "docs/architecture/database-compatibility.md",
     "docs/architecture/decisions/0001-case-runtime.md",
+    "docs/architecture/decisions/0002-issuer-association-readback.md",
     "docs/architecture/frontend.md",
     "docs/architecture/gateway-identity.md",
     "docs/architecture/overview.md",
