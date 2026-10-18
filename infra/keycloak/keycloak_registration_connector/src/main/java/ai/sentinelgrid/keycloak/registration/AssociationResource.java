@@ -14,6 +14,7 @@ import org.keycloak.services.managers.AuthenticationManager.AuthResult;
 import org.keycloak.storage.UserStoragePrivateUtil;
 
 /** Prototype only: real native bearer verification; no creating/repairing model calls. */
+@jakarta.enterprise.inject.Vetoed
 @jakarta.ws.rs.ext.Provider
 @Produces("application/json")
 public final class AssociationResource {
@@ -38,8 +39,11 @@ public final class AssociationResource {
       var realm = ctx.getRealm();
       var headers = ctx.getRequestHeaders();
       URI request = ctx.getUri().getRequestUri();
+      String basePath = ctx.getUri().getBaseUri().getRawPath();
+      // Keycloak hostname v2 may represent the root base path as an empty string.
+      if (basePath.isEmpty()) basePath = "/";
       String expectedPath =
-          ctx.getUri().getBaseUri().getRawPath()
+          basePath
               + "realms/"
               + realm.getName()
               + "/sentinelgrid-registration/v1/clients/"
@@ -86,17 +90,14 @@ public final class AssociationResource {
       // Pre-auth rejection only. Never allow session cleanup or username fallback in the native
       // stateless path.
       for (String name :
-          List.of(
-              "sid",
-              "session_state",
-              "preferred_username",
-              "act",
-              "may_act",
-              "sg_actor",
-              "client_id")) if (claims.has(name)) throw new IllegalArgumentException();
+          List.of("sid", "session_state", "preferred_username", "act", "may_act", "sg_actor"))
+        if (claims.has(name)) throw new IllegalArgumentException();
       String issuer = Grants.text(claims, "iss"),
           azp = Grants.text(claims, "azp"),
           sub = Grants.uuid(Grants.text(claims, "sub"));
+      // Native service-account issuance may repeat azp as client_id; it grants no authority.
+      if (claims.has("client_id") && !azp.equals(Grants.text(claims, "client_id")))
+        throw new IllegalArgumentException();
       Grants.Grant grant =
           grants.rows.stream()
               .filter(

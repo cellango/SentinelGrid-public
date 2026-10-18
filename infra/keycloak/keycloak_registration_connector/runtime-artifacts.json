@@ -1,0 +1,1703 @@
+{
+  "format_version": 1,
+  "scope": "Historical compatibility lab only; no vendor binary distribution or deployment clearance",
+  "distribution_sha256": "05b66533b6d8fa834fc48a16f6c9fb419268247efc62b800755eafa76178f136",
+  "distribution_root_license": "Apache-2.0",
+  "distribution_license_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+  "jar_artifacts": [
+    {
+      "path": "lib/lib/boot/io.smallrye.common.smallrye-common-ref-2.6.0.jar",
+      "sha256": "354c13f56f8cf0f1b5c48ab82b56bb208f224542883fd9d5b7603cdc671478c6"
+    },
+    {
+      "path": "lib/lib/boot/io.smallrye.common.smallrye-common-net-2.6.0.jar",
+      "sha256": "eb925117c4b11a3886e10a0da66bf47290a628a8fca55ed346326c45202b562f"
+    },
+    {
+      "path": "lib/lib/boot/org.eclipse.parsson.parsson-1.1.7.jar",
+      "sha256": "c21db018f8ac6cf79893f1af77f1cd337937bd12ae6fa3d4b10f5a00819ee56c"
+    },
+    {
+      "path": "lib/lib/boot/org.jboss.logmanager.jboss-logmanager-3.0.6.Final.jar",
+      "sha256": "0b7870896089ecd7c5d59bb3bbf864f491ca52e06c9dbbbeb3bdbc7ff08a5aa7"
+    },
+    {
+      "path": "lib/lib/main/com.fasterxml.jackson.module.jackson-module-parameter-names-2.17.2.jar",
+      "sha256": "1ee5e2f3593d44726b900868c6f64d1a50636a5683d6d40427f5984a61de53c0"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-crypto-default-26.0.6.jar",
+      "sha256": "e4dbb54a73231f2f330bcff0419d0e0e57ff2cf69bd8c936a80fb7e90bd558a0"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-security-manager-action-2.5.2.Final.jar",
+      "sha256": "f293818b3c85e4df269d031242b540cb3ca7fa9e97b7fb8bdae93c1a6e14e001"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-credential-2.5.2.Final.jar",
+      "sha256": "cc160ade97b30dfab12579602c0a0b5f8946f6480e7ec40881bcc38731298366"
+    },
+    {
+      "path": "lib/lib/main/com.apicatalog.titanium-json-ld-1.3.3.jar",
+      "sha256": "779de1d88f173486f0ea9f1b4b7779970ac21a7ad49b2a0370f5f99b6dfef72c"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-base-2.5.2.Final.jar",
+      "sha256": "3efa3ed5ed587199ad95b6f81bf8ed70c024b0d702ede3ba6a1d4af7b4789ece"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-x500-cert-2.5.2.Final.jar",
+      "sha256": "3a9cb52ea84ff480f6c2a26c76273f02196117f4235f55e2a4424b5fb3ff11ab"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-datasource-common-3.15.1.jar",
+      "sha256": "6175f6b11aa9b0ce5187dbc45979ed8d4045819b709a87ce4174dbaecdcd8b1f"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-mechanism-2.5.2.Final.jar",
+      "sha256": "fb3a32aabac35c62c15d5faa442c8cabaa8cbab86ef25b31bc4be518acb8dcfc"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-admin-ui-26.0.6.jar",
+      "sha256": "33a0c114fb35f5b49f320a6a22097394c0823d232cba779baecf2103fac3e606"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-jdbc-mysql-3.15.1.jar",
+      "sha256": "b119257e6a0778735b73326ddfc4d43f3095ac4e2f374904234137bd64a94e1f"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-buffer-4.1.111.Final.jar",
+      "sha256": "7d94b609fb36afd88304c73922411d08f383f7945aa882b59a15219b5ecbfb76"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.common.smallrye-common-vertx-context-2.6.0.jar",
+      "sha256": "38137fa672842de0550bc7ec0cae496c988ab4c652fd2f92a264afe220c8baf5"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.smallrye-reactive-converter-mutiny-3.0.1.jar",
+      "sha256": "8a2548958143f8a3ce2c18805ff46394332476ce03e022107b1f365979b1b7de"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-sdk-extension-autoconfigure-spi-1.39.0.jar",
+      "sha256": "771973839aa69e5ec03abd80e08fb046a71ba917b2b912ac9e8cd508e3dc0ea5"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-rest-common-3.15.1.jar",
+      "sha256": "5a8ae9a52f6730dffc14d84f1358914509e5ad920b042ee006fe73c5f9e5519c"
+    },
+    {
+      "path": "lib/lib/main/io.grpc.grpc-util-1.65.1.jar",
+      "sha256": "7d2c4866515c6101598dd0c3d2e955707fb1126e51fd0eeb06daa98837f8dfbc"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.infinispan-core-15.0.8.Final.jar",
+      "sha256": "69f98a57517e0a58ca6d031234f8c2f4725488e670c0ac9d4d5e0d16f5a84b23"
+    },
+    {
+      "path": "lib/lib/main/org.jboss.invocation.jboss-invocation-2.0.0.Final.jar",
+      "sha256": "ef9beb3bff85930710b367b6f84d40bf72128898ca6ccdf3775537793b74b067"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-jdbc-postgresql-3.15.1.jar",
+      "sha256": "7c575a31b13d869f44964ae03e1c0966c01729a48e0ca332c2a26f94e252155e"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-rest-jackson-common-3.15.1.jar",
+      "sha256": "b3386ddc5b888e792781609b37b7f88b59df07f3e8709c6262a3b2065084f371"
+    },
+    {
+      "path": "lib/lib/main/com.google.errorprone.error_prone_annotations-2.30.0.jar",
+      "sha256": "144f3aefbd6e27daec55d3753b2c6b13c1afdaf0cf04816cdb564588ed92f1bd"
+    },
+    {
+      "path": "lib/lib/main/com.github.waffle.waffle-jna-3.3.0.jar",
+      "sha256": "301cb389402618a0a8e7fb56c4b47e20f1f9c774f99a3d7272435bae2d323580"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-mechanism-gssapi-2.5.2.Final.jar",
+      "sha256": "ab95510a9e0fd8152aaf8c0c6b955df337f0da8b23eca447adb59f253d13bf08"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.resteasy.reactive.resteasy-reactive-vertx-3.15.1.jar",
+      "sha256": "70482f8d12815d977cba1b5732e5516be6fd8f84957441d57d2015662c915c2c"
+    },
+    {
+      "path": "lib/lib/main/org.yaml.snakeyaml-2.0.jar",
+      "sha256": "880c9d896e4b74a06c549c15ca496450165d6909fa15d7e662bee8f6a66d7afa"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-transport-native-unix-common-4.1.111.Final.jar",
+      "sha256": "ec4bd4574ee1ec776a1b14139fb69982ddf7f5039a803082074a81f6604ecad2"
+    },
+    {
+      "path": "lib/lib/main/org.apache.commons.commons-collections4-4.4.jar",
+      "sha256": "1df8b9430b5c8ed143d7815e403e33ef5371b2400aadbe9bda0883762e0846d1"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-codec-haproxy-4.1.111.Final.jar",
+      "sha256": "cd3fa5bea2e495df4f717e35ff75b6ac9050b7da8343f62637473315a48cbb6b"
+    },
+    {
+      "path": "lib/lib/main/jakarta.interceptor.jakarta.interceptor-api-2.2.0.jar",
+      "sha256": "d240d72b4dd38a2e431c804079810010cb97903678fa5f987fb7434878b04398"
+    },
+    {
+      "path": "lib/lib/main/org.ow2.asm.asm-9.7.jar",
+      "sha256": "adf46d5e34940bdf148ecdd26a9ee8eea94496a72034ff7141066b3eea5c4e9d"
+    },
+    {
+      "path": "lib/lib/main/io.setl.rdf-urdna-1.1.jar",
+      "sha256": "c57a2ae551bd301f84faf1010251d96510a40e2b00d883e86cdd2d0dfa6f01ae"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-fs-util-0.0.10.jar",
+      "sha256": "cd66340d85a2daa72dc1adedfe7ee4ac0d1d8ea2e4334922169114f687b54d08"
+    },
+    {
+      "path": "lib/lib/main/org.postgresql.postgresql-42.7.4.jar",
+      "sha256": "188976721ead8e8627eb6d8389d500dccc0c9bebd885268a3047180274a6031e"
+    },
+    {
+      "path": "lib/lib/main/org.bouncycastle.bcpkix-jdk18on-1.78.1.jar",
+      "sha256": "4b48ea084e5232b9d79ebca1887b9de037b124931807cd60710748c2aee08cc9"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.config.smallrye-config-source-keystore-3.9.1.jar",
+      "sha256": "9d619ee61eddfb2f9231baf2e8d82684030116558e7ceef90be90199f362c111"
+    },
+    {
+      "path": "lib/lib/main/jakarta.xml.soap.jakarta.xml.soap-api-3.0.0.jar",
+      "sha256": "33124e98d724b69e1673a61675c205b58c372605f4254d455b12b37398219a37"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-account-ui-26.0.6.jar",
+      "sha256": "92fef5026815dfeea325969e1ccfa1a7eac8581f41949fab78889264af3962d7"
+    },
+    {
+      "path": "lib/lib/main/org.jboss.logging.jboss-logging-annotations-3.0.1.Final.jar",
+      "sha256": "e90a93ac27c3e97d6e1b2a91c7731b57616b95d83663e1ecaaf58a9522a1c2c6"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-transport-classes-epoll-4.1.111.Final.jar",
+      "sha256": "d230d1680d1517c7d7b2e25ef6a9a87c22ebbcf264a0da8e807734f15b7c7cae"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-codec-4.1.111.Final.jar",
+      "sha256": "a63ac713f60ec0b8e2bb8182665d216662d1f474872ec5c368d25f15f544f4bc"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-jdbc-mariadb-3.15.1.jar",
+      "sha256": "ff5374a862beb0eb1aaeceaad47e8d8f751fa4709a75c6d57cf4dc3a3067a3da"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.common.smallrye-common-classloader-2.6.0.jar",
+      "sha256": "3d7f3af21d3146e7efee24bee2139c42d265961dbf8acdc875960342b2c2115f"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.smallrye-reactive-converter-api-3.0.1.jar",
+      "sha256": "c5b10c9e197222437fb2bbe9c4b3f600f4d3f8981ca6425766f8890a2535c4da"
+    },
+    {
+      "path": "lib/lib/main/javax.xml.bind.jaxb-api-2.3.1.jar",
+      "sha256": "88b955a0df57880a26a74708bc34f74dcaf8ebf4e78843a28b50eae945732b06"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-sasl-gssapi-2.5.2.Final.jar",
+      "sha256": "dcec8eda8bc574646bcb96cbbda4ce4e23a4ea2d17d7b2a3d7e88c903c18aef6"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-transport-native-epoll-4.1.111.Final-linux-aarch_64.jar",
+      "sha256": "7c1a30b628088a2c6abfd6d2f9e7ae3d37eb2b03e9be74795ec5b95170b85426"
+    },
+    {
+      "path": "lib/lib/main/com.google.api.grpc.proto-google-common-protos-2.41.0.jar",
+      "sha256": "49edeba62f334053b91aa9455c95e38449269891b920dbc36daa74e959a3d89a"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.infinispan-commons-15.0.8.Final.jar",
+      "sha256": "fc088912b8c08c4916843f1e4bd3a3999b808a9c45b94355aa5149f53ef26e67"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-rest-jackson-3.15.1.jar",
+      "sha256": "db6a61dd4819cf664db2b549864c711d5bf3a28abe5c72e3a1343985a7d5151f"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-security-runtime-spi-3.15.1.jar",
+      "sha256": "c28bb8d653e0abf8e32c8a6d31875f7868b235e218f670e40576927609e457c8"
+    },
+    {
+      "path": "lib/lib/main/org.eclipse.angus.angus-activation-2.0.2.jar",
+      "sha256": "6dd3bcffc22bce83b07376a0e2e094e4964a3195d4118fb43e380ef35436cc1e"
+    },
+    {
+      "path": "lib/lib/main/io.grpc.grpc-context-1.65.1.jar",
+      "sha256": "1e8d6da14486585451f061a47d2e2435ec45506deb809b5029ccab9d4842c6ff"
+    },
+    {
+      "path": "lib/lib/main/org.slf4j.slf4j-api-2.0.6.jar",
+      "sha256": "2f2a92d410b268139d7d63b75ed25e21995cfe4100c19bf23577cfdbc8077bda"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.protostream.protostream-processor-5.0.8.Final.jar",
+      "sha256": "efd93d6aa3d4062b172d176d6d7099bad0f881d512f28302634d23fd1599f177"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-sdk-trace-1.39.0.jar",
+      "sha256": "2f152b730decb46a001f48b65420ae32f565e7b5c43afe88be3377455e0d41b8"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-reactive-routes-3.15.1.jar",
+      "sha256": "765bb358d190907d3115812d8c77657c31077792788c7acd1d90f507ae25bbdf"
+    },
+    {
+      "path": "lib/lib/main/org.snakeyaml.snakeyaml-engine-2.6.jar",
+      "sha256": "2652199af40c9aa2f1782400d2dfbbf4e5226208c4e05ddd4059c3d6d9cd1505"
+    },
+    {
+      "path": "lib/lib/main/io.grpc.grpc-api-1.65.1.jar",
+      "sha256": "4fb6a4b2ed3744bd95c495fea42d9c6b8d4b6c26dd562376d5c62ec28d5db64f"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-web-common-4.5.10.jar",
+      "sha256": "bc3c47e390e54213e32083daa9e1dcb604e34031d2b9c676d035d53598f5b0e5"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-rest-3.15.1.jar",
+      "sha256": "2cef2fcf4b3b9de92ab0e17132877e952d4c60d931388ee39f7f2dbc2d6b1d48"
+    },
+    {
+      "path": "lib/lib/main/org.apache.httpcomponents.httpclient-4.5.14.jar",
+      "sha256": "c8bc7e1c51a6d4ce72f40d2ebbabf1c4b68bfe76e732104b04381b493478e9d6"
+    },
+    {
+      "path": "lib/lib/main/com.sun.istack.istack-commons-runtime-3.0.10.jar",
+      "sha256": "85239e7fff2463b7d8a9c3962f78ee3e2c6db9455c724f29281e2c5f663e22be"
+    },
+    {
+      "path": "lib/lib/main/com.googlecode.owasp-java-html-sanitizer.java10-shim-20240325.1.jar",
+      "sha256": "e4637fb9d825c23677d4526ab1ff58117702e54c30d260a047cea10a93be1a92"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.instrumentation.opentelemetry-instrumentation-api-incubator-2.5.0-alpha.jar",
+      "sha256": "eb3d98eea4e6b091dc8da99ee38189290ce19edfede0e82e82cdbd7809e4f3d0"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-asn1-2.5.2.Final.jar",
+      "sha256": "200a942c655330bf9a6f125e5193929055d9facbd7397ab5b2d537db02f2b444"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-sdk-metrics-1.39.0.jar",
+      "sha256": "b682910c1b3d19d79559e8f2de0ed32a997122df5f687c72893ae4a8d58f8418"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-services-26.0.6.jar",
+      "sha256": "7874874a0b53ae09df7cd5a285c7a637fa947bf0d94e2d2811335d645d58edfb"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-x500-cert-util-2.5.2.Final.jar",
+      "sha256": "03a0fdd5f24b05a9a33707b9e5247ceb317a11e73d1cfc4283163b8f23f0db66"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.instrumentation.opentelemetry-instrumentation-api-2.5.0.jar",
+      "sha256": "a61582214f88184facef5a16d9a1300b45f8aaf2ce3a90783651e91380181dd5"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.protostream.protostream-5.0.8.Final.jar",
+      "sha256": "b871cc45b4aba178391c066a4f62af04206688965742633331b7e39836a64670"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-x500-2.5.2.Final.jar",
+      "sha256": "e75bed19a629ef0271b32fb9898004420d88f344670c2835b4fe302da8f7f1b6"
+    },
+    {
+      "path": "lib/lib/main/org.bouncycastle.bcprov-jdk18on-1.78.1.jar",
+      "sha256": "add5915e6acfc6ab5836e1fd8a5e21c6488536a8c1f21f386eeb3bf280b702d7"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.semconv.opentelemetry-semconv-1.26.0-alpha.jar",
+      "sha256": "4ab23f9d62fa65e351944826af81ea1dfded45fb24b550fd681ded2e1eb6fec0"
+    },
+    {
+      "path": "lib/lib/main/io.prometheus.simpleclient_tracer_common-0.16.0.jar",
+      "sha256": "e84a784ac8e24f182ee62da80b6b5c8140774b75bfa4bf9cc3d3b8390db625f6"
+    },
+    {
+      "path": "lib/lib/main/com.googlecode.owasp-java-html-sanitizer.owasp-java-html-sanitizer-20240325.1.jar",
+      "sha256": "f67d865cbd32d0ec7e2ee0ffa97f8b5c71e3f0f8e0a7e822254737c108f13579"
+    },
+    {
+      "path": "lib/lib/main/io.prometheus.simpleclient_tracer_otel-0.16.0.jar",
+      "sha256": "a2a84c59bef3796bb7f9c6f2ae8b7de8b905313ef28180ac3de7ff61dd68df3f"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-model-jpa-26.0.6.jar",
+      "sha256": "026dd5542ed23430e4a15e917bb7a4a2145abf68d19d20c78af3a8b693d44ff9"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-model-storage-26.0.6.jar",
+      "sha256": "a6b6a5dbb8062c1084976d2b183e85671d5594c385607e5f164ed9f8e34792c5"
+    },
+    {
+      "path": "lib/lib/main/org.mariadb.jdbc.mariadb-java-client-3.4.1.jar",
+      "sha256": "f60e4b282f1f4bdb74f0a26436ba7078a5e480b6f6702f6a7b45d9ba5e604a24"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-netty-3.15.1.jar",
+      "sha256": "d4f5ff59f07ecdfc9232f46f49cc8000d0c05ee54d0f611900fd586dbb742ab0"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-resolver-dns-4.1.111.Final.jar",
+      "sha256": "b3f9fdaa473fb5fff307c007cc1840a411dace167bca05e1eb57fe19ebd57725"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.smallrye-fault-tolerance-vertx-6.4.0.jar",
+      "sha256": "35c1c7e6849895db4724387373e7bd06a7e28ae43175e402901fd6aecdcff6f9"
+    },
+    {
+      "path": "lib/lib/main/jakarta.transaction.jakarta.transaction-api-2.0.1.jar",
+      "sha256": "50c0a7c760c13ae6c042acf182b28f0047413db95b4636fb8879bcffab5ba875"
+    },
+    {
+      "path": "lib/lib/main/org.bouncycastle.bcutil-jdk18on-1.78.1.jar",
+      "sha256": "d9fa56f97b0f761ce3bc8d9d74c5d7137a987bf5bd3abfe1003f9bafa45a1d2f"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-bootstrap-app-model-3.15.1.jar",
+      "sha256": "0facd46981a7f0ecc1a0fa92912020197b1a97f664924d39337ef72f59c73d58"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-narayana-jta-deployment-3.15.1.jar",
+      "sha256": "465a8cb60819f9a5e1eca322cc942f95daa0a4242d63a674a2548e55eca2e84c"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-panache-hibernate-common-deployment-3.15.1.jar",
+      "sha256": "b0231e01826e7f29e2f99add8afc87df215af51d9e13b105d43b36ee4aac7400"
+    },
+    {
+      "path": "lib/lib/deployment/org.graalvm.sdk.word-23.1.2.jar",
+      "sha256": "2ae7a71ff3f53f61d1d7360a6152f67ce3902ae86ca22b30b70208dc0cf4e039"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jdbc-postgresql-deployment-3.15.1.jar",
+      "sha256": "01192c5ff7fb593e1116f3a37014fb251422f4e76c3dafeda6e61fdefb3d3c17"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-core-deployment-3.15.1.jar",
+      "sha256": "2e29c58b9d3c69a0414d04633219b62db411c283594d2ac4e2a07e234160b527"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.resteasy.reactive.resteasy-reactive-processor-3.15.1.jar",
+      "sha256": "86f77831b7b2be1c961b8883f7574102943123efbe1c6294b66c19015bc60ccf"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-logging-json-deployment-3.15.1.jar",
+      "sha256": "6cc9d7e5b0786218c5476fcd1ba5e7c5c3b34bccf9e501bed83698ca575ad1da"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-vertx-http-deployment-3.15.1.jar",
+      "sha256": "fbd90e09ce03128d9e44456b0778abd19563c219db91f6a93e4bf1db082b5b12"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.http.quarkus-http-servlet-5.3.2.jar",
+      "sha256": "29cc62fab69475bbf90befb4b3c7b9a8f4407be6c2b39506dd86740a15febcc7"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-smallrye-health-deployment-3.15.1.jar",
+      "sha256": "f22d21a1e5e070ed86f3ed5519e5109e1b9a92d29a47c7e944afa7b01e18cbbe"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jdbc-h2-deployment-3.15.1.jar",
+      "sha256": "d74a773bef31bed3e32084dc21641b8a4abf7552341e2eeccc4f7477921c979c"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-reactive-routes-deployment-3.15.1.jar",
+      "sha256": "5c6fcaf0e8eb8edd3b98ecdf45b73cf33144496b0420b915defcd5119d620817"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-panache-common-3.15.1.jar",
+      "sha256": "b7cf3a932a13c75f06f1caf4a1cbd1538805183a0e6cce35aac120a9b2d3b10c"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jackson-spi-3.15.1.jar",
+      "sha256": "72fc8f42c390c55941f0c8c086193bd6e164885ded5ae21edecf99634641c0c4"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-virtual-threads-deployment-3.15.1.jar",
+      "sha256": "7dc7abec9b7b8b431abe082d34d0c74a9675d4044dbe3c719a9484f27e1b5206"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-agroal-spi-3.15.1.jar",
+      "sha256": "0cf8a83c7c918955fc76796f897cbe9d6755ddb253ee875b5c81e053c7ea655b"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-smallrye-context-propagation-spi-3.15.1.jar",
+      "sha256": "efbab714375518607d78e2285b26573095ed61b93de5f257a03f50edff3bec6e"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-datasource-deployment-spi-3.15.1.jar",
+      "sha256": "f32b628314fe225780577c676adc2c64f66f1560768c47c2a935644311812b5b"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-grpc-common-deployment-3.15.1.jar",
+      "sha256": "dfdc4d6edb49628f9355a42efd6e50217fa72820ac1fc60072a2374102ed6161"
+    },
+    {
+      "path": "lib/app/keycloak.jar",
+      "sha256": "5568b67a8bd2d72f6eb4c5d290ce194f455584f0319f9ee99188f538e9541878"
+    },
+    {
+      "path": "lib/quarkus/generated-bytecode.jar",
+      "sha256": "763e86fd29153ca2c8fc4ba51b4852cf83a7037fbd543a018ffc21e590934a64"
+    },
+    {
+      "path": "bin/client/lib/keycloak-crypto-default-26.0.6.jar",
+      "sha256": "e4dbb54a73231f2f330bcff0419d0e0e57ff2cf69bd8c936a80fb7e90bd558a0"
+    },
+    {
+      "path": "bin/client/keycloak-admin-cli-26.0.6.jar",
+      "sha256": "5fc5b98d2c1044bb8ff86e3c5e39c155b1702312df891d026586fb9db5a02ce7"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.config.smallrye-config-common-3.9.1.jar",
+      "sha256": "0577a6380e6282abde6f376700d2e2fc137112edf2950bfe1f8202ec8e54680f"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.semconv.opentelemetry-semconv-incubating-1.26.0-alpha.jar",
+      "sha256": "11357da4671ec0b4110fe01e617ff56643efbd12fa1744bfa43aad8371eae0d9"
+    },
+    {
+      "path": "lib/lib/main/net.bytebuddy.byte-buddy-1.14.18.jar",
+      "sha256": "52117af1696a53aa77c131353074ada25ccbdf2df511f2af33fad6704fa95104"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.smallrye-health-api-4.1.0.jar",
+      "sha256": "80f7167ee42fa2b0f587d308a30e5024b5aaf14b65167350af1852cf9ffae09c"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-api-incubator-1.39.0-alpha.jar",
+      "sha256": "ea84984fd86cc25b07e083af5cf39e764160bbe82ff0e2723610f8880a95af6f"
+    },
+    {
+      "path": "lib/lib/main/com.google.guava.guava-33.2.1-jre.jar",
+      "sha256": "452b2d9787b7d366fa8cf5ed9a1c40404542d05effa7a598da03bbbbb76d9f31"
+    },
+    {
+      "path": "lib/lib/main/org.ow2.asm.asm-util-9.7.jar",
+      "sha256": "37a6414d36641973f1af104937c95d6d921b2ddb4d612c66c5a9f2b13fc14211"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-sdk-1.39.0.jar",
+      "sha256": "90d24b5066eda3a15e8739f1f48d0758e5b5c55b70f1e6e326b9471a1dfacc23"
+    },
+    {
+      "path": "lib/lib/main/org.reactivestreams.reactive-streams-1.0.4.jar",
+      "sha256": "f75ca597789b3dac58f61857b9ac2e1034a68fa672db35055a8fb4509e325f28"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.instrumentation.opentelemetry-instrumentation-annotations-2.5.0.jar",
+      "sha256": "f75b30df5119e73e630c8bc81b60889c384ef1fcda036b03b29585645081ca4a"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-sssd-federation-26.0.6.jar",
+      "sha256": "3226ed601f74fb3eb6440c6da354ceacdd2450c1a110e1ad2a0e4b09515890b0"
+    },
+    {
+      "path": "lib/lib/main/org.hibernate.orm.hibernate-core-6.6.0.Final.jar",
+      "sha256": "b410b6d0a7ce05f2d5315fd93732d3c6d2c3f016faf01ae6ea3e5a8160ddeb5d"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-ldap-federation-26.0.6.jar",
+      "sha256": "1d60008c64c8201b1f134ed7a054274f5d3a7ae966c23d92297be527ddce9372"
+    },
+    {
+      "path": "lib/lib/main/jakarta.persistence.jakarta.persistence-api-3.1.0.jar",
+      "sha256": "475389446d35c6f46c565728b756dc508c284644ea2690644e0d8e7e339d42fd"
+    },
+    {
+      "path": "lib/lib/main/io.agroal.agroal-api-2.5.jar",
+      "sha256": "c21fa1cf4abdd69ca3cb759760efb44749b502b8453d54a5c4a7ae2645a67656"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-smallrye-context-propagation-3.15.1.jar",
+      "sha256": "430d60ac1fbe50d04d53fe6b624415336cf46b6bf55205e6910fdba0b608a88b"
+    },
+    {
+      "path": "lib/lib/main/io.prometheus.simpleclient_tracer_otel_agent-0.16.0.jar",
+      "sha256": "7ad2bb40df74a772d9f5445a3d03579b49d6b37a47d5e90f6cf3f59ecf41ad06"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-provider-util-2.5.2.Final.jar",
+      "sha256": "9d8558aa36bc94ff51cfb97adbf8b5bfa25a8ccd608005a83347c048de3c687a"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-codec-http-4.1.111.Final.jar",
+      "sha256": "bf50c212caec876bb6fba85b74f18482da2d7824dd0766f1829ca9f93aa01a52"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.common.wildfly-common-1.5.4.Final-format-001.jar",
+      "sha256": "9884f791f815d0fed8c51771af71164afd48f96e621f26009f9ebe791c053f1b"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-codec-http2-4.1.111.Final.jar",
+      "sha256": "a9eb9b0627041f4891de92aa896499ae334cdf607dba0dcdfafd3516a7d0ecca"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-sasl-plain-2.5.2.Final.jar",
+      "sha256": "6b2d6a3146be58d0ad485173c1e0f50563fe204347020c0a74d91e32623dae26"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-transaction-annotations-3.15.1.jar",
+      "sha256": "9e71826d5beb1897803c86679f56395ed7d10d7b9cab8dbe5a9fb7e74b3e1ff1"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.security.quarkus-security-2.1.0.jar",
+      "sha256": "4e18bca328cac783ed9984d44d57688ca92f568a63aaa6034357f32965d79da9"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-handler-4.1.111.Final.jar",
+      "sha256": "1a034672ca26c8be6245c8e8641b29785ed2c018617bb2dd7e07be39f7ea71fc"
+    },
+    {
+      "path": "lib/lib/main/org.ow2.asm.asm-commons-9.7.jar",
+      "sha256": "389bc247958e049fc9a0408d398c92c6d370c18035120395d4cba1d9d9304b7a"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.resteasy.reactive.resteasy-reactive-3.15.1.jar",
+      "sha256": "3213c84948d0c22e765050427fae503c18d6c606b868eea32857a022b4b30898"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-codegen-4.5.10.jar",
+      "sha256": "01ca7ebc4796fd603dab182c6c14b074250c6b2603b5454785eff003e76e5a19"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-grpc-4.5.10.jar",
+      "sha256": "38cbf241369bf5d32bac778d7cd7dc9bf82c05b9d10bdfb09774f80e9d44606d"
+    },
+    {
+      "path": "lib/lib/main/org.jboss.narayana.jta.narayana-jta-7.0.2.Final.jar",
+      "sha256": "9fc3bf9a87642eef3a1b515cb532a636ed58c1684d424c90dc9155fc003955be"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-config-api-26.0.6.jar",
+      "sha256": "37921df39ea4cbd775a712671497578661662c11295787f94e87d7ef1e2c1fb7"
+    },
+    {
+      "path": "lib/lib/main/org.ow2.asm.asm-tree-9.7.jar",
+      "sha256": "62f4b3bc436045c1acb5c3ba2d8ec556ec3369093d7f5d06c747eb04b56d52b1"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.smallrye-mutiny-vertx-web-common-3.15.0.jar",
+      "sha256": "b600ac5aab459e9d7eefc47be94f772c6bbc219d3f805331610bdc04367a04d7"
+    },
+    {
+      "path": "lib/lib/main/com.fasterxml.jackson.core.jackson-core-2.17.2.jar",
+      "sha256": "721a189241dab0525d9e858e5cb604d3ecc0ede081e2de77d6f34fa5779a5b46"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-datasource-3.15.1.jar",
+      "sha256": "77111293bd6371bf23fe8c670ba6bd1a68e5d2204f072424279d31a8b3caf050"
+    },
+    {
+      "path": "lib/lib/main/io.prometheus.simpleclient_common-0.16.0.jar",
+      "sha256": "eba6ec26ce7e40cbb8725e05fb83247a9f4f44945b9e7522e3375dde67b9f059"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-jdbc-h2-3.15.1.jar",
+      "sha256": "b0d06bcbe7dfd471390617e9b9527bfea0bde7f66c91a2cf72f14665533fdf94"
+    },
+    {
+      "path": "lib/lib/main/io.prometheus.simpleclient-0.16.0.jar",
+      "sha256": "22c374f237f7bc4fdb1f0ec2da379c0ba00e69ad2ffe8b6ade543d73062d377f"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-mutiny-3.15.1.jar",
+      "sha256": "9b89263b520aa0b67d4761eeaedbecbe6fbf7e65cc1b25dff0c11f08833f9ae1"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-sdk-common-1.39.0.jar",
+      "sha256": "f7adb493a05c0e348c4a56736da1ded238df85ef59dfd502e06d186b6b547f88"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-sdk-logs-1.39.0.jar",
+      "sha256": "a8f2e26ed29940e607894e8d370ff3c495a1c664efb5c42ecfeb993699cd4b45"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.resteasy.reactive.resteasy-reactive-common-types-3.15.1.jar",
+      "sha256": "a645b08465781a1a806418bb6d32cf3a258087935bdee5326610064d91277d83"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-sasl-external-2.5.2.Final.jar",
+      "sha256": "e61a2ef7e0d8d6d7a6f8a931cbff0541380b4e6656cc985b084a8451f2b6f98e"
+    },
+    {
+      "path": "lib/lib/main/org.apache.santuario.xmlsec-2.2.6.jar",
+      "sha256": "9325edf9e2449a31315b7f0c49204840d465b38f7e83ecc9471da125ea3d5b75"
+    },
+    {
+      "path": "lib/lib/main/com.mysql.mysql-connector-j-8.3.0.jar",
+      "sha256": "94e7fa815370cdcefed915db7f53f88445fac110f8c3818392b992ec9ee6d295"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.resteasy.reactive.resteasy-reactive-common-3.15.1.jar",
+      "sha256": "8169978f57c2a70b9c4790269a5979e39464c085b5e9902835f38911904b6991"
+    },
+    {
+      "path": "lib/lib/main/jakarta.enterprise.jakarta.enterprise.cdi-api-4.1.0.jar",
+      "sha256": "c42c808f17925129a0800f618febe050d966e181a4c7384c8a5e7a0283d68699"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.mutiny-zero-flow-adapters-1.1.0.jar",
+      "sha256": "892160e75d273fa9abce9af1f2767abf00e3c27e8bfe779375764a46716148da"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.common.smallrye-common-annotation-2.6.0.jar",
+      "sha256": "da783e44d5796134f751384d4ceb76ec89817c3ff19bc6e752151f9d0c2e3510"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-sasl-gs2-2.5.2.Final.jar",
+      "sha256": "35c18fbbb453abb8502a302b48e9dfc5b02da05fbce06a70cc42e5ff31c0f320"
+    },
+    {
+      "path": "lib/lib/main/io.grpc.grpc-stub-1.65.1.jar",
+      "sha256": "2df07043e03ae03e06bca49fd9a55702adeaafb3bcec3068a8f6179efa68c9e1"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-quarkus-server-26.0.6.jar",
+      "sha256": "b81dbb3d31746e1dd36bf51e8b686600e7dc8e611c3bd52c7de86027f579cbe6"
+    },
+    {
+      "path": "lib/lib/main/org.eclipse.microprofile.reactive-streams-operators.microprofile-reactive-streams-operators-api-3.0.jar",
+      "sha256": "a5385fa6eb55939c4fe2f8a6573f8aa93b6d7db4e6f5178a0bd2cb3d26328905"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-vertx-3.15.1.jar",
+      "sha256": "e264f43dfa962ad53b7044997eec5284779897833498c9a5e2ba412318cba56e"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.infinispan-client-hotrod-15.0.8.Final.jar",
+      "sha256": "34c0651f8381ef92cb584351da7299efa763e4fe7f402e78aff6ecd6df260001"
+    },
+    {
+      "path": "lib/lib/main/io.micrometer.micrometer-core-1.13.5.jar",
+      "sha256": "700c19d17357464c430366565f1b9fbaf22299a45b1e34440c0a41d2d6961244"
+    },
+    {
+      "path": "lib/lib/main/org.jboss.narayana.jts.narayana-jts-integration-7.0.2.Final.jar",
+      "sha256": "48eede5f35c5a66b04f27304a2ba35d4c163177228cba7ad2f8f2fe6ffe47652"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-keystore-2.5.2.Final.jar",
+      "sha256": "ef943509dde1c84925822cea3547c4256d21c0719b6c4748a32b494fa4107276"
+    },
+    {
+      "path": "lib/lib/main/com.opencsv.opencsv-5.9.jar",
+      "sha256": "2023969b86ce968ad8ae549648ac587d141c19ae684a9a5c67c9105f37ab0d1c"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.infinispan-cachestore-remote-15.0.8.Final.jar",
+      "sha256": "5034ba529b2fb705c7f31e75785e6f285262eac447bc2dca4d7f92888d67aa5c"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-model-infinispan-26.0.6.jar",
+      "sha256": "c0ba3a1e216a8d52e2d203f587dd8160c409c1aefd2e94f7e1c16b1d0c7e11e8"
+    },
+    {
+      "path": "lib/lib/main/org.hibernate.common.hibernate-commons-annotations-7.0.1.Final.jar",
+      "sha256": "0a690967ef2ef3e2bcec3c7871869ff64d1269904d58d22d7aaf46e3e5bb0483"
+    },
+    {
+      "path": "lib/lib/main/org.latencyutils.LatencyUtils-2.0.3.jar",
+      "sha256": "a32a9ffa06b2f4e01c5360f8f9df7bc5d9454a5d373cd8f361347fa5a57165ec"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.vertx-mutiny-generator-3.15.0.jar",
+      "sha256": "7be06fc5921675dc1f69d2ed68505f50912198ff828beed56465a3e7ace5c198"
+    },
+    {
+      "path": "lib/lib/main/info.picocli.picocli-4.7.6.jar",
+      "sha256": "ed441183f309b93f104ca9e071e314a4062a893184e18a3c7ad72ec9cba12ba0"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-builder-3.15.1.jar",
+      "sha256": "765687af9d72952304a26cace0f1aa9d3f2d70aca098d6705f2bd09d2069ad03"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-datasource-deployment-3.15.1.jar",
+      "sha256": "d0b7c7fcc35f8e0fc56aea9d60abbb2335c5983b33c96d90f07cff5cf595c8bf"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-arc-test-supplement-3.15.1.jar",
+      "sha256": "0abd4d05c69908d69ced023de768fe093ada7989cc352ab5cbedd28d8554b5cc"
+    },
+    {
+      "path": "lib/lib/deployment/io.smallrye.smallrye-open-api-core-3.10.0.jar",
+      "sha256": "38f5d2c49f348a8f13f34e54e8c0d792d9e17bb49aef7e2d91606320043506c1"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-kubernetes-service-binding-spi-3.15.1.jar",
+      "sha256": "70275035da7c18bce62959704cce64721ea634066258792b217516b4c78c0040"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-bootstrap-core-3.15.1.jar",
+      "sha256": "2a30b24e26d36cd585a49baebd9126f97e4fc8892e52251e53fa0e32a028eabf"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-kubernetes-spi-3.15.1.jar",
+      "sha256": "a8953892bcae420ba116c20f2970cb2a917e30d57b232d5ac5d427e5e5d61c9f"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-hibernate-orm-deployment-3.15.1.jar",
+      "sha256": "b86b0112880dc30a065183ad983638dfe32a69f6cd8ab2d4fb3ac6f902fec915"
+    },
+    {
+      "path": "lib/lib/deployment/io.smallrye.jandex-3.2.2.jar",
+      "sha256": "8b72a337397848198eeacb21490a59cc6f2b7e7c4dfddd68007867d576c712bc"
+    },
+    {
+      "path": "lib/lib/deployment/io.smallrye.smallrye-health-ui-4.1.0.jar",
+      "sha256": "c1941153d86d5acf0ac27fe6b75fef957c22bb142d671e9b85513355748dcd6e"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-opentelemetry-deployment-3.15.1.jar",
+      "sha256": "cb9b737651364674964b95f52fa563c587ea46e9421fd6d559c7f73b6be6a2f8"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.http.quarkus-http-http-core-5.3.2.jar",
+      "sha256": "0497f5fafdc177e24fdb8d0f81e1f8291ee8894f1532689e67ab0b2f12c7b092"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-vertx-http-deployment-spi-3.15.1.jar",
+      "sha256": "3645fb1e366f249cb137a3d0d477da3e722bad12a504bb8efbd3466b0244e877"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.arc.arc-processor-3.15.1.jar",
+      "sha256": "e1c3cb595bd5a4ab75bedf59b47a3c738b935c7ff83c1f245c418a879a7d37d0"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-rest-deployment-3.15.1.jar",
+      "sha256": "09751b1162688ef5dc7442a87f5e0cf648574ceca8a619f9d6f7b36bc4ab5793"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-class-change-agent-3.15.1.jar",
+      "sha256": "4985ab729f1112bb1f92fe529ca16c440454e07ace28e19d1c4ca231a2119d29"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-micrometer-deployment-3.15.1.jar",
+      "sha256": "ee12dfa4191b79d1da3736bd25f0549898bdff577be0a9be9d7321e744c5f887"
+    },
+    {
+      "path": "lib/quarkus/transformed-bytecode.jar",
+      "sha256": "f3f79e4013e435f85cdcd5c0c214e1f2e18bee1fd794493b26c89ee2f15e928a"
+    },
+    {
+      "path": "lib/quarkus-run.jar",
+      "sha256": "a0a91a09c28c63eb2d60fad3f74a4fe247d1841e487b3efbc58befb893b5706f"
+    },
+    {
+      "path": "lib/lib/boot/io.quarkus.quarkus-classloader-commons-3.15.1.jar",
+      "sha256": "b87a96267e3e1f0f6b461a003581d1fabe2671f5bb36fe38e1e84dbb66c14496"
+    },
+    {
+      "path": "lib/lib/boot/io.github.crac.org-crac-0.1.3.jar",
+      "sha256": "d77a0c628d1399ee682738851dca13d060fef51601aedad6d1efcd3185f9af09"
+    },
+    {
+      "path": "lib/lib/boot/io.quarkus.quarkus-bootstrap-runner-3.15.1.jar",
+      "sha256": "70315bd5886e987893373fdc373b98d893a2bc004f0b9608dc0350fd4912d8c6"
+    },
+    {
+      "path": "lib/lib/boot/io.smallrye.common.smallrye-common-cpu-2.6.0.jar",
+      "sha256": "066ee2fdef8524907a29ad679a86b4a1b5e314eb5776e6441ed45ff2533cc6f2"
+    },
+    {
+      "path": "lib/lib/boot/io.smallrye.common.smallrye-common-expression-2.6.0.jar",
+      "sha256": "1b7af1ec7d4fb873adc356cd2bee0db44d1cc83e9f59882306e1a3454ff4552d"
+    },
+    {
+      "path": "lib/lib/boot/io.smallrye.common.smallrye-common-os-2.6.0.jar",
+      "sha256": "3e4ca823116c3706334dbd7c3dddba274b3a45f1f8f473c39d7374a35eaa68ed"
+    },
+    {
+      "path": "lib/lib/boot/jakarta.json.jakarta.json-api-2.1.3.jar",
+      "sha256": "bc934142805ea1d794f1440563965a3861a2a9fb7414ecd3fe44f26500734414"
+    },
+    {
+      "path": "lib/lib/boot/org.jboss.logging.jboss-logging-3.6.0.Final.jar",
+      "sha256": "924529a679ad76a4665115c47f053e47c6fd272f59a632ba70db481c925ef7a2"
+    },
+    {
+      "path": "lib/lib/boot/io.quarkus.quarkus-development-mode-spi-3.15.1.jar",
+      "sha256": "5f9b74784a9424836eacd8df7560848723e09f874b67afccbf9e9baad913f485"
+    },
+    {
+      "path": "lib/lib/boot/io.smallrye.common.smallrye-common-function-2.6.0.jar",
+      "sha256": "cfe75a781014af514bc17e58df79b3983324b1cb9719714abe227defe1585dda"
+    },
+    {
+      "path": "lib/lib/boot/io.smallrye.common.smallrye-common-constraint-2.6.0.jar",
+      "sha256": "90563f245d5a55b71980d9cebbe9cfe2adbec6a092c6350256cb1327e9b2938b"
+    },
+    {
+      "path": "lib/lib/boot/io.smallrye.common.smallrye-common-io-2.6.0.jar",
+      "sha256": "ebf2ea64fcc98f97e99439b7b41284613c03109d4c1017bce129a74542856239"
+    },
+    {
+      "path": "lib/lib/boot/io.quarkus.quarkus-vertx-latebound-mdc-provider-3.15.1.jar",
+      "sha256": "816357c14b530bf7b3c3ce68bf86132b9dbac0264d6fba9090d30687b3b0a5c6"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-mechanism-oauth2-2.5.2.Final.jar",
+      "sha256": "8c126c2178e4da9ce9332948d472c32b782290736ee6c54f1f7a0c6a8d6efd44"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-arc-3.15.1.jar",
+      "sha256": "41450170f22ba4f20b943e912ec4c5849596e11b866cb1e70a9d6ce97bfc8168"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-http-2.5.2.Final.jar",
+      "sha256": "32f0f1806ab7c976348796d31be88e913a229cb9c07319fb106abec2fb0b334e"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-grpc-client-4.5.10.jar",
+      "sha256": "8128d80331aea90984133a3165d8d03cc6ae5ee042e5510c5bf8fc6d3a50a6b5"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.smallrye-context-propagation-2.1.2.jar",
+      "sha256": "19935cf595d0683df6d96322ca3b5add0596b53402669fe82b924e0033391957"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-core-26.0.6.jar",
+      "sha256": "c9ddc65da555bf69fee1c38353a3d93446e11c082070f0dcc676ce0a16f56896"
+    },
+    {
+      "path": "lib/lib/main/org.jvnet.staxex.stax-ex-2.0.1.jar",
+      "sha256": "5fd7292ace0d39c264f6ba4f2cfcd92cc72453e5fb13561fb0e5570405fe9455"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-kerberos-federation-26.0.6.jar",
+      "sha256": "a31a7532755dd2d6b69f71e3e66f3abacba929e2ca192a14b863da9170e244a5"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-hibernate-orm-3.15.1.jar",
+      "sha256": "11ab5fc1c65068b439b84bc953c045aa28a95a60f9eefd07d9851736ed266493"
+    },
+    {
+      "path": "lib/lib/main/io.perfmark.perfmark-api-0.26.0.jar",
+      "sha256": "b7d23e93a34537ce332708269a0d1404788a5b5e1949e82f5535fce51b3ea95b"
+    },
+    {
+      "path": "lib/lib/main/com.google.code.findbugs.jsr305-3.0.2.jar",
+      "sha256": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7"
+    },
+    {
+      "path": "lib/lib/main/org.jboss.logging.commons-logging-jboss-logging-1.0.0.Final.jar",
+      "sha256": "f12176263ea25f4e78bb4fa4b36d335a29738dde6a8123e1b6da89a655d150ff"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-server-spi-26.0.6.jar",
+      "sha256": "cb3698442ccc718d844c914b15bc90b31d8cf471a75a36a459493aefe1ba8819"
+    },
+    {
+      "path": "lib/lib/main/com.github.ben-manes.caffeine.caffeine-3.1.5.jar",
+      "sha256": "02c34fd2ba78b1956ef6e5de9ac915aee9bfa498589966fa87255fbadb653499"
+    },
+    {
+      "path": "lib/lib/main/io.micrometer.micrometer-commons-1.13.5.jar",
+      "sha256": "1177c58c20a7727feb58042053a9c36e78505f50dcbce46248e20a5d1b495708"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-codec-dns-4.1.111.Final.jar",
+      "sha256": "60ab19f92b413db7e3b3e0c3d72b390aa0fb56d7ae0938f5cb5f0b87b6e095f0"
+    },
+    {
+      "path": "lib/lib/main/jakarta.el.jakarta.el-api-5.0.1.jar",
+      "sha256": "90432d18281717b363b819978c6a172433a2654b77eb87c863c22fc19c20eced"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-opentelemetry-3.15.1.jar",
+      "sha256": "068abdb72ebde11f1f364dfecd94b43d751de566f0ce9afde15caee03ab4ae63"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-mechanism-digest-2.5.2.Final.jar",
+      "sha256": "412c524aac3774f95390fc0c8ad02da0bebca6f7ba33cf6142b28e64c959ece9"
+    },
+    {
+      "path": "lib/lib/main/org.jboss.threads.jboss-threads-3.6.1.Final.jar",
+      "sha256": "a0432e46d8781ee4f9e431fd05be3b58abf668b7e3c524ebf276c0621dc81827"
+    },
+    {
+      "path": "lib/lib/main/org.openjdk.nashorn.nashorn-core-15.4.jar",
+      "sha256": "6f816e84dfd63a81d4eaa7829c08337bbaff3ec683ff3bf6bbd90d017a00dc6f"
+    },
+    {
+      "path": "lib/lib/main/org.ow2.asm.asm-analysis-9.7.jar",
+      "sha256": "7bc6bcbc21379948a0c8c467fb0f864206e5b818f6bc0b546872f5c9f941556f"
+    },
+    {
+      "path": "lib/lib/main/jakarta.ws.rs.jakarta.ws.rs-api-3.1.0.jar",
+      "sha256": "6b3b3628b8b4aedda0d24c3354335e985497d8ef3c510b8f3028e920d5b8663d"
+    },
+    {
+      "path": "lib/lib/main/org.apache.commons.commons-lang3-3.14.0.jar",
+      "sha256": "7b96bf3ee68949abb5bc465559ac270e0551596fa34523fddf890ec418dde13c"
+    },
+    {
+      "path": "lib/lib/main/io.grpc.grpc-netty-1.65.1.jar",
+      "sha256": "86b0a76c7283c7dfe47153f1b27f9ad6580a3ea8ab82276aa5e32d6a62487ae6"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.config.smallrye-config-core-3.9.1.jar",
+      "sha256": "0ee147bff127ff506812aa824b143821caa0ea9eae9e6af2229862a86f7332c4"
+    },
+    {
+      "path": "lib/lib/main/org.freemarker.freemarker-2.3.32.jar",
+      "sha256": "04d65ec1bde6cea20e3495d5e78ef96ab774d9936434861d3254bd88e7e94f92"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-ssl-2.5.2.Final.jar",
+      "sha256": "9099f93ce872dd0d445cf623f5e9b4a3919caf1b3f501008a9d971e24da60018"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-api-1.39.0.jar",
+      "sha256": "ffe18c37246fd34da9460b8d604825bb265c99d3c141698b770c31dd3e38f6c5"
+    },
+    {
+      "path": "lib/lib/main/io.agroal.agroal-pool-2.5.jar",
+      "sha256": "b434d89e4d16a0e400a3c46a705a778aea56a7852f8d749bfcf3bee7a33f9137"
+    },
+    {
+      "path": "lib/lib/main/io.reactivex.rxjava3.rxjava-3.1.8.jar",
+      "sha256": "6890becbd4646347928746a4421cc559fca9f34d06ef2a7a947bd7adf7473246"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-grpc-common-3.15.1.jar",
+      "sha256": "ff5eb0bc5cbea57768a12ee23133255fb3a3805c05f61122504cbac15eab93ac"
+    },
+    {
+      "path": "lib/lib/main/org.apache.kerby.kerby-asn1-2.0.3.jar",
+      "sha256": "3f1532d2bfa0dd6fec171744a07990c0046e0f2f0f65ca21780b408a3827dbd2"
+    },
+    {
+      "path": "lib/lib/main/org.jboss.slf4j.slf4j-jboss-logmanager-2.0.0.Final.jar",
+      "sha256": "277885104b727a213ef784bab31499d23221074ded28b04827e809d2f5489693"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-credentials-3.15.1.jar",
+      "sha256": "5ed2974626315ea400b98dd499a0524d499cec6a938579a8b5954d5b9d058fab"
+    },
+    {
+      "path": "lib/lib/main/jakarta.activation.jakarta.activation-api-2.1.3.jar",
+      "sha256": "01b176d718a169263e78290691fc479977186bcc6b333487325084d6586f4627"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.smallrye-mutiny-vertx-core-3.15.0.jar",
+      "sha256": "f29d72bd624085772fbfffbd7a5cac3f55e9c28423685cbc5bdd30b6f28d4183"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-core-3.15.1.jar",
+      "sha256": "4919133c633d66df39f15057e342d2f0c096be37452163c2a9e3fcbe5dca3169"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-rest-admin-ui-ext-26.0.6.jar",
+      "sha256": "0eb9c355a91ecddb2dad46f896db742220d9a0c32703ff87ca5e478d6de9f3a7"
+    },
+    {
+      "path": "lib/lib/main/com.fasterxml.classmate-1.7.0.jar",
+      "sha256": "cb868f231c5cceb89d795ea00e6e1b7a93b8f4ac1ce1d8be76dde322dff4a046"
+    },
+    {
+      "path": "lib/lib/main/com.webauthn4j.webauthn4j-core-0.21.5.RELEASE.jar",
+      "sha256": "e3b954c4426499752dc354e2c0af582b0bb85dc1f6a6104605c681ccf724fcae"
+    },
+    {
+      "path": "lib/lib/main/com.webauthn4j.webauthn4j-util-0.21.5.RELEASE.jar",
+      "sha256": "1f4f1eec6da1836509afc0f3e826f445a0edf685aab931b98a3f19d4ad029002"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-micrometer-3.15.1.jar",
+      "sha256": "50576fa5a5028298b4334bd83d37a7b7b3867cc363619a57c203ca61f861b1b4"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-logging-json-3.15.1.jar",
+      "sha256": "6bef653238c116e18fb6fae710adfb551f6b7d95077ddc57be1cfa38cbe7d846"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.mutiny-2.6.2.jar",
+      "sha256": "a626a98068a79afa2e5d90258ad96dbada9763ecde587951641c9c5b8fdcff79"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-vertx-http-3.15.1.jar",
+      "sha256": "20b4ac22856b0970d979652d4dc3f2b051c49d010a668ffd84726722f4345a48"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-caffeine-3.15.1.jar",
+      "sha256": "251a27b7ebe867d6938be4842d52e0b22f073ac06f74f708c5e014a87ac5d21f"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-util-2.5.2.Final.jar",
+      "sha256": "bf77d84d52ae2dd014481da3df8557410346a670353ccb79374db260dd752bca"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-saml-core-public-26.0.6.jar",
+      "sha256": "cc467c63e88c1e66de3e3b59158028428e4d2316824f328f773db2832f308a99"
+    },
+    {
+      "path": "lib/lib/main/commons-codec.commons-codec-1.17.1.jar",
+      "sha256": "f9f6cb103f2ddc3c99a9d80ada2ae7bf0685111fd6bffccb72033d1da4e6ff23"
+    },
+    {
+      "path": "lib/lib/main/com.fasterxml.jackson.datatype.jackson-datatype-jdk8-2.17.2.jar",
+      "sha256": "aaa98d3edabf50426bd822fad1442fbdada6e470969326cbcab5c2798f1738d9"
+    },
+    {
+      "path": "lib/lib/main/org.eclipse.angus.angus-mail-2.0.3.jar",
+      "sha256": "6b5b6fc2ba633c53733d829c56cae51d343fb1eadee3e17b8eea01a49edc72d3"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-transport-4.1.111.Final.jar",
+      "sha256": "49a3cc0b6d342340f0980f047026db74161c19ea2a07753a14b4d22ee0653aa5"
+    },
+    {
+      "path": "lib/lib/main/org.glassfish.jaxb.txw2-4.0.5.jar",
+      "sha256": "917355bc451481f30d043b24d123110517966af34383901773882810dca480e5"
+    },
+    {
+      "path": "lib/lib/main/com.microsoft.sqlserver.mssql-jdbc-12.8.1.jre11.jar",
+      "sha256": "e6933c0711e598a224060e52ed31392f720a4a7664e85d8ae37c52a85b67ebb0"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.smallrye-context-propagation-storage-2.1.2.jar",
+      "sha256": "bba24d4bc00fdb6befee17288523c5315303ad50c72c2f7f1340c8a0a434f9fd"
+    },
+    {
+      "path": "lib/lib/main/jakarta.inject.jakarta.inject-api-2.0.1.jar",
+      "sha256": "f7dc98062fccf14126abb751b64fab12c312566e8cbdc8483598bffcea93af7c"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-transport-native-epoll-4.1.111.Final-linux-x86_64.jar",
+      "sha256": "5e9201ad8617a8f72c99a6325c504620c715dc2e4826e36e4187f93eabc426f7"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.infinispan-remote-query-client-15.0.8.Final.jar",
+      "sha256": "f9434525fa0bed1907b7930fa6dab14288156221678626f0cbd24ae3ec6f29f4"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-resolver-4.1.111.Final.jar",
+      "sha256": "78e735746d1f98ca89793176359c97ad5bb6393ec63cd2962f30db43be090e1b"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.smallrye-mutiny-vertx-bridge-common-3.15.0.jar",
+      "sha256": "08ff1da4d1a97c62e8a1c79bc79674e283c0e7a55fb505fe28fd5212c866156e"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-narayana-jta-3.15.1.jar",
+      "sha256": "54f778f28c88ee12623152f1b2eb9b501b28111d778c71a69db97cbb437ab38c"
+    },
+    {
+      "path": "lib/lib/main/org.jgroups.jgroups-5.3.10.Final.jar",
+      "sha256": "1793a1ee89acfda85927633572c8a9935638b2404c2e44832ed6287fdb61e58f"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-tls-registry-3.15.1.jar",
+      "sha256": "5637eca25a02bc9b41e1050274a70f665bac9625be379ab7138740efc3519896"
+    },
+    {
+      "path": "lib/lib/main/io.micrometer.micrometer-observation-1.13.5.jar",
+      "sha256": "c86d59c91a17a897a7c18c25c67af95dd8e44d0beca705840296803afadc40dc"
+    },
+    {
+      "path": "lib/lib/main/org.glassfish.jaxb.jaxb-core-4.0.5.jar",
+      "sha256": "ad3fd9bf00de3eda9859f70b6cfb011e2fe9904804e16a2665092888ece0fdca"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-sasl-digest-2.5.2.Final.jar",
+      "sha256": "ea98411fae6f01128ba2ca7eda3f1ec58480a0784ebc892ae03e94669e08f7b6"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-auth-2.5.2.Final.jar",
+      "sha256": "50fb9422dcbdb49dec6c1f74f6e568df2f0f16615ce46463dbbee86c59b5d9f7"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-permission-2.5.2.Final.jar",
+      "sha256": "e7ac19c89965861adae9e4fbd550491d61f1a5dcd6167ce0244fff2bbb7dddf8"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-auth-common-4.5.10.jar",
+      "sha256": "f9604b4ed7ad20d9536112c1d24db63ae5625f8fc63c2238ff3a8cbe834e7bde"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.resteasy.reactive.resteasy-reactive-jackson-3.15.1.jar",
+      "sha256": "1dd2bb802d01999c60f4d706a7c47bdd4689bc8488ea1a3e42bc1fcf7393aac6"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-model-storage-private-26.0.6.jar",
+      "sha256": "c0d29a583c819ecb74b3c9a6b28e6fac58ee2673293cf6d241d8407f511c8af8"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-jdbc-mssql-3.15.1.jar",
+      "sha256": "8955fe3d6e4a5c592da309e974e94a5eea723ab0a2c790e2b92ea044848577b3"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-auth-server-2.5.2.Final.jar",
+      "sha256": "fbbf6daafc334bccb77464640c71f49bb93c6b1916373cc5294dee34bbae3d3f"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-agroal-3.15.1.jar",
+      "sha256": "037f1d64247ece594d3450d36e0d6a2dec6ada0a9e4bc72263736047f251e3c5"
+    },
+    {
+      "path": "lib/lib/main/jakarta.enterprise.jakarta.enterprise.lang-model-4.1.0.jar",
+      "sha256": "bb56f571f60d2862b2387d5468fe8f5540f8094727283ed991f89082708095ee"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-common-4.1.111.Final.jar",
+      "sha256": "9ae12e9a89f59ce24fb233851fdd93e3c2dfaeb9fa02c60627cd67fa7561871d"
+    },
+    {
+      "path": "lib/lib/main/com.fasterxml.jackson.dataformat.jackson-dataformat-cbor-2.17.2.jar",
+      "sha256": "1d7dc634ba3d7981d7017f4f44d43cf371e922c80028b4eb3e5374ce6546d5f6"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-micrometer-registry-prometheus-3.15.1.jar",
+      "sha256": "90a9366a8a96f321fb0cecfbd9bdbfc606117242571de4ad8437f29a7ffd1102"
+    },
+    {
+      "path": "lib/lib/main/org.hdrhistogram.HdrHistogram-2.2.2.jar",
+      "sha256": "22d1d4316c4ec13a68b559e98c8256d69071593731da96136640f864fa14fad8"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-sasl-scram-2.5.2.Final.jar",
+      "sha256": "f8c765dd9e3fd6c493e74fb621e358b3ef7e880cbe1d1747482d54c060cc9a36"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.smallrye-context-propagation-jta-2.1.2.jar",
+      "sha256": "b83022f6851b7115df6a6e586a29f995c487e64e95dda1963915bf01cd7ec623"
+    },
+    {
+      "path": "lib/lib/main/com.google.code.gson.gson-2.11.0.jar",
+      "sha256": "57928d6e5a6edeb2abd3770a8f95ba44dce45f3b23b7a9dc2b309c581552a78b"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-jsonp-3.15.1.jar",
+      "sha256": "043962b987eec7d11e84869277a1c4872d022c24aa837759fe17f98d7ed7a194"
+    },
+    {
+      "path": "lib/lib/main/org.eclipse.microprofile.context-propagation.microprofile-context-propagation-api-1.3.jar",
+      "sha256": "69ccc04487e87779d4970aa50c673cc34a9df080c1c0e8d8eab2e8b46f825cf4"
+    },
+    {
+      "path": "lib/lib/main/org.hibernate.orm.hibernate-graalvm-6.6.0.Final.jar",
+      "sha256": "5639bb970718a41849e1fb908868322480454250a9a1251524c9b9917cb9cac1"
+    },
+    {
+      "path": "lib/lib/main/com.google.zxing.javase-3.4.0.jar",
+      "sha256": "7aeef746a544effcd9e499214d9f315e69c3a835e7c81abfb703be79f859a6d7"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-exporter-sender-okhttp-1.39.0.jar",
+      "sha256": "e2fbf6f490c2e2b7ab926460d9fa4602dedb4050bbd4e7005eb145512eab44d1"
+    },
+    {
+      "path": "lib/lib/main/org.eclipse.microprofile.health.microprofile-health-api-4.0.1.jar",
+      "sha256": "b89ca4b6c4f7a044250d31c0673f6bc221e40fd669fc5871dbad5e5a0769ca47"
+    },
+    {
+      "path": "lib/lib/main/com.h2database.h2-2.3.230.jar",
+      "sha256": "9a3734cb0799fb53d5c8bb159422ff41bb1e1ad938e340880e3b4e35b4b3c69f"
+    },
+    {
+      "path": "lib/lib/main/io.agroal.agroal-narayana-2.5.jar",
+      "sha256": "a607d53871e23f8d1fa801cebfab37b1c25e4235d9ab8c928d78ea58f0cfbb63"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-password-impl-2.5.2.Final.jar",
+      "sha256": "3d3c60f16cff6aa52a6468034b5c38a148af25b35b4caf068683f3b2ce8d5df8"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-crypto-fips1402-26.0.6.jar",
+      "sha256": "18463d04bda1d38bec77410690a673fdc58affe6c7cc5e6d0c81a5d78fecb317"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-jdbc-oracle-3.15.1.jar",
+      "sha256": "67c33fc6889b68797ed5a78d656a8cb4e587fbceb8013bdc2998c1dee9afa194"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-grpc-common-4.5.10.jar",
+      "sha256": "2d9b4449b4a2707547173b07e14dd37ef0a311a32dd197a88f1addad70ac9e27"
+    },
+    {
+      "path": "lib/lib/main/com.google.zxing.core-3.4.0.jar",
+      "sha256": "65004806a669234c698fbe0755258100375fb01fe93b538455f3903713d4a50d"
+    },
+    {
+      "path": "lib/lib/main/com.google.protobuf.protobuf-java-3.25.5.jar",
+      "sha256": "8540247fad9e06baefa8fb45eb313802d019f485f14300e0f9d6b556ed88e753"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.mutiny-smallrye-context-propagation-2.6.2.jar",
+      "sha256": "4604f8dcbe3d6fa1800ced0035c7abbac11316960b808b69f64e7ff0b1cc054d"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.infinispan-api-15.0.8.Final.jar",
+      "sha256": "c684feae2403dc7f447b0522d491906e76c1121ace977989a524a2dea60efb9d"
+    },
+    {
+      "path": "lib/lib/main/org.twitter4j.twitter4j-core-4.1.2.jar",
+      "sha256": "72602281c06d97e92c63ce84bd93d007642fa0bff852f63df12fd123b990b1f2"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.arc.arc-3.15.1.jar",
+      "sha256": "df89528c26d2d96aeb197aa8a29bfd4d7f28109b8747804a4025ae1cb64a9fd8"
+    },
+    {
+      "path": "lib/lib/main/org.hibernate.quarkus-local-cache-0.3.0.jar",
+      "sha256": "ff7e273ab8de51c748d51c968a519ed9d2944d625b1fab45a843076ee7754c1e"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-model-storage-services-26.0.6.jar",
+      "sha256": "b1f046cde4ee538039c5767a54dfc75fedd2824f5911abe30b8f216986481ca9"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-sasl-2.5.2.Final.jar",
+      "sha256": "0a9e677700074eb953f3e75a057a3f53a3bf06377cbb2fea436bdfb9a5029a89"
+    },
+    {
+      "path": "lib/lib/main/io.grpc.grpc-protobuf-1.65.1.jar",
+      "sha256": "dd5b390240b98daf040f28319711e964a810d7e7c200eb15d3525de51c927350"
+    },
+    {
+      "path": "lib/lib/main/io.grpc.grpc-protobuf-lite-1.65.1.jar",
+      "sha256": "0debee5af442761318309bb24377c512c2228123396f9f4aafd36f1d198af4b2"
+    },
+    {
+      "path": "lib/lib/main/jakarta.xml.bind.jakarta.xml.bind-api-4.0.2.jar",
+      "sha256": "0d6bcfe47763e85047acf7c398336dc84ff85ebcad0a7cb6f3b9d3e981245406"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.smallrye-context-propagation-api-2.1.2.jar",
+      "sha256": "6f464a02e44dfa50a80f5e04378ee46ac11e2044d21121bd2e7464718cc76274"
+    },
+    {
+      "path": "lib/lib/main/com.github.ua-parser.uap-java-1.5.4.jar",
+      "sha256": "2230b8d8ee58b7c7122b198d7f5a97cef4b209ecc7c3ac5fbfee4784f0934259"
+    },
+    {
+      "path": "lib/lib/main/com.fasterxml.jackson.datatype.jackson-datatype-jsr310-2.17.2.jar",
+      "sha256": "9b80024a9822e70b07f6bb13824c76c137c1064a1b5eb518374ab141870fdbcc"
+    },
+    {
+      "path": "lib/lib/main/net.java.dev.jna.jna-platform-5.8.0.jar",
+      "sha256": "ffd93fe1bc07de6f33eabf3d051c3636e01a01c17cb0da8448c53a2ac5e3bf7a"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.smallrye-mutiny-vertx-runtime-3.15.0.jar",
+      "sha256": "2d379aceb9e9c9ddb988f75f1c609ff80057a1d2e3a2ed5bd9741cae2f501d56"
+    },
+    {
+      "path": "lib/lib/main/commons-io.commons-io-2.16.1.jar",
+      "sha256": "f41f7baacd716896447ace9758621f62c1c6b0a91d89acee488da26fc477c84f"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-bridge-common-4.5.10.jar",
+      "sha256": "73ad5e470780a4c885f229b705fb365fbae50f5e1f1990274128f7f48dc61374"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.infinispan-multimap-15.0.8.Final.jar",
+      "sha256": "966aa268a2073a3738a15b2d4e4d2a6603a9c887c621f162c462caa1f8ae5bda"
+    },
+    {
+      "path": "lib/lib/main/com.fasterxml.jackson.core.jackson-annotations-2.17.2.jar",
+      "sha256": "873a606e23507969f9bbbea939d5e19274a88775ea5a169ba7e2d795aa5156e1"
+    },
+    {
+      "path": "lib/lib/main/org.apache.httpcomponents.httpcore-4.4.16.jar",
+      "sha256": "6c9b3dd142a09dc468e23ad39aad6f75a0f2b85125104469f026e52a474e464f"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-virtual-threads-3.15.1.jar",
+      "sha256": "c53c52dda7397e8b111afee26784a9dcfc5920f57c11e4a66a191f1635dd73ef"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.smallrye-mutiny-vertx-auth-common-3.15.0.jar",
+      "sha256": "a7aea831bf53f6242e0291916ded694cddd9a027b2efec8458f8302e85cdbf3f"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-exporter-otlp-common-1.39.0.jar",
+      "sha256": "906f78a318182b4d342067b974da2b10656a8673627b5d2291cdf53829df28f4"
+    },
+    {
+      "path": "lib/lib/main/com.googlecode.owasp-java-html-sanitizer.java8-shim-20240325.1.jar",
+      "sha256": "11f5a6c345d5c48a9d47703b6552fce150c2af266a9915eb20c20ac6d87507fa"
+    },
+    {
+      "path": "lib/lib/main/org.antlr.antlr4-runtime-4.13.0.jar",
+      "sha256": "bd7f7b5d07bc0b047f10915b32ca4bb1de9e57d8049098882e4453c88c076a5d"
+    },
+    {
+      "path": "lib/lib/main/org.glassfish.jaxb.jaxb-runtime-4.0.5.jar",
+      "sha256": "485d8940e76373a7f300815ea5504bf5b726c234425ad30971019d133124cca4"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-authz-policy-common-26.0.6.jar",
+      "sha256": "c594d997017fce25290006dab610d9625aa68190202f9028de2b252bac70b54c"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-sasl-oauth2-2.5.2.Final.jar",
+      "sha256": "ea3e40f25905f10594f88ad6b52d6618be0704e172cd82d237b00200933ef709"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-grpc-server-4.5.10.jar",
+      "sha256": "f21c2e47d5778fae52d62673b404a92204817a606c7cb191815d83c0d14d4908"
+    },
+    {
+      "path": "lib/lib/main/jakarta.mail.jakarta.mail-api-2.1.1.jar",
+      "sha256": "1d69d8aaa6ab704d4ce3bd156cd5542060849a409b1e0463163d8508356857cc"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-handler-proxy-4.1.111.Final.jar",
+      "sha256": "3d00abae89eb2fb5bfb836acbee86fd5249ddeae71d7743a87a39fbc9ea41049"
+    },
+    {
+      "path": "lib/lib/deployment/org.aesh.readline-2.6.jar",
+      "sha256": "601eb6cbc77a8b07b8014ba89cf3fbdda20fcdb96493e57466d3753fa26accde"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-mutiny-deployment-3.15.1.jar",
+      "sha256": "ca6732d61815f0339b5f9a71eeb9fdf73740868e96b05ba159e5f675d3132891"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.qute.qute-core-3.15.1.jar",
+      "sha256": "02fc027d2d2c5ec90cb09db183d6a4810cbfb1ef47b944f4adcecef1aafeb1ef"
+    },
+    {
+      "path": "lib/lib/deployment/org.graalvm.sdk.nativeimage-23.1.2.jar",
+      "sha256": "b20c00823c194cadcafc8e853b96a5754e641b467dc56634e738d756b308ad9a"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jdbc-oracle-deployment-3.15.1.jar",
+      "sha256": "c93259d7373c4c82e747d16af4b269535e8201e12934f93f027a7a2ed10745fa"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-devtools-utilities-3.15.1.jar",
+      "sha256": "dfda2d2978187c007dc3f6e60cc88cb9e1a33d48d0f90f4dd996d235253df618"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-vertx-deployment-3.15.1.jar",
+      "sha256": "d6879ef63cce58e20bedeb91d7722e974a25bbb5c605ee2cdb6e675522299752"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-hibernate-orm-deployment-spi-3.15.1.jar",
+      "sha256": "53f4c26ef35ae47a622ec62a896186d10632021a4ecb28ae63c4c258d0ad6042"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-security-spi-3.15.1.jar",
+      "sha256": "7cf12b3cf2f66ee0042870e29979a82926ee92b8b3092330d7aa90c669033bde"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-hibernate-validator-spi-3.15.1.jar",
+      "sha256": "c4c42d2eb8f317ec313094ddb00b20ab84dc92f5160c84757ba2d72dac52efcc"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-tls-registry-deployment-3.15.1.jar",
+      "sha256": "0e7e8510f1fcbbe4695c3b22ff404fdf1d97a26a6c4a99efcfebdc3e1a6736e9"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jdbc-mssql-deployment-3.15.1.jar",
+      "sha256": "15427d5ab97288692935838595327977a86cc8ebd070c5534ef804d4de2415a2"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jaxrs-spi-deployment-3.15.1.jar",
+      "sha256": "d11c5a5110425c92009511331875aa070390610fccee99718e1af3981d836c5b"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jsonp-deployment-3.15.1.jar",
+      "sha256": "277b104c7d26f44e0a4217b645a84904eb554d48292a6c26d20066e4989723b1"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-agroal-deployment-3.15.1.jar",
+      "sha256": "4df18603582d63ec068f4ffe03d9105b787a7fca915fb7f48f6084e490299bd1"
+    },
+    {
+      "path": "lib/lib/deployment/org.aesh.aesh-2.8.2.jar",
+      "sha256": "8c1e17fd1ab9d3a736bdee7fbd649e174f7dc26c1ceeac6e9ea596a9d63fcffd"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.gizmo.gizmo-1.8.0.jar",
+      "sha256": "b4c903e40595313685ad3fef57a429e715fef5a254c653703bab19ee50eec077"
+    },
+    {
+      "path": "lib/lib/deployment/org.keycloak.keycloak-quarkus-server-deployment-26.0.6.jar",
+      "sha256": "ffecae274ab6c29594756717ead7bc56f8fad5ff040c35be34bd054c80c079e6"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-credentials-deployment-3.15.1.jar",
+      "sha256": "a5893ef3ff0cd61ce7f77fc82214168b334ffa5bac55e9c51016a9a921dd0fd6"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-vertx-http-dev-ui-spi-3.15.1.jar",
+      "sha256": "0a482e6c4feca419d8227f5929ad8b27a8b7468b620127ef77cf58fd8447d384"
+    },
+    {
+      "path": "bin/client/lib/keycloak-crypto-fips1402-26.0.6.jar",
+      "sha256": "18463d04bda1d38bec77410690a673fdc58affe6c7cc5e6d0c81a5d78fecb317"
+    },
+    {
+      "path": "bin/client/lib/bcprov-jdk18on-1.78.1.jar",
+      "sha256": "add5915e6acfc6ab5836e1fd8a5e21c6488536a8c1f21f386eeb3bf280b702d7"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.protostream.protostream-types-5.0.8.Final.jar",
+      "sha256": "1151ab6696039ed15a1d7d172ee75403336162d774cf296d910edc3dc19bd2e2"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-web-4.5.10.jar",
+      "sha256": "3611fc8916ce564e9fdeea359fc66482a6687a17c43c50f2887a37c81e3e29ee"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-exporter-common-1.39.0.jar",
+      "sha256": "91d95ae84f2f0a98bf8256951a4ca76be2cea47a56a47721690c5d8a9beb54b0"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.smallrye-health-4.1.0.jar",
+      "sha256": "6a19356518a022c4a3f45ce233c9803d2435d5d1a0e2385262b12f3e6e52595c"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-sdk-extension-autoconfigure-1.39.0.jar",
+      "sha256": "292bef09c2e35154e6d580b46dd612f267166ee4069aa7116449b75e13739e88"
+    },
+    {
+      "path": "lib/lib/main/org.jboss.jboss-transaction-spi-8.0.0.Final.jar",
+      "sha256": "07e4e62ceae075a8c11a715d89b19992c879f505b48be6b2727f5be798562ae1"
+    },
+    {
+      "path": "lib/lib/main/net.java.dev.jna.jna-5.8.0.jar",
+      "sha256": "930273cc1c492f25661ea62413a6da3fd7f6e01bf1c4dcc0817fc8696a7b07ac"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-common-26.0.6.jar",
+      "sha256": "d0d54ce48d208c6c9a438b562429cb09f003366cc6f781760c452cff0f71f0d2"
+    },
+    {
+      "path": "lib/lib/main/io.netty.netty-codec-socks-4.1.111.Final.jar",
+      "sha256": "6e4c22dd0a5416ccce630aa37db1df11c22e1e3c68c72e1aa2206626568f522e"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.smallrye-mutiny-vertx-uri-template-3.15.0.jar",
+      "sha256": "756f3659b38669d56ed92e717ad67a013f427920f8fb4ad0e8d8f6add2691c3f"
+    },
+    {
+      "path": "lib/lib/main/io.micrometer.micrometer-registry-prometheus-simpleclient-1.13.5.jar",
+      "sha256": "0a9e49d167b9b1b68203e58b6198f3a8c5a2037257eb4667cd7d5c3adb64d2d3"
+    },
+    {
+      "path": "lib/lib/main/org.locationtech.jts.jts-core-1.19.0.jar",
+      "sha256": "dbb8644cf324123d06c27aa982f570811e10b4cb1f2aef893b00de237d33efc0"
+    },
+    {
+      "path": "lib/lib/main/com.sun.xml.messaging.saaj.saaj-impl-2.0.1.jar",
+      "sha256": "9ed4294e7947088a3644b4d9aa726a2eb510585b50faec308d737046ba0fda90"
+    },
+    {
+      "path": "lib/lib/main/org.infinispan.infinispan-query-dsl-15.0.8.Final.jar",
+      "sha256": "4f6661e3b963307a39cf667f5f11b27de56959510ba88a7656cb6b966d6b52b5"
+    },
+    {
+      "path": "lib/lib/main/io.vertx.vertx-core-4.5.10.jar",
+      "sha256": "e34ba9e379c280a74a9ddf408dea5d383fa386d14599233bdd43de16a85d9bf0"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-server-spi-private-26.0.6.jar",
+      "sha256": "e1436042ed481682ee5623e8c9984f5a7f025860b4bf04789ca52b8af1ee0fc2"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.config.smallrye-config-3.9.1.jar",
+      "sha256": "785934b573c0dca820b7fc5d9553bd37d21ce6afb13be1f835eb84f0491e8822"
+    },
+    {
+      "path": "lib/lib/main/jakarta.resource.jakarta.resource-api-2.1.0.jar",
+      "sha256": "4d26ad86a5f72cd2f9c4a31cc4524f7bf3ec0ff74416f081f8642b7ce8041067"
+    },
+    {
+      "path": "lib/lib/main/org.eclipse.microprofile.config.microprofile-config-api-3.1.jar",
+      "sha256": "dee277f81e1edfeafd5e43589441ecdf434500fe4a31d035e74b8e6d8e7bfd91"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-saml-core-26.0.6.jar",
+      "sha256": "1270c825188bbf5e8798946287403fed10c519760def5e8736a579d8a5783b72"
+    },
+    {
+      "path": "lib/lib/main/org.wildfly.security.wildfly-elytron-mechanism-scram-2.5.2.Final.jar",
+      "sha256": "7d15554d0fadd12f313c5c9b6f482c5526f20b716d7c175833146cdea62965b0"
+    },
+    {
+      "path": "lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.17.2.jar",
+      "sha256": "c04993f33c0f845342653784f14f38373d005280e6359db5f808701cfae73c0c"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.vertx.utils.quarkus-vertx-utils-3.15.1.jar",
+      "sha256": "5986eaf5f8e505f4913c1b87048ff739bdbe6b5854f859177a5de22680278ee6"
+    },
+    {
+      "path": "lib/lib/main/io.grpc.grpc-core-1.65.1.jar",
+      "sha256": "590d19ad387b5f288477fc4c5bc5be9adf4ac4eab51cb69e8b3211286127c061"
+    },
+    {
+      "path": "lib/lib/main/org.liquibase.liquibase-core-4.29.1.jar",
+      "sha256": "d32b687d37f5fbf9f30d10e12cb9d7ba4ae3e41f7248ef2df3de2ce53b0cdd27"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.instrumentation.opentelemetry-jdbc-2.5.0-alpha.jar",
+      "sha256": "900edfd6ae02874d21f2db3f9ce55846f3e94db86cf95e03fe41fbdc37988bfd"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-smallrye-health-3.15.1.jar",
+      "sha256": "fff311b44c47029b7e3e3b635fe72e3fe2003c6d3ffa057742ac7c015658eae1"
+    },
+    {
+      "path": "lib/lib/main/io.quarkus.quarkus-jackson-3.15.1.jar",
+      "sha256": "5e10ccdd074cd346ecb7e97d155e3b82b78bf3f2cd1599c0a7fc17301c156f49"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.instrumentation.opentelemetry-instrumentation-annotations-support-2.5.0-alpha.jar",
+      "sha256": "ad8178cc3b64fd19a85543351a27ae8f98160809dfd8787d080d3ddbe5013692"
+    },
+    {
+      "path": "lib/lib/main/jakarta.annotation.jakarta.annotation-api-3.0.0.jar",
+      "sha256": "b01f55552284cfb149411e64eabca75e942d26d2e1786b32914250e4330afaa2"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.smallrye-health-provided-checks-4.1.0.jar",
+      "sha256": "07e5b970c35679b8ca05257b54e49bdfeb8a2e220a4d275361c3a0acdd138089"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-exporter-otlp-1.39.0.jar",
+      "sha256": "1cc7c3833fb3f899348678f98a17480d665bd3e9ad4afb5f2c8f7a1b2384fe55"
+    },
+    {
+      "path": "lib/lib/main/io.opentelemetry.opentelemetry-context-1.39.0.jar",
+      "sha256": "3c86e7de8cc34a2c1a6077b0409bafebe4321495e297e355c371d1cfd39c26f3"
+    },
+    {
+      "path": "lib/lib/main/io.smallrye.reactive.smallrye-mutiny-vertx-web-3.15.0.jar",
+      "sha256": "d0c639e655f2d7a9129835a9d91f29d35b58b541c0ef5f40b861f0117707a5ac"
+    },
+    {
+      "path": "lib/lib/main/org.jctools.jctools-core-4.0.5.jar",
+      "sha256": "d65e5f38bcd0984e26f87187687f1f70dd52740c4d5e046f8d104e01ab5db95f"
+    },
+    {
+      "path": "lib/lib/main/org.keycloak.keycloak-themes-26.0.6.jar",
+      "sha256": "bfb1ebde76ebdbb2f781bb233fc7d6031d7350d46c665d2d0f20e439614b33d0"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-resteasy-common-spi-3.15.1.jar",
+      "sha256": "4c3388841e751459dbbe60a1a9758e6aa3f1164b588f0291d4b803bd5ebbb2ea"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jackson-deployment-3.15.1.jar",
+      "sha256": "8055bae9fce7178aee52f58e4eb235f7debf4d58e0e6e14c320f757e0b84b597"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-undertow-spi-3.15.1.jar",
+      "sha256": "5431b2ff3fca20afbfe5cc94b55c91443eb440fbaeacab56a32f529b8a85c933"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-caffeine-deployment-3.15.1.jar",
+      "sha256": "2f1d55bc33d3cfda7dac3e36aff5db619bb41cb175de97f833100f083fdefdf7"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-rest-jackson-deployment-3.15.1.jar",
+      "sha256": "998b29cb921c08eaeaff905337ae1e9a1b72bf8dd9da25990f8966bc8f7dfbdc"
+    },
+    {
+      "path": "lib/lib/deployment/com.fasterxml.jackson.dataformat.jackson-dataformat-yaml-2.17.2.jar",
+      "sha256": "941bcd8b1381bb3b0d726fab41624fa8ece0ee7b6cf2860ad95e8157ce673376"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jdbc-mysql-deployment-3.15.1.jar",
+      "sha256": "0cdffd29468ef91a5784e652f08abe1097f907052b133cd282fe31503280d63c"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.http.quarkus-http-core-5.3.2.jar",
+      "sha256": "ecf52f1bf5cf7b2e633ab998260f406792ce02c02e14c366bc9895ad565b2c1e"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-rest-server-spi-deployment-3.15.1.jar",
+      "sha256": "be3b78f9ef28b65592bcbaa93190cf0e4022e934cb78d235f2932a2f14d210aa"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-vertx-deployment-spi-3.15.1.jar",
+      "sha256": "2f6f8db462f42018c4fbfa3d39944cba4f31ff08eb57adba1790dcf5984ba110"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-jdbc-mariadb-deployment-3.15.1.jar",
+      "sha256": "38a0adae2afaafdf1eb4b772ab1e73fed5a56574aec961047cc987c7186f3b64"
+    },
+    {
+      "path": "lib/lib/deployment/jakarta.servlet.jakarta.servlet-api-6.0.0.jar",
+      "sha256": "c034eb1afb158987dbb53a5fea0cadf611c8dae8daadd59c44d9d5ab70129cef"
+    },
+    {
+      "path": "lib/lib/deployment/org.eclipse.microprofile.openapi.microprofile-openapi-api-3.1.1.jar",
+      "sha256": "b482278365efc155fe8de06aac2e715911df4abc01562391a958cae2ce941814"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-panache-hibernate-common-3.15.1.jar",
+      "sha256": "0c2d16fc7be1905d39d2bd9289326800fed52d5876d0fbcaee2cbcd2d0e6b703"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-smallrye-health-spi-3.15.1.jar",
+      "sha256": "825fd30db8a9821a80720086c91f7b585cffb08249812892ed34f6c1aec057e1"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-rest-spi-deployment-3.15.1.jar",
+      "sha256": "928ee8b7a69fc88aff037a389b6f7069cce5e1bdd22b6c5366922da098185f48"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-smallrye-context-propagation-deployment-3.15.1.jar",
+      "sha256": "85c4ca30b81be61a1de1d2619c4e03f79bdcc631f1721dc39658afc674d3d54a"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-netty-deployment-3.15.1.jar",
+      "sha256": "522b0b9ed59d3928750dcc4b8b48837d16a693f716c644039340b27de030a0d4"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-rest-common-deployment-3.15.1.jar",
+      "sha256": "42e4647d9c9bfca5478bc2ddb4abe92a7488f09aadb5972d1e5ae72f5cb62442"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-rest-jackson-common-deployment-3.15.1.jar",
+      "sha256": "eaf2f346ae0bc7a2616a60802588e0e8cbd388cfccf9e9f9eb6d42cd2d4949fa"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.resteasy.reactive.resteasy-reactive-common-processor-3.15.1.jar",
+      "sha256": "40a4d8f9f5a62dd8b0b2e58573bf1eb61655709db46ff9a34b3a9d15967a48c6"
+    },
+    {
+      "path": "lib/lib/deployment/org.fusesource.jansi.jansi-2.4.0.jar",
+      "sha256": "6cd91991323dd7b2fb28ca93d7ac12af5a86a2f53279e2b35827b30313fd0b9f"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-panache-common-deployment-3.15.1.jar",
+      "sha256": "178a0dbd6e12096a5bc031e7e5f8f60feb0e7922b47ed93d0231c80db7805683"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-smallrye-openapi-spi-3.15.1.jar",
+      "sha256": "34b97633b81dccee7e9a1eeff57d14530cb8614ef0c55efc22404953125b9c55"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-micrometer-registry-prometheus-deployment-3.15.1.jar",
+      "sha256": "61fdbd12dad7776d478b20ce15692a44dcb32fb134b17b7db562f7375814c876"
+    },
+    {
+      "path": "lib/lib/deployment/jakarta.validation.jakarta.validation-api-3.0.2.jar",
+      "sha256": "291c25e6910cc6a7ebd96d4c6baebf6d7c37676c5482c2d96146e901b62c1fc9"
+    },
+    {
+      "path": "lib/lib/deployment/io.quarkus.quarkus-arc-deployment-3.15.1.jar",
+      "sha256": "ea6ce5e8cc9345ffeb0409471e0bec156aaf855dd8d017bebd49b122ec2f01e8"
+    }
+  ],
+  "transitive_license_and_security_clearance": false,
+  "limits": "Archive/root-license review and exact binary inventory only. The distribution root license does not classify every dependency. A maintained version and full runtime advisory/transitive-license/image review are still required. No image was used."
+}

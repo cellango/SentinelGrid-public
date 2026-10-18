@@ -779,7 +779,12 @@ The [non-creating association proposal](decisions/0002-issuer-association-readba
 records source findings for all three pinned Keycloak versions and a separately
 scoped provider-model read prototype. It is proposed for isolated qualification;
 the [provider source prototype](../../infra/keycloak/keycloak_registration_connector/README.md)
-now compiles and passes86native-authentication/SDK fixture checks. No server
-installation or caller adapter is supplied. The current guard remains unchanged. Its first source compatibility candidate is the existing26.0.6 test pin,
-not a production-version recommendation. Runtime non-creation, provider grants,
-protected credentials and caller integration remain unqualified.
+passes 88 native/SDK checks and 46 measured scenarios in a fresh single-node
+Keycloak 26.0.6/H2 lab. All 87 vendor base tables are instrumented for row-write
+attempts, with protected identity/configuration fingerprints unchanged across
+observation windows. See the component's runtime review for exact coverage and
+limitations. No application deployment or caller adapter is supplied; the current
+guard remains unchanged. This historical compatibility candidate is not a
+production-version recommendation. Controlled mutation races, cache freshness,
+other storage/version/transport paths, provider grant/credential lifecycle and
+caller integration remain unqualified.

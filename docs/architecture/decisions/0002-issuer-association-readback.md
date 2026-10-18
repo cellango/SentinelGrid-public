@@ -4,8 +4,10 @@ Date: October 18, 2026.
 Status: **proposed for isolated prototype qualification**. No runtime adoption,
 provider installation or caller adoption is approved by this document. An isolated
 [source prototype](../../../infra/keycloak/keycloak_registration_connector/README.md)
-now compiles and passes native-authentication/SDK fixture checks; server, database
-non-mutation and deployment qualification remain pending.
+now passes 88 native/SDK checks and 46 measured scenarios in a new single-node
+Keycloak 26.0.6/H2 lab. Protected row writes and persistent changes were absent in
+those windows; controlled mutation races/cache freshness, broader runtime and
+deployment qualification remain pending. See its linked runtime review and runner.
 
 ## Context and evidence
 
@@ -50,7 +52,10 @@ is the compatibility input. Current documentation is guidance, not a guarantee
 that packaging/authentication details match a historical version.
 
 The initial source review ran no provider server; its local Docker daemon was unavailable.
-The subsequent prototype tests also run no server or database.
+The SDK fixture suite runs no server or database. A subsequent opt-in disposable
+lab exercises actual native issuance/authentication, routing/TLS and local JPA/H2
+with write-attempt triggers and before/after fingerprints. This bounded result
+does not establish every qualification gate below.
 Version26.0.6 is selected only for the first reproducible compatibility prototype
 because it already appears in the test manifest. It is **not** selected as a
 production version or recommended upgrade. Before any deployment, separately
@@ -66,8 +71,8 @@ models and must never call the account-creating Admin REST resource. No direct
 application access to the Keycloak database, custom vendor table, token signer,
 account provisioning, refresh or token-exchange path is added.
 
-The isolated prototype implements the resource below. It is not installed in a
-server or adopted by any current Python client:
+The isolated prototype implements the resource below. Its only installation is
+in a newly created disposable qualification lab; no current Python client adopts it:
 
 `GET /realms/{realm}/sentinelgrid-registration/v1/clients/{client_uuid}/association`
 
@@ -168,7 +173,10 @@ proof, tenant tests, ticket SQL/RLS and deployed caller adoption remain required
 
 ## Qualification and migration gates
 
-Prototype work may proceed in an isolated source/test fixture. Acceptance for
+Prototype work may proceed in an isolated source/test fixture or the documented
+new disposable synthetic runtime. The bounded local evidence and remaining
+concurrency/cache/transport/storage/version limitations are recorded in the
+[component runtime review](../../../infra/keycloak/keycloak_registration_connector/runtime-review.json). Acceptance for
 production adoption or changing the caller remains pending all of these gates:
 
 - Reproducible provider build with reviewed license/dependency provenance and pinned

@@ -1,7 +1,7 @@
 {
   "format_version": 1,
   "review_date": "2026-10-18",
-  "scope": "Two clean local source/test builds on one pinned temporary macOS arm64 toolchain. Not server, database, installation or production qualification.",
+  "scope": "Two clean local Java21 source/test builds. Real isolated runtime qualification is reported separately in runtime-review.json.",
   "keycloak_source_candidate": "26.0.6",
   "java_target": 21,
   "toolchain": [
@@ -21,23 +21,23 @@
   ],
   "source_inputs_sha256": {
     "pom.xml": "609f71d81217ca068fd233d632cb420ebbefe4adaab0a5fced9774575169a68d",
-    "src/main/java/ai/sentinelgrid/keycloak/registration/Grants.java": "fa735f033794b95180b5299f3cebb407831ae9c09843ffc86bc9e56490b05512",
-    "src/main/java/ai/sentinelgrid/keycloak/registration/AssociationResource.java": "7837ae81c8b69f85c7be895f7ad41a8dd7d9069b121d35273d74646e1e047bd8",
     "src/main/java/ai/sentinelgrid/keycloak/registration/AssociationProviderFactory.java": "b2772ea533993f4888228e3805516eed1b54518aca0c32916fc71e2306c00fb0",
+    "src/main/java/ai/sentinelgrid/keycloak/registration/AssociationResource.java": "d1687cdda703a75bf9c534234f41f7c8563fdebbb32b95cd06d8f392ff4b1888",
+    "src/main/java/ai/sentinelgrid/keycloak/registration/Grants.java": "fa735f033794b95180b5299f3cebb407831ae9c09843ffc86bc9e56490b05512",
     "src/main/resources/META-INF/LICENSE": "2191d05c6ee7c145480916b745bd020484adb61653be943c43cff10bc22927a1",
-    "src/main/resources/META-INF/beans.xml": "812e2e963ab7109d7629568a8f082780654630920faeaf4ee76f508947cb5d37",
     "src/main/resources/META-INF/NOTICE": "21e96f7719962309ca04aa039c9f26570ec90818e2652c74204ecabca0eaf9d7",
+    "src/main/resources/META-INF/beans.xml": "812e2e963ab7109d7629568a8f082780654630920faeaf4ee76f508947cb5d37",
     "src/main/resources/META-INF/services/org.keycloak.services.resource.RealmResourceProviderFactory": "8d8b203514f4b38403e219846b821a2d525113455919cd4c2add4405959195dd",
-    "src/test/java/ai/sentinelgrid/keycloak/registration/AssociationResourceTest.java": "943c82f26ea403f6596b3a45d79dec684f367a1ea0c97e60375fd59c26ac86b7",
+    "src/test/java/ai/sentinelgrid/keycloak/registration/AssociationResourceTest.java": "132b4fb09fc9b74cbddcf968af35f445d5e05777b4f1ad78630487b4466101fa",
     "src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker": "8eca853a5a457f17e0479b71dfbe95f2a13aff9eeff250261ecdc8ca9b847a6a"
   },
-  "tests": 86,
+  "tests": 88,
   "actual_native_Keycloak_AuthenticationManager_TokenVerifier_RS256": true,
   "request_key_and_SDK_storage_doubles": true,
   "admission_override": false,
   "real_provider_server_or_SQL_started": false,
   "two_clean_builds_identical": true,
-  "jar_sha256": "5d47af2dd59acee0dec149a3aa846dc56dbb7af7bedae8caa0a516e1c74561e2",
+  "jar_sha256": "c87cc395f671ee575b1547d7b659e630010f6e3d2d8decb7fda084534c48f852",
   "thin_jar_entries": [
     "META-INF/",
     "META-INF/MANIFEST.MF",
@@ -66,5 +66,6 @@
   "build_output_timestamp": "2026-10-18T00:00:00Z",
   "default_disabled_and_empty_grants": true,
   "current_Python_receiver_verifier_caller_guard_unchanged": true,
-  "real_non_mutation_cache_server_TLS_and_runtime_remaining": true
+  "real_non_mutation_cache_server_TLS_and_runtime_remaining": true,
+  "isolated_runtime_report": "runtime-review.json"
 }

@@ -278,6 +278,19 @@ class AssociationResourceTest {
   }
 
   @Test
+  void nativeHostnameRootCanHaveEmptyBasePath() throws Exception {
+    when(uri.getBaseUri()).thenReturn(URI.create("https://identity.internal.test"));
+    assertEquals(200, read().getStatus());
+  }
+
+  @Test
+  void nativeClientIdMustMatchAuthorizedParty() throws Exception {
+    claims.put("client_id", "association-reader");
+    assertEquals(200, read().getStatus());
+    assertEquals(1, signatureChecks);
+  }
+
+  @Test
   void nativeRSAAndExactAssociationProduceMinimalObservation() throws Exception {
     Response r = read();
     assertEquals(200, r.getStatus());

@@ -195,3 +195,11 @@ is changed. Current-IAM/actual-assembly checks use key/HTTP and runtime-state do
 without identity/admission or scheduler-SDK replacements. Actual APScheduler,
 backing stores, model/Flyway/RLS/data, rule evaluation, downstream credentials/effects
 and full runtime remain unqualified; broader legacy fixture errors remain open.
+
+## Experimental association-provider lab
+
+The [Keycloak connector](infra/keycloak/keycloak_registration_connector/README.md)
+adds an opt-in qualification runner for a new disposable synthetic Keycloak/H2
+instance. It is outside the supported preview commands and production scope. Its
+recorded local results do not enable the current caller or supersede the proposed
+association ADR's remaining adoption gates. Existing environments are never targets.
