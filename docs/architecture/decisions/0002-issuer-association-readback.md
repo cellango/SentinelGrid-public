@@ -11,8 +11,10 @@ during a read that still reports enabled state; repeated queries also retain
 older associations in late-mutation cases. Pinned SQL callbacks miss parse-time
 failures. The [controlled evidence](../../../infra/keycloak/keycloak_registration_connector/controlled-failures-review.json)
 and component README govern the exact scope. A consistency/version/fencing and
-instrumentation decision is required before caller adoption; this ADR remains
-proposed and the current guard remains closed.
+instrumentation decision is required before caller adoption. The follow-on
+[consistency and conditional-issuance proposal](0003-association-consistency-and-issuance.md)
+defines the proposed contract, alternatives and ordered remediation gates. Both
+ADRs remain proposed and the current guard remains closed.
 
 ## Context and evidence
 
@@ -196,7 +198,11 @@ alone proves a later acquisition cannot race. Evaluate a fresh consistent provid
 snapshot and issuer-side conditional acquisition together before choosing a repair.
 Do not reinterpret the failed witnesses as passes or enable a caller from them.
 Full SQL attempt coverage also needs evidence beyond the pinned callback subset.
-No superseding contract or implementation is selected by this evidence update.
+The follow-on [ADR 0003](0003-association-consistency-and-issuance.md) proposes a
+consistent snapshot plus issuer-side conditional acquisition. It identifies the
+stock token path's account/mapper repair fallback and the missing complete writer
+fence. Its design requires a version-specific feasibility and compatibility
+decision; no contract or implementation is adopted here.
 
 ## Qualification and migration gates
 

@@ -3,7 +3,11 @@
 **Experimental, default-disabled source prototype.** This deterministic provider
 integration is not a reasoning agent or a qualified deployment. Read the
 [root preview scope](../../../RELEASE_SCOPE.md) and
-[proposed association ADR](../../../docs/architecture/decisions/0002-issuer-association-readback.md).
+[proposed association ADR](../../../docs/architecture/decisions/0002-issuer-association-readback.md)
+and [consistency/conditional-issuance plan](../../../docs/architecture/decisions/0003-association-consistency-and-issuance.md).
+The latter is design only: SQL observer calibration precedes issuer feasibility,
+snapshot and conditional-issuance prototypes, full qualification and an explicit
+caller compatibility decision. It clears none of the nine failed gates.
 Default repository workflows install no provider; current Python clients and their
 missing-association guard are unchanged. No application/Compose/Helm/CI path loads
 this JAR. Keycloak 26.0.6 is a historical source-compatibility candidate from the

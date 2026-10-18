@@ -784,7 +784,11 @@ Keycloak/H2 baseline scenarios pass again. A new controlled study completed
 18 experiments with 9 failed adoption gates: repeated reads can retain earlier
 state across committed mutations, including a supported native Admin REST disable,
 and pinned SQL callbacks miss parse-time failures. See the component's controlled
-review and ADR0002 for the exact witnesses and required consistency/fencing decision.
+review and ADR0002 for the exact witnesses. The proposed
+[consistency/conditional-issuance decision](decisions/0003-association-consistency-and-issuance.md)
+defines the intended snapshot/issuance points, stock account/mapper fallback gap,
+writer-fence prerequisites and ordered remediation gates. It adopts no API or
+compatibility change; the nine failed gates remain open.
 No application deployment or caller adapter is supplied; the current guard stays
 closed. Historical 26.0.6 remains a compatibility candidate. All other provider,
 credential, metadata-rights, data and caller adoption gates remain required.

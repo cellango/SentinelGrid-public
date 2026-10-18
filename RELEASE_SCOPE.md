@@ -208,3 +208,9 @@ The optional controlled-failure mode deliberately terminates its own new H2
 process and records unresolved consistency and statement-coverage gates. Completing
 those experiments is not an adoption pass; current callers and guards remain
 unchanged. See the component's controlled review before considering integration.
+
+The [association consistency and conditional-issuance proposal](docs/architecture/decisions/0003-association-consistency-and-issuance.md)
+adds an ordered remediation plan only. Its snapshot, durable generation, complete
+writer fence and native non-creating acquisition are unimplemented. All nine
+controlled-study gates remain failed; no caller, schema, configuration or
+production version is changed by this documentation.

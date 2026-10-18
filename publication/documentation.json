@@ -420,6 +420,11 @@
       "authority": "proposed_design_not_implemented"
     },
     {
+      "path": "docs/architecture/decisions/0003-association-consistency-and-issuance.md",
+      "class": "current_architecture",
+      "authority": "proposed_design_not_implemented"
+    },
+    {
       "path": "docs/architecture/frontend.md",
       "class": "current_architecture",
       "authority": "current_within_source_preview_scope"
