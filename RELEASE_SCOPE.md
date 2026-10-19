@@ -221,3 +221,10 @@ recompile, errors, transactions, row attempts, attribution and deliberately fail
 log/crash evidence. Its scoped controls and 46 baseline cases pass; whole-runtime
 coverage and all nine earlier provider gates remain open. No application or
 provider implementation, schema, dependency, default or deployment changes.
+
+The [maintained issuer feasibility review](docs/architecture/keycloak-issuer-feasibility.md)
+is source/design only. Keycloak 26.8.1 improves stock missing-account denial, but
+provides no qualified complete snapshot/writer-fence contract for this prototype.
+Issuer-core/storage/compatibility ownership must be decided before further
+prototypes. No production version, application behavior or schema is adopted;
+all historical failed gates and caller-adoption restrictions remain.

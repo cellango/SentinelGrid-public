@@ -435,6 +435,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/architecture/keycloak-issuer-feasibility.md",
+      "class": "current_architecture",
+      "authority": "source_feasibility_review_not_implementation_or_runtime_qualification"
+    },
+    {
       "path": "docs/architecture/overview.md",
       "class": "current_architecture",
       "authority": "current_within_source_preview_scope"

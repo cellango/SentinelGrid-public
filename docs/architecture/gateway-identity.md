@@ -793,6 +793,9 @@ The [bounded SQL calibration](../../infra/keycloak/keycloak_registration_connect
 adds lab tracing and native request-through-commit attribution; all 46 baseline
 cases pass. Whole-log health/coverage and all nine original provider gates remain
 open. The current provider and Python guard are unchanged.
+The [maintained-candidate source review](keycloak-issuer-feasibility.md) finds
+improved missing-account denial in 26.8.1, but no qualified complete issuer fence.
+R3/R4 need an explicit issuer-core ownership/storage/compatibility decision first.
 No application deployment or caller adapter is supplied; the current guard stays
 closed. Historical 26.0.6 remains a compatibility candidate. All other provider,
 credential, metadata-rights, data and caller adoption gates remain required.

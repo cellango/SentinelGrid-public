@@ -281,6 +281,24 @@ R2 source/API/version/writer/storage feasibility is next, carrying the remaining
 R1 limits and every R3–R7 requirement. This adds instrumentation only; the proposed
 consistency/issuance contract and current provider/caller behavior are unchanged.
 
+## R2 maintained-candidate source review
+
+The [26.8.1 feasibility review](../keycloak-issuer-feasibility.md) pins the current
+source candidate separately from historical 26.0.6 evidence. Its stock
+client-credentials implementation rejects a missing account instead of invoking
+the historical repair fallback. Admin/registration provisioning remains. This
+source improvement clears no old runtime failures or complete fencing gates.
+The review finds no qualified stock-extension aggregate snapshot/generation/
+all-writer conditional-issuance contract. Synchronous response close is a source
+seam, not proven durable token release; streaming/async differ. Custom JPA entity
+APIs are unsupported and need exact build/storage ownership.
+
+R2 source review is delivered with a NO-GO for R3/R4 on the existing extension.
+A concrete issuer-core ownership/storage/compatibility architecture decision is
+next; its acceptance gate is open. No issuer version, fork, schema, grant, adapter
+or deployment is adopted. Remaining R1 limits, every R3–R7 requirement, all nine
+old failures and all IAM/service restoration obligations remain required.
+
 ## Safety, compatibility and operations gates
 
 All future runtime work is confined to **new disposable synthetic loopback labs**

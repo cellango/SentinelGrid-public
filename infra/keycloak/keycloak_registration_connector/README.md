@@ -264,3 +264,13 @@ interleaved native disable still returns earlier enabled state. The provider JAR
 and existing application/guard/defaults remain unchanged. ADR 0003 R2 source/API/
 writer/storage/conditional-issuance feasibility is next, with every prior gate
 retained. No provider/caller deployment is enabled.
+
+## Maintained-candidate issuer feasibility
+
+The [26.8.1 source review](../../../docs/architecture/keycloak-issuer-feasibility.md)
+and [review matrix](issuer-feasibility-review.json) select no deployment version.
+Stock missing-account acquisition now denies, but a qualified aggregate snapshot,
+all-writer generation/fence and native conditional commit are not supplied. The
+existing extension is NO-GO for R3/R4 until an issuer-core ownership/storage/
+compatibility decision is reviewed. Historical artifacts and all runtime failures,
+current guards, empty grants and defaults are unchanged.

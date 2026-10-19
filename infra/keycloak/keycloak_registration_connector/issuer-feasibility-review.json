@@ -1,0 +1,95 @@
+{
+  "format_version": 1,
+  "review_date": "2026-10-19",
+  "status": "bounded_R2_source_review_complete_stock_extension_NO_GO",
+  "candidate": {
+    "version": "26.8.1",
+    "commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+    "published_at": "2026-10-13T08:58:15Z",
+    "source_archive_sha256": "f67ec723e2eaf46b2d38f167ecb7578964115f1f2ce203f9b6659322223d9874",
+    "source_archive_bytes": 51988209,
+    "license": "Apache-2.0",
+    "license_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "selection": "Current upstream release for source/API review only, not production support or adoption"
+  },
+  "source_files_reviewed": 65,
+  "writer_categories": 22,
+  "complete_transitive_writer_fence": false,
+  "source_api_matrix": [
+    {
+      "id": "F01",
+      "boundary": "Native authentication and grant dispatch",
+      "status": "SOURCE_SEAM_ONLY",
+      "evidence": "Native auth precedes grant.process, but preProcess runs before checkClient and some grants use special authentication paths. No global enrolled-profile condition."
+    },
+    {
+      "id": "F02",
+      "boundary": "Non-creating stock service-account acquisition",
+      "status": "IMPROVED_SOURCE_ONLY",
+      "evidence": "26.8.1 client_credentials rejects a missing account; no enableServiceAccount/default-mapper fallback in this method. Admin and registration provisioning remain; no new runtime claim."
+    },
+    {
+      "id": "F03",
+      "boundary": "Fresh coherent scalar snapshot",
+      "status": "NO_GO_STOCK_API",
+      "evidence": "Fresh session utility and issuer JPA access exist; managed caches, AUTO flush and unspecified multi-read snapshot/isolation do not implement the contract. No qualified read-only snapshot API."
+    },
+    {
+      "id": "F04",
+      "boundary": "Aggregate incarnation/generation and all-writer fence",
+      "status": "NO_GO_STOCK_API",
+      "evidence": "Reviewed realm/client/user/scope/mapper entities and independent model writers provide no shared contract. CredentialEntity has a local @Version; it does not cover the aggregate."
+    },
+    {
+      "id": "F05",
+      "boundary": "Early denial of stock and alternate acquisition",
+      "status": "NO_GO_CURRENT_PROVIDER",
+      "evidence": "New grant alone cannot govern existing grants, special UMA/pre-authorized paths, browser, broker, refresh, exchange or other authenticators. Dedicated enrollment and mandatory guards unimplemented."
+    },
+    {
+      "id": "F06",
+      "boundary": "Native conditional issue and durable attempt",
+      "status": "NO_GO_STOCK_API",
+      "evidence": "Native signing/token builders are real seams. SingleUseObject CAS/pessimistic operations are not coupled aggregate state or whole-writer fencing."
+    },
+    {
+      "id": "F07",
+      "boundary": "Commit before token response release",
+      "status": "SOURCE_SEAM_UNQUALIFIED",
+      "evidence": "Synchronous response filter closes session and propagates transaction failure before ordinary entity serialization. Streaming closes after writes; async differs. Crash/durability/HTTP proof remains required."
+    },
+    {
+      "id": "F08",
+      "boundary": "Durable storage and restore ABA",
+      "status": "NO_GO_UNDECIDED",
+      "evidence": "Custom JPA entity extension is explicitly unsupported; getEntities is deprecated/ignored in production in this tag. Liquibase/augmentation/core patch ownership and recovery epoch require explicit decision."
+    },
+    {
+      "id": "F09",
+      "boundary": "Compatibility and current caller adoption",
+      "status": "BLOCKED",
+      "evidence": "No manifests/pins changed, no 26.8.1 build/runtime/SDK/image or SQL proof; current guard and management profiles unchanged. R1 limits, all nine old failures and R3-R7 remain."
+    }
+  ],
+  "proposal": {
+    "direction": "Do not implement R3/R4 on the existing stock extension. First decide whether to own/upstream an issuer-core transaction, enrollment and storage patch; keep present authority closed.",
+    "version_scope": "Only pinned 26.8.1 source reviewed; every future release needs diff and qualification",
+    "storage": "Candidate: issuer-primary PostgreSQL transaction and issuer-owned JPA/Liquibase records; no tables, lock primitives, schema or database version adopted in this unit",
+    "compatibility": "Versioned observation v2 and conditional native grant; mandatory enrolled-client stock-path denial. v1/stock-response caller stays closed pending separate R6 review.",
+    "maintenance": "Explicit owner for core patch/rebases, all writer/extension admission, build/augmentation, schema rollback/upgrade/restore epochs, signing/mappers/security/license/image/HA tests and incident operations",
+    "approval_status": "proposed; no issuer fork, deployment, schema or superseding architecture decision accepted"
+  },
+  "current_application_provider_build_config_defaults_dependencies_unchanged": true,
+  "build_or_server_or_runtime_tests_executed": false,
+  "production_version_selected": false,
+  "adoption_gate_passed": false,
+  "original_18_experiments_9_failed_gates_unchanged": true,
+  "R2_implementation_decision_gate_met": false,
+  "next": "Concrete issuer-core ownership/storage/compatibility architecture decision before R3/R4; preserve every R1/R3-R7 and ancestor/Task6 requirement",
+  "primary_sources": [
+    "https://www.keycloak.org/downloads",
+    "https://www.keycloak.org/2026/10/keycloak-2681-released",
+    "https://www.keycloak.org/security",
+    "https://github.com/keycloak/keycloak/tree/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b"
+  ]
+}
