@@ -292,3 +292,9 @@ native client-secret authentication denials in an unmanaged fixture. This is a
 method-body research result; front-door/constructor/alternate entry and all
 writer/storage gates remain unqualified. Its isolated test POM never changes the
 provider build or current issuer authority.
+
+The [native admission design review](../../../docs/architecture/keycloak-native-admission.md)
+traces the earlier request/realm/event and alternate/internal/error/worker paths.
+Its proposed three core layers remain unimplemented; no full entry/writer closure
+or R2 implementation/R3/R4 gate is cleared. The review supplies pinned source
+references and the next denial-only experiment boundary.

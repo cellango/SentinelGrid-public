@@ -445,6 +445,11 @@
       "authority": "source_feasibility_review_not_implementation_or_runtime_qualification"
     },
     {
+      "path": "docs/architecture/keycloak-native-admission.md",
+      "class": "current_architecture",
+      "authority": "proposed_admission_core_patch_source_review_not_implemented"
+    },
+    {
       "path": "docs/architecture/overview.md",
       "class": "current_architecture",
       "authority": "current_within_source_preview_scope"

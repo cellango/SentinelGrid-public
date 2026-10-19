@@ -219,10 +219,15 @@ client-secret authentication and missing-account denial; eight input controls
 pass. Closed/unknown fixtures stop before grant lookup or preprocessing. Test-owner
 unmanaged controls preserve native negative outcomes without issuing tokens.
 This is not durable enrollment, an HTTP admission boundary or all-grant execution.
-Endpoint construction/earlier reads, browser/broker/SAML/alternate paths and all
-writer/storage/compatibility gates remain unqualified. The next bounded research
-unit reviews those front-door and alternate-entry gaps. No production fork,
-provider artifact, current guard or application behavior is adopted.
+The [native admission review](../keycloak-native-admission.md) now traces the
+front-door, construction, alternate entry and failure paths against 54 pinned
+source/service units. It identifies earlier realm/event-provider reads, internal
+constructors, fresh-session SAML artifact work and HTML error-path realm resolution.
+It proposes deployment, minimal primary admission lookup and native operation
+scope layers; none are implemented or fully closed. The next bounded experiment
+tests denial before ordinary realm resolution and a minimal failure path.
+All entry/writer/storage/compatibility gates remain unqualified. No production
+fork, provider artifact, current guard or application behavior is adopted.
 
 ## Primary source references
 

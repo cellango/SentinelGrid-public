@@ -1,0 +1,945 @@
+{
+  "format_version": 1,
+  "date": "2026-10-19",
+  "status": "source_admission_gap_review_and_patch_proposal_only",
+  "source_version": "26.8.1",
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "archive_sha256": "f67ec723e2eaf46b2d38f167ecb7578964115f1f2ce203f9b6659322223d9874",
+  "source_units": [
+    {
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
+      "sha256": "c823592bcc4460bd76a8690e0b4a6274777c3dac0f6387d0caf2a6bd4b24fa77"
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/models/jpa/JpaRealmProvider.java",
+      "sha256": "ed55d52a92a0055c40f013ea153a07a4d9abbd10e43272605295c7559f10e3b7"
+    },
+    {
+      "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java",
+      "sha256": "2479b51bf75bae3a11a20a4bc3a90b97eaba1001ee5e81a8216e3022fb9edddf"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakRecorder.java",
+      "sha256": "f80d51fe106aafc7b9dd19c7b05e1154d750fb56770c51d537f9972b0dcfcbcd"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSessionFactory.java",
+      "sha256": "092af4553215b3bf5736df43eb92fecebf07b89da1f4c03f0cf2285ff3124fe9"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java",
+      "sha256": "d24e2802fd33a913632798a9331eda86e2452c2e687fb4270ad5e5c1767cd1a0"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java",
+      "sha256": "2054a1d3d7cb3b40f027b3f3aa6b646a832ea8113cc0cb71a626c62b3531be3e"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/KeycloakHandlerChainCustomizer.java",
+      "sha256": "3e1b9dfaa8174dcdd95ce351b4570d76ddc559a2f58741f4ccd2d977cfd5f052"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java",
+      "sha256": "9c751a303a52984a64a0cac5ba4dd07c2f639006608c2386df68f4ecba6d5e9d"
+    },
+    {
+      "path": "rest/admin-v2/services/src/main/java/org/keycloak/rest/admin/api/client/DefaultClientApi.java",
+      "sha256": "9fb4b2c877b31770b0771ba996d15a59fff1e9977b6274db59fb24764047caf2"
+    },
+    {
+      "path": "rest/admin-v2/services/src/main/java/org/keycloak/services/client/scim/ClientResourceTypeProvider.java",
+      "sha256": "2998faa65e33e996bd051302ccc64f6b882e5213026200182e915132833bbee4"
+    },
+    {
+      "path": "scim/services/src/main/java/org/keycloak/scim/services/ScimRealmResourceFactory.java",
+      "sha256": "99e5ed5856ce44b7387ec1dba08d8f3d2d01769dc20232ea0b0a96cea10519cd"
+    },
+    {
+      "path": "scim/services/src/main/java/org/keycloak/scim/services/ScimResourceTypeResource.java",
+      "sha256": "1e5f1190d1c76694f2aa890ca59c20d1e1d335a1cb0c775ad41f6c6b54eb751a"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/events/EventBuilder.java",
+      "sha256": "6ff83d4d7e1fc59f5e471d27f2a50d8ad6e19e98addf8b11a6e526c0199444de"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/services/scheduled/ScheduledTaskRunner.java",
+      "sha256": "9d9635aae148569d66e68e6a451361253df16d6f1f3bfbe97a5c8a9467a596d1"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/authentication/AuthenticationProcessor.java",
+      "sha256": "d5f7d61550a774084d7fc39b3ce0033c443c14316fa151d8096983b3a340ee23"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/broker/provider/IdpLinkAction.java",
+      "sha256": "556cf6c643710cd1ac5cf6e7f9f7d31b994f4c16546cbda082f5dc8d022256e2"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/jose/jws/DefaultTokenManager.java",
+      "sha256": "12c92e247041db96985bcdb37c31f5f5b8be15f401cfb5f2fad479c987a99668"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/AuthorizationEndpointBase.java",
+      "sha256": "6df267522888c752457cbda91b8b9e34ff2ea8e85108890c9f1b794e985b1c59"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oid4vc/OID4VCLoginProtocolFactory.java",
+      "sha256": "7303c16098c46861cf4c90223cee8dd68dc300cbdc63fa67fad2b41edb154e10"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oid4vc/issuance/OID4VCIssuerEndpoint.java",
+      "sha256": "1040b7e56be74892ad13f20a795b5d579f31c890ec63efcd83a77a1644e80245"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/OIDCLoginProtocolService.java",
+      "sha256": "ed74e79a3897c01b8ee1adf83ee9566a9a0fa6b1b5144fa864dbf98194f8f759"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java",
+      "sha256": "4f55098516cad8a56d189baa3173b382ef8410936a6aedd0f114dceecfb61aab"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/AuthorizationEndpoint.java",
+      "sha256": "e5b22fe73b987084f82fe0f73e2bda21024263d54b98afe3511ebde194a75d4b"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java",
+      "sha256": "23c8c74cbaeee855b77ae71c855a0e577b61c14e2c0c0a3ba97f66d0b8103ef7"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/AuthorizationCodeGrantTypeFactory.java",
+      "sha256": "11da2f767aad3a4affb6619f3c9dfa7923cf05986f8e0a62ed20d1d1e507b168"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ClientCredentialsGrantTypeFactory.java",
+      "sha256": "b2aeffcbb7bed1ca688d889b19fe6c4f9b8baf7a17697cce11b319ae34ca7258"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/JWTAuthorizationGrantTypeFactory.java",
+      "sha256": "9068fc04da7f3df79c52d5b8652ff10c8ab7bc7a84f0445edd1932e828cdce66"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/PermissionGrantTypeFactory.java",
+      "sha256": "b58fa4e815a02951a2067a2e69ad9a980029ec3ed3b8f7af22350a3bf887d4ea"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/PreAuthorizedCodeGrantTypeFactory.java",
+      "sha256": "2ad73fbac6cd1d33bdd51acac8136792e042e91f3f7428b6870891cc0ffb1d94"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/RefreshTokenGrantTypeFactory.java",
+      "sha256": "d912dc38d491ebc759882663b91cd9a4b3e2e273e571cbb128e19a42123b48df"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ResourceOwnerPasswordCredentialsGrantTypeFactory.java",
+      "sha256": "464e2c87d9c366a84bc1d492123efabb34ab0fe32e7645bd66a4cba8f9656092"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/TokenExchangeGrantTypeFactory.java",
+      "sha256": "c8e38924575706c20a678c97b02ae4d009406bcde471185d402b340000e01919"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ciba/CibaGrantTypeFactory.java",
+      "sha256": "8d50600017a4eb2c9a1588aac2ba1c392cddc0aab0b2260aadf850d28d3e773b"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ciba/endpoints/BackchannelAuthenticationEndpoint.java",
+      "sha256": "92fa5bc640c95d9b5cae828bda0604f27eb75d0a6e5758f004bbcc9d868f6ab8"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ciba/endpoints/CibaRootEndpoint.java",
+      "sha256": "d63921036b58abf4bc1125665b10a6a2a0248c961f13d29c62c991e830678246"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/device/DeviceGrantTypeFactory.java",
+      "sha256": "44d5b2eb1e18c755915385a50e590a15bed47d9d1ef80ea4e86b29fb19d60d45"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/device/endpoints/DeviceEndpoint.java",
+      "sha256": "77062fb44c9c8382a2b4dd046e42074c7934fd4a3b0eea9eec4fc01ce33a93fc"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/par/endpoints/ParEndpoint.java",
+      "sha256": "289035c3aee1f52c1c651448226ad6958911129062f0ec5593f1df5048771e02"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/par/endpoints/ParRootEndpoint.java",
+      "sha256": "19d1b60b11c8d1eab02a0b7ccbf3c20446dab5eb565967dd191223c2767924a5"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/utils/AuthorizeClientUtil.java",
+      "sha256": "f756160a802ebbce006c68b93bd12e513a8e5e7b97f269174cc025e4f36aee46"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlProtocolFactory.java",
+      "sha256": "142fab084ef1c8b4957eb04b7ee6be432a267a8bccbaf777fda44b612b130e6f"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlService.java",
+      "sha256": "159734b9e2f11fd9741ae5906bd968d401e6862f53318ce21701c67bb3ee1db3"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakContext.java",
+      "sha256": "d97a65002888f3e66da8e15ff2831aa98511da0f96540e31a8d8d5d3d6375a4a"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java",
+      "sha256": "5193a79eb80835b9ad96daf97e304e3b05f4aef0df9df64c5a424d8d6cafd924"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/RollbackWebApplicationException.java",
+      "sha256": "155db39d134a1484e706d6fe5ca360c24307730ac0190aa384d9f4b8089cda96"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java",
+      "sha256": "e93dce4a743dc939b12993fd90e90e987587e45c7e08459141cef2a9d869ce76"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/RealmManager.java",
+      "sha256": "cdc4a19a9c7d906efb612300d39603429acf9ef94be1142c2839f4a2e9883337"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/IdentityBrokerService.java",
+      "sha256": "cc24d52cdbe0602b3c26f2163ea8f949fed3731f0dd1fbc5e89d3df67efec845"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/LoginActionsService.java",
+      "sha256": "2394801d413e66e92944817a6f8a065b06a88421d30b074432e4676ef6ba8c09"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "sha256": "7320f461b227f9022d451d26a4834621f8303762c9e5eeb0470dfb04d338b8de"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/admin/AdminRoot.java",
+      "sha256": "667a987683701dea3e0f73fedfe07b43d846c6410fe8a334cd595c543fdcd14b"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/admin/RealmsAdminResource.java",
+      "sha256": "a9e729ff0f5f169e2c878131ebf739827c2d263c49b6cb402522ba4ce5c2b5b3"
+    },
+    {
+      "path": "services/src/main/resources/META-INF/services/org.keycloak.protocol.oidc.grants.OAuth2GrantTypeFactory",
+      "sha256": "6261c908d97f07eb7584e287f55da8269c72eb7c50cfe89ce9d94f4a2554a23d"
+    }
+  ],
+  "evidence": {
+    "router_normalization": {
+      "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java",
+      "line": 313
+    },
+    "method_scanner": {
+      "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java",
+      "line": 1019
+    },
+    "router_registration": {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakRecorder.java",
+      "line": 162
+    },
+    "session_producer": {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java",
+      "line": 39
+    },
+    "session_factory": {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSessionFactory.java",
+      "line": 78
+    },
+    "transaction_invocation": {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java",
+      "line": 67
+    },
+    "framework_form_handler": {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/KeycloakHandlerChainCustomizer.java",
+      "line": 50
+    },
+    "context_realm": {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakContext.java",
+      "line": 127
+    },
+    "context_trace": {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakContext.java",
+      "line": 269
+    },
+    "provider_construction": {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java",
+      "line": 222
+    },
+    "protocol_locator": {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "line": 109
+    },
+    "realm_resolution": {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "line": 188
+    },
+    "login_locator": {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "line": 164
+    },
+    "broker_locator": {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "line": 211
+    },
+    "registration_locator": {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "line": 171
+    },
+    "extension_locator": {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "line": 277
+    },
+    "account_locator": {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "line": 198
+    },
+    "discovery": {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "line": 237
+    },
+    "realm_manager": {
+      "path": "services/src/main/java/org/keycloak/services/managers/RealmManager.java",
+      "line": 117
+    },
+    "realm_cache": {
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
+      "line": 528
+    },
+    "realm_jpa": {
+      "path": "model/jpa/src/main/java/org/keycloak/models/jpa/JpaRealmProvider.java",
+      "line": 190
+    },
+    "event_constructor": {
+      "path": "server-spi-private/src/main/java/org/keycloak/events/EventBuilder.java",
+      "line": 68
+    },
+    "event_provider_init": {
+      "path": "server-spi-private/src/main/java/org/keycloak/events/EventBuilder.java",
+      "line": 90
+    },
+    "oidc_constructor": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/OIDCLoginProtocolService.java",
+      "line": 80
+    },
+    "token_locator": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/OIDCLoginProtocolService.java",
+      "line": 178
+    },
+    "authorization_locator": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/OIDCLoginProtocolService.java",
+      "line": 152
+    },
+    "oidc_extension_locator": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/OIDCLoginProtocolService.java",
+      "line": 247
+    },
+    "token_constructor": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java",
+      "line": 117
+    },
+    "token_dispatch": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java",
+      "line": 130
+    },
+    "preprocess": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java",
+      "line": 150
+    },
+    "special_auth": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java",
+      "line": 160
+    },
+    "client_auth": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/utils/AuthorizeClientUtil.java",
+      "line": 48
+    },
+    "native_auth_flow": {
+      "path": "services/src/main/java/org/keycloak/authentication/AuthenticationProcessor.java",
+      "line": 965
+    },
+    "browser_constructor": {
+      "path": "services/src/main/java/org/keycloak/protocol/AuthorizationEndpointBase.java",
+      "line": 71
+    },
+    "browser_get": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/AuthorizationEndpoint.java",
+      "line": 122
+    },
+    "browser_process": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/AuthorizationEndpoint.java",
+      "line": 138
+    },
+    "device_locator": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/AuthorizationEndpoint.java",
+      "line": 131
+    },
+    "device_request": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/device/endpoints/DeviceEndpoint.java",
+      "line": 121
+    },
+    "login_constructor": {
+      "path": "services/src/main/java/org/keycloak/services/resources/LoginActionsService.java",
+      "line": 196
+    },
+    "login_direct_internal": {
+      "path": "services/src/main/java/org/keycloak/services/resources/IdentityBrokerService.java",
+      "line": 1275
+    },
+    "broker_callback": {
+      "path": "services/src/main/java/org/keycloak/services/resources/IdentityBrokerService.java",
+      "line": 709
+    },
+    "idp_internal": {
+      "path": "services/src/main/java/org/keycloak/broker/provider/IdpLinkAction.java",
+      "line": 164
+    },
+    "saml_factory": {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlProtocolFactory.java",
+      "line": 69
+    },
+    "saml_idp": {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlService.java",
+      "line": 1049
+    },
+    "saml_soap": {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlService.java",
+      "line": 1203
+    },
+    "saml_async_schedule": {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlService.java",
+      "line": 438
+    },
+    "saml_async_run": {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlService.java",
+      "line": 1470
+    },
+    "saml_artifact": {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlService.java",
+      "line": 1153
+    },
+    "scheduled_session": {
+      "path": "server-spi-private/src/main/java/org/keycloak/services/scheduled/ScheduledTaskRunner.java",
+      "line": 54
+    },
+    "ciba_root": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ciba/endpoints/CibaRootEndpoint.java",
+      "line": 55
+    },
+    "ciba_request": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ciba/endpoints/BackchannelAuthenticationEndpoint.java",
+      "line": 86
+    },
+    "ciba_callback": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ciba/endpoints/CibaRootEndpoint.java",
+      "line": 65
+    },
+    "par_root": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/par/endpoints/ParRootEndpoint.java",
+      "line": 47
+    },
+    "par_request": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/par/endpoints/ParEndpoint.java",
+      "line": 91
+    },
+    "vc_factory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oid4vc/OID4VCLoginProtocolFactory.java",
+      "line": 151
+    },
+    "vc_credential": {
+      "path": "services/src/main/java/org/keycloak/protocol/oid4vc/issuance/OID4VCIssuerEndpoint.java",
+      "line": 789
+    },
+    "admin_auth": {
+      "path": "services/src/main/java/org/keycloak/services/resources/admin/AdminRoot.java",
+      "line": 188
+    },
+    "admin_target": {
+      "path": "services/src/main/java/org/keycloak/services/resources/admin/RealmsAdminResource.java",
+      "line": 220
+    },
+    "v2_write": {
+      "path": "rest/admin-v2/services/src/main/java/org/keycloak/rest/admin/api/client/DefaultClientApi.java",
+      "line": 81
+    },
+    "shared_client_write": {
+      "path": "rest/admin-v2/services/src/main/java/org/keycloak/services/client/scim/ClientResourceTypeProvider.java",
+      "line": 159
+    },
+    "scim_write": {
+      "path": "scim/services/src/main/java/org/keycloak/scim/services/ScimResourceTypeResource.java",
+      "line": 75
+    },
+    "scim_gate": {
+      "path": "scim/services/src/main/java/org/keycloak/scim/services/ScimRealmResourceFactory.java",
+      "line": 42
+    },
+    "native_signing": {
+      "path": "services/src/main/java/org/keycloak/jose/jws/DefaultTokenManager.java",
+      "line": 80
+    },
+    "response_builder": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java",
+      "line": 1471
+    },
+    "error_mapper": {
+      "path": "services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java",
+      "line": 65
+    },
+    "error_realm": {
+      "path": "services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java",
+      "line": 162
+    },
+    "rollback_exception": {
+      "path": "services/src/main/java/org/keycloak/services/RollbackWebApplicationException.java",
+      "line": 37
+    },
+    "close_filter": {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java",
+      "line": 51
+    },
+    "browser_internal_login": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/AuthorizationEndpoint.java",
+      "line": 260
+    },
+    "v2_delete": {
+      "path": "rest/admin-v2/services/src/main/java/org/keycloak/rest/admin/api/client/DefaultClientApi.java",
+      "line": 169
+    },
+    "shared_client_update": {
+      "path": "rest/admin-v2/services/src/main/java/org/keycloak/services/client/scim/ClientResourceTypeProvider.java",
+      "line": 164
+    },
+    "shared_client_delete": {
+      "path": "rest/admin-v2/services/src/main/java/org/keycloak/services/client/scim/ClientResourceTypeProvider.java",
+      "line": 270
+    },
+    "scim_update": {
+      "path": "scim/services/src/main/java/org/keycloak/scim/services/ScimResourceTypeResource.java",
+      "line": 201
+    },
+    "scim_delete": {
+      "path": "scim/services/src/main/java/org/keycloak/scim/services/ScimResourceTypeResource.java",
+      "line": 174
+    },
+    "scim_patch": {
+      "path": "scim/services/src/main/java/org/keycloak/scim/services/ScimResourceTypeResource.java",
+      "line": 231
+    },
+    "org.keycloak.protocol.oidc.grants.AuthorizationCodeGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/AuthorizationCodeGrantTypeFactory.java",
+      "line": 35
+    },
+    "org.keycloak.protocol.oidc.grants.ClientCredentialsGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ClientCredentialsGrantTypeFactory.java",
+      "line": 33
+    },
+    "org.keycloak.protocol.oidc.grants.PermissionGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/PermissionGrantTypeFactory.java",
+      "line": 34
+    },
+    "org.keycloak.protocol.oidc.grants.RefreshTokenGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/RefreshTokenGrantTypeFactory.java",
+      "line": 36
+    },
+    "org.keycloak.protocol.oidc.grants.ResourceOwnerPasswordCredentialsGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ResourceOwnerPasswordCredentialsGrantTypeFactory.java",
+      "line": 34
+    },
+    "org.keycloak.protocol.oidc.grants.TokenExchangeGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/TokenExchangeGrantTypeFactory.java",
+      "line": 36
+    },
+    "org.keycloak.protocol.oidc.grants.ciba.CibaGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ciba/CibaGrantTypeFactory.java",
+      "line": 40
+    },
+    "org.keycloak.protocol.oidc.grants.device.DeviceGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/device/DeviceGrantTypeFactory.java",
+      "line": 40
+    },
+    "org.keycloak.protocol.oidc.grants.PreAuthorizedCodeGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/PreAuthorizedCodeGrantTypeFactory.java",
+      "line": 53
+    },
+    "org.keycloak.protocol.oidc.grants.JWTAuthorizationGrantTypeFactory": {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/JWTAuthorizationGrantTypeFactory.java",
+      "line": 31
+    }
+  },
+  "native_grant_factories": [
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.AuthorizationCodeGrantTypeFactory",
+      "id_source_symbol": "OAuth2Constants.AUTHORIZATION_CODE",
+      "evidence": "org.keycloak.protocol.oidc.grants.AuthorizationCodeGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    },
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.ClientCredentialsGrantTypeFactory",
+      "id_source_symbol": "OAuth2Constants.CLIENT_CREDENTIALS",
+      "evidence": "org.keycloak.protocol.oidc.grants.ClientCredentialsGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    },
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.PermissionGrantTypeFactory",
+      "id_source_symbol": "OAuth2Constants.UMA_GRANT_TYPE",
+      "evidence": "org.keycloak.protocol.oidc.grants.PermissionGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    },
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.RefreshTokenGrantTypeFactory",
+      "id_source_symbol": "OAuth2Constants.REFRESH_TOKEN",
+      "evidence": "org.keycloak.protocol.oidc.grants.RefreshTokenGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    },
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.ResourceOwnerPasswordCredentialsGrantTypeFactory",
+      "id_source_symbol": "OAuth2Constants.PASSWORD",
+      "evidence": "org.keycloak.protocol.oidc.grants.ResourceOwnerPasswordCredentialsGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    },
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.TokenExchangeGrantTypeFactory",
+      "id_source_symbol": "OAuth2Constants.TOKEN_EXCHANGE_GRANT_TYPE",
+      "evidence": "org.keycloak.protocol.oidc.grants.TokenExchangeGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    },
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.ciba.CibaGrantTypeFactory",
+      "id_source_symbol": "OAuth2Constants.CIBA_GRANT_TYPE",
+      "evidence": "org.keycloak.protocol.oidc.grants.ciba.CibaGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    },
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.device.DeviceGrantTypeFactory",
+      "id_source_symbol": "OAuth2Constants.DEVICE_CODE_GRANT_TYPE",
+      "evidence": "org.keycloak.protocol.oidc.grants.device.DeviceGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    },
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.PreAuthorizedCodeGrantTypeFactory",
+      "id_source_symbol": "PRE_AUTH_GRANT_TYPE",
+      "evidence": "org.keycloak.protocol.oidc.grants.PreAuthorizedCodeGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    },
+    {
+      "factory": "org.keycloak.protocol.oidc.grants.JWTAuthorizationGrantTypeFactory",
+      "id_source_symbol": "OAuth2Constants.JWT_AUTHORIZATION_GRANT",
+      "evidence": "org.keycloak.protocol.oidc.grants.JWTAuthorizationGrantTypeFactory",
+      "runtime_activation": "unqualified",
+      "enrolled_profile_admission": "deny_until_qualified"
+    }
+  ],
+  "reviewed_file_count": 54,
+  "proposed_core_hooks_implemented": false,
+  "all_entry_closure_proved": false,
+  "complete_writer_fence_proved": false,
+  "R2_implementation_gate_met": false,
+  "R3_R4_GO": false,
+  "runtime_or_HTTP_experiment_executed": false,
+  "prior_native_68tests_and_8controls_retained_not_rerun": true,
+  "all_22writer_categories_and_ancestor_IAM_service_restoration_retained": true,
+  "route_families": [
+    {
+      "id": "token",
+      "family": "OIDC token: all ten declared grants and unknown extensions",
+      "evidence": [
+        "protocol_locator",
+        "token_locator",
+        "token_dispatch",
+        "preprocess",
+        "special_auth"
+      ],
+      "required_treatment": "Early realm admission, then fixed operation classification before any grant/provider preprocessing; real native authentication remains mandatory.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "browser",
+      "family": "OIDC auth, registration and forgotten credentials",
+      "evidence": [
+        "authorization_locator",
+        "browser_constructor",
+        "browser_process"
+      ],
+      "required_treatment": "Before EventBuilder/protocol/resource construction and before browser policy, client/session lookup or redirect/code generation.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "login_actions",
+      "family": "Login-actions, action tokens, required actions and reset/registration flows",
+      "evidence": [
+        "login_locator",
+        "login_constructor",
+        "browser_internal_login",
+        "login_direct_internal"
+      ],
+      "required_treatment": "Both resource locator and internal constructor/operation calls need the same scope; a request filter alone cannot cover direct calls.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "broker",
+      "family": "Broker login, callbacks, linking and stored provider tokens",
+      "evidence": [
+        "broker_locator",
+        "broker_callback",
+        "idp_internal"
+      ],
+      "required_treatment": "Before provider creation/callback, federated lookup/update or upstream credential acquisition; internal entry must revalidate scope.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "saml",
+      "family": "SAML redirect/POST, IdP-initiated SSO, SOAP and artifact resolution",
+      "evidence": [
+        "saml_factory",
+        "saml_idp",
+        "saml_soap",
+        "saml_artifact"
+      ],
+      "required_treatment": "Deny unqualified enrolled-profile paths before parsing/provider/model/signing effects; separate SAML signing boundary.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "saml_worker",
+      "family": "SAML artifact worker / fresh scheduled transaction",
+      "evidence": [
+        "saml_async_schedule",
+        "scheduled_session",
+        "saml_async_run"
+      ],
+      "required_treatment": "Fresh issuer admission and durable scope per job; copied HTTP context/thread-local state is not authority. Deny before remote artifact dispatch.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "device",
+      "family": "Device authorization/user approval versus later device-code token grant",
+      "evidence": [
+        "device_locator",
+        "device_request"
+      ],
+      "required_treatment": "Guard initialization/approval independently from the token endpoint; source feature gate is not admission.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "ciba",
+      "family": "CIBA authentication request and callback versus later token grant",
+      "evidence": [
+        "oidc_extension_locator",
+        "ciba_root",
+        "ciba_request",
+        "ciba_callback"
+      ],
+      "required_treatment": "Guard before resolver/channel provider, request persistence or external authentication dispatch; guard callback separately.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "par",
+      "family": "Pushed authorization request",
+      "evidence": [
+        "oidc_extension_locator",
+        "par_root",
+        "par_request"
+      ],
+      "required_treatment": "Guard before client authentication/request storage; later browser/token entry is a separate admission.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "vc",
+      "family": "OpenID credential issuer / credential request",
+      "evidence": [
+        "protocol_locator",
+        "vc_factory",
+        "vc_credential"
+      ],
+      "required_treatment": "Independent protocol endpoint; token grant interception does not cover verifiable-credential issuance or its builders.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "extensions",
+      "family": "Realm and OIDC extensions / unknown protocols or provider builds",
+      "evidence": [
+        "extension_locator",
+        "oidc_extension_locator",
+        "provider_construction"
+      ],
+      "required_treatment": "Reject unreviewed provider/route identity before getProvider/getResource/createProtocolEndpoint; never treat absent mapping as unmanaged.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "registration_account",
+      "family": "Dynamic registration, client management, account and related identity writes",
+      "evidence": [
+        "registration_locator",
+        "account_locator"
+      ],
+      "required_treatment": "Classify before constructors/native auth/provisioning and include all protected writer dependencies; no wholesale feature retirement.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "admin",
+      "family": "Admin authentication realm versus operation target realm",
+      "evidence": [
+        "admin_auth",
+        "admin_target"
+      ],
+      "required_treatment": "Issuer claim is an untrusted lookup hint until verified; classify principal and target realms separately, enforce native auth and target authorization, deny unqualified cross-realm work.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "v2_scim",
+      "family": "Client Admin API v2/shared client providers and native realm SCIM",
+      "evidence": [
+        "v2_write",
+        "v2_delete",
+        "shared_client_write",
+        "shared_client_update",
+        "shared_client_delete",
+        "scim_gate",
+        "scim_write",
+        "scim_update",
+        "scim_delete",
+        "scim_patch"
+      ],
+      "required_treatment": "Apply before provider construction/auth/model reads and every mutation, including feature changes. Retain all 22 writer families.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "public_reads",
+      "family": "Discovery, public realm data, JWKS, userinfo, introspection and revocation/logout",
+      "evidence": [
+        "discovery",
+        "protocol_locator",
+        "oidc_constructor"
+      ],
+      "required_treatment": "Require an explicit operation classification. Public visibility or read-shaped HTTP verbs do not waive protected-read or revocation/writer analysis.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "signing",
+      "family": "Native token response / encoder and separate SAML/credential builders",
+      "evidence": [
+        "response_builder",
+        "native_signing",
+        "saml_async_schedule",
+        "vc_credential"
+      ],
+      "required_treatment": "Defense against direct/internal emission only after complete native-auth/profile/dependency checks; late signing guards cannot repair earlier effects.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "denial_response",
+      "family": "Error mapping, HTML rendering, rollback and response close",
+      "evidence": [
+        "error_mapper",
+        "error_realm",
+        "rollback_exception",
+        "close_filter"
+      ],
+      "required_treatment": "Dedicated minimal pre-admission denial must not resolve a realm/theme/provider again; prove rollback, close, cancellation and zero usable response bytes.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    },
+    {
+      "id": "non_http",
+      "family": "Background/native/model/SQL/import/bootstrap/operator paths",
+      "evidence": [
+        "scheduled_session",
+        "context_realm",
+        "provider_construction"
+      ],
+      "required_treatment": "Explicit issuer-owned operation scope or enforced maintenance/exclusion. HTTP hooks and mutable context cannot establish complete writer closure.",
+      "coverage": "source_edges_reviewed_transitive_and_runtime_closure_unproved",
+      "enrolled_permission_granted": false
+    }
+  ],
+  "candidate_patch_layers": [
+    {
+      "id": "A0",
+      "boundary": "Quarkus router/framework lifecycle before resource/provider construction",
+      "evidence": [
+        "router_normalization",
+        "router_registration",
+        "method_scanner",
+        "session_producer",
+        "framework_form_handler",
+        "transaction_invocation"
+      ],
+      "required": "Deployment readiness gate, trusted route normalization/classification, safe blocking handoff, explicit non-realm/static route policy and minimal rejection before ordinary model/provider access.",
+      "implemented": false,
+      "framework_order_proved": false
+    },
+    {
+      "id": "A1",
+      "boundary": "Issuer-owned minimal admission identity lookup before RealmManager/model cache resolution",
+      "evidence": [
+        "realm_resolution",
+        "realm_manager",
+        "realm_cache",
+        "realm_jpa",
+        "context_realm",
+        "event_constructor",
+        "event_provider_init"
+      ],
+      "required": "Primary-store immutable realm UUID/incarnation plus enrollment/deployment-recovery epoch/profile/revision; no ordinary RealmModel/cache/EventBuilder for admission; establish coupled scope before native readers/writers.",
+      "implemented": false,
+      "bootstrap_storage_API_proved": false
+    },
+    {
+      "id": "A2",
+      "boundary": "Native operation/authentication/internal worker/writer and emission scopes",
+      "evidence": [
+        "token_dispatch",
+        "client_auth",
+        "native_auth_flow",
+        "scheduled_session",
+        "saml_async_run",
+        "native_signing",
+        "response_builder"
+      ],
+      "required": "Deny unsupported operations before effects, retain actual native auth, validate realm/incarnation at every operation/reentry/realm change; full writer participation and native signing/HTTP coupling remain mandatory.",
+      "implemented": false,
+      "all_callers_proved": false
+    }
+  ],
+  "identity_requirements": [
+    "Untrusted path/alias/issuer/client hints select only a target candidate, never authenticated authority.",
+    "Admission lookup uses issuer primary authority with exact canonical UUID, incarnation, deployment/recovery epoch, enrollment state, profile version, revision and operation class. No application DB, lease, TTL cache or route allowlist is authority.",
+    "An authoritative explicit unmanaged classification is required; missing, ambiguous, stale, inaccessible, restored or changed state cannot mean unmanaged.",
+    "Minimal bootstrap reads only admission directory/enrollment data; no user/client/grant/credential/policy/mapper/session/key/eager-realm fields, repair or runtime record creation. Exact native storage/transaction API remains unproved.",
+    "Revalidate scope at realm/client binding changes, nested operations, jobs/retries/resumes and before native emission under the same required durable fence; do not serialize thread-local admission as a bearer capability.",
+    "Native principal authentication and tenant/target authorization remain independent required decisions; failed auth must not acquire credentials/tokens or provision accounts.",
+    "Initial single-realm restriction needs explicit principal/target handling; do not blanket-exempt admin, discovery, error rendering, providers or background work."
+  ],
+  "denial_requirements": [
+    "Missing/unknown/ambiguous/lookup-error/epoch-or-revision mismatch/unsupported profile or route all deny before protected effects.",
+    "Pre-admission denial uses fixed minimal non-enumerating no-store output, no realm/theme/locale/EventBuilder/provider lookup; exact wire code and mapper compatibility remain to qualify.",
+    "Mark rollback on any initialized transaction before response handling, close owned resources and clear per-operation state on every terminal/cancel/error path.",
+    "Do not rely on KeycloakErrorHandler HTML rendering, a late postprocessor, CloseSessionFilter or exception names as proof of safe denial/durability.",
+    "Existing admitted native auth failure semantics must be preserved; successful issuance and synchronous durable-commit-before-response remain separate proofs."
+  ],
+  "negative_result": "The token method hook, ordinary realm resolver, setRealm interceptor, request filter alone and token encoder alone each miss concrete earlier or alternate effects. No single stock reviewed seam proves universal admission. Required new bootstrap identity/transaction and multi-entry core scopes are not implemented or fully closed.",
+  "next_bounded_experiment": "Native early realm-resolution denial and minimal failure-response fixture, with exact-source controls and no durable enrollment/issuance/storage implementation; any HTTP/framework or worker gap must stay explicit."
+}
