@@ -298,3 +298,8 @@ traces the earlier request/realm/event and alternate/internal/error/worker paths
 Its proposed three core layers remain unimplemented; no full entry/writer closure
 or R2 implementation/R3/R4 gate is cleared. The review supplies pinned source
 references and the next denial-only experiment boundary.
+
+The [early realm-denial experiment](qualification/realm_entry/README.md) tests a
+native resolver hook and minimal direct failure path (260 test cases/six input
+controls). A reproduced rollback-participant failure remains a failed cleanup
+gate; passing assertions do not qualify native durability or full admission.

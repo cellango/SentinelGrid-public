@@ -1,0 +1,25 @@
+{
+  "commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "files": [
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "sha256": "7320f461b227f9022d451d26a4834621f8303762c9e5eeb0470dfb04d338b8de"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java",
+      "sha256": "23c8c74cbaeee855b77ae71c855a0e577b61c14e2c0c0a3ba97f66d0b8103ef7"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java",
+      "sha256": "e93dce4a743dc939b12993fd90e90e987587e45c7e08459141cef2a9d869ce76"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java",
+      "sha256": "bd93dc08ae8e90735dbb54b8a75ef8415404dd0f752e25343a2e6c47e28bd928"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java",
+      "sha256": "2054a1d3d7cb3b40f027b3f3aa6b646a832ea8113cc0cb71a626c62b3531be3e"
+    }
+  ]
+}

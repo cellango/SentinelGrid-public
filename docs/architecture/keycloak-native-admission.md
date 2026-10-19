@@ -159,14 +159,22 @@ resolver, context setter, HTTP filter alone and encoder alone each miss concrete
 required work. A0/A1/A2 is a proposed core patch surface with a missing primary
 admission lookup and unproved framework/provider/internal/worker closure.
 
-The next bounded experiment should exercise denial **before ordinary realm
-resolution** and a minimal failure path against exact native source, with an
-unmodified control. Prove no RealmManager/cache/EventBuilder/provider construction
-after denial, preserve explicit unmanaged native behavior, and reject changed
-source, unknown/missing/error/realm mismatch and recursive-error paths. Do not
-claim HTTP ordering from a method fixture. Keep framework/worker gaps explicit
-until their own real proofs; no durable enrollment, R3 snapshot, R4 conditional
-grant or successful issuance implementation is authorized by that experiment.
+The [early realm-denial experiment](../../infra/keycloak/keycloak_registration_connector/qualification/realm_entry/README.md)
+now supplies a one-line exact-source resolver hook and directly invoked minimal
+mapper. Both variants pass 130 test cases each, including reused native auth
+controls; six preparation controls pass. The guarded locator invocations stop
+before ordinary realm lookup. This does not qualify HTTP ordering or durable
+admission. Native HTML failure mapping still attempts realm lookup after denial.
+
+A new synthetic lifecycle witness keeps cleanup **NO-GO**: a throwing rollback
+participant remains unfinished while the native manager returns and the session
+reports closed, without propagating the failure to the mapper. Unmarked native
+close also commits the control transaction. These are in-memory native lifecycle
+results, not SQL/JDBC durability qualification. A missing/failed rollback marker
+cannot safely fall through default-close; some fixture fault cleanup is incomplete.
+The next bounded experiment must address native rollback-failure propagation
+and lifecycle outcomes. No further admission/storage qualification, R3 snapshot,
+R4 conditional grant or successful issuance follows from the passing tests.
 
 All old 18 witnesses/nine failed latest-at-response gates, remaining R1 attribution/
 health/error/async/driver/deferred-effect limits and earlier 503, proposed semantic

@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "path": "src/main/java/ai/sentinelgrid/research/EntryGuardProbe.java",
+      "sha256": "5dae4c3e99ef6b8bb5169b838f5c0d779e21538a5f69a3719e67d14e429838c0"
+    },
+    {
+      "path": "src/test/java/ai/sentinelgrid/research/NativeEntryGuardTest.java",
+      "sha256": "6dac2823688dee39de8a8b943e1c67a76ba3ad934cc63740b92ebc47fc17efed"
+    }
+  ]
+}

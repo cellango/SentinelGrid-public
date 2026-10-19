@@ -224,10 +224,15 @@ front-door, construction, alternate entry and failure paths against 54 pinned
 source/service units. It identifies earlier realm/event-provider reads, internal
 constructors, fresh-session SAML artifact work and HTML error-path realm resolution.
 It proposes deployment, minimal primary admission lookup and native operation
-scope layers; none are implemented or fully closed. The next bounded experiment
-tests denial before ordinary realm resolution and a minimal failure path.
-All entry/writer/storage/compatibility gates remain unqualified. No production
-fork, provider artifact, current guard or application behavior is adopted.
+scope layers; none are implemented or fully closed. The paired
+[early realm-denial experiment](../../../infra/keycloak/keycloak_registration_connector/qualification/realm_entry/README.md)
+now tests the resolver hook, native authentication controls and minimal direct
+failure path: 260 test cases/six preparation controls pass. A synthetic rollback
+participant failure is not propagated by the native manager despite reported
+session close. Complete cleanup and rollback-failure propagation remain NO-GO;
+the next bounded research addresses that lifecycle gap. All entry/writer/storage/
+compatibility gates remain unqualified. No production fork, provider artifact,
+current guard or application behavior is adopted.
 
 ## Primary source references
 

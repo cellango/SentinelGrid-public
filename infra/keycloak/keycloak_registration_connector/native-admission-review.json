@@ -941,5 +941,12 @@
     "Existing admitted native auth failure semantics must be preserved; successful issuance and synchronous durable-commit-before-response remain separate proofs."
   ],
   "negative_result": "The token method hook, ordinary realm resolver, setRealm interceptor, request filter alone and token encoder alone each miss concrete earlier or alternate effects. No single stock reviewed seam proves universal admission. Required new bootstrap identity/transaction and multi-entry core scopes are not implemented or fully closed.",
-  "next_bounded_experiment": "Native early realm-resolution denial and minimal failure-response fixture, with exact-source controls and no durable enrollment/issuance/storage implementation; any HTTP/framework or worker gap must stay explicit."
+  "next_bounded_experiment": "Bounded native rollback-participant failure propagation and lifecycle qualification before further admission or storage work",
+  "subsequent_early_denial_experiment": {
+    "review": "realm-entry-review.json",
+    "total_tests": 260,
+    "preparation_controls": 6,
+    "HTTP_or_durable_admission_proved": false,
+    "rollback_failure_propagation_and_complete_cleanup_proved": false
+  }
 }
