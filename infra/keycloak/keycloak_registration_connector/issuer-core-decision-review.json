@@ -1,15 +1,15 @@
 {
   "format_version": 1,
   "date": "2026-10-19",
-  "status": "proposed_owner_decision_pending",
+  "status": "accepted_bounded_prototype_research_only",
   "source_base": {
     "version": "26.8.1",
     "commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
     "archive_sha256": "f67ec723e2eaf46b2d38f167ecb7578964115f1f2ce203f9b6659322223d9874"
   },
   "recommendation": "Authorize one bounded isolated issuer-core feasibility prototype, retaining NO-GO for R3/R4/caller adoption until complete hook/storage/compatibility proof; no production fork adoption",
-  "owner_choice": null,
-  "owner_choice_required": true,
+  "owner_choice": "P1",
+  "owner_choice_required": false,
   "alternatives": [
     {
       "id": "P1",
@@ -28,7 +28,7 @@
   "all_writer_closure_proved": false,
   "writer_categories": 22,
   "additional_source_files_reviewed": 13,
-  "R2_architecture_owner_decision_gate_met": false,
+  "R2_architecture_owner_decision_gate_met": true,
   "R2_implementation_gate_met": false,
   "R3_R4_GO": false,
   "required_patch_boundaries": [
@@ -47,5 +47,7 @@
     "https://www.keycloak.org/server/configuration-provider",
     "https://www.keycloak.org/security",
     "https://github.com/keycloak/keycloak/tree/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b"
-  ]
+  ],
+  "owner_approval_date": "2026-10-19",
+  "owner_decision_scope": "Explicit owner approval for bounded isolated feasibility prototype and review only; no production fork ownership or deployment"
 }

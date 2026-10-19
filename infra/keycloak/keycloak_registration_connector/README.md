@@ -276,6 +276,6 @@ compatibility decision is reviewed. Historical artifacts and all runtime failure
 current guards, empty grants and defaults are unchanged.
 
 The [issuer-core decision proposal](../../../docs/architecture/decisions/0004-issuer-core-storage-and-compatibility.md)
-now records the core patch/storage/compatibility options and unresolved ownership
-choice. Writer closure is unproved, so R3/R4 remain NO-GO. No provider, artifact,
+records the core patch/storage/compatibility options and owner-approved bounded
+prototype research. Writer closure is unproved, so R3/R4 remain NO-GO. No provider, artifact,
 application, schema, dependency or default changes are supplied.

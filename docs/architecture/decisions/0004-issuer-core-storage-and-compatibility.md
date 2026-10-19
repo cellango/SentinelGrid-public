@@ -1,19 +1,21 @@
 # ADR 0004: Issuer-core ownership, storage and conditional acquisition
 
 Date: October 19, 2026.
-Status: **proposed; owner decision pending**. No issuer fork, core patch,
-storage, version upgrade, provider installation, grant, adapter or deployment
-is adopted. Current application behavior and disabled guards are unchanged.
+Status: **accepted for bounded prototype research only**. The repository owner
+approved P1 on October 19, 2026. This authorizes isolated feasibility work and
+review of the experiment. It does not adopt a production fork, storage, version
+upgrade, provider installation, grant, adapter or deployment. Current application
+behavior and disabled guards are unchanged.
 
-## Proposed decision and scope
+## Accepted research decision and scope
 
-Recommend **one bounded, isolated issuer-core feasibility prototype**, with a
+Proceed with **one bounded, isolated issuer-core feasibility prototype**, with a
 hard stop if complete writer and transaction closure cannot be demonstrated.
 Do not adopt an extension-only approximation. Do not adopt a production fork as
 a consequence of approving research. An alternative is to retain stock Keycloak
-and leave this capability unavailable. The owner choice has not been made.
+and leave this capability unavailable. The owner selected P1; the alternative remains documented for comparison.
 
-If accepted, this supersedes only the extension-only implementation direction
+For research, this supersedes only the extension-only implementation direction
 of proposed [ADR 0002](0002-issuer-association-readback.md) and the implementation
 choice left open by [ADR 0003](0003-association-consistency-and-issuance.md).
 It preserves their pre-acquisition non-creation/authority requirements and the
@@ -43,10 +45,10 @@ augmentation, native Liquibase and bulk/background writer paths. The 22 writer
 surfaces remain an inventory, **not complete transitive hook closure**. Therefore:
 
 - **NO-GO:** R3/R4 implementation, enrolled issuance or caller adoption now.
-- **Proposed research only:** prove or reject the missing core boundaries before
+- **Approved research only:** prove or reject the missing core boundaries before
   implementing snapshot/grant/storage behavior. Approval of P1 cannot turn an
   unproved hook into a passing gate.
-- **Owner decision open:** P1 or P2 must be selected; no silent fork adoption.
+- **Owner decision received:** P1 bounded research; production fork ownership remains a separate decision.
 
 `runAsReadOnly` is a session flag. The reviewed entity-manager proxy changes query
 flush mode in that scope, and tracks some update calls for durability; it still
@@ -184,7 +186,7 @@ support contract or funding are assigned by this document. Owning a patch entail
 
 | Gate | Present result |
 | --- | --- |
-| Owner selects P1 or P2 | Pending |
+| Owner selects P1 or P2 | P1 approved for bounded research; production ownership unassigned |
 | Exact mandatory entry/writer hook closure | Not proved; NO-GO |
 | Paired storage, entity discovery and durable transaction contract | Proposed only; NO-GO |
 | R3/R4 prototype admission | Blocked until the required decision and closure gates pass |
@@ -192,7 +194,7 @@ support contract or funding are assigned by this document. Owning a patch entail
 | R6 scoped stock-response/acquisition compatibility and caller adapter | Open |
 | R7 rights/custody/provisioning/rotation/revocation/data/actual caller adoption | Open |
 
-Accepting P1 authorizes bounded research, not acceptance of these gates. If full
+The P1 approval authorizes bounded research, not acceptance of these gates. If full
 closure cannot be demonstrated, record the negative result and retain unavailable
 authority; do not replace it with a token proxy, second signer, local CAS or
 weaker pre-acquisition boundary. Existing IAM/service restoration remains required

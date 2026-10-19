@@ -303,9 +303,9 @@ old failures and all IAM/service restoration obligations remain required.
 
 [ADR 0004](0004-issuer-core-storage-and-compatibility.md) now supplies the proposed
 ownership options, core entry/writer boundaries, logical issuer storage and
-transaction/recovery/build/compatibility contract. It recommends a bounded core
-feasibility prototype; the owner choice is pending. Complete writer closure is
-not proved and R3/R4 remain NO-GO. No fork, schema, contract supersession, native
+transaction/recovery/build/compatibility contract. The owner approved bounded core
+feasibility research. Complete writer closure is not proved and R3/R4 remain
+NO-GO. No production fork, schema, behavioral contract supersession, native
 grant or caller adapter is accepted. All earlier gates remain open.
 
 ## Safety, compatibility and operations gates

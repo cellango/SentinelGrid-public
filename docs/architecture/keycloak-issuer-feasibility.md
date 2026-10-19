@@ -150,8 +150,9 @@ All existing IAM and service restoration obligations remain migration work.
 The proposed [ADR 0004](decisions/0004-issuer-core-storage-and-compatibility.md)
 compares a bounded owned core prototype with retaining stock/unavailable behavior.
 It details logical storage, transaction ordering, writer exclusions, recovery and
-maintenance costs. The owner decision and complete hook closure remain open;
-it authorizes no implementation or deployment and preserves the R2 NO-GO.
+maintenance costs. The owner approved P1 bounded prototype research. Complete
+hook closure and R3/R4 admission remain open; no production fork or deployment
+is adopted. The R2 implementation NO-GO remains.
 
 ## Pinned source references
 
