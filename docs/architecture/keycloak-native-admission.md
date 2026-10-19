@@ -181,10 +181,12 @@ fault to native close/the fixture mapper; complete cleanup stays NO-GO because
 tracing, prepare/commit branches, provider close, retry and durable outcomes remain
 unqualified. The [lifecycle containment contract](keycloak-lifecycle-containment.md)
 now classifies actual prepare/cache/new-job/response participants, independent
-outcome facts and required changes/exclusions. Its next bounded experiment covers
-integrated native abort/close outcomes. The [completed comparison](../../infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md)
+outcome facts and required changes/exclusions. Its scoped abort/close experiment is recorded separately. The [completed comparison](../../infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md)
 passes 512 cases/six input controls but retains four containment failures;
-mandatory fresh-session/job/context/response ownership is next. Full lifecycle,
+the [native ownership qualification](../../infra/keycloak/keycloak_registration_connector/qualification/session_ownership/README.md)
+now supplies 578 expected-outcome cases/six input controls and a NO-GO result for
+mandatory pre-effect ownership or enforceable exclusions. Next is coherent core
+admission/lifecycle patch design, not another optional hook. Full lifecycle,
 provider/SQL/JTA/HTTP and all admission/storage gates remain open.
 No further admission/storage qualification, R3 snapshot, R4 conditional grant or
 successful issuance follows from the passing tests.

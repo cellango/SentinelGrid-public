@@ -2075,6 +2075,11 @@
       "authority": "bounded_native_rollback_candidate_partial_observation_not_cleanup_or_production"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/qualification/session_ownership/README.md",
+      "class": "experimental_component_reference",
+      "authority": "bounded_exact_native_ownership_qualification_NO_GO_not_runtime_or_production"
+    },
+    {
       "path": "infra/nginx/README.md",
       "class": "experimental_component_reference",
       "authority": "experimental_reference"

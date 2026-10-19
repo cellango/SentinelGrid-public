@@ -130,3 +130,9 @@ warning led to final sequential runs with owned per-project temporary state.
 Final results above have no skipped cases or that warning. Prior reports remain
 private. The [review](../../native-abort-review.json) pins the final fixture and
 source inputs and distinguishes observations from unmet acceptance.
+
+The subsequent [session/job/context/response qualification](../session_ownership/README.md)
+retains all 512 cases and four negative witnesses, adds exact native job/context/
+scheduled-runner tests, and records NO-GO for mandatory ownership/exclusion. No
+new native overlay is added; coherent core admission/lifecycle design must precede
+further optional-hook candidates or storage/admission qualification.

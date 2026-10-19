@@ -321,3 +321,9 @@ adds a deny-only source overlay and retains native/limited controls (512 cases,
 six preparation checks). Child-session commit, native callback response release,
 lost parent context and late ownership remain concrete containment failures.
 Full lifecycle and production/provider/SQL/JTA/HTTP/admission remain NO-GO.
+
+The [native session/job/context/response qualification](qualification/session_ownership/README.md)
+reruns all 512 earlier cases and adds 66 native ownership cases (578 total/six
+input controls). Mandatory pre-effect ownership/exclusion remains NO-GO. Further
+optional-hook candidates stop pending coherent core admission/lifecycle design;
+no new native patch, production behavior or provider/SQL/HTTP qualification follows.

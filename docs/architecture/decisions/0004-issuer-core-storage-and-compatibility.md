@@ -237,9 +237,11 @@ The [lifecycle containment review](../keycloak-lifecycle-containment.md) now def
 the proposed participant/outcome contract and ten required core changes or
 enforceable exclusions. The [integrated native comparison](../../../infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md)
 now tests those outcomes (512 cases/six input controls), with four concrete
-containment failures retained. Mandatory session/job/context/response ownership
-qualification is next; full cleanup and actual provider, SQL/JTA and HTTP gates
-stay open.
+containment failures retained. The [native ownership qualification](../../../infra/keycloak/keycloak_registration_connector/qualification/session_ownership/README.md)
+now runs 578 cases/six controls, retaining those failures and a NO-GO result for
+mandatory pre-effect ownership/exclusion. Further optional-hook candidates stop;
+coherent core admission/lifecycle design and exact prerequisite proof are next.
+Full cleanup and actual provider, SQL/JTA and HTTP gates stay open.
 All entry/writer/storage/compatibility gates remain unqualified. No production
 fork, provider artifact, current guard or application behavior is adopted.
 

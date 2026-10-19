@@ -156,35 +156,31 @@ experiment supplies evidence for part of LC-02 only.
 
 ## Proof sequence and next bounded experiment
 
-1. **Integrated native abort/close outcome experiment, bounded result recorded.** In new owned
-   temporary projects, compare unmodified source, the preserved two-catch-site
-   control, and one isolated candidate covering LC-01/02/04/05 together. Exercise
-   actual pinned native manager/session/abstract transaction/thread-close paths,
-   synthetic classified participants and adversarial observational hooks. Retain
-   all earlier native negative witnesses and real native-auth/non-creation tests.
-   Explicitly withhold success/release on failed/unknown outcome; prove no default
-   commit fallback and no duplicate callback/retry. Include prepare no-op/paired/
-   independent-effect classifications as limits, not fake real-provider proof.
-   A source-only outcome record is not durable admission or full cleanup. Record
-   a concrete negative result if this boundary cannot be demonstrated.
-   The [integrated comparison](../../infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md)
-   now passes 512 cases/six preparation controls while retaining four concrete
-   containment failures: unbound child commit, native error-response resumption,
-   lost nested parent context and late attachment to unfinished work. Only scoped
-   deny/error-observation controls pass; full LC-01/02/04/05 acceptance remains
-   unmet. **Next is mandatory session-creation/job/context/response ownership
-   qualification or enforceable pre-effect exclusion**, retaining those witnesses.
-   No further local catch fix or storage/admission qualification substitutes for
-   that missing mandatory boundary. Stop with NO-GO if it cannot be shown.
-2. Only after that boundary and the remaining lifecycle requirements qualify, qualify actual selected provider/JTA/JDBC/cache
-   participation and durability (LC-03/06/08), and framework response/denial
-   ownership (LC-07), in separately isolated synthetic runtime work. Select exact
-   prerequisite builds/licenses/security inputs first; no live issuer/state.
-3. Complete mandatory admission, all writers, storage/attempt/recovery, response
-   durability and compatibility gates (LC-09/10 and R3–R7) before any successful
-   protected issuance or caller adoption. A lifecycle test pass cannot advance
-   R2 implementation or R3/R4 by itself. A production fork/version/deployment
-   remains a separate later decision.
+1. **Bounded experiments completed; full qualification remains NO-GO.** The
+   [integrated abort comparison](../../infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md)
+   passes 512 cases/six preparation controls, retaining four containment failures.
+   The [native session/job/context/response qualification](../../infra/keycloak/keycloak_registration_connector/qualification/session_ownership/README.md)
+   reruns those cases and adds 66 (578 total/six controls). It executes the real
+   job/context/scheduled-runner source and distinguishes parent restoration from
+   generic clear/double-close failure. Mandatory pre-effect ownership/exclusion
+   remains unproved; no new native patch was added. Full LC-01/02/04/05 and all
+   original failed requirements remain open. **Further optional-hook/local-catch
+   candidates stop.**
+2. **Next: coherent pre-session admission/lifecycle core-patch design.** Cover
+   concrete factory/constructor/build activation, the missing primary admission
+   lookup and bootstrap order, semantic job/participant authority, verified
+   context/close ownership and complete response release. Define exact native
+   changed seams, compatibility, enforceable pre-effect exclusions and proof
+   prerequisites together. Select no physical schema, automatic recovery store,
+   production version/fork or deployment. A carrier, late bind or ThreadLocal
+   cannot create authority. Stop with NO-GO if mandatory closure cannot be shown.
+3. After the coherent design is reviewed, qualify its mandatory source boundaries
+   and actual selected provider/JTA/JDBC/cache/HTTP/error/async/HA behavior in
+   separately isolated synthetic work with reviewed build/license/security inputs.
+   Complete all entry/writer/admission/storage/attempt/recovery and compatibility
+   gates (LC-01–10 and R3–R7) before protected issuance or caller adoption. No local
+   lifecycle pass permits R2 implementation or R3/R4 while prerequisites fail.
+   Production fork/version/deployment remains a separate later decision.
 
 This review closes the **bounded design task only**. Full cleanup/containment,
 HTTP/native SQL durability, bootstrap/admission, writer closure and all old 18
