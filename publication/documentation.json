@@ -2060,6 +2060,11 @@
       "authority": "bounded_native_early_denial_fixture_negative_cleanup_result_not_production"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/qualification/rollback_lifecycle/README.md",
+      "class": "experimental_component_reference",
+      "authority": "bounded_native_rollback_candidate_partial_observation_not_cleanup_or_production"
+    },
+    {
       "path": "infra/nginx/README.md",
       "class": "experimental_component_reference",
       "authority": "experimental_reference"

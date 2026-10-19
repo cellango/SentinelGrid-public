@@ -303,3 +303,8 @@ The [early realm-denial experiment](qualification/realm_entry/README.md) tests a
 native resolver hook and minimal direct failure path (260 test cases/six input
 controls). A reproduced rollback-participant failure remains a failed cleanup
 gate; passing assertions do not qualify native durability or full admission.
+
+The [native rollback comparison](qualification/rollback_lifecycle/README.md)
+checks a two-site candidate for participant-loop error observation (310 test
+cases/six input controls). Full cleanup/containment and durable outcomes remain
+unqualified; this is an isolated source overlay, not a production issuer patch.

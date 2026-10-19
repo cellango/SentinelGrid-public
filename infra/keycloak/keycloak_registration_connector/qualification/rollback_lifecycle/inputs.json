@@ -1,0 +1,53 @@
+{
+  "commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "native_manager": {
+    "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java",
+    "sha256": "1f6230bbbc3bcadff5eb476cd09147145f4bb8f8a308da397371ab9a235b0a53"
+  },
+  "reused_files": [
+    {
+      "path": "realm_entry/prepare.py",
+      "sha256": "d0329f9447fe2398f92c3c1b1ef9186cc3820a7bc27bff70117a28e430bbdd78"
+    },
+    {
+      "path": "realm_entry/native-sources.json",
+      "sha256": "904152f4a49b3133bdbeff2d08cc64cdfd61ba37e796e132ad2925ada308f052"
+    },
+    {
+      "path": "realm_entry/shared-controls.json",
+      "sha256": "44de66808aa5ca24828e69dd956f966b54bf7b958959eb373b249be7e5449e9a"
+    },
+    {
+      "path": "realm_entry/pom.xml",
+      "sha256": "86cde626d0cf8ee8b195ac84760dba88fba0ce40a2aaa451062eead01b828dd4"
+    },
+    {
+      "path": "realm_entry/src/main/java/ai/sentinelgrid/research/RealmEntryProbe.java",
+      "sha256": "ff9cb0ed45adbc445580a828df13f578a8c6fa2229db369163153b98bf383031"
+    },
+    {
+      "path": "realm_entry/src/main/java/ai/sentinelgrid/research/MinimalDenialMapper.java",
+      "sha256": "51f562e164dea13f3ea08bc2f9d6592afa200de05ad437b08aaa9ef868de02c1"
+    },
+    {
+      "path": "realm_entry/src/test/java/org/keycloak/services/resources/RealmEntryTest.java",
+      "sha256": "3a8b8e5c6c48b44017feab17629120c55a336a5f6b486ec501c7c76cea3da5a8"
+    },
+    {
+      "path": "realm_entry/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker",
+      "sha256": "8eca853a5a457f17e0479b71dfbe95f2a13aff9eeff250261ecdc8ca9b847a6a"
+    },
+    {
+      "path": "realm_entry/src/test/resources/mockito-extensions/org.mockito.plugins.MemberAccessor",
+      "sha256": "f03c834f2bf5d58702453b8e2441aed4d1dd30afa523d28ad978f79aab56e0c7"
+    },
+    {
+      "path": "entry_guard/src/main/java/ai/sentinelgrid/research/EntryGuardProbe.java",
+      "sha256": "5dae4c3e99ef6b8bb5169b838f5c0d779e21538a5f69a3719e67d14e429838c0"
+    },
+    {
+      "path": "entry_guard/src/test/java/ai/sentinelgrid/research/NativeEntryGuardTest.java",
+      "sha256": "6dac2823688dee39de8a8b943e1c67a76ba3ad934cc63740b92ebc47fc17efed"
+    }
+  ]
+}

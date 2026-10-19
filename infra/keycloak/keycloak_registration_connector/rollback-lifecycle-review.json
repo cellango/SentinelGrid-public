@@ -1,0 +1,126 @@
+{
+  "format_version": 1,
+  "date": "2026-10-19",
+  "status": "bounded_native_rollback_candidate_comparison_complete_partial_propagation_only",
+  "owner_choice": "P1_already_approved_research",
+  "source_version": "26.8.1",
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "candidate_replacement_sites": 2,
+  "candidate_scope": "ordinary and after-completion rollback catch accumulators only; first RuntimeException retained with later distinct exceptions suppressed",
+  "source_review": [
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java",
+      "sha256": "1f6230bbbc3bcadff5eb476cd09147145f4bb8f8a308da397371ab9a235b0a53",
+      "line": 211
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java",
+      "sha256": "5193a79eb80835b9ad96daf97e304e3b05f4aef0df9df64c5a424d8d6cafd924",
+      "line": 417
+    },
+    {
+      "path": "server-spi/src/main/java/org/keycloak/models/AbstractKeycloakTransaction.java",
+      "sha256": "349da55ffc96f97cfc8adef20590b27446c9d17c21781d9287255682cb74c3f5",
+      "line": 52
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/IdentityBrokerService.java",
+      "sha256": "cc24d52cdbe0602b3c26f2163ea8f949fed3731f0dd1fbc5e89d3df67efec845",
+      "line": 1621
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/WelcomeResource.java",
+      "sha256": "5141261f12baaed256c795c28b375a8cdc675eb065d37f58008590ded05a4fb4",
+      "line": 159
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/models/utils/KeycloakModelUtils.java",
+      "sha256": "1e4a43a5a9acb5dbda9a05ab35d91d254c844f57d4a433a437a8c005bc53b36c",
+      "line": 524
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/authentication/jpa/JpaAuthenticationSessionProvider.java",
+      "sha256": "27a42532a085f5252b6059ade2ebe099646b9d3c6885941e85ae1b299b2d7359",
+      "line": 193
+    },
+    {
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
+      "sha256": "c823592bcc4460bd76a8690e0b4a6274777c3dac0f6387d0caf2a6bd4b24fa77",
+      "line": 369
+    },
+    {
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/authorization/StoreFactoryCacheSession.java",
+      "sha256": "d8d90091d3560bcd1f2b6eef2a602b467153ce1b15167cd16dd7fa7bb711b27b",
+      "line": 166
+    },
+    {
+      "path": "model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProviderFactory.java",
+      "sha256": "1a3ffc166b240933ec4303b6767bfb5a4ed36d9ab842735013709e39934ffb03",
+      "line": 53
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java",
+      "sha256": "8f3901bf75ac4049b045b89572da736765493528954a4ca89fb58a3a9da1da90",
+      "line": 180
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/transaction/AsyncResponseTransaction.java",
+      "sha256": "ba4a8097287710bab65f12e3f545786cb09486f80bc9fa288567f330d42b22cb",
+      "line": 54
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java",
+      "sha256": "bd93dc08ae8e90735dbb54b8a75ef8415404dd0f752e25343a2e6c47e28bd928",
+      "line": 44
+    }
+  ],
+  "source_review_is_transitive_closure": false,
+  "native_tests": 155,
+  "candidate_tests": 155,
+  "total_tests": 310,
+  "new_lifecycle_tests_per_variant": 25,
+  "reused_realm_tests_per_variant": 96,
+  "reused_actual_native_authentication_tests_per_variant": 34,
+  "preparation_controls": 6,
+  "skips": 0,
+  "earlier_negative_oracle_explicit_native_candidate_observation_comparison": true,
+  "earlier_unfinished_participant_and_failed_cleanup_requirements_retained": true,
+  "candidate_participant_loop_error_propagation_controls_passed": true,
+  "complete_lifecycle_cleanup_gate_passed": false,
+  "actual_SQL_JDBC_rollback_proved": false,
+  "HTTP_or_durable_admission_proved": false,
+  "complete_writer_fence_proved": false,
+  "R2_implementation_gate_met": false,
+  "R3_R4_GO": false,
+  "issuer_or_database_started": false,
+  "actual_workload_credentials_or_token_acquired": false,
+  "production_patch_version_fork_provider_artifact_schema_runtime_dependencies_defaults_adopted": false,
+  "all_ancestor_and_IAM_service_restoration_retained": true,
+  "remaining_failures": [
+    "Tracing faults can prevent rollback, including silent dropped callbacks.",
+    "Prepare callback semantics/coverage require actual-provider classification.",
+    "Main-commit failure branch logs after-completion rollback errors without complete propagation.",
+    "Provider-close errors are logged; closed session does not prove resource release.",
+    "Suppression-disabled primary drops later details; completed manager does not retry unfinished participants.",
+    "No SQL/JTA durability, resource recovery or HTTP lifecycle proof."
+  ],
+  "next_research": "Lifecycle containment and participant-contract review before further native admission/storage qualification",
+  "fixture_inputs": [
+    {
+      "path": "inputs.json",
+      "sha256": "2be259266f961cdd5977dda6b60b365fb0c3c5324baebf272d611c419c72e880"
+    },
+    {
+      "path": "pom.xml",
+      "sha256": "d7a212127bc17c7aee4a8ad9018282dbbf5b92440c1bb2b68c6371239688b146"
+    },
+    {
+      "path": "prepare.py",
+      "sha256": "0f10a2e416b8a83b841f1deae9b3b58c39d0fa3a6d26c99ca594e60987184427"
+    },
+    {
+      "path": "src/test/java/org/keycloak/services/RollbackLifecycleTest.java",
+      "sha256": "ec44ebc96d02c925d179728cecf6fcf55a2dd515933f76bbd2bc18ab137d5aa9"
+    }
+  ]
+}

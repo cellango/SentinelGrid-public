@@ -77,8 +77,11 @@ The first test iteration expected that participant failure to propagate and
 failed; the witness is retained. Final tests explicitly preserve this negative
 result. Passing assertions describe the observation; **the rollback-failure
 propagation and complete-cleanup gates remain failed**. No native rollback fix is
-supplied here. Propagation/recovery behavior needs the next bounded lifecycle
-experiment before further admission or storage qualification.
+supplied by this lab. The adjacent [rollback comparison](../rollback_lifecycle/README.md)
+now tests a limited isolated candidate and explicitly compares the observed-fault
+oracle while preserving unfinished participants and failed full cleanup. Native
+production behavior remains unchanged; containment/recovery and actual participant
+contracts still need review before further admission/storage qualification.
 
 ## Reproduce only in owned temporary projects
 

@@ -172,9 +172,16 @@ reports closed, without propagating the failure to the mapper. Unmarked native
 close also commits the control transaction. These are in-memory native lifecycle
 results, not SQL/JDBC durability qualification. A missing/failed rollback marker
 cannot safely fall through default-close; some fixture fault cleanup is incomplete.
-The next bounded experiment must address native rollback-failure propagation
-and lifecycle outcomes. No further admission/storage qualification, R3 snapshot,
-R4 conditional grant or successful issuance follows from the passing tests.
+The [rollback lifecycle comparison](../../infra/keycloak/keycloak_registration_connector/qualification/rollback_lifecycle/README.md)
+now tests an isolated two-site candidate retaining the first participant-loop
+runtime error and suppressing later distinct errors: 155 cases per variant,
+310 total, plus six preparation controls pass. The original native witness and
+unfinished participant requirement remain. The candidate exposes the selected
+fault to native close/the fixture mapper; complete cleanup stays NO-GO because
+tracing, prepare/commit branches, provider close, retry and durable outcomes remain
+unqualified. Next is lifecycle containment and actual participant-contract review.
+No further admission/storage qualification, R3 snapshot, R4 conditional grant or
+successful issuance follows from the passing tests.
 
 All old 18 witnesses/nine failed latest-at-response gates, remaining R1 attribution/
 health/error/async/driver/deferred-effect limits and earlier 503, proposed semantic

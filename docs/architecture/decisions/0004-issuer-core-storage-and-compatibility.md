@@ -229,10 +229,13 @@ scope layers; none are implemented or fully closed. The paired
 now tests the resolver hook, native authentication controls and minimal direct
 failure path: 260 test cases/six preparation controls pass. A synthetic rollback
 participant failure is not propagated by the native manager despite reported
-session close. Complete cleanup and rollback-failure propagation remain NO-GO;
-the next bounded research addresses that lifecycle gap. All entry/writer/storage/
-compatibility gates remain unqualified. No production fork, provider artifact,
-current guard or application behavior is adopted.
+session close. The [rollback lifecycle comparison](../../../infra/keycloak/keycloak_registration_connector/qualification/rollback_lifecycle/README.md)
+now demonstrates a limited two-site candidate for participant-loop runtime-error
+propagation (310 test cases/six input controls). Full cleanup, tracing/provider/
+prepare/commit branch behavior and durable outcomes remain NO-GO/unqualified.
+The next bounded review defines lifecycle containment and participant contracts.
+All entry/writer/storage/compatibility gates remain unqualified. No production
+fork, provider artifact, current guard or application behavior is adopted.
 
 ## Primary source references
 
