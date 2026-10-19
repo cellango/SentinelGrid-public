@@ -299,6 +299,15 @@ next; its acceptance gate is open. No issuer version, fork, schema, grant, adapt
 or deployment is adopted. Remaining R1 limits, every R3–R7 requirement, all nine
 old failures and all IAM/service restoration obligations remain required.
 
+## Concrete issuer ownership/storage proposal
+
+[ADR 0004](0004-issuer-core-storage-and-compatibility.md) now supplies the proposed
+ownership options, core entry/writer boundaries, logical issuer storage and
+transaction/recovery/build/compatibility contract. It recommends a bounded core
+feasibility prototype; the owner choice is pending. Complete writer closure is
+not proved and R3/R4 remain NO-GO. No fork, schema, contract supersession, native
+grant or caller adapter is accepted. All earlier gates remain open.
+
 ## Safety, compatibility and operations gates
 
 All future runtime work is confined to **new disposable synthetic loopback labs**

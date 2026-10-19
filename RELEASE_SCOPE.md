@@ -228,3 +228,8 @@ provides no qualified complete snapshot/writer-fence contract for this prototype
 Issuer-core/storage/compatibility ownership must be decided before further
 prototypes. No production version, application behavior or schema is adopted;
 all historical failed gates and caller-adoption restrictions remain.
+
+The [issuer-core/storage architecture proposal](docs/architecture/decisions/0004-issuer-core-storage-and-compatibility.md)
+is design only and awaits an ownership choice. It specifies required core writer,
+transaction and native migration boundaries; complete closure remains unproved.
+No issuer fork, new authority, schema, grant or caller compatibility is adopted.

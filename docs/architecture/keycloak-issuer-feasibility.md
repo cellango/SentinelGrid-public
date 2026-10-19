@@ -145,6 +145,14 @@ Remaining R1 instrumentation limits, all 18 historical witnesses/nine failed
 gates and full R3–R7 runtime/custody/data/caller qualification remain required.
 All existing IAM and service restoration obligations remain migration work.
 
+## Concrete ownership and storage proposal
+
+The proposed [ADR 0004](decisions/0004-issuer-core-storage-and-compatibility.md)
+compares a bounded owned core prototype with retaining stock/unavailable behavior.
+It details logical storage, transaction ordering, writer exclusions, recovery and
+maintenance costs. The owner decision and complete hook closure remain open;
+it authorizes no implementation or deployment and preserves the R2 NO-GO.
+
 ## Pinned source references
 
 | Topic | Primary source |

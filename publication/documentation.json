@@ -425,6 +425,11 @@
       "authority": "proposed_design_not_implemented"
     },
     {
+      "path": "docs/architecture/decisions/0004-issuer-core-storage-and-compatibility.md",
+      "class": "current_architecture",
+      "authority": "proposed_owner_decision_pending_not_implementation"
+    },
+    {
       "path": "docs/architecture/frontend.md",
       "class": "current_architecture",
       "authority": "current_within_source_preview_scope"

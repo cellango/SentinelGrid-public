@@ -274,3 +274,8 @@ all-writer generation/fence and native conditional commit are not supplied. The
 existing extension is NO-GO for R3/R4 until an issuer-core ownership/storage/
 compatibility decision is reviewed. Historical artifacts and all runtime failures,
 current guards, empty grants and defaults are unchanged.
+
+The [issuer-core decision proposal](../../../docs/architecture/decisions/0004-issuer-core-storage-and-compatibility.md)
+now records the core patch/storage/compatibility options and unresolved ownership
+choice. Writer closure is unproved, so R3/R4 remain NO-GO. No provider, artifact,
+application, schema, dependency or default changes are supplied.

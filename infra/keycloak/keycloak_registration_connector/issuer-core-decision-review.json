@@ -1,0 +1,51 @@
+{
+  "format_version": 1,
+  "date": "2026-10-19",
+  "status": "proposed_owner_decision_pending",
+  "source_base": {
+    "version": "26.8.1",
+    "commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+    "archive_sha256": "f67ec723e2eaf46b2d38f167ecb7578964115f1f2ce203f9b6659322223d9874"
+  },
+  "recommendation": "Authorize one bounded isolated issuer-core feasibility prototype, retaining NO-GO for R3/R4/caller adoption until complete hook/storage/compatibility proof; no production fork adoption",
+  "owner_choice": null,
+  "owner_choice_required": true,
+  "alternatives": [
+    {
+      "id": "P1",
+      "name": "Bounded owned issuer-core prototype",
+      "recommended": true,
+      "consequence": "Adds version-specific experimental core patch design/build ownership. No promise of acceptance; a negative result keeps authority unavailable. Long-term maintenance/deployment remains separate."
+    },
+    {
+      "id": "P2",
+      "name": "Keep stock issuer and capability unavailable",
+      "recommended": false,
+      "consequence": "No owned issuer patch work. Existing identity/conditional acquisition and dependent migration acceptance stay open until supported hooks or a separately accepted alternative exist."
+    }
+  ],
+  "decision_scope": "If accepted, supersedes extension-only implementation direction in proposed ADR0002/0003, not their invariants, old failure oracles, current guards or Temporal/runtime ownership",
+  "all_writer_closure_proved": false,
+  "writer_categories": 22,
+  "additional_source_files_reviewed": 13,
+  "R2_architecture_owner_decision_gate_met": false,
+  "R2_implementation_gate_met": false,
+  "R3_R4_GO": false,
+  "required_patch_boundaries": [
+    "Mandatory trusted enrollment and native auth/grant/alternate entry denial",
+    "Fresh immutable snapshot independent of request caches and AUTO flush",
+    "All protected model/bulk/native/provider/background writer participation or enforceable exclusion before reads",
+    "Atomic generation/tombstone/recovery and attempt lifecycle on issuer primary transaction",
+    "Native signing/mappers fixed profile and synchronous durable-commit-before-response boundary",
+    "Build augmentation, paired issuer mapping/Liquibase, protected recovery configuration and immutable provider admission"
+  ],
+  "production_version_fork_schema_dependencies_defaults_grants_or_caller_changed": false,
+  "application_sources_and_provider_artifact_unchanged": true,
+  "all_old_gates_and_ancestor_Task6_restoration_retained": true,
+  "no_upstream_contact_or_PR_created": true,
+  "primary_sources": [
+    "https://www.keycloak.org/server/configuration-provider",
+    "https://www.keycloak.org/security",
+    "https://github.com/keycloak/keycloak/tree/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b"
+  ]
+}

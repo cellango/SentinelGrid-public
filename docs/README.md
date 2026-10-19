@@ -14,8 +14,9 @@ running commands. Original code uses [Apache-2.0](../LICENSING.md).
 
 For design review, read the [selected agentic target](architecture/agentic-platform.md),
 [authoritative runtime decision](architecture/decisions/0001-case-runtime.md),
-[proposed issuer association decision](architecture/decisions/0002-issuer-association-readback.md)
-and [consistency/issuance remediation plan](architecture/decisions/0003-association-consistency-and-issuance.md),
+[proposed issuer association decision](architecture/decisions/0002-issuer-association-readback.md),
+the [consistency/issuance remediation plan](architecture/decisions/0003-association-consistency-and-issuance.md)
+and [proposed issuer-core ownership/storage decision](architecture/decisions/0004-issuer-core-storage-and-compatibility.md),
 [logical contracts](reference/agentic-contracts.md),
 [database compatibility plan](architecture/database-compatibility.md),
 [adaptive Playbook and evidence design](architecture/adaptive-playbooks.md), and
