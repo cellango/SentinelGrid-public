@@ -200,6 +200,19 @@ authority; do not replace it with a token proxy, second signer, local CAS or
 weaker pre-acquisition boundary. Existing IAM/service restoration remains required
 Phase 1 migration work. Tasks 6/7 and private-repository retirement remain open.
 
+## First bounded prototype evidence
+
+The [compiler-assisted core audit](../../../infra/keycloak/keycloak_registration_connector/qualification/core_audit/README.md)
+is now an executable opt-in research component. Two final runs verify and parse
+6,441 main-source-layout Java files and 299 service declarations identically;
+testsuite/helper modules are reported separately. All 15 fault controls pass.
+This is syntax inventory, not a production callgraph, vendor build or core patch.
+It identifies Client Admin API v2 and native realm SCIM writer entry families
+that expand the concrete source map within the existing 22 writer categories.
+Their feature/profile activation and complete enforcement remain unproved.
+R2 implementation/R3/R4 and all R5–R7/ancestor gates remain open. Next research
+tests mandatory native entry-guard hooks against that expanded inventory.
+
 ## Primary source references
 
 All code links use the reviewed immutable upstream commit. No upstream server or

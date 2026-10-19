@@ -2040,6 +2040,11 @@
       "authority": "bounded_experiment_not_runtime_adoption"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/qualification/core_audit/README.md",
+      "class": "experimental_component_reference",
+      "authority": "bounded_source_audit_not_runtime_enforcement"
+    },
+    {
       "path": "infra/nginx/README.md",
       "class": "experimental_component_reference",
       "authority": "experimental_reference"

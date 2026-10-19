@@ -234,3 +234,8 @@ records owner-approved bounded prototype research. It specifies required core
 writer, transaction and native migration boundaries; complete closure remains
 unproved. No production issuer fork, new authority, schema, grant or caller
 compatibility is adopted.
+
+The opt-in [issuer-core source audit](infra/keycloak/keycloak_registration_connector/qualification/core_audit/README.md)
+is the first approved research component. Its JDK parser verifies pinned source
+and emits an inventory; it does not build/run vendor classes or implement issuer
+authority. No production version, core patch, storage or caller adoption follows.

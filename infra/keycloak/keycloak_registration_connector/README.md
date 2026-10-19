@@ -279,3 +279,8 @@ The [issuer-core decision proposal](../../../docs/architecture/decisions/0004-is
 records the core patch/storage/compatibility options and owner-approved bounded
 prototype research. Writer closure is unproved, so R3/R4 remain NO-GO. No provider, artifact,
 application, schema, dependency or default changes are supplied.
+
+The first P1 component is the [compiler-assisted core audit](qualification/core_audit/README.md).
+Its 15 controls and two deterministic source parses pass. It inventories native
+entry/mutation syntax, including Admin API v2/SCIM paths; complete transitive
+coverage and issuer enforcement remain unproved. It starts no issuer or database.
