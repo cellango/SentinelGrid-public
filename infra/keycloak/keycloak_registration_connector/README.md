@@ -284,3 +284,11 @@ The first P1 component is the [compiler-assisted core audit](qualification/core_
 Its 15 controls and two deterministic source parses pass. It inventories native
 entry/mutation syntax, including Admin API v2/SCIM paths; complete transitive
 coverage and issuer enforcement remain unproved. It starts no issuer or database.
+
+The paired [native token-entry experiment](qualification/entry_guard/README.md)
+compiles an exact-source endpoint overlay with one early denial hook: 34 native
+control tests, 34 guarded tests and eight input controls pass. It preserves actual
+native client-secret authentication denials in an unmanaged fixture. This is a
+method-body research result; front-door/constructor/alternate entry and all
+writer/storage gates remain unqualified. Its isolated test POM never changes the
+provider build or current issuer authority.

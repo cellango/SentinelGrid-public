@@ -1,0 +1,1674 @@
+{
+  "keycloak_version": "26.8.1",
+  "repository": "https://repo.maven.apache.org/maven2",
+  "scope": "isolated native-source test only",
+  "checksum_verification": "Maven Central same-origin SHA-1 metadata plus locally recorded SHA-256; not independent signatures",
+  "license_review": "POM declarations including parent inheritance; no production clearance or redistribution of dependencies",
+  "artifacts": [
+    {
+      "coordinate": "org.keycloak:keycloak-services:26.8.1",
+      "sha256": "eef91c0d261559393e829231ab44e99d06ec380bd331ee106a2ad8c05cf32da1",
+      "pom_sha256": "f01eb55c889a2551459119c4f50f224b231e1b49d56db824267ea2a30affbf14",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-core:26.8.1",
+      "sha256": "82ef702ad69a26b0b76a9030e5ff36dbf58e64de5ab468ba5c57df8036a8bd34",
+      "pom_sha256": "a940c3ab98b9c14039bf34417aada6b995c14dcb4442766edb546a4795a4496c",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.7",
+      "sha256": "5989b937f0aa5b6407e7a061077c9bfcac0590dc0a32e54b2fac6a3e2d49e812",
+      "pom_sha256": "c67c68e85e0f1b5583d98d011f6bc542632451157f45746c0f16603ebece50e0",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.mail:jakarta.mail-api:2.1.1",
+      "sha256": "1d69d8aaa6ab704d4ce3bd156cd5542060849a409b1e0463163d8508356857cc",
+      "pom_sha256": "2c0a59ed129e12ceda0e4888a213dfb1a06d85919afcecc0cc1c0a3d436a22a0",
+      "declared_licenses": [
+        "EDL 1.0",
+        "EPL 2.0",
+        "GPL2 w/ CPE"
+      ]
+    },
+    {
+      "coordinate": "org.eclipse.angus:angus-mail:2.0.5",
+      "sha256": "b4d8c30d35f455def6c7a05fe595a1e62ea2b80cac3efec1e9ccf4118b23168a",
+      "pom_sha256": "b2fb76a9ea807b355b8ffa634de84adefac2f279cf60d58cb59c6a6c114c55af",
+      "declared_licenses": [
+        "EDL 1.0",
+        "EPL 2.0",
+        "GPL2 w/ CPE"
+      ]
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-common:26.8.1",
+      "sha256": "8749363705a4dffefb5ab92d3a29f216013900430da1756ad935aa1375909dfe",
+      "pom_sha256": "c2261162a27d2fdc249e98822df4578a105bf0b6b4acfcd4e14f4ff8fc1f0a34",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.twitter4j:twitter4j-core:4.1.2",
+      "sha256": "72602281c06d97e92c63ce84bd93d007642fa0bff852f63df12fd123b990b1f2",
+      "pom_sha256": "56184132943af3bdc114f21173b89e69c8ccaa58f6181a3fbd1d60f7126ba346",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.jboss.logging:jboss-logging:3.6.3.Final",
+      "sha256": "7c12ee575508f81e22b1db9334b969d0ec54ef0fd1dcba24eeab1a44235fc366",
+      "pom_sha256": "e673490683b352b79e85c22df13b396e4b39e5f25cfef9c1b9e835ed123c0ca4",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.jboss.logging:commons-logging-jboss-logging:2.0.0.Final",
+      "sha256": "ce4088809c7512228cb34b54686223dec45532b97366a36830f82926b58a4c6c",
+      "pom_sha256": "bb1fabc7aeded5fef4fc67dd56b73eaa7aa1bce262c7f00f591cb0002926e418",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0",
+      "sha256": "6b3b3628b8b4aedda0d24c3354335e985497d8ef3c510b8f3028e920d5b8663d",
+      "pom_sha256": "c697a303e9ffc31963eb1c275bbf77a583a7d482965ac4f1bb26dc91e595ffbf",
+      "declared_licenses": [
+        "EPL-2.0",
+        "GPL-2.0-with-classpath-exception"
+      ]
+    },
+    {
+      "coordinate": "jakarta.transaction:jakarta.transaction-api:2.0.1",
+      "sha256": "50c0a7c760c13ae6c042acf182b28f0047413db95b4636fb8879bcffab5ba875",
+      "pom_sha256": "5fe349981c156fbbe26388d59949fdac16bb8d7879ee61b34c49c7b5ce0f2f23",
+      "declared_licenses": [
+        "EPL 2.0",
+        "GPL2 w/ CPE"
+      ]
+    },
+    {
+      "coordinate": "jakarta.xml.soap:jakarta.xml.soap-api:3.0.0",
+      "sha256": "33124e98d724b69e1673a61675c205b58c372605f4254d455b12b37398219a37",
+      "pom_sha256": "2f66ba33e306ce92b22e7bcf456d12e6494e7a97d18a3a8d4beadbb7819dcdd8",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20260101.1",
+      "sha256": "f313f1d6ae849a18f5122dbef8126dc379ec86cef2dcf8192b478170c7eaf155",
+      "pom_sha256": "2f3011c0e8aefa001bf9db19f8cc7eb6cedb72f9e803fef02862ef5a555aef5b",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.googlecode.owasp-java-html-sanitizer:java8-shim:20260101.1",
+      "sha256": "b5d5b10afd2ab1899bd9a859d1d7b59b49e438dab18a7c95d85ac71c1329932a",
+      "pom_sha256": "d432fc292573a0160e53f21902ea6604cb924f6e5e196dc9e06f90e73db9b929",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.googlecode.owasp-java-html-sanitizer:java10-shim:20260101.1",
+      "sha256": "9c20befbc7003af4dee3970fd1f9d01f252d2be9835235509038419fcb68da1d",
+      "pom_sha256": "024250faefda416ae14711bae299077acf927c7232e491b84a522350d79ba5c9",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.core:jackson-core:2.21.7",
+      "sha256": "8c5623b98f32d5f7e1287ff61ed50e08ab7b11381e991fff89327faabba42261",
+      "pom_sha256": "70233c57a076fadb2f3af1ca25647dc65116d8c135df6c3cb79c95a2560eafce",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.core:jackson-databind:2.21.7",
+      "sha256": "1290c2795e93e8a6861a6c4d9ff0d844d32f5ea178362cb2721edf5561e828b1",
+      "pom_sha256": "3191130a3cb7be2f1f05d4e68765e23a1880db719a23ee368a14a8b0477f7bb5",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.core:jackson-annotations:2.21",
+      "sha256": "53ca085f4a150f703f49e1aabd935bd03b43e1ea3d55d135438292af22cef56b",
+      "pom_sha256": "71cac5392151e2a528cc9a09179f0a334179f05c52f8e596cf58ddf12bb27f2b",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "javax.annotation:javax.annotation-api:1.3.2",
+      "sha256": "e04ba5195bcd555dc95650f7cc614d151e4bcd52d29a10b8aa2197f3ab89ab9b",
+      "pom_sha256": "46a4a251ca406e78e4853d7a2bae83282844a4992851439ee9a1f23716f06b97",
+      "declared_licenses": [
+        "CDDL + GPLv2 with classpath exception"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.21.7",
+      "sha256": "b8f62f98363ed9aa259b3a479a64fcbe7e081158a8bec6733972e900d12f4e47",
+      "pom_sha256": "7abd6d55d00cb4e072046fc3bd53b44ce339afca34d81784b90f24fe5ac518bd",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-yaml-provider:2.21.7",
+      "sha256": "38990d47adec34070332d79e9e157218c8b5611e64445a5028fc6653105d9d78",
+      "pom_sha256": "cec222f4368a1b83f48f19eb618339edb7b78f30ef9276e7b1cc357f8a42ed06",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-base:2.21.7",
+      "sha256": "202b61a95e735d01ae03e411b8f6ae1245bbf19c87d4746c0204579f5c2e456b",
+      "pom_sha256": "14ad053b2dac69a17328bc52081f1ba8aab2e0cdbcbf8519aab0de921f82a118",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.21.7",
+      "sha256": "df2b3e6a194181dc067b7211d750926b4ae9e4f3c892a0005b8219a9b59be681",
+      "pom_sha256": "f8e9f9e0ac2e3ac129d23c8f45a013baae1d3a49083214086a94870817011b84",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:2.21.7",
+      "sha256": "76054ca6e252e7142fec9c0e9a146bd8c43cde13dddf2d1cdaecd9db981c2ddc",
+      "pom_sha256": "9b27c2dc2fb8ec9c0a661934b4b569528eb0f55845569e2927987343a8b7b7da",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.google.zxing:javase:3.4.0",
+      "sha256": "7aeef746a544effcd9e499214d9f315e69c3a835e7c81abfb703be79f859a6d7",
+      "pom_sha256": "cc0138c230357e64ad759a40c0e362ba8837c9fd4f4abe64c35bb3fd52a10a7a",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.google.zxing:core:3.4.0",
+      "sha256": "65004806a669234c698fbe0755258100375fb01fe93b538455f3903713d4a50d",
+      "pom_sha256": "0b3aa550ee9b33da83530c7b3ce0985434323597b0f995d9aea1246df7b07832",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.github.jai-imageio:jai-imageio-core:1.4.0",
+      "sha256": "8ad3c68e9efffb10ac87ff8bc589adf64b04a729c5194c079efd0643607fd72a",
+      "pom_sha256": "01cd0b8cf446a1ee2456ec9e83c435d60447d06e9f54904c4e6fec08f7cef2ac",
+      "declared_licenses": [
+        "BSD 3-clause License w/nuclear disclaimer"
+      ]
+    },
+    {
+      "coordinate": "com.apicatalog:titanium-json-ld:1.3.3",
+      "sha256": "779de1d88f173486f0ea9f1b4b7779970ac21a7ad49b2a0370f5f99b6dfef72c",
+      "pom_sha256": "54cfbe75a8b67bfbdfff599ff9b7b4d7a9ae9fb8751901cabbd7f5f8e4dbc4bd",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.setl:rdf-urdna:1.1",
+      "sha256": "c57a2ae551bd301f84faf1010251d96510a40e2b00d883e86cdd2d0dfa6f01ae",
+      "pom_sha256": "03d36dbbb3feeb51c9862a0383a1bf24c9ef23fdcc33e21a3e2de203113f385d",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.webauthn4j:webauthn4j-core:0.30.3.RELEASE",
+      "sha256": "22630b3a6d8d73483461e7eb10cef306f01ae9b8f4360bf77652db4f3c543e99",
+      "pom_sha256": "3bb7a2d4f9593789786d0e418ff21a628590e808a3296c550c8c1c6d2f8e1cf6",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.20.1",
+      "sha256": "591d476a77b35798cff61b7f970e00f895b0e537d54b50401d4bef7598910da4",
+      "pom_sha256": "5fc087985714c0cba4de6243dc7dfd9daf8016bc8fe142486f742dc3e8623945",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.slf4j:slf4j-api:2.0.17",
+      "sha256": "7b751d952061954d5abfed7181c1f645d336091b679891591d63329c622eb832",
+      "pom_sha256": "150c40287f7cecdc21b9380caac98e928c4f33c023db6b348df1c5ac977026bf",
+      "declared_licenses": [
+        "MIT"
+      ]
+    },
+    {
+      "coordinate": "com.github.ua-parser:uap-java:1.6.1",
+      "sha256": "ff3e1eb9d807df8bc197950de5d555d1892a7ceed0fdff75b3eb2aa78bbe51c5",
+      "pom_sha256": "6675cafc3052a09417c9c5271afe68c2b4aba6ebbcc9af0551f875d24eabe9c9",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.apache.commons:commons-collections4:4.4",
+      "sha256": "1df8b9430b5c8ed143d7815e403e33ef5371b2400aadbe9bda0883762e0846d1",
+      "pom_sha256": "271bd673839af46e73aff957e2918d4bf96f5ac4f6c6cf4d5be93fd1f1271c4d",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.yaml:snakeyaml:2.0",
+      "sha256": "880c9d896e4b74a06c549c15ca496450165d6909fa15d7e662bee8f6a66d7afa",
+      "pom_sha256": "43c761f92b549c8b08fb992080253e49f0a983e544ef0663c1f4f9d68eb52616",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.eclipse.microprofile.openapi:microprofile-openapi-api:4.1.1",
+      "sha256": "1e333f5bd206245e7a4d0a3dd5f2bab1820fc3b950b77e96008fcdb7b77d9150",
+      "pom_sha256": "bbc60a1377d649455d159f9568f636c974e99ce2fc34f79050f6b706d428bcb1",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-annotation:2.19.0",
+      "sha256": "a29ef5d8ed9e306ed683a4d680bb1c03f89c41196aa0a41c95eb0dda8e81e346",
+      "pom_sha256": "47ae18b859af2288978e0b0fa8d6cc5eb4092245e6fc51d89f1b3afa73e92ba2",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-model-storage-private:26.8.1",
+      "sha256": "32c774c4089ec2400a6ef93d92639ad592698e9ab9b0dba3a779fd29b6ea0643",
+      "pom_sha256": "aa0fbb89e40dadd400162f67027f4c8e729f7e17dd4d4097ea4ed83b9877b4d2",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-model-storage:26.8.1",
+      "sha256": "cf61dc020a052f3a595a8e585d2a0b574a65bd17814d0af118bbb835bc956142",
+      "pom_sha256": "b98ffad7c8a151f16d8cd93c1e6450de36763a8c448f085eac90ebcb94bebaa5",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-config-api:26.8.1",
+      "sha256": "dbb5def9ef6fba3289eb3c60e8e27819dc562b11cb1f62c91c48d368eccc9675",
+      "pom_sha256": "00551eda01eb26a2e76b83aca3b89175a2f51fbbab655cd82cb9e627a08e0fe5",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.infinispan:infinispan-commons:16.0.15",
+      "sha256": "d58eca635ca474a8f16a96433a04662c0b557aa93e80d0883f6dabf36f951eaa",
+      "pom_sha256": "3737608b5c7111adfc02dd0bbdfe318c4dabfa00d5df7fe7ed03caca3b49dafe",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.infinispan.protostream:protostream:6.0.7",
+      "sha256": "fa630f97729bd321b1feb457b3bf5ad938dfe32bef1095010ffc51ee810ce4b6",
+      "pom_sha256": "cf36dd1e1b40eb56d64757f2d27a28dfc17b2a3faaa26b7765f168f12f2cdd02",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.infinispan.protostream:protostream-types:6.0.7",
+      "sha256": "e05cefff474b59796e765f72f47a59fbc9bb25c91ef3b8051eb2620a61a9c731",
+      "pom_sha256": "ce000b9a5beab319a4034738b17f33209db3809c07495e8c6263f8267e72a540",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.github.ben-manes.caffeine:caffeine:3.2.3",
+      "sha256": "ca70c90a5d1ce1511880ce9c93d4ad22108f61111d3daf91eb52762b571bd179",
+      "pom_sha256": "9f704f9083797b4f7d0c1d5c855d34cd268d544cf06b4283d5ce4288acfc9ee0",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.jspecify:jspecify:1.0.0",
+      "sha256": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab",
+      "pom_sha256": "cdab929a3b95211f43d2090c5e2d0dfe8465960e378bc32b35841dab324433a6",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.reactivex.rxjava3:rxjava:3.1.12",
+      "sha256": "1808a433ef55dcc2965523e512ab914a5d0d727228a2683ed7559d7cccf44e37",
+      "pom_sha256": "72126bafb80a12c7b558524d091923e69612383c4741acb7e00c35c9b0546b34",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-opentelemetry:3.40.1",
+      "sha256": "83ac6c4262aac3864d4295a38c85dd91707c915b084d00b20b728af05e8a0700",
+      "pom_sha256": "1c6f3ce4d324faba9127c66623811958740d77a53ab625f0323a710660c8927d",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-core:3.40.1",
+      "sha256": "3f75b567f56ed89f80451176656a78fdcced7571330f7e7c7527f1f3ea987d97",
+      "pom_sha256": "feb6df7d63d3dff94f90fbab7f500774074e998a5de0ed0a25c902e2c36af564",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0",
+      "sha256": "c42c808f17925129a0800f618febe050d966e181a4c7384c8a5e7a0283d68699",
+      "pom_sha256": "d464d848318e061d12364422b75347cfc8bcbd29447db6480d36f1d02580985c",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.enterprise:jakarta.enterprise.lang-model:4.1.0",
+      "sha256": "bb56f571f60d2862b2387d5468fe8f5540f8094727283ed991f89082708095ee",
+      "pom_sha256": "ff6c448799024c694bac8b52b7dee3b1f264a22718a5e2af4dd4d5fb42c98b02",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.el:jakarta.el-api:6.0.0",
+      "sha256": "f33d0becf2d5516730ba5cc99a7b5a2b1f62986bf0a3370249cdff9a2f171507",
+      "pom_sha256": "26c666a9157486dbc4dc2eb19f3b808560ddbc0ba457254d63f25c8dab1c66d0",
+      "declared_licenses": [
+        "Eclipse Public License v. 2.0",
+        "GNU General Public License, version 2 with the GNU Classpath Exception"
+      ]
+    },
+    {
+      "coordinate": "jakarta.interceptor:jakarta.interceptor-api:2.2.0",
+      "sha256": "d240d72b4dd38a2e431c804079810010cb97903678fa5f987fb7434878b04398",
+      "pom_sha256": "8ce38ec619a9adb808d2a8d06b2fa62d89a4342e7f16ed76e7e9bbbb3732a6f8",
+      "declared_licenses": [
+        "EPL 2.0",
+        "GPL2 w/ CPE"
+      ]
+    },
+    {
+      "coordinate": "jakarta.inject:jakarta.inject-api:2.0.1",
+      "sha256": "f7dc98062fccf14126abb751b64fab12c312566e8cbdc8483598bffcea93af7c",
+      "pom_sha256": "e7fd7232e96307a575b2494c9367d68cf43ec98244aace3ccc23e1773ffa6fda",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-os:2.19.0",
+      "sha256": "ac12ba8e86119ebd0a3b14d1053a3b6a4722f63978e9c718fb1ffcbbd4e3a3b5",
+      "pom_sha256": "e3499ab467de07820fa85b3566981d046561c48db5a3d923ae63bf9d749acba0",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-ide-launcher:3.40.1",
+      "sha256": "d956344c362f825780d8f54cf098f1cc40eda82ee8ca424a1d36abc729196f6b",
+      "pom_sha256": "82f2b33a84b05ff268dae76b75619011097c045b47d20d1e20251f2df8ddcb08",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-development-mode-spi:3.40.1",
+      "sha256": "33638b290e946702730acf6e57aec4e3dd339815c3fa0f0ce5019288dc3367b9",
+      "pom_sha256": "36ea0928c44d0a07c3552235e135f422972d00a71365dc400089659f271d70b8",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.config:smallrye-config:3.17.2",
+      "sha256": "d93d4fec79674f67391c44fc995c61209ef72e816b0fc40ffd631ab883310c14",
+      "pom_sha256": "b7861aacc85d764d500039d300c56163aac09ab5955eb7a4e28b1052d0c998d1",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.config:smallrye-config-core:3.17.2",
+      "sha256": "092050099d3144bcc64b33165b3c2b7d25a519808d3c7618a6e1c1debcc0d832",
+      "pom_sha256": "33453bff5dd971e81093356bae4e0cad297417341e390f849a7fa5c9fbb258e1",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.eclipse.microprofile.config:microprofile-config-api:3.1.1-RC1",
+      "sha256": "6913dfe8e1a567293825d9960b23d3b9197f2631c631e6477ebf33617116f05b",
+      "pom_sha256": "8f19500ee7e9aa5af3889be2bca5f539d06408b00674cdacedc423c34d8554b6",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-classloader:2.17.1",
+      "sha256": "76e5fb5cb65ac0711c03575b0f6a0b42f9717b19fdc5df1f0feb159adf8cf04c",
+      "pom_sha256": "a5400746c06835fc75d920974d3ce0d9829e1e982b1e64152e057ce9910c11b2",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.ow2.asm:asm:9.9.1",
+      "sha256": "6f3828a215c920059a5efa2fb55c233d6c54ec5cadca99ce1b1bdd10077c7ddd",
+      "pom_sha256": "aca68dee9ba2f6cd90ffde728efdc7e3ebfcf59f3f41fbfe248d2d01d5b866af",
+      "declared_licenses": [
+        "BSD-3-Clause"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.config:smallrye-config-common:3.17.2",
+      "sha256": "ebbb7b03044580440f63788cb743664749e7169b8eb382b3cfc44a4fb328bb85",
+      "pom_sha256": "c5f13b9614e411a6757080ec2d29ee45bd77e7636dc46fa965182124b932411d",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.jboss.logmanager:jboss-logmanager:3.2.2.Final",
+      "sha256": "91d3d76c1e41d403cd717026cd6e8c4495068cb3a4a06461d9d984920fbb856c",
+      "pom_sha256": "5c941dfaf5506985d4d020d21fe2e06ebbf86ca8bf77278c838ee4ead7e773d9",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-cpu:2.15.0",
+      "sha256": "0a3a17d2828c946f0f13ca12fb424e12ec102873dd8086fae253003bf8bdb1cc",
+      "pom_sha256": "2e67324e5e92795cb14cb9a698f8d7dfd154a175ea519f4d05fe0ea59be485bb",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-expression:2.15.0",
+      "sha256": "6a76868724acd8b57fb62be9daa42acccf0c02107c831a7112c20d8519d445e8",
+      "pom_sha256": "debb05f7c021cb59d9db7c541cacb2c5bd2ac48127ce965dc7b5fd7af4411e45",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-net:2.15.0",
+      "sha256": "35d0e4d22d408369cd6a6c1474db179eb7d4811849f6fd4cc96e8748f30139cf",
+      "pom_sha256": "0ccf009efbaeb000181c322d2954a4fe608dace6c005dac906e6be877514fd56",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-ref:2.15.0",
+      "sha256": "7fef733c8468ad6e255e1b3c21869544cc6ed354dc553c4e7cf75b9bc3cba866",
+      "pom_sha256": "df98e22e10904a86a536e5dc64fecf977bc93e2550cfaede6113ef58d6447db3",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.json:jakarta.json-api:2.1.3",
+      "sha256": "bc934142805ea1d794f1440563965a3861a2a9fb7414ecd3fe44f26500734414",
+      "pom_sha256": "416a73971385a0be43f9da8a477aa64f4814ac52187d88f3e24f215b7f89dfde",
+      "declared_licenses": [
+        "Eclipse Public License 2.0",
+        "GNU General Public License, version 2 with the GNU Classpath Exception"
+      ]
+    },
+    {
+      "coordinate": "org.eclipse.parsson:parsson:1.1.7",
+      "sha256": "c21db018f8ac6cf79893f1af77f1cd337937bd12ae6fa3d4b10f5a00819ee56c",
+      "pom_sha256": "aeb404e7f0c14a76ecc8ba6e21ecd92f80f7c10402a446ff5d9c31d50f08e2d3",
+      "declared_licenses": [
+        "Eclipse Public License 2.0",
+        "GNU General Public License, version 2 with the GNU Classpath Exception"
+      ]
+    },
+    {
+      "coordinate": "org.jboss.threads:jboss-threads:3.9.2",
+      "sha256": "ac0fd044686122014143267d3688245852ca07c6c4474320c9172062a5af6634",
+      "pom_sha256": "aace53fd557a29ab2cf12941af62d7ad29aa39bb8b184603c79d2cc9c31efefd",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-function:2.14.0",
+      "sha256": "f0e0c6c213c40665b3c29cede733f668f37e38aa5f3ab4335c55191fdc0c359d",
+      "pom_sha256": "9da0bfe6ab4362ab5f6c98cc6b256e541a211d4f61611d432104b59a9e4d6e28",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.jboss.slf4j:slf4j-jboss-logmanager:2.0.2.Final",
+      "sha256": "ba469a975e9d1e79f34a8baa1a0afa8b01bbd8cf080537c0e0899476d31db84b",
+      "pom_sha256": "1cea6fae5f05c918f0165284959d3dfb0ada88f51e7855a61f00bc97b0e5e874",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.wildfly.common:wildfly-common:2.0.1",
+      "sha256": "fa4a710db7ae3e598a5f41639eb54e9f7b09de5fd0f58f56bd6070f21d956374",
+      "pom_sha256": "c96c922497c28c9c66edbada7b8a1d19824926bd41fe1d4b10c27ba6c66c65f3",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-value-registry:3.40.1",
+      "sha256": "f0ea7643b20999443d2e53dcc490ad308e38ca9473b83abcaa9bb09bbf1b0f14",
+      "pom_sha256": "2815c45fd73786d853586267beb0c8be08337d2be7f9260da001af104ee7e5d0",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-fs-util:1.4.2",
+      "sha256": "a6034133b21de4e3aee4bc9e250f8416abfbdc0c86e6e0737f766415c3866169",
+      "pom_sha256": "5ca80035fd5e6b7b2f6e2cc3dbe204b3a6b2b2818d33b84cd834ea1d1716a133",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-tls-registry:3.40.1",
+      "sha256": "d80244e55b66057b9c3e400dfe39dbc57fde7192ea75a5547bc110cd7096a67f",
+      "pom_sha256": "9de2942dc85ee5de8afab801cf566c9c742f28ff363e66ee0337e9b32d5b845a",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-tls-registry-spi:3.40.1",
+      "sha256": "811dd9659d23724fc15109fbcc5754bcbe436705441ce43f771e047b550ab5e1",
+      "pom_sha256": "d63700eb52195d5a99f956ceb9e99e257fbe7e5877650a4025de6d356cc1e3f2",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-credentials:3.40.1",
+      "sha256": "7ea00fcfeaf26c5bd6c925c1ab5247b06ff4afc8528812cdca741fc34bba641d",
+      "pom_sha256": "518534089e7f3f4d7c8b6bf13e1c91550619db817c6a1a0ae59c5be0246335e7",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.certs:smallrye-private-key-pem-parser:0.9.4",
+      "sha256": "2444ab1430505d1a8a9f6c9797fba60e14948bfe27cf8c98ae012c37bf768c15",
+      "pom_sha256": "5d1f82c2db3a9bc718a49ffb3ab0a3230a7df94c2de11803c9df1352067cf5ba",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-arc:3.40.1",
+      "sha256": "6e67b61817de34142d2fd97359d9e6b7619cfb8ab2c733f835cb9f85983fb00c",
+      "pom_sha256": "ef6dc076ec04519f426448e27df9fedbdd19eb8f012d5b00d5a484d492ebaf2b",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus.arc:arc:3.40.1",
+      "sha256": "06ef89b8a2da007286342f1855452ae50655d78263e28cc9448d414c4187be54",
+      "pom_sha256": "93d8b680483434a61c23b49707efe23ebfda4e92439059065194fec15f2480f4",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.reactive:mutiny:3.3.0",
+      "sha256": "468035abda56638307e8dad7d4be3bd818b05725f0559140b32e087be017b83f",
+      "pom_sha256": "9515453be5bd927ecafc09a28296cc0c4b94c50a7dabeacde5eac92470fe1f6c",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.jctools:jctools-core:4.0.6",
+      "sha256": "374fb4660436a70ba131e15ca7bab8423424c737898a894fb276841c94bdd962",
+      "pom_sha256": "6a7d37edc57b6a2b90a05037013fcc0b5eeac5e3dbf1d7109f7639c71cde41e7",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.eclipse.microprofile.context-propagation:microprofile-context-propagation-api:1.3",
+      "sha256": "69ccc04487e87779d4970aa50c673cc34a9df080c1c0e8d8eab2e8b46f825cf4",
+      "pom_sha256": "9ef480ed16a867d1aec7a8041fafe60dc3c1745d06ebc18dd5dd68e6c43fa844",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-vertx:3.40.1",
+      "sha256": "8e7399a09a8a235e495ffd2b0c66b9d35d0ce8a280d6827f6a6876d77c0d61bc",
+      "pom_sha256": "5e15e18a46f625a636274c7ca4d515f803cdff9195bc0332f55eeae0db73dac9",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-netty:3.40.1",
+      "sha256": "c76df5a03a93c634d4a271ca6d8e8a8b352e34bd710782e6d56218c137e966c5",
+      "pom_sha256": "242e2d46f1d05ad3ce8ce93ee628ae7ba30db0f582ae033ecc88b399c1331595",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-codec:4.1.138.Final",
+      "sha256": "21b9b7717da9ed7034c7a9ef4fcea4a08825e8f52d775da4d898364edf99327f",
+      "pom_sha256": "b60e503237740ea2965453471af832b553cd9ede8cf6e128e1b4ae67c88e1dfc",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-codec-http:4.1.138.Final",
+      "sha256": "7d9000e53c8e37504be42b8dd7b646a7d1c73ad2cf801527fe3c6301880fe06f",
+      "pom_sha256": "d54f278f907cb795db4e0bb29ee1cfb444299f447a1b0a388a7c7ccfde012182",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-codec-http2:4.1.138.Final",
+      "sha256": "c7521231535c252903d9e424e162f789b5b55b0b0799628ea466a9b3daf49dae",
+      "pom_sha256": "2ddd376fc8af75f0971fe80f44cb77e8a37cdc7662f8d17333d2bbbd85c0a45a",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-handler:4.1.138.Final",
+      "sha256": "a79fb814e029db17da82baea25a0340172af2c59f107fd20b394c1fa28680f21",
+      "pom_sha256": "ce6874b25ea1c0e779a6292c797cd631c3038b84f09aee795f0621c080c584fa",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-transport-native-unix-common:4.1.138.Final",
+      "sha256": "8d1ada8f185d6f6da4cd79f9daeef39f1db49908cfec8bc2a1fb602458aa2341",
+      "pom_sha256": "4fea21319fcf2cbb81e36e3e66b977181191e89ca0930538d0fdce90d216438d",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-codec-haproxy:4.1.138.Final",
+      "sha256": "56cc45103a0d24329e3065305c802360beb0c921318222142c333059421f3964",
+      "pom_sha256": "18fc34668f2c50854a21d72e4df13b00ac327aecf45680524ceb6b643326bd5f",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-buffer:4.1.138.Final",
+      "sha256": "5bef3ea2b9e80c5e8d03151ca1609bd75fd1e264863bf3e2f8d538392c0f2c38",
+      "pom_sha256": "3d9c064e5f9c1038269344751a0902221d104bfd80e07701b3e20634c9cab18d",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-transport:4.1.138.Final",
+      "sha256": "6c064c1cae4d410b920abfc07959a49db1b4778a9547614373e97d31cab0cad6",
+      "pom_sha256": "39be347c16d858d2a87505a4a7b51d4c34fe7909e9f87a4a8f10c88e6640a1e3",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-mutiny:3.40.1",
+      "sha256": "eb0c14df189da848ce262920c3315a7ad1d7669f18fb12673e3b9099e69d41b7",
+      "pom_sha256": "7fc02bbea91385244f092f5ac159395d1a7d1f1a5b7e4db4161c2a1310ba3f60",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-smallrye-context-propagation:3.40.1",
+      "sha256": "fb47ec4762179cdda80181e53e9574a914325bddee30158cf776e6bc839d8275",
+      "pom_sha256": "2f827c796a99dc58732a19d98ad507ccd2bede1c6e0160826c8cf3ca79a99462",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye:smallrye-context-propagation:2.3.0",
+      "sha256": "bc7d83a626d92d223c9f479c24c80e09df4c801781134ace9d826803b8f8eaff",
+      "pom_sha256": "0ba9b3edcb507bdd5b48c4bbf94cec937a757941b43f8796745a451ce5c1f75c",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye:smallrye-context-propagation-api:2.3.0",
+      "sha256": "da0bc273588cefb478e98c4e137f65cc394a54253e35684d5d917060fdc4147c",
+      "pom_sha256": "f71992494edcf877c3a72fbca5146cb189e2084dd9cffe372bac18b7675b0f96",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye:smallrye-context-propagation-storage:2.3.0",
+      "sha256": "0fb685500b833b819c934147f0d2f0ab00397df196442aa3fa0b1a6d962dedd0",
+      "pom_sha256": "1c0cd0ab3f3bed74445a3927ec814c7229c1bccb99b12fc03012692dfe0472a3",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.reactive:mutiny-smallrye-context-propagation:3.3.0",
+      "sha256": "e7b20ad3a01d0b0944dfbf86538392621ef38e87e6c69722902fc5bc9af674ff",
+      "pom_sha256": "c5484909a3e4d555af2f25a416e06ca6eac1cb96ff2b428cfc7923ef59e73cc9",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-virtual-threads:3.40.1",
+      "sha256": "eac8ea03397d8849f474c65af22b8348313a77dfa91621c8b54b80cce648321c",
+      "pom_sha256": "fed8a2d4e53aad700affbf102cf09ca29151ef2dc1860f5db764cebc19c10b5e",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-vertx-latebound-mdc-provider:3.40.1",
+      "sha256": "3a808a8e3e41d2519de206067a03365407c3e8c4b9801bad28d82ae9dff1c0ad",
+      "pom_sha256": "dcb0984e208a71840996c2fc2bd7b6e53d9f20f2587a8264fe9453371521de31",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.reactive:smallrye-mutiny-vertx-core:3.23.1",
+      "sha256": "dc5578295b8e5dc10f9fd8028ecb3ac3ed8b2ccc54b8b80172181188f577372e",
+      "pom_sha256": "9bf33e0c8d33030eeb82d53ed424c271cbf62baa8b235cdb53177ff6dbdd7d6e",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.reactive:smallrye-mutiny-vertx-runtime:3.23.1",
+      "sha256": "ab996413864654f8977a4459154d36b093dabd661e8d17c3854d2ca20616bf8c",
+      "pom_sha256": "2ee9947d93983746181858d169ccc217c42a2ff1c1d42e547027069f2555a014",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye:smallrye-fault-tolerance-vertx:6.11.4",
+      "sha256": "70b53bc8d55093b2b5db4482569544ea5849de149d9df84b0094be7b1e217bc1",
+      "pom_sha256": "3fbd435623c5548358b3a6ec44e3e13a055dbb8ffa4b61916f8566991d26b5d6",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-security-runtime-spi:3.40.1",
+      "sha256": "f155068d9d4fe20ad1e0f2bfc23f1139160a1e53fcc73644d3c0f63faa408668",
+      "pom_sha256": "811f70f5227184dee2118351233875b1268514862f4ae6e15879d9631d42726f",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus.security:quarkus-security:2.3.2",
+      "sha256": "9176a0e5b88d7b29ab28b5137d5702d44a248da3d7e7fa80f1b89d4ec64f929a",
+      "pom_sha256": "17274468b93186744bea2b18a300fe4996270684cf79370674de2cc0041304d1",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-grpc-common:3.40.1",
+      "sha256": "aa396944343309b41a61e8618d47517c7b36f3db2b45af321d7853153eec896b",
+      "pom_sha256": "c3add99362fcb36e9c74ee2687552ad4b10a8c1040f8b6b1f1ee1e38fb75f7e7",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.vertx:vertx-grpc:4.5.34",
+      "sha256": "cca98680ca84726528bf5bf8c505a78b5f76707c20a184f111a215d0ba06c80c",
+      "pom_sha256": "3b942e2819460515d64b8af7fca9b889415c42f41e695be24b02baea3183eca5",
+      "declared_licenses": [
+        "Eclipse Public License - v 1.0",
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.grpc:grpc-netty:1.65.0",
+      "sha256": "cee9307f5809858fd7b4bc11d52c6acff8da989df288222d0c68abed09ba488d",
+      "pom_sha256": "e16aef2e2102b8d3794af0a1f5e11999016884c911d4b15e049066729faede0b",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.grpc:grpc-util:1.65.0",
+      "sha256": "695b6ef5041d1029bd472407c8cbdd235d52fb32740d9abc97ae060ca820471a",
+      "pom_sha256": "881cc8e422968c0ade2be5c99812eeffcdaa31e8a7f127fd72ab898108298061",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.grpc:grpc-protobuf:1.65.0",
+      "sha256": "af6975f569cae4f05a636fdc1575e2eee7cc2099abbc50af48aac6849034843d",
+      "pom_sha256": "dccd3708998d5573e0cd901613488d968a267e7a57553aeb4f7d87c21e5d1782",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.google.protobuf:protobuf-java:3.25.1",
+      "sha256": "48a8e58a1a8f82eff141a7a388d38dfe77d7a48d5e57c9066ee37f19147e20df",
+      "pom_sha256": "3ff4a78d605e1d6991e515c5503726cb48042b874ea554a4bc8a87ae9f91bf95",
+      "declared_licenses": [
+        "BSD-3-Clause"
+      ]
+    },
+    {
+      "coordinate": "com.google.api.grpc:proto-google-common-protos:2.29.0",
+      "sha256": "ee9c751f06b112e92b37f75e4f73a17d03ef2c3302c6e8d986adbcc721b63cb0",
+      "pom_sha256": "6ee1ea16588ecec9fbf412d7ad1ba557bc456ce097520dee5e4cd08ae61c2784",
+      "declared_licenses": [
+        "Apache-2.0"
+      ]
+    },
+    {
+      "coordinate": "io.grpc:grpc-protobuf-lite:1.65.0",
+      "sha256": "944679d98ea92ef564c7ecce30ab692512dc2ffae596f4e9a8941132af9370e8",
+      "pom_sha256": "3ac94d8c4747ecf1e28399eb3da6a9982260fde00e57963f0ba3d0dd876a15b8",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.google.guava:guava:32.1.2-jre",
+      "sha256": "bc65dea7cfd9e4dacf8419d8af0e741655857d27885bb35d943d7187fc3a8fce",
+      "pom_sha256": "3f208596d71e0839b253a490af49a36ef7fdb451be90a42ab1df9e96cfd31660",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.google.guava:failureaccess:1.0.1",
+      "sha256": "a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26",
+      "pom_sha256": "e96042ce78fecba0da2be964522947c87b40a291b5fd3cd672a434924103c4b9",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava",
+      "sha256": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99",
+      "pom_sha256": "18d4b1db26153d4e55079ce1f76bb1fe05cdb862ef9954a88cbcc4ff38b8679b",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.google.j2objc:j2objc-annotations:2.8",
+      "sha256": "f02a95fa1a5e95edb3ed859fd0fb7df709d121a35290eff8b74dce2ab7f4d6ed",
+      "pom_sha256": "37f87798b18385113c918bfa9e1276fe50735ef8fa849b5800c519d54dbf11f8",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.vertx:vertx-grpc-server:4.5.34",
+      "sha256": "6d630ffc20612d41a25c1cb8ef734a3743b06b0c740e2f8d319473fe2f504549",
+      "pom_sha256": "55b906e33afbb2b7e7272dbe278b21a13a9fa97189a7ad7ff8b471c47e136d79",
+      "declared_licenses": [
+        "Eclipse Public License - v 1.0",
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.grpc:grpc-core:1.81.0",
+      "sha256": "3ffe1a91dedf0603269ce597469bf82f93477b12968a9e0d80fbd407e5ba6e99",
+      "pom_sha256": "0f6d5cce5505d66428398544fb5d49ee80922ac0256ecc82fe25c9a9772540e6",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.google.code.gson:gson:2.13.2",
+      "sha256": "dd0ce1b55a3ed2080cb70f9c655850cda86c206862310009dcb5e5c95265a5e0",
+      "pom_sha256": "3aa06aa7c0f9af092961a42d09578e4324be146348a0ee6ed47857f7c2677b76",
+      "declared_licenses": [
+        "Apache-2.0"
+      ]
+    },
+    {
+      "coordinate": "com.google.errorprone:error_prone_annotations:2.48.0",
+      "sha256": "b49c5c958316ed67a09c699dda9aa749caf434d51d863dea599ef36a49b9c855",
+      "pom_sha256": "189e09ad0489c325e90daaa9d5c8f406330602fa366609bca07cbcdad03ab9da",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.perfmark:perfmark-api:0.27.0",
+      "sha256": "c7b478503ec524e55df19b424d46d27c8a68aeb801664fadd4f069b71f52d0f6",
+      "pom_sha256": "22c175c2c1823667630c84e73225767f5970492d8e6cbffb81a6575dba472d26",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.grpc:grpc-context:1.81.0",
+      "sha256": "05de695306f90ded01d41b083b7500eb13dc53763097ac8c5b0264842df06679",
+      "pom_sha256": "9479eccbba26ce345aa6a2fbc37f9fd0d862c72072022a85a8be4e075a7e07a6",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-vertx-context:2.19.0",
+      "sha256": "2c3d3326bab62064e7120ad6c1e4f99e267176b2efd74a44b3ab2cd5aa5c69d6",
+      "pom_sha256": "f779a800b9d9d79d3a192e4a56fafc4a5b4cb12bdb848fa1927cd428a5dbfc84",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.vertx:vertx-core:4.5.28",
+      "sha256": "8f6979d6763137fca782fd952c67fccfcee1c742fc742186fa0c22d7a89ab4df",
+      "pom_sha256": "a01459214f8ed539dcc62fc595f9975393ed05b6fe5d364a868701a008f8d9bd",
+      "declared_licenses": [
+        "Eclipse Public License - v 2.0",
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-common:4.1.135.Final",
+      "sha256": "26775ca95820711403cf065fa2ec0134a0a04ff5417c688c0237aee68b55838d",
+      "pom_sha256": "00f8ff7a8f597d3416d810af2ef0ceb89bd2a65378078a0a16cbd9c2c61f3be4",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-handler-proxy:4.1.135.Final",
+      "sha256": "75661010630a44468f0e85d7ed8be7779c0cb1369fe85d30799cedc52e9ed3b7",
+      "pom_sha256": "33e27983be2bb35a7df5a7411f61babddb02b1c350af8812c6223033fa280fc9",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-codec-socks:4.1.135.Final",
+      "sha256": "ec7a39e8d7d7e223014115a021273f011c3cb1e8fb187cbfb90a74e76d68c25c",
+      "pom_sha256": "b0c415b04cdcaf1dd6a47875fbdad5cf0fc83b05af08f2b107b1631aa145859d",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-resolver:4.1.135.Final",
+      "sha256": "77dd03865965b6c12b9e521bddec82f035caeb33156e09c158289c5094318481",
+      "pom_sha256": "44c6423973357e91497a4f6bda375242068a403b9def837ac1a093f866e15cf7",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-resolver-dns:4.1.135.Final",
+      "sha256": "ca25581e4cebd55797ef3b4d0953b75df32c1af77fe771b96bfaa9e701cdb7c3",
+      "pom_sha256": "8c7318f191da978b7de04c3d35c9cf09bc32cba33d9b3501d73297e0199108c2",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-codec-dns:4.1.135.Final",
+      "sha256": "5e996d7ac7597f368ab114fbb91d16788918c7e5bf166345c51e56db54d50fd1",
+      "pom_sha256": "d5ea906b279cc2db4e4411e5412df38817890a72263904af2b489e9da1fe540c",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.netty:netty-tcnative-classes:2.0.77.Final",
+      "sha256": "d492269308336001b7a7eca02703282c3d74c8c3b4fe08c5078cfefeeda7e34f",
+      "pom_sha256": "ce116a14acdd91159d3921785b0de62c62a4796f8f40d19eda4e29b6b9dff437",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.smallrye.common:smallrye-common-constraint:2.19.0",
+      "sha256": "4454a2f32caeadb47cf6f0565c667f64c21facbee959cf15bcfc8ec8755c471a",
+      "pom_sha256": "ee1d8fc912e219d61b0c7c4930630d594ce068da5c857a69dbbe0abd956fa8c6",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-websockets-next-spi:3.40.1",
+      "sha256": "22ae6d22f7d874e71c03c6f238ce8a260e98c48a475aed6ce185e74534a8930b",
+      "pom_sha256": "63ff6f805befe9bd985bd911d7436a1f4f7f751e10b7dfb7571011c776eeb973",
+      "declared_licenses": [
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.62.0",
+      "sha256": "4165984bdc3261486918a55815ae57d5e75ba08730d1e1ccf97908720659b619",
+      "pom_sha256": "7d31d96cedd11309f0b7918c1a3dacb3a192ec4cc493ca9ad2875e6e151c5311",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-sdk:1.62.0",
+      "sha256": "99d421ea0e5a1ca8e45cb67f1d5db7f0e8a718dd55eeb86c1323597e1f10aed3",
+      "pom_sha256": "868ccd347afd902dce8f2fd0b729540dcd9dc471463d924e5812c984b4463767",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-sdk-common:1.62.0",
+      "sha256": "bf9d13df9a50e49a5db664ba8ebfad79f73f03219d2ac6f6709d432f6896eba0",
+      "pom_sha256": "51022bc77fed54d166f6a7f29ec9e235cadd341cccb70b390cd0534a2607d9d5",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-sdk-trace:1.62.0",
+      "sha256": "fb6c0953b229a6da1db813135ae11a621bf9da56b7356c1e93049ed4b088c232",
+      "pom_sha256": "8f6f114878b36090c65b10bfe575d9e84890fd35da33840d746a38bfbc93b931",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-sdk-metrics:1.62.0",
+      "sha256": "50b057fbf063f6801f623212f4b51b6a3fefc77837314a1316b2f54894c8b5d4",
+      "pom_sha256": "d30113f1da2db379c3b6efd15df164d76c564e9a4e68c36518dbbc485b12250d",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-sdk-logs:1.62.0",
+      "sha256": "51c94329bc8e335ed79027d29d49c075c11b91b39e48679edf590e784a392406",
+      "pom_sha256": "7ebb00daf414332e8d52c19ca96356a878956d3072d40c504af0455ff968acda",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:1.62.0",
+      "sha256": "220c22bcf420faae59b7225c789f572eaa22e7af2304d55508aaf2a3efcfecf8",
+      "pom_sha256": "97086d950590f90995a5fa9a2eabff89b6369c1cb9c12d8fa4e833779d03816a",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry.semconv:opentelemetry-semconv:1.41.1",
+      "sha256": "636ad7dac093d22fb84bf8d928ef836694f2d63c92d72b3df21b86002e8becef",
+      "pom_sha256": "9f86b14641b264fc54b7483243e9195ea4d7fd0a795676af20dc330ad37c39de",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry.semconv:opentelemetry-semconv-incubating:1.40.0-alpha",
+      "sha256": "b73e725e970e3120670d3e64b8ff058fba495b0e8040b259b50dd38e030380e4",
+      "pom_sha256": "ab56de85b82d462ddc4f4bcf742460f12f3112957161cfa90d76b8b093409987",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-api-incubator:1.62.0-alpha",
+      "sha256": "6b8dbe21aea973896555c65e94de694ff73f788bdf47c712f8b2267a57b5d0d8",
+      "pom_sha256": "3214a6e3217986e52f6e1f48cd24471e58d1722e091f62777ca2b2415a659325",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry.instrumentation:opentelemetry-instrumentation-api:2.28.1",
+      "sha256": "f4f82a26dc391cd8b9db32046aa6fe01e2d53d9f1f31fc7c7f47ee21b77f2a62",
+      "pom_sha256": "5c606787c764ed0aef4bdbe829f26c6d3a53be40e9b5661c85c5a9af3c31d26b",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.28.1",
+      "sha256": "76f3be2f490cf846c4a0fae03e5ec21fbcdc6d5617c54b1e0b4f8c8768f0cea4",
+      "pom_sha256": "7ce13c935562d8a0b9325e103d346a0ea906fd91dac546f0bd6000f1f1d95173",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations-support:2.28.1-alpha",
+      "sha256": "725a6f9c201fc3f30c09bc84416501378908d764b88ca84a4e5caacb118e9bc2",
+      "pom_sha256": "bd3e18114b587853c2bd5537c609bfc992d0252a25680680bd041570f7dbb413",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry.instrumentation:opentelemetry-instrumentation-api-incubator:2.28.1-alpha",
+      "sha256": "78ad66aba5c5de53634205775bd44095e17232cf2b247622d0a9e6bf20293f1c",
+      "pom_sha256": "ea7df311e7a1af467192c4ef665b1912464c6949bf9305d4891bc60de6c3ab6c",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-exporter-otlp-common:1.62.0",
+      "sha256": "79eaaaf044df15209ee1461b668f7c93547734a793d6cf6ad5e57290d3f8c0ea",
+      "pom_sha256": "4fdc493859fe57bc678ceb459dde532adf4b2a84c8f6eeb1301b4c22f9f3cb22",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-exporter-common:1.62.0",
+      "sha256": "50f84b5b58048f69bd684ec874413944209995e01c177200555c151dabfe1ec9",
+      "pom_sha256": "11a37162886ef902e03c0d676f6d2a76283c18decb85b6f4e67f30eb648a6967",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-exporter-otlp:1.62.0",
+      "sha256": "59df47fdc4bef6866ed39eb6a04892c68e28d7938eaeaa21801ac5dd2dcb0d65",
+      "pom_sha256": "0f34debd061f5bb71bbc4a9f1bd08b7edb671db81902375ed70f7fbdb3751b2f",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry.instrumentation:opentelemetry-runtime-telemetry:2.28.1-alpha",
+      "sha256": "98254e3b412e8fdf72e6fc3b631d6eef31ad01739422d82e8b1573e3694e57a2",
+      "pom_sha256": "63c727ac49db4e56e2fe2a02588b3fe68c6da5caa420b309ddec47b4581b7a73",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.vertx:vertx-grpc-client:4.5.34",
+      "sha256": "66baf997c13199b16930863c665d87e903838cf655849f3ad5d4ed79061a4ec2",
+      "pom_sha256": "465c7f6bc45265e2477df4d185cb412ee0a3475945960493eb4fcbbe242a6188",
+      "declared_licenses": [
+        "Eclipse Public License - v 1.0",
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.vertx:vertx-grpc-common:4.5.34",
+      "sha256": "cb7a5ba8259ff01531c9305382c3fc02c485a3eb0b6dfba1157bda43d8e11886",
+      "pom_sha256": "39630d50d82d13064320d3229e60bd19665925c9ab283ec82cd4531c8b5b6396",
+      "declared_licenses": [
+        "Eclipse Public License - v 1.0",
+        "The Apache Software License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.grpc:grpc-stub:1.65.0",
+      "sha256": "a19fa4c56434eb4b720edec9add389a8a4427bf91818c3f4770571212e5bee24",
+      "pom_sha256": "97380babb88ae1684a2fc69409f8245e7ff9d3b33295ae3b2ba5aec0ea567578",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.grpc:grpc-api:1.65.0",
+      "sha256": "f5907f9e2a0802bf161a7cbc7d0bc56fef289df4eab97dd68e04ee2f699f31c5",
+      "pom_sha256": "243eddf0dffbf24b4e971b789ba34ed3351bd17f3963793c25a88d26ff7c7439",
+      "declared_licenses": [
+        "Apache 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry.instrumentation:opentelemetry-jdbc:2.28.1-alpha",
+      "sha256": "7b03a3edbe77f93f5b5e762e62c6f54ecc2c92c4e02bbcb481f830bc6acda805",
+      "pom_sha256": "d92166703a73c12d7380512a381232001b4a746375b2651927d088cf89902bb0",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-server-spi:26.8.1",
+      "sha256": "489ec3352a853c52e6848c5464ae0ee1c61d3df6139ceba3bb0950546ab788be",
+      "pom_sha256": "c39972b717c6a9462e1a168527119c1e943b993027005f1fc8c84b987649dbee",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-server-spi-private:26.8.1",
+      "sha256": "c843a126f3db4b9898e56e5af5c2f781108d06113e7faa6f81473871702c3ca0",
+      "pom_sha256": "fc7a3767dce936f8527b150eb1bc5bcbce53b972a407e39a8a0c9299be3233c3",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.apache.httpcomponents:httpclient:4.5.14",
+      "sha256": "c8bc7e1c51a6d4ce72f40d2ebbabf1c4b68bfe76e732104b04381b493478e9d6",
+      "pom_sha256": "f18355af4cf80a8a4ef04ebd742a47e90a7eaf080c725b2095dbc4fc5dbdefb7",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.apache.httpcomponents:httpcore:4.4.16",
+      "sha256": "6c9b3dd142a09dc468e23ad39aad6f75a0f2b85125104469f026e52a474e464f",
+      "pom_sha256": "3cbad849b35dacfe6cec31adada2c623c026c3261141b0d26eec7e399c6cd7fa",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "commons-codec:commons-codec:1.11",
+      "sha256": "e599d5318e97aa48f42136a2927e6dfa4e8881dff0e6c8e3109ddbbff51d7b7d",
+      "pom_sha256": "c1e7140d1dea8fdf3528bc1e3c5444ac0b541297311f45f9806c213ec3ee9a10",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-api:1.62.0",
+      "sha256": "d58143928c049233653e6bf1282ff8a767ebdd5e6a82b3f336158c30e40b431d",
+      "pom_sha256": "6d69339f6ac9afe87be1e018597bf088b9fe53194de7bd30c69a4d905954004a",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-context:1.62.0",
+      "sha256": "8ec86c3609222b9b6307bf40154c1f1c288d1f18ada0155409e7797adbdbe517",
+      "pom_sha256": "c37a9d7e220a2747c91bdaaa9648c8998315f2829d4aa01ef411fe1227d196ba",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "io.opentelemetry:opentelemetry-common:1.62.0",
+      "sha256": "d6310bebde67d65c1519696728d8604005315ed08ab14071956fc0826fd71815",
+      "pom_sha256": "b8cc3e8e671f7e8e3c52837eb00b71d4b891be4f49c78043e7146865e0a66600",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.junit.jupiter:junit-jupiter:5.11.3",
+      "sha256": "ac7578efed162367c3ddc006338e07d4571510fd9866642ea93d5b9e4ed2f665",
+      "pom_sha256": "cbe9f385a0a13b6fed8c6c6ed1f16dc605a92657f3b25b196838c73d97684806",
+      "declared_licenses": [
+        "Eclipse Public License v2.0"
+      ]
+    },
+    {
+      "coordinate": "org.junit.jupiter:junit-jupiter-api:5.11.3",
+      "sha256": "5d8147a60f49453973e250ed68701b7ff055964fe2462fc2cb1ec1d6d44889ba",
+      "pom_sha256": "f19afe0923b01935c40f2e7e96d66037e2008b7017917cc7051338377849618e",
+      "declared_licenses": [
+        "Eclipse Public License v2.0"
+      ]
+    },
+    {
+      "coordinate": "org.opentest4j:opentest4j:1.3.0",
+      "sha256": "48e2df636cab6563ced64dcdff8abb2355627cb236ef0bf37598682ddf742f1b",
+      "pom_sha256": "9bf7cffc410f3e8372c2522578df9ca56d9d43bd937e30948706c232a943b355",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.junit.platform:junit-platform-commons:1.11.3",
+      "sha256": "be262964b0b6b48de977c61d4f931df8cf61e80e750cc3f3a0a39cdd21c1008c",
+      "pom_sha256": "816ebd3244a770d915d9c1d40d3b4651fe348f42f89b7cb7ebd0dee209c52040",
+      "declared_licenses": [
+        "Eclipse Public License v2.0"
+      ]
+    },
+    {
+      "coordinate": "org.apiguardian:apiguardian-api:1.1.2",
+      "sha256": "b509448ac506d607319f182537f0b35d71007582ec741832a1f111e5b5b70b38",
+      "pom_sha256": "32355081d109095c3d5d374d5a43b4f4c1b75d549e983ef50723e2772e5302a0",
+      "declared_licenses": [
+        "The Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.junit.jupiter:junit-jupiter-params:5.11.3",
+      "sha256": "0f798ebec744c4e6605fd4f2072f41a8e989e2d469e21db5aa67cf799c0b51ec",
+      "pom_sha256": "ccec3424a0714944c677b94fd503fd0c1ca243ce15c40160d60ce628aafa35ff",
+      "declared_licenses": [
+        "Eclipse Public License v2.0"
+      ]
+    },
+    {
+      "coordinate": "org.junit.jupiter:junit-jupiter-engine:5.11.3",
+      "sha256": "e62420c99f7c0d59a2159a2ef63e61877e9c80bd722c03ca8bf3bdcea050a589",
+      "pom_sha256": "789e378d37c49dd8654d66e3ad3ade418e5884ae6f48723901dd3be7c9ec9e03",
+      "declared_licenses": [
+        "Eclipse Public License v2.0"
+      ]
+    },
+    {
+      "coordinate": "org.junit.platform:junit-platform-engine:1.11.3",
+      "sha256": "0043f72f611664735da8dc9a308bf12ecd2236b05339351c4741edb4d8fab0da",
+      "pom_sha256": "fe26dc5da911b94b68c12b2241257a208135bbb9b8c91cc1a13433a80a7a791e",
+      "declared_licenses": [
+        "Eclipse Public License v2.0"
+      ]
+    },
+    {
+      "coordinate": "org.mockito:mockito-core:5.14.2",
+      "sha256": "2296141c1e1f2e1ae35c08d36a9ab4563ecd66e03533fe82630a764e7aa49182",
+      "pom_sha256": "638e56a68f496879bc8a0f53cfbdf9c4cc39a45b6e438a333a5ea83c09ee9cfd",
+      "declared_licenses": [
+        "MIT"
+      ]
+    },
+    {
+      "coordinate": "net.bytebuddy:byte-buddy:1.15.4",
+      "sha256": "4a683d83ff219f20d44f35ca302d821e0c6842e3fa8f9f1ee913eb16f49cec6c",
+      "pom_sha256": "2fbb9eb7ed5b70285bf04397be78dc2a851d0dc2e74865d81497c61a898e21bd",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "net.bytebuddy:byte-buddy-agent:1.15.4",
+      "sha256": "1d76defd159a564b9cb7a968d0dea27367b8b70ebde75a968e7ef1921bc75ee4",
+      "pom_sha256": "5091074b4eced6ff166e3943947464ff42da739638042df8683ba3e8c209e755",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.objenesis:objenesis:3.3",
+      "sha256": "02dfd0b0439a5591e35b708ed2f5474eb0948f53abf74637e959b8e4ef69bfeb",
+      "pom_sha256": "ba0c40da2669a048b6e24ef7066a471f0fbcbfcc509e6a3e856ca4ddfa614ad3",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.jboss.resteasy:resteasy-core:6.2.19.Final",
+      "sha256": "407623d6038c4f5055d693fb3b8fbe4c6c361d800611ce4fdbbbc749bcd361dd",
+      "pom_sha256": "8489706a33e736c1307cd2a3ef999296795d3aaed7580b28dd258d0a6e684450",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.annotation:jakarta.annotation-api:2.1.1",
+      "sha256": "5f65fdaf424eee2b55e1d882ba9bb376be93fb09b37b808be6e22e8851c909fe",
+      "pom_sha256": "af650eca1de1b98741006acd82507e4408cffedd2fee33a0ea463d61508db7ec",
+      "declared_licenses": [
+        "EPL 2.0",
+        "GPL2 w/ CPE"
+      ]
+    },
+    {
+      "coordinate": "jakarta.xml.bind:jakarta.xml.bind-api:3.0.1",
+      "sha256": "b8fb4bee3ff5b5c1ef77144d8411316018d7bbd41fcf1ede0646f7978546b867",
+      "pom_sha256": "a273dac9741412fd9dccce9911298706d789e582dcb35197075f6fd2a5b0ebea",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.servlet:jakarta.servlet-api:6.0.0",
+      "sha256": "c034eb1afb158987dbb53a5fea0cadf611c8dae8daadd59c44d9d5ab70129cef",
+      "pom_sha256": "3d5a259dfbd2b940e495c305cba2b60615923dc8178e032b7ef60cbb24138439",
+      "declared_licenses": [
+        "EPL 2.0",
+        "GPL2 w/ CPE"
+      ]
+    },
+    {
+      "coordinate": "org.jboss:jandex:2.4.5.Final",
+      "sha256": "70a283bcf11a82b14c20d1a9be731d301aedfd98be1b4c0f5b35fe60b305caff",
+      "pom_sha256": "2d66da070ea8dafa46447d7893560a1b21b7060b2c97fcc6bb651f339b82b7e3",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.jboss.resteasy:resteasy-core-spi:6.2.19.Final",
+      "sha256": "237fd1b9d64ed3f1836e73ac055f0872ff097346af9342158cd5d7261189a7b5",
+      "pom_sha256": "95f2a530d41cd25cd5bfc986a33d063f8f4149901ede64b13260be515c670853",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.reactivestreams:reactive-streams:1.0.4",
+      "sha256": "f75ca597789b3dac58f61857b9ac2e1034a68fa672db35055a8fb4509e325f28",
+      "pom_sha256": "54ba23d87a2d438540c99ef8794a0856fc573a256b498678283c3c67ef18ada8",
+      "declared_licenses": [
+        "MIT-0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.activation:jakarta.activation-api:2.1.4",
+      "sha256": "c9db52100ce6c8aac95cc39075f95720d2e561b11f8051b81c121ad4effd7004",
+      "pom_sha256": "7577970dc09f1131a4a42769e1771ed062f08d22f40da3041ff3e16d5b2fdea8",
+      "declared_licenses": [
+        "EDL 1.0"
+      ]
+    },
+    {
+      "coordinate": "org.eclipse.angus:angus-activation:2.0.3",
+      "sha256": "a6bd35c538cf90fff941ad6258c40c08fca0b5c9c3f536c657114f27ce0527a7",
+      "pom_sha256": "35c9e16209b2721261354e8aea971626648ad9d4201d221bd96901d900372da0",
+      "declared_licenses": [
+        "EDL 1.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.validation:jakarta.validation-api:3.0.2",
+      "sha256": "291c25e6910cc6a7ebd96d4c6baebf6d7c37676c5482c2d96146e901b62c1fc9",
+      "pom_sha256": "0a7b9c6327968afe0d82f7cf4facbda7e157968c5808d69bcb8019863b298dc4",
+      "declared_licenses": [
+        "Apache License 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-saml-core:26.8.1",
+      "sha256": "af7228c631882235071a1993dd7149865f7e089cfcf7f15952af70ee19a5b687",
+      "pom_sha256": "a5cb90d2251545b1f593b691355f5e979c9b79a9df7ec44e4cbe8dd4a6b9a169",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "org.apache.santuario:xmlsec:3.0.6",
+      "sha256": "395eccc3496063ac7b1d6af2422a11670ee5ded807f51542818eccd5fbb5e20c",
+      "pom_sha256": "53b879224c62a45505bb2dc2f4c93e30943a0bcdfb0ce1a18f43d38db3b358c0",
+      "declared_licenses": [
+        "Apache-2.0"
+      ]
+    },
+    {
+      "coordinate": "jakarta.xml.ws:jakarta.xml.ws-api:4.0.0",
+      "sha256": "02dc0bd36358a56c349b89a99996d1f6544cf1153cf37fec4aef700809e6e3f2",
+      "pom_sha256": "b4e878b45781fd258551dc304b0daa80e4332a62af52c6b997b54585e374773b",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-saml-core-public:26.8.1",
+      "sha256": "fc4e080a8a1756e26a529cae86480684fca4c452573363737f0c1efec97f0cde",
+      "pom_sha256": "cc49f0d7f21a821319ad3a8f07675eecfe613414ecff95b267f0985c0b2a9a79",
+      "declared_licenses": [
+        "Apache License, Version 2.0"
+      ]
+    },
+    {
+      "coordinate": "com.sun.xml.messaging.saaj:saaj-impl:2.0.1",
+      "sha256": "9ed4294e7947088a3644b4d9aa726a2eb510585b50faec308d737046ba0fda90",
+      "pom_sha256": "f130e4340ae61525d23b6c08581095c4bc69c5493139b29d221aecf15cecc191",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "org.jvnet.staxex:stax-ex:2.0.1",
+      "sha256": "5fd7292ace0d39c264f6ba4f2cfcd92cc72453e5fb13561fb0e5570405fe9455",
+      "pom_sha256": "f9ab55a01d6454029f0a155aba7ddd992f40e5962d7c78eefe1ec4821d4e179e",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "com.sun.activation:jakarta.activation:2.0.1",
+      "sha256": "b9e24b7dd6e07495562ea96531be3130c96dba4d78e1dfd88adbbdebf4332871",
+      "pom_sha256": "8a068592db08e6853204ff0b625a301438e3c36ea5f1ae65babfed208502781a",
+      "declared_licenses": [
+        "EDL 1.0"
+      ]
+    },
+    {
+      "coordinate": "com.sun.xml.ws:rt:4.0.0",
+      "sha256": "78a6ff045fc093dca82ea6a0657f76ebb63ca9d24e4eb0f1b8b09b8966aa9558",
+      "pom_sha256": "8d428c7127d04b04f55a6de627228d33c734dde04acacbda7ac1d7f5560e1238",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "com.sun.xml.ws:policy:4.0.0",
+      "sha256": "1b01147fd4544966fe03966c2406fb95383186688c15f6cc8c61ab20b06c020f",
+      "pom_sha256": "8e433316e02ff98535605e38e53eccf65968136da4d8d9d5811dce63f02c77ef",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "org.glassfish.jaxb:jaxb-runtime:4.0.0",
+      "sha256": "525a84ce58b872fa4c3dc59c93ba95e7c1b85c7c53082e75480f4e874477f636",
+      "pom_sha256": "828f3ad151289ee32e92f51233bd8b41fbb7b7e12ce2049dd6f6431289a146b0",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "org.glassfish.jaxb:jaxb-core:4.0.0",
+      "sha256": "c0114dca52025f4e9df167c0e99d9165d651bdcf2320a45489f90100b28fc13b",
+      "pom_sha256": "90312e6ba87f468fce93ab80f3e937a7e70c0d0d5f98f341359127f9f0c94ec4",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "com.sun.istack:istack-commons-runtime:4.1.1",
+      "sha256": "7e8148c5bf5d5ae6f8c4534c1873f82e80bf7f9164fd09ee573df0013918dcd3",
+      "pom_sha256": "014746f67ae8d0abb7e6075f407572e59135f110b8ff89e9ce9d0877308cdb9e",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "org.glassfish.external:management-api:3.2.3",
+      "sha256": "4d1a8f09fe7d6907048cf29c6e6c4ef35ce1fe3d2476220f91d94908d134c66f",
+      "pom_sha256": "2df1b111295ccbc61e0ace9afae661b5f541923c2dcdf84f592454e13df595fa",
+      "declared_licenses": [
+        "EDL 1.0"
+      ]
+    },
+    {
+      "coordinate": "org.glassfish.gmbal:gmbal-api-only:4.0.3",
+      "sha256": "d980a9ad0015068a97c000d71cdffdefc9bcef1feaa9f2eaad7e88e10851f9c4",
+      "pom_sha256": "0f048ad9b3eac17318c98066033752ba1ed28c5a0cfedcb8fafb60a31e24d502",
+      "declared_licenses": [
+        "EDL 1.0"
+      ]
+    },
+    {
+      "coordinate": "com.sun.xml.stream.buffer:streambuffer:2.1.0",
+      "sha256": "4fc371f13aa58b77223600cfb4651a3f98e7809ede1af70a3f00df49e2a4d028",
+      "pom_sha256": "7ac22ee1c78b0c27dd7903aa208bf64c0859bea19967daffc6628b50cdface60",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "org.jvnet.mimepull:mimepull:1.10.0",
+      "sha256": "3ede6147fcb684a29b038ee986695d84877b1ae872655230f82406929c907ece",
+      "pom_sha256": "d16c05b93d2f6f1c4979571e5792e90156a60f354887d53a76b75faf8dcb1488",
+      "declared_licenses": [
+        "Eclipse Distribution License - v 1.0"
+      ]
+    },
+    {
+      "coordinate": "org.codehaus.woodstox:stax2-api:4.2.1",
+      "sha256": "678567e48b51a42c65c699f266539ad3d676d4b1a5b0ad7d89ece8b9d5772579",
+      "pom_sha256": "79da410c8c0f46a3f8e8adb30d6c24ccd6065b6ef6bfde87bd97e9881ea0a2e7",
+      "declared_licenses": [
+        "The BSD License"
+      ]
+    }
+  ]
+}

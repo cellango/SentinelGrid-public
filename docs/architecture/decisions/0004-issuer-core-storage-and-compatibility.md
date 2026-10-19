@@ -210,13 +210,24 @@ This is syntax inventory, not a production callgraph, vendor build or core patch
 It identifies Client Admin API v2 and native realm SCIM writer entry families
 that expand the concrete source map within the existing 22 writer categories.
 Their feature/profile activation and complete enforcement remain unproved.
-R2 implementation/R3/R4 and all R5–R7/ancestor gates remain open. Next research
-tests mandatory native entry-guard hooks against that expanded inventory.
+R2 implementation/R3/R4 and all R5–R7/ancestor gates remain open.
+
+The paired [native token-entry experiment](../../../infra/keycloak/keycloak_registration_connector/qualification/entry_guard/README.md)
+now compiles the exact endpoint source and a one-line early method-body overlay
+against the matching 26.8.1 SDK. Both variants pass 34 tests, including real native
+client-secret authentication and missing-account denial; eight input controls
+pass. Closed/unknown fixtures stop before grant lookup or preprocessing. Test-owner
+unmanaged controls preserve native negative outcomes without issuing tokens.
+This is not durable enrollment, an HTTP admission boundary or all-grant execution.
+Endpoint construction/earlier reads, browser/broker/SAML/alternate paths and all
+writer/storage/compatibility gates remain unqualified. The next bounded research
+unit reviews those front-door and alternate-entry gaps. No production fork,
+provider artifact, current guard or application behavior is adopted.
 
 ## Primary source references
 
-All code links use the reviewed immutable upstream commit. No upstream server or
-test suite was run in this unit. The [decision record](../../../infra/keycloak/keycloak_registration_connector/issuer-core-decision-review.json)
+All code links use the reviewed immutable upstream commit. No upstream server or full vendor
+test suite was run. The bounded native-source fixture is documented separately. The [decision record](../../../infra/keycloak/keycloak_registration_connector/issuer-core-decision-review.json)
 distinguishes proposal, source evidence and unmet implementation gates.
 
 - [Entity-manager proxy](https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/connections/jpa/support/EntityManagerProxy.java),

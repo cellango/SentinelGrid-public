@@ -2045,6 +2045,11 @@
       "authority": "bounded_source_audit_not_runtime_enforcement"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/qualification/entry_guard/README.md",
+      "class": "experimental_component_reference",
+      "authority": "bounded_native_method_experiment_not_full_entry_enforcement"
+    },
+    {
       "path": "infra/nginx/README.md",
       "class": "experimental_component_reference",
       "authority": "experimental_reference"
