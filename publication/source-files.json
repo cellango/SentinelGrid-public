@@ -2955,6 +2955,7 @@
     "infra/keycloak/keycloak_registration_connector/build-review.json",
     "infra/keycloak/keycloak_registration_connector/controlled-failures-review.json",
     "infra/keycloak/keycloak_registration_connector/core-audit-review.json",
+    "infra/keycloak/keycloak_registration_connector/core-lifecycle-design-review.json",
     "infra/keycloak/keycloak_registration_connector/dependency-artifacts.json",
     "infra/keycloak/keycloak_registration_connector/entry-guard-review.json",
     "infra/keycloak/keycloak_registration_connector/grants.example.json",

@@ -1,0 +1,1651 @@
+{
+  "format_version": 1,
+  "status": "proposed_source_design_only_NO_GO_for_implementation_adoption",
+  "research_decision": "docs/architecture/decisions/0004-issuer-core-storage-and-compatibility.md",
+  "canonical_design": "docs/architecture/keycloak-lifecycle-containment.md",
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "archive_sha256": "f67ec723e2eaf46b2d38f167ecb7578964115f1f2ce203f9b6659322223d9874",
+  "source_units": 50,
+  "literal_anchors": 104,
+  "source_refs": [
+    {
+      "path": "server-spi/src/main/java/org/keycloak/models/KeycloakSessionFactory.java",
+      "sha256": "9e1542b375bbf4cf8dffe12faa3048a836e0a80b0489bda1615a66f058328cef",
+      "anchors": [
+        {
+          "symbol": "KeycloakSession create();",
+          "line": 37,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D01",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/models/KeycloakSessionFactory.java#L37"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakSessionFactory.java",
+      "sha256": "685f093a607610193e4a93f3a1c3e9e941ae93bb59462d913a1f0e8f29f7747d",
+      "anchors": [
+        {
+          "symbol": "public abstract class DefaultKeycloakSessionFactory",
+          "line": 58,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected void initProviderFactories(",
+          "line": 97,
+          "literal_occurrences": 2
+        },
+        {
+          "symbol": "private void initializeProviders(",
+          "line": 118,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void publish(",
+          "line": 85,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D02",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakSessionFactory.java#L58"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSessionFactory.java",
+      "sha256": "092af4553215b3bf5736df43eb92fecebf07b89da1f4c03f0cf2285ff3124fe9",
+      "anchors": [
+        {
+          "symbol": "public QuarkusKeycloakSessionFactory(",
+          "line": 35,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public KeycloakSession create()",
+          "line": 78,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D03",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSessionFactory.java#L35"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSession.java",
+      "sha256": "31da8a70358237ec06cd6ab93d922593e1277d61f72c5a3a1fa262aed7693b8c",
+      "anchors": [
+        {
+          "symbol": "public QuarkusKeycloakSession(",
+          "line": 28,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected DefaultKeycloakContext createKeycloakContext(",
+          "line": 33,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D04",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSession.java#L28"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java",
+      "sha256": "5193a79eb80835b9ad96daf97e304e3b05f4aef0df9df64c5a424d8d6cafd924",
+      "anchors": [
+        {
+          "symbol": "public DefaultKeycloakSession(",
+          "line": 93,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void close()",
+          "line": 380,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected RuntimeException closeTransactionManager()",
+          "line": 417,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private <T extends Provider> T getOrCreateProvider(",
+          "line": 205,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void invalidate(",
+          "line": 113,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void enlistForClose(",
+          "line": 121,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public RealmProvider realms()",
+          "line": 285,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D05",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java#L93"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakContext.java",
+      "sha256": "d97a65002888f3e66da8e15ff2831aa98511da0f96540e31a8d8d5d3d6375a4a",
+      "anchors": [
+        {
+          "symbol": "public DefaultKeycloakContext(",
+          "line": 77,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void setRealm(",
+          "line": 127,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void setClient(",
+          "line": 145,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D06",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakContext.java#L77"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/models/utils/KeycloakModelUtils.java",
+      "sha256": "1e4a43a5a9acb5dbda9a05ab35d91d254c844f57d4a433a437a8c005bc53b36c",
+      "anchors": [
+        {
+          "symbol": "public static void enlistAfterRollback(",
+          "line": 363,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private static void enlistAfterCompletion(",
+          "line": 380,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private static void cloneContextToSession(",
+          "line": 451,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "KeycloakSession existing = KeycloakSessionUtil.getKeycloakSession()",
+          "line": 527,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D07",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/models/utils/KeycloakModelUtils.java#L363"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/models/utils/SessionLookup.java",
+      "sha256": "3b9a3717f8ed7d7c3324d2284d84574259626523146c181d790e1b5a28317143",
+      "anchors": [
+        {
+          "symbol": "public SessionLookup(",
+          "line": 22,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public UserSessionModel findUserSession(",
+          "line": 35,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D08",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/models/utils/SessionLookup.java#L22"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/transaction/RequestContextHelper.java",
+      "sha256": "a8fababf89c3ca0bf88c0e8392669a69df941c29d9dd834aef2e85caf7e510c7",
+      "anchors": [
+        {
+          "symbol": "public static RequestContextHelper getContext(",
+          "line": 57,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D09",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/transaction/RequestContextHelper.java#L57"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/services/scheduled/ScheduledTaskRunner.java",
+      "sha256": "9d9635aae148569d66e68e6a451361253df16d6f1f3bfbe97a5c8a9467a596d1",
+      "anchors": [
+        {
+          "symbol": "public void run()",
+          "line": 54,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected void runTask(",
+          "line": 85,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D10",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/services/scheduled/ScheduledTaskRunner.java#L54"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/services/scheduled/NamedSessionTask.java",
+      "sha256": "9b4ba30f637e734048f5b3281acd1058f78b8e6eb30d9724494eebd6f8a80ed8",
+      "anchors": [
+        {
+          "symbol": "public NamedSessionTask(",
+          "line": 31,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D11",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/services/scheduled/NamedSessionTask.java#L31"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/timer/basic/BasicTimerProvider.java",
+      "sha256": "8791afca26e23b60ef3546807e01bfcea63ef58b99b073eca1d65ba7a9ebb431",
+      "anchors": [
+        {
+          "symbol": "public void scheduleTask(",
+          "line": 80,
+          "literal_occurrences": 2
+        },
+        {
+          "symbol": "timer.schedule(task,",
+          "line": 76,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D12",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/timer/basic/BasicTimerProvider.java#L80"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java",
+      "sha256": "d24e2802fd33a913632798a9331eda86e2452c2e687fb4270ad5e5c1767cd1a0",
+      "anchors": [
+        {
+          "symbol": "public KeycloakSession getKeycloakSession()",
+          "line": 39,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "void dispose(",
+          "line": 46,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D13",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java#L39"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java",
+      "sha256": "9c751a303a52984a64a0cac5ba4dd07c2f639006608c2386df68f4ecba6d5e9d",
+      "anchors": [
+        {
+          "symbol": "public void handle(",
+          "line": 67,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "beginTransaction(currentSession)",
+          "line": 81,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D14",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java#L67"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java",
+      "sha256": "bd93dc08ae8e90735dbb54b8a75ef8415404dd0f752e25343a2e6c47e28bd928",
+      "anchors": [
+        {
+          "symbol": "default void close(",
+          "line": 44,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D15",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java#L44"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/QuarkusKeycloakContext.java",
+      "sha256": "8549c2e07d434dae6f2645ec5a88a0e2a867a05e8b7488fa84626d0c584b3c9e",
+      "anchors": [
+        {
+          "symbol": "public QuarkusKeycloakContext(",
+          "line": 36,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private Optional<ResteasyReactiveRequestContext> getResteasyReactiveRequestContext()",
+          "line": 55,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D16",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/QuarkusKeycloakContext.java#L36"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/KeycloakHandlerChainCustomizer.java",
+      "sha256": "3e1b9dfaa8174dcdd95ce351b4570d76ddc559a2f58741f4ccd2d977cfd5f052",
+      "anchors": [
+        {
+          "symbol": "public ServerRestHandler alternateInvocationHandler(",
+          "line": 40,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "case BEFORE_METHOD_INVOKE:",
+          "line": 50,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D17",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/KeycloakHandlerChainCustomizer.java#L40"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakRecorder.java",
+      "sha256": "f80d51fe106aafc7b9dd19c7b05e1154d750fb56770c51d537f9972b0dcfcbcd",
+      "anchors": [
+        {
+          "symbol": "public RuntimeValue<QuarkusKeycloakSessionFactory> createSessionFactory(",
+          "line": 223,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D18",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakRecorder.java#L223"
+    },
+    {
+      "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java",
+      "sha256": "2479b51bf75bae3a11a20a4bc3a90b97eaba1001ee5e81a8216e3022fb9edddf",
+      "anchors": [
+        {
+          "symbol": "SyntheticBeanBuildItem.configure(QuarkusKeycloakSessionFactory.class)",
+          "line": 834,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "chainCustomizers.add(new KeycloakHandlerChainCustomizer())",
+          "line": 1019,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "SyntheticBeanBuildItem configureKeycloakSessionFactory(",
+          "line": 804,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private Map<Spi, Map<Class<? extends Provider>, Map<String, ProviderFactory>>> loadFactories(",
+          "line": 1075,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D19",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java#L834"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/transaction/AsyncResponseTransaction.java",
+      "sha256": "ba4a8097287710bab65f12e3f545786cb09486f80bc9fa288567f330d42b22cb",
+      "anchors": [
+        {
+          "symbol": "public static void finishAsyncResponseInTransaction(",
+          "line": 33,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 49,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 54,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D20",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/transaction/AsyncResponseTransaction.java#L33"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java",
+      "sha256": "2054a1d3d7cb3b40f027b3f3aa6b646a832ea8113cc0cb71a626c62b3531be3e",
+      "anchors": [
+        {
+          "symbol": "public void filter(",
+          "line": 51,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "if (entity instanceof Stream)",
+          "line": 55,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "if (entity instanceof StreamingOutput)",
+          "line": 61,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D21",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java#L51"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java",
+      "sha256": "e93dce4a743dc939b12993fd90e90e987587e45c7e08459141cef2a9d869ce76",
+      "anchors": [
+        {
+          "symbol": "public static Response getResponse(",
+          "line": 65,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "RealmModel realm = resolveRealm(session)",
+          "line": 101,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D22",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java#L65"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlService.java",
+      "sha256": "159734b9e2f11fd9741ae5906bd968d401e6862f53318ce21701c67bb3ee1db3",
+      "anchors": [
+        {
+          "symbol": "private class ArtifactResolutionRunnable",
+          "line": 1445,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void run(KeycloakSession session)",
+          "line": 1470,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "httpClient.execute(httpPost)",
+          "line": 1494,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D23",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/saml/SamlService.java#L1445"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java",
+      "sha256": "8f3901bf75ac4049b045b89572da736765493528954a4ca89fb58a3a9da1da90",
+      "anchors": [
+        {
+          "symbol": "private static class RollbackDrivenTransaction",
+          "line": 180,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "KeycloakModelUtils.runJobInTransaction(this.factory, this.task)",
+          "line": 202,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D24",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java#L180"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java",
+      "sha256": "4f55098516cad8a56d189baa3173b382ef8410936a6aedd0f114dceecfb61aab",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterRollback(session, ctx ->",
+          "line": 193,
+          "literal_occurrences": 3
+        }
+      ],
+      "id": "D25",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java#L193"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/AuthorizationCodeGrantType.java",
+      "sha256": "fce5e6da02159381bf8e53f784447518adabfdf86f864573effb5030f0ef2946",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterRollback(session, ctx ->",
+          "line": 92,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D26",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/grants/AuthorizationCodeGrantType.java#L92"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ResourceOwnerPasswordCredentialsGrantType.java",
+      "sha256": "b318a10f5e2e242311ef487cf58b5570729b1719b136ac8ee1a3266075b6a968",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterRollback(session, ctx ->",
+          "line": 129,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D27",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/grants/ResourceOwnerPasswordCredentialsGrantType.java#L129"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/refresh/AbstractRefreshTokenProvider.java",
+      "sha256": "fb620bc5df7de572fb11ecd8bf8d6273d6a7a8f4f3dc0ecea00302b988996cac",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.runJobInTransaction(factory, s -> s.singleUseObjects().remove(lockId))",
+          "line": 260,
+          "literal_occurrences": 2
+        },
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterRollback(session, ctx ->",
+          "line": 297,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D28",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/refresh/AbstractRefreshTokenProvider.java#L260"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/authorization/policy/evaluation/PermissionTicketAwareDecisionResultCollector.java",
+      "sha256": "b4a6c9252c27fef3fedc7f00435b49ce5393432a06b132c685791ae9abc41ca7",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterCompletion(session, ctx ->",
+          "line": 102,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D29",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/authorization/policy/evaluation/PermissionTicketAwareDecisionResultCollector.java#L102"
+    },
+    {
+      "path": "model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProvider.java",
+      "sha256": "691cac589793225533a6a32073fe590b1c1dff9148fea05f76fddd5b1b23ad01",
+      "anchors": [
+        {
+          "symbol": "public void prepareStep()",
+          "line": 86,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private void commitDatabaseUpdates(",
+          "line": 125,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D30",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProvider.java#L86"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/DefaultBlockingBruteForceProtector.java",
+      "sha256": "87184de5fe2993a1ec413789bd5d69d7b29342687c29f2a4f5cee50e46df37bb",
+      "anchors": [
+        {
+          "symbol": "private boolean tryEnlistBlockingTransactionOrSameThread(",
+          "line": 86,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private void enlistRemoval(",
+          "line": 123,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D31",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/DefaultBlockingBruteForceProtector.java#L86"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/DefaultLockingBruteForceProtector.java",
+      "sha256": "95538bbf159a3c48eabed8b569b873bb27e39de3880c86b1d531c4545b4539c8",
+      "anchors": [
+        {
+          "symbol": "private void releaseAllLocks()",
+          "line": 123,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D32",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/DefaultLockingBruteForceProtector.java#L123"
+    },
+    {
+      "path": "server-spi/src/main/java/org/keycloak/utils/KeycloakSessionUtil.java",
+      "sha256": "bdad8094c93f8998ff19647a6916dfc1e78f61847f95e956d22932ec9a580e80",
+      "anchors": [
+        {
+          "symbol": "public static KeycloakSession getKeycloakSession()",
+          "line": 38,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public static KeycloakSession setKeycloakSession(",
+          "line": 49,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D33",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/utils/KeycloakSessionUtil.java#L38"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultPermissions.java",
+      "sha256": "43d640966ee38fcbac6c5a173855ee7e1044d2e118438dde5e5c2fd30cd2aee2",
+      "anchors": [
+        {
+          "symbol": "public DefaultPermissions(",
+          "line": 35,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D34",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultPermissions.java#L35"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java",
+      "sha256": "1f6230bbbc3bcadff5eb476cd09147145f4bb8f8a308da397371ab9a235b0a53",
+      "anchors": [
+        {
+          "symbol": "public void enlist(",
+          "line": 51,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void enlistPrepare(",
+          "line": 75,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void enlistAfterCompletion(",
+          "line": 63,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void begin()",
+          "line": 98,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 138,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected void rollback(RuntimeException exception)",
+          "line": 211,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void setRollbackOnly()",
+          "line": 241,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D35",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java#L51"
+    },
+    {
+      "path": "server-spi/src/main/java/org/keycloak/models/AbstractKeycloakTransaction.java",
+      "sha256": "349da55ffc96f97cfc8adef20590b27446c9d17c21781d9287255682cb74c3f5",
+      "anchors": [
+        {
+          "symbol": "public void begin()",
+          "line": 30,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 41,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 52,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D36",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/models/AbstractKeycloakTransaction.java#L30"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "sha256": "7320f461b227f9022d451d26a4834621f8303762c9e5eeb0470dfb04d338b8de",
+      "anchors": [
+        {
+          "symbol": "private static void resolveRealmAndUpdateSession(",
+          "line": 188,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D37",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/RealmsResource.java#L188"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/RealmManager.java",
+      "sha256": "cdc4a19a9c7d906efb612300d39603429acf9ef94be1142c2839f4a2e9883337",
+      "anchors": [
+        {
+          "symbol": "public RealmModel getRealm(",
+          "line": 113,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public RealmModel getRealmByName(",
+          "line": 117,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D38",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/RealmManager.java#L113"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/admin/AdminRoot.java",
+      "sha256": "667a987683701dea3e0f73fedfe07b43d846c6410fe8a334cd595c543fdcd14b",
+      "anchors": [
+        {
+          "symbol": "protected void resolveRealmAndUpdateSession(",
+          "line": 146,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public static AdminAuth authenticateRealmAdminRequest(",
+          "line": 188,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D39",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/admin/AdminRoot.java#L146"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/admin/RealmsAdminResource.java",
+      "sha256": "a9e729ff0f5f169e2c878131ebf739827c2d263c49b6cb402522ba4ce5c2b5b3",
+      "anchors": [
+        {
+          "symbol": "public RealmAdminResource getRealmAdmin(",
+          "line": 220,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D40",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/admin/RealmsAdminResource.java#L220"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java",
+      "sha256": "23c8c74cbaeee855b77ae71c855a0e577b61c14e2c0c0a3ba97f66d0b8103ef7",
+      "anchors": [
+        {
+          "symbol": "public Response processGrantRequest()",
+          "line": 130,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D41",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java#L130"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/transaction/JtaTransactionWrapper.java",
+      "sha256": "4c1baab07fde1782442a8732ade5106eb25d63390b6ca2c14466931ac8702d79",
+      "anchors": [
+        {
+          "symbol": "public JtaTransactionWrapper(",
+          "line": 45,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 101,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 113,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected void end()",
+          "line": 164,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D42",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/transaction/JtaTransactionWrapper.java#L45"
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/JpaKeycloakTransaction.java",
+      "sha256": "1e1a12cc99aa447c42358f99aa9c7fdd0c018b0d574e42f34f19f4a2c97459d1",
+      "anchors": [
+        {
+          "symbol": "public void commit()",
+          "line": 47,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 57,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D43",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/JpaKeycloakTransaction.java#L47"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/QuarkusJtaTransactionManagerLookup.java",
+      "sha256": "8a2d07e2b4e7f98427dbbddffaecb050a086d4b7cd70ea2168c8647ecb8436dd",
+      "anchors": [
+        {
+          "symbol": "public TransactionManager getTransactionManager()",
+          "line": 36,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D44",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/QuarkusJtaTransactionManagerLookup.java#L36"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/AbstractJpaConnectionProviderFactory.java",
+      "sha256": "348dbed0e3a60c3b124a4ef01da0639a4b64ed6464045b0235f177c4000f467b",
+      "anchors": [
+        {
+          "symbol": "public JpaConnectionProvider create(",
+          "line": 55,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected EntityManager createEntityManager(",
+          "line": 120,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D45",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/AbstractJpaConnectionProviderFactory.java#L55"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/QuarkusJpaConnectionProviderFactory.java",
+      "sha256": "dddff0ccfbe52e7853119f3deb043e3c3e3c207c806b4219f0d88004e7ef63eb",
+      "anchors": [
+        {
+          "symbol": "if (config.getBoolean(\"asyncCommit\", true))",
+          "line": 106,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D46",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/QuarkusJpaConnectionProviderFactory.java#L106"
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/DefaultJpaConnectionProvider.java",
+      "sha256": "c6f80be50965bce295a9333fe6001488fa54e5bff745cb12c063c97df74b164a",
+      "anchors": [
+        {
+          "symbol": "public void close()",
+          "line": 42,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D47",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/DefaultJpaConnectionProvider.java#L42"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/connections/jpa/support/EntityManagerProxy.java",
+      "sha256": "7ad5c53b7deeb7af148f9b5c68ad9ec38e3ed6bcd74e0eba31d9898d695b127c",
+      "anchors": [
+        {
+          "symbol": "public static EntityManager create(",
+          "line": 93,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private Object invoke(",
+          "line": 135,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D48",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/connections/jpa/support/EntityManagerProxy.java#L93"
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/AsyncCommitIntegrator.java",
+      "sha256": "2bf1c843343dbe523cbd44a07f7df705b0a18bf59539027a9dceb1d3397e0d5a",
+      "anchors": [
+        {
+          "symbol": "public static void registerListeners(",
+          "line": 80,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D49",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/AsyncCommitIntegrator.java#L80"
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/PostgreSQLAsyncCommitIntegrator.java",
+      "sha256": "34cde68a86514ddd1ee5d23b09618cf2bb12a903ba87ba51837848b412800636",
+      "anchors": [
+        {
+          "symbol": "protected void applyAsyncCommit(",
+          "line": 51,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "D50",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/PostgreSQLAsyncCommitIntegrator.java#L51"
+    }
+  ],
+  "prior_33_source_pins_reverified": true,
+  "complete_callgraph": false,
+  "patch_units": [
+    {
+      "id": "P01",
+      "layers": [
+        "A0"
+      ],
+      "lc": [
+        "LC-01",
+        "LC-09",
+        "LC-10"
+      ],
+      "refs": [
+        "D01",
+        "D02",
+        "D03",
+        "D04",
+        "D05",
+        "D06",
+        "D13",
+        "D16",
+        "D18",
+        "D19",
+        "D34"
+      ],
+      "seam": "KeycloakProcessor.configureKeycloakSessionFactory/loadFactories/configureResteasy; KeycloakRecorder.createSessionFactory; QuarkusKeycloakSessionFactory constructor/create; DefaultKeycloakSession constructor; createKeycloakContext and DefaultKeycloakContext constructor",
+      "change": "Verify build before provider class loading/instantiation, recheck activation before factory init/postInit, require restricted birth ownership before manager/context/logging construction; cover direct, internal, worker and CDI creation",
+      "exclusion": "Unreviewed artifact/provider/build or construction route has no serving activation; no bootstrap bypass",
+      "depends": [
+        "reviewed immutable runtime artifact and provider closure",
+        "separate fenced maintenance/bootstrap contract"
+      ],
+      "proof": "Exact constructor and concrete Quarkus factory/build negative controls, alternate constructors/subclasses/direct creation, first instruction ordering and actual augmentation/classloading proof; stop if any path can begin/read/init before ownership",
+      "implemented": false,
+      "qualified": false
+    },
+    {
+      "id": "P02",
+      "layers": [
+        "A1"
+      ],
+      "lc": [
+        "LC-01",
+        "LC-09",
+        "LC-10"
+      ],
+      "refs": [
+        "D05",
+        "D06",
+        "D07",
+        "D08",
+        "D37",
+        "D38",
+        "D39",
+        "D40"
+      ],
+      "seam": "RealmsResource.resolveRealmAndUpdateSession; RealmManager.getRealm/getRealmByName; AdminRoot.resolveRealmAndUpdateSession/authenticateRealmAdminRequest; RealmsAdminResource.getRealmAdmin; cloneContextToSession and SessionLookup constructor",
+      "change": "Primary-only scalar classification before ordinary model/context reads, then fresh classification in the protected durable scope before protected dependencies; bind exact UUID/incarnations/profile/revision",
+      "exclusion": "Missing/duplicate/stale/unknown classification cannot fall through to legacy unmanaged access",
+      "depends": [
+        "P01",
+        "missing issuer-primary bootstrap adapter and authority read",
+        "future proven shared durable scope/fence"
+      ],
+      "proof": "Primary outage/ambiguity/rename/ABA/restore/enrollment-change races before each resolver/clone/model read; primary-only and no cache/model recursion evidence",
+      "implemented": false,
+      "qualified": false
+    },
+    {
+      "id": "P03",
+      "layers": [
+        "A2"
+      ],
+      "lc": [
+        "LC-01",
+        "LC-06",
+        "LC-09"
+      ],
+      "refs": [
+        "D05",
+        "D06",
+        "D07",
+        "D37",
+        "D39",
+        "D40",
+        "D41"
+      ],
+      "seam": "TokenEndpoint.processGrantRequest and native authentication/grant dispatch; admin target resolution; model/provider/context entry and internal operation entry",
+      "change": "Separate bounded native-auth dependency authority from authenticated fixed operation authority; retain real native auth, exact target authorization and account-missing non-creation before acquisition",
+      "exclusion": "Unknown route/grant/provider/target combination cannot construct its effectful implementation; cross-realm operations unavailable until independently qualified",
+      "depends": [
+        "P01",
+        "P02",
+        "reviewed operation definitions and all entry/target coverage"
+      ],
+      "proof": "All 18 route families/13 locators/10 grants plus unknown extensions, native auth failures, no provisioning repair, target mismatch/admin-principal-realm separation, internal callers",
+      "implemented": false,
+      "qualified": false
+    },
+    {
+      "id": "P04",
+      "layers": [
+        "A2"
+      ],
+      "lc": [
+        "LC-02",
+        "LC-03",
+        "LC-04",
+        "LC-05",
+        "LC-08"
+      ],
+      "refs": [
+        "D05",
+        "D35",
+        "D36",
+        "D42",
+        "D43",
+        "D44",
+        "D45",
+        "D46",
+        "D47",
+        "D48",
+        "D49",
+        "D50"
+      ],
+      "seam": "DefaultKeycloakTransactionManager.begin/enlist/enlistPrepare/enlistAfterCompletion/commit/rollback/setRollbackOnly; AbstractKeycloakTransaction; DefaultKeycloakSession.close/closeTransactionManager/invalidate/enlistForClose; actual JTA/JPA/entity-manager/async-commit participants",
+      "change": "Own registration before fallible initialization/enlist/begin; semantic paired participants and terminal abort; outcomes independent of native flags; actual resource durability/release required",
+      "exclusion": "Untyped/unknown protected participant or unqualified durability policy denied before construction/effect; no prepare-list blanket rollback",
+      "depends": [
+        "P01",
+        "P02",
+        "P03",
+        "selected runtime participant and coordinator contract"
+      ],
+      "proof": "Partial begin/enlist, status/marker/completed errors, earlier commit/later failure, prepared resources, paired cache cleanup, JTA suspend/resume masking, JDBC/pool/async durability/crash outcomes",
+      "implemented": false,
+      "qualified": false
+    },
+    {
+      "id": "P05",
+      "layers": [
+        "A1",
+        "A2"
+      ],
+      "lc": [
+        "LC-03",
+        "LC-04",
+        "LC-06",
+        "LC-08",
+        "LC-09",
+        "LC-10"
+      ],
+      "refs": [
+        "D07",
+        "D08",
+        "D09",
+        "D10",
+        "D11",
+        "D12",
+        "D24",
+        "D25",
+        "D26",
+        "D27",
+        "D28",
+        "D29",
+        "D30",
+        "D31",
+        "D32"
+      ],
+      "seam": "KeycloakModelUtils.runJobInTransactionWithResult/enlistAfterRollback/enlistAfterCompletion/cloneContextToSession; CodeGenerateUtil.RollbackDrivenTransaction; ScheduledTaskRunner.run/runTask; BasicTimerProvider.scheduleTask; native security/cache/brute-force callers",
+      "change": "Register independent security/business intent before effect; after parent known resource completion and scope release, child reacquires fresh authority/fence before clone/read/begin/effect; explicit retry and release semantics",
+      "exclusion": "No child inherits admission from ThreadLocal/request context or runs while parent synchronously holds its needed barrier; unknown parent/child outcome prevents success/replay",
+      "depends": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P06",
+        "P07",
+        "fresh child authority and writer participation"
+      ],
+      "proof": "Actual rollback and completion jobs, code/revocation/logout/password/UMA/cache retry semantics, worker admission before tracing/model reads, partial parent outcomes and no parent-child fence deadlock; security cleanup preserved",
+      "implemented": false,
+      "qualified": false
+    },
+    {
+      "id": "P06",
+      "layers": [
+        "A0",
+        "A2"
+      ],
+      "lc": [
+        "LC-01",
+        "LC-05",
+        "LC-06",
+        "LC-07"
+      ],
+      "refs": [
+        "D03",
+        "D04",
+        "D05",
+        "D07",
+        "D09",
+        "D10",
+        "D13",
+        "D14",
+        "D15",
+        "D16",
+        "D17",
+        "D21",
+        "D33"
+      ],
+      "seam": "Native session/job creation/finally; KeycloakSessionUtil; TransactionalSessionHandler.handle/close; KeycloakBeanProducer.getKeycloakSession/dispose; handler chain; CloseSessionFilter",
+      "change": "Exact internal frame binds operation/factory/session/thread/parent; one lifecycle close owner; other disposers join terminal result, cannot close/commit a second time; verified clear/restore",
+      "exclusion": "Foreign/reentrant/stale/unowned work and unsupported worker/async transfer rejected before use; no copied context permission",
+      "depends": [
+        "P01",
+        "P04",
+        "one owner protocol across all disposers"
+      ],
+      "proof": "Generic-clear and job-restore comparison, explicit plus implicit close, nested/foreign/thread switches, fallback CDI disposal, cancellation and parent loss all independently observed",
+      "implemented": false,
+      "qualified": false
+    },
+    {
+      "id": "P07",
+      "layers": [
+        "A0",
+        "A2"
+      ],
+      "lc": [
+        "LC-02",
+        "LC-04",
+        "LC-05",
+        "LC-06",
+        "LC-08",
+        "LC-10"
+      ],
+      "refs": [
+        "D05",
+        "D10",
+        "D35",
+        "D36",
+        "D42",
+        "D47",
+        "D48"
+      ],
+      "seam": "Manager/session/worker diagnostic and error paths, tracing invocation, provider/invalidation/JTA resume outcomes",
+      "change": "Required work executes independently of observational callbacks; first plus bounded ordered secondary evidence independent of Throwable suppression; record unknown/fatal/overflow without success",
+      "exclusion": "Diagnostic failure cannot skip/repeat required work or trigger default commit; uncertain resource cannot be reused on an in-memory success marker",
+      "depends": [
+        "P01",
+        "P04",
+        "P06",
+        "separate durable containment/recovery authority still missing"
+      ],
+      "proof": "Same Throwable, suppression disabled, overflow, trace lookup/start/drop/repeat/reentry/end/log failure, provider/invalidation/clear/restore failures; actual exporter and fatal limits",
+      "implemented": false,
+      "qualified": false
+    },
+    {
+      "id": "P08",
+      "layers": [
+        "A2"
+      ],
+      "lc": [
+        "LC-04",
+        "LC-05",
+        "LC-07",
+        "LC-08",
+        "LC-09",
+        "LC-10"
+      ],
+      "refs": [
+        "D13",
+        "D14",
+        "D15",
+        "D17",
+        "D20",
+        "D21",
+        "D22",
+        "D23",
+        "D41"
+      ],
+      "seam": "AsyncResponseTransaction.finishAsyncResponseInTransaction/commit/rollback; CloseSessionFilter.filter; invoker/CDI close; KeycloakErrorHandler.getResponse; SamlService.ArtifactResolutionRunnable.run and native signing/response producers",
+      "change": "Replace direct response release with owned intent; prepare bounded private native signed/serialized buffer only in authorized scope; release after durable outcome plus required child/resource/context barrier",
+      "exclusion": "Initial unqualified async/streaming/SAML worker/direct response/external dispatch combinations blocked before provider/read/worker dispatch; fixed pre-admission denial avoids realm/theme/locale/EventBuilder",
+      "depends": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "actual framework and durable attempt/fence proof"
+      ],
+      "proof": "Early resume/later failure, false resume, cancellation/disconnect/duplicate/streaming/body/serialization/error mapper/filter precedence; zero usable bytes before barrier and no post-close model access",
+      "implemented": false,
+      "qualified": false
+    },
+    {
+      "id": "P09",
+      "layers": [
+        "A0",
+        "A1",
+        "A2"
+      ],
+      "lc": [
+        "LC-01",
+        "LC-03",
+        "LC-06",
+        "LC-08",
+        "LC-09"
+      ],
+      "refs": [
+        "D02",
+        "D05",
+        "D07",
+        "D19",
+        "D30",
+        "D37",
+        "D38",
+        "D39",
+        "D40",
+        "D41",
+        "D48"
+      ],
+      "seam": "Every provider overload/component factory, datastore/model access, native/bulk/SQL/flush/internal/worker/config/signing path and all 22 writer categories below",
+      "change": "Before protected dependencies/effects each path joins the same primary durable scope and atomic generation/fence contract or is mandatorily excluded",
+      "exclusion": "Endpoint flag/list or named allowlist is not enforcement; unknown provider/feature/caller fails closed at earlier construction/read/mutation seam",
+      "depends": [
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P08",
+        "complete transitive native/provider/writer inventory and runtime coverage"
+      ],
+      "proof": "Per-category participating and excluded negative tests including AdminAPIv2/shared clients/native SCIM/feature profiles, bulk/model/SQL/import/federation and signing; selected provider identity and all nodes covered",
+      "implemented": false,
+      "qualified": false
+    },
+    {
+      "id": "P10",
+      "layers": [
+        "A0",
+        "A1",
+        "A2"
+      ],
+      "lc": [
+        "LC-08",
+        "LC-09",
+        "LC-10"
+      ],
+      "refs": [
+        "D02",
+        "D03",
+        "D18",
+        "D19",
+        "D42",
+        "D43",
+        "D44",
+        "D45",
+        "D46",
+        "D49",
+        "D50"
+      ],
+      "seam": "Build/boot/provider initialization, issuer-native migration/maintenance/import/restore entry and compatibility activation",
+      "change": "All-node maintenance before import/migration/operator writes; explicit inventory classification and externally replaced recovery incarnation; reconcile and independently requalify before serving",
+      "exclusion": "No online mixed old/new core or unclassified legacy fallback; no normal request repairs enrollment or automatic recovery/compensation",
+      "depends": [
+        "P01",
+        "P02",
+        "P04",
+        "P09",
+        "separate issuer mapping/native migration/recovery and compatibility qualification"
+      ],
+      "proof": "Upgrade/rollback/restore/node skew/recovery epoch/key/grant/provider reconciliation; legacy explicitly-unmanaged compatibility; no stale node can issue or write after maintenance",
+      "implemented": false,
+      "qualified": false
+    }
+  ],
+  "writer_inventory_origin": {
+    "evidence": "Earlier reviewed native writer-category inventory; not a complete callgraph",
+    "sha256": "d6b7820c9581f1b3b557a07f30118805fb4a9824529a6dfd62d7442df366460c"
+  },
+  "writer_categories": [
+    {
+      "id": "W01",
+      "category": "Admin REST and UI client changes",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/resources/admin/ClientResource.java",
+        "services/src/main/java/org/keycloak/services/resources/admin/ClientsResource.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W02",
+      "category": "User lifecycle and JIT/ITDR effects",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/resources/admin/UserResource.java",
+        "services/src/main/java/org/keycloak/services/resources/admin/UsersResource.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P05",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W03",
+      "category": "Realm policy and authentication configuration",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/resources/admin/RealmAdminResource.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W04",
+      "category": "Protocol mappers",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/resources/admin/ProtocolMappersResource.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W05",
+      "category": "Client scopes",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/resources/admin/ClientScopeResource.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W06",
+      "category": "Roles and composites",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/resources/admin/RoleByIdResource.java",
+        "services/src/main/java/org/keycloak/services/resources/admin/RoleMapperResource.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W07",
+      "category": "Groups and inherited authority",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/resources/admin/GroupResource.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W08",
+      "category": "Account credentials",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/resources/account/AccountCredentialResource.java",
+        "model/storage/src/main/java/org/keycloak/credential/UserCredentialManager.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P05",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W09",
+      "category": "Dynamic registration",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/clientregistration/AbstractClientRegistrationProvider.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W10",
+      "category": "Admin SDK",
+      "source_paths": [
+        "integration/admin-client-core/src/main/java/org/keycloak/admin/client/resource/ClientResource.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W11",
+      "category": "Representation import and partial import",
+      "source_paths": [
+        "server-spi-private/src/main/java/org/keycloak/models/utils/RepresentationToModel.java",
+        "services/src/main/java/org/keycloak/partialimport/PartialImportManager.java"
+      ],
+      "required_patch_units": [
+        "P09",
+        "P10"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W12",
+      "category": "Startup/offline import",
+      "source_paths": [
+        "model/storage-services/src/main/java/org/keycloak/exportimport/dir/DirImportProvider.java",
+        "services/src/main/java/org/keycloak/exportimport/ExportImportManager.java"
+      ],
+      "required_patch_units": [
+        "P01",
+        "P10"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W13",
+      "category": "Bootstrap and migrations",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/managers/ApplianceBootstrap.java",
+        "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/QuarkusJpaConnectionProviderFactory.java"
+      ],
+      "required_patch_units": [
+        "P01",
+        "P10"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W14",
+      "category": "Model adapters and native provisioning",
+      "source_paths": [
+        "model/jpa/src/main/java/org/keycloak/models/jpa/ClientAdapter.java",
+        "model/jpa/src/main/java/org/keycloak/models/jpa/UserAdapter.java",
+        "services/src/main/java/org/keycloak/services/managers/ClientManager.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P04",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W15",
+      "category": "Federation and synchronization",
+      "source_paths": [
+        "model/storage-private/src/main/java/org/keycloak/storage/UserStorageManager.java",
+        "model/storage-private/src/main/java/org/keycloak/storage/UserStorageSyncTask.java"
+      ],
+      "required_patch_units": [
+        "P01",
+        "P05",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W16",
+      "category": "Issuer workflow background writers",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/models/workflow/DisableUserStepProvider.java",
+        "services/src/main/java/org/keycloak/models/workflow/DeleteUserStepProvider.java",
+        "services/src/main/java/org/keycloak/models/workflow/client/DisableClientStepProvider.java",
+        "services/src/main/java/org/keycloak/models/workflow/client/DeleteClientStepProvider.java"
+      ],
+      "required_patch_units": [
+        "P05",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W17",
+      "category": "Credential and registration policy",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/services/clientpolicy/executor/ClientSecretRotationExecutor.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P05",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W18",
+      "category": "Native issuance and refresh",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java",
+        "services/src/main/java/org/keycloak/protocol/oidc/grants/RefreshTokenGrantType.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P05",
+        "P08",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W19",
+      "category": "Browser and direct access",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/protocol/oidc/endpoints/AuthorizationEndpoint.java",
+        "services/src/main/java/org/keycloak/protocol/oidc/grants/ResourceOwnerPasswordCredentialsGrantType.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P05",
+        "P08",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W20",
+      "category": "Revocation and logout",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenRevocationEndpoint.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P05",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W21",
+      "category": "Keys and signing",
+      "source_paths": [
+        "services/src/main/java/org/keycloak/protocol/oidc/OIDCLoginProtocolService.java",
+        "services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java"
+      ],
+      "required_patch_units": [
+        "P03",
+        "P08",
+        "P09"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    },
+    {
+      "id": "W22",
+      "category": "Operator restore and direct database changes",
+      "source_paths": [],
+      "required_patch_units": [
+        "P01",
+        "P10"
+      ],
+      "disposition": "participate before protected read/mutation with atomic revision/fence; otherwise enforceable pre-effect exclusion or all-node maintenance",
+      "proof_complete": false
+    }
+  ],
+  "writer_categories_retained": 22,
+  "logical_primary_lookup_and_bootstrap_unimplemented": true,
+  "native_tests_rerun": false,
+  "inherited_native_cases": 578,
+  "inherited_preparation_controls": 6,
+  "new_native_candidate_overlay_units": 0,
+  "production_changes": false,
+  "physical_schema_or_lock_primitive_selected": false,
+  "mandatory_pre_effect_admission_or_ownership_proved": false,
+  "enforceable_exclusion_proved": false,
+  "complete_lifecycle_cleanup_gate_passed": false,
+  "actual_Quarkus_build_provider_HTTP_JTA_JDBC_cache_durable_outcomes_proved": false,
+  "R2_implementation_gate_met": false,
+  "R3_R4_GO": false,
+  "all_prior_four_containment_witnesses_and_original_failed_gates_retained": true,
+  "all_capability_restoration_retained": true,
+  "next_bounded_unit": "Mandatory A0 session-birth deny-gate qualification with exact native/Quarkus activation prerequisites; no A1/A2 authority; stop if activation or closure remains unproved"
+}

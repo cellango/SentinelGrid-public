@@ -15,7 +15,7 @@ Full lifecycle cleanup, durable rollback, R2 implementation and R3/R4 stay NO-GO
 
 ## Evidence and review boundary
 
-The [source record](../../infra/keycloak/keycloak_registration_connector/lifecycle-containment-review.json)
+The original [source record](../../infra/keycloak/keycloak_registration_connector/lifecycle-containment-review.json)
 pins **39 source/registration units and 80 literal anchors** to Keycloak 26.8.1
 commit `24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b`. Its archive SHA-256 is
 `f67ec723e2eaf46b2d38f167ecb7578964115f1f2ce203f9b6659322223d9874`.
@@ -154,33 +154,271 @@ experiment supplies evidence for part of LC-02 only.
 | LC-09 | Immutable build/provider/feature admission and all native front doors/writers. | A0/A1/A2, earlier 18 entry families/10 grants/13 locator variants and all 22 writer categories participate or are enforceably excluded before effects. Literal inventories remain incomplete. |
 | LC-10 | Recovery, replay and operator handling of uncertain state. | Authorized durable containment/recovery mechanism, fresh epoch after restore, independent verification, no automatic replay; no new physical schema selected here. |
 
+## Coherent core patch design
+
+This revision adds a source/design plan across **50 pinned units and 104 literal
+anchors** in the [core design record](../../infra/keycloak/keycloak_registration_connector/core-lifecycle-design-review.json).
+All 33 pins from the session-ownership review were reverified. Counts describe
+reviewed source, not transitive closure, compiled activation or runtime proof.
+The inherited 578 cases/six preparation controls were **not rerun** for this
+documentation change. No candidate, build input, production code or schema is added.
+All mandatory admission, cleanup and response-exclusion gates remain **NO-GO**.
+
+### Authority before ordinary session work
+
+The following interfaces and states are **required new logical contracts**.
+They are not existing Keycloak APIs, implemented storage or authorization receipts.
+
+| Stage | Required input and result | Failure and ordering rule |
+| --- | --- | --- |
+| A0 build and bootstrap | An independently verified immutable artifact/provider/factory/feature set and exact core activation identity. | Verify before loading or constructing privileged plugins, and recheck before factory init/postInit. A plugin already loaded can execute server-privileged code; this design is not a plugin sandbox. Unknown build stays unavailable. |
+| A0 restricted session birth | Core-owned identity for exact factory/session/operation/thread and verified parent, created before manager/context/logging initialization. | Creates only a `BORN_RESTRICTED` shell. No realm/model/provider/auth/write/signing authority. Cover constructor, concrete factory, internal/worker/CDI creation; a later attach hook is insufficient. |
+| A1 `readPrimaryAdmission(selector)` | Bounded untrusted realm name/UUID/issuer hint used only to locate exact authoritative realm UUID/incarnation, recovery incarnation, enrollment state, immutable profile version and non-wrapping revision. | A minimal issuer-primary scalar adapter must not resolve normal models/cache/providers or recursively create a session. Missing, duplicate, stale, inaccessible or unsupported state is `UNKNOWN`, never unmanaged. No credential/token is an input or result. |
+| A1 classification | `MANAGED_PENDING_AUTH`, authoritatively `EXPLICIT_UNMANAGED`, `MAINTENANCE_CLOSED`, or `UNKNOWN`. | Classification grants no operation permission. Protected normal model/auth-dependency reads require revalidation inside the same issuer-primary durable scope/fence; an earlier lookup/TTL/independent lease leaves a race. This is not the R3 association snapshot. |
+| A2 bounded native-auth scope | Server-owned operation definition and exact target identity permit only reviewed native-auth dependencies/counters, under the applicable writer boundary. | Native client authentication and target authorization still precede acquisition. Authentication side effects are classified, not exempt. Never provision/repair a missing account or mapper as a fallback. |
+| A2 fixed authorized scope | Verified native principal, exact target tenant UUID, operation/profile and current primary authority. | Only then allow fixed protected work/native signing with the shared writer/attempt scope. Admin principal realm and operation target are distinct; no master/admin/public/error bypass. Cross-realm combinations stay unavailable until qualified. |
+
+The logical `openBootstrapPrimary(reviewedBuild, maintenanceOwner)` contract must
+return only a trusted issuer-primary scalar-read/resource owner, or fail closed.
+Both inputs must be established by reviewed deployment/maintenance authority,
+not request fields, an extension-supplied object or a fabricated receipt. It
+cannot grant model/auth/write/signing access or declare serving ready. Mapping,
+connection acquisition/release and recovery-state validation still need separate
+source and runtime qualification; this name does not make an adapter exist.
+
+Bootstrap is deliberately separate from a request: verify artifacts without
+executing unreviewed provider code; establish a narrowly trusted issuer-owned
+primary adapter; enter all-node maintenance for required issuer-native mapping/
+migration work; classify existing realms explicitly; run only reviewed bootstrap
+initializers/jobs; open serving only after authority/recovery verification. A
+bootstrap boolean is not authority. A job needing models needs its own reviewed
+maintenance or operation contract. The primary bootstrap adapter, trusted
+connection lifecycle, scalar query, mapping and durable scope are **missing
+implementation prerequisites**. Neither app DB credentials, a second authority
+database, an in-memory map nor a caller hint fills that gap. No physical table,
+lock primitive or transaction implementation is chosen by this design.
+
+The concrete factory is `QuarkusKeycloakSessionFactory.create`, not the abstract
+`DefaultKeycloakSessionFactory` ([D01], [D02], [D03]). Its constructor initializes
+provider factories; the recorder/processor select and assemble them ([D18],
+[D19]). `DefaultKeycloakSession` constructs its manager and virtual context then
+logs; Quarkus creates a framework context ([D04], [D05], [D06], [D16]). Birth must
+precede these steps, and provider/model overloads must enforce subsequent scope
+**before** `providerFactory.create`, datastore access or invalidation ([D05]).
+Review Java static/instance initializers and superclass/virtual dispatch as well
+as constructor bodies. A body guard cannot run before earlier JVM initialization;
+the verified build/classloading boundary must precede privileged static code, and
+earlier instance initialization must be proven effect-free or moved behind birth.
+Failure to establish that order is NO-GO, not a constructor-fixture pass.
+The permissions constructor assigns fields ([D34]); that observation does not
+qualify later permission methods or arbitrary context/provider constructors.
+
+### Lifecycle transitions, ownership and failures
+
+| Transition | Required owner action | Failure result |
+| --- | --- | --- |
+| `BOOT_CLOSED` → `BORN_RESTRICTED` | A0 verifies activation and allocates an internal exact birth/frame owner before native initialization. | Fail before native begin/context/provider effects. No synthetic admission allow receipt. |
+| `BORN_RESTRICTED` → `CLASSIFIED` | A1 primary scalar classification before realm/client model resolution or cloning. | Fixed bounded denial or maintenance-closed; unknown cannot enter legacy behavior. |
+| `CLASSIFIED` → `AUTHENTICATING` → `AUTHORIZED_FENCED` | Revalidate in protected scope; permit only reviewed native-auth reads/writes; authenticate and authorize exact target before acquisition. | Native auth denial can require separately authorized security cleanup. No credentials/signing on failed auth. |
+| Owned operation → `FINALIZING` | Register participants/resources before fallible initialization/enlist/begin; fix commit/abort intent before status/tracing; complete classified work once. | Partial begin, failed enlist/status/marker or earlier commit stays partial/unknown. Native completed/active/closed flags cannot attest rollback or durability. |
+| `FINALIZING` → `RELEASE_READY` | Verify actual durable resource outcome, required child effects, provider/invalidation release and exact context restoration; freeze private response intent. | Any required failure/unknown withholds successful response. Do not relabel an earlier commit as rollback. |
+| `RELEASE_READY` → `TERMINAL` | Single response owner releases once, records delivery separately. | False resume, cancellation/disconnect or serialization uncertainty means delivery unknown; no token-byte replay. |
+| Any nonterminal state → terminal abort intent | One coordinator owns rollback/release/denial; other invoker/filter/CDI/job disposers join its result. | Secondary closes cannot commit, replay or mask the first outcome. Foreign/stale/reentrant use denies; fatal/overflow outcomes stay unknown. |
+
+These stages describe an ordering obligation, not a universal single transaction:
+native authentication, declared independent security work and the protected
+attempt can own separate resources. Each needs its own exact permitted effects
+and scope. A restricted session may wait for classification; it cannot begin
+ordinary resource work to discover whether it is protected. Preserve the native
+job helper's verified parent restore, but replace generic unconditional clear and
+implicit double-close with one exact frame/close owner ([D07], [D15], [D33]).
+Thread switches need an explicit verified handoff, never inherited ThreadLocal
+authority. A copied realm/client/request context is only data after new authority.
+
+Keep bounded ordered failure records outside Throwable suppression: phase,
+participant/owner, first/secondary errors, same-instance recurrence and overflow.
+Record status/marker/trace/logger/provider/invalidation/JTA resume/context failures
+independently. Diagnostics must observe required work without controlling whether
+it runs, drops, repeats or reenters ([D10], [D35], [D42]). Continue independent
+release only where its resource contract permits. This finite evidence is neither
+durable admission, an effect receipt, recovery storage nor a proof of complete
+cleanup. Unknown commit/rollback/resource release requires explicit containment
+and independently verified authorized recovery; no reset, automatic retry,
+compensation or fabricated quarantine record follows. The durable multi-node
+containment mechanism is still unimplemented; those paths cannot qualify now.
+
+### Participant and independent-effect migration
+
+Every registration needs a reviewed definition binding caller, target, semantic
+role, resource, phase/order, authority prerequisite and failure/retry contract.
+A role enum, callback class/name or allowlist alone cannot enforce this. Migrate
+both registration and actual resource/worker entry before claiming coverage.
+
+| Native behavior | Proposed ownership and ordering; required compatibility proof |
+| --- | --- |
+| Resource transaction / prepare work / paired cache invalidation | Register ownership before fallible enlist/begin. Classify JPA prepare persistence and paired cache prepare/after work jointly using the earlier source record. No blanket rollback of all prepare callbacks, suppression of after lists or claim of SQL two-phase prepare from list order. Actual provider/resource/JTA/DB outcomes remain mandatory. |
+| Code invalidation, token/session revocation, logout/client-session detach, password/auth-session removal ([D24]–[D28]) | Preserve each required denial/security effect. Finish the parent's known rollback/commit and release its scope before a required independent job acquires fresh A1/A2/fence and resolves/clones models. Keep parent rollback and child security commit as separate declared outcomes. Unknown parent resource/locks cannot safely launch or replay a child. |
+| UMA tickets ([D29]) | Independent business transaction; fresh authority/target/writer scope and required outcome after the parent boundary. A child commit cannot be described as parent rollback undoing everything. |
+| Session-cache DB updates/retries ([D30]) | Separate resource/cache stage outcomes; fresh primary authority per independent write. Retry only a specifically qualified idempotent operation within its budget after a known outcome. No generic retry of uncertain effects. |
+| Brute-force thread/map/semaphore/lock cleanup ([D31], [D32]) | Exact acquired-resource release owner, even when the parent fails; retain native security counters/transactions where required. Local lock release is distinct from durable authority and must not be suppressed with write callbacks. |
+| Scheduled/timer/other internal jobs ([D07]–[D12]) | Birth and fresh operation authority before begin/clone/model reads; observation cannot own task execution. Logged task error or returned result is not an independent-effect receipt. Unsupported job/provider combinations remain closed before dispatch with restoration ownership. |
+| Response, event or external dispatch | Response intent is distinct from an independent effect; required audit/event delivery has its own contract. External work needs authority before dispatch, not merely registration of a later callback. SAML dispatch occurs before response callback registration ([D23]). |
+
+Never hold the parent's realm barrier and synchronously wait for a child to take
+that same barrier. Separate classified deferred work from the stock manager's
+inline callback loop: finish/verify the parent's resource outcome, release its
+scope, then run required independent child work under fresh authority. Keep the
+parent response withheld until required child results and resource releases are
+known. Parent unknown cannot be solved by waiting, dropping security work or
+replaying it. Qualify recovery separately; retain feature restoration requirements
+while the protected profile remains unavailable. Nested same-resource work needs
+a separately qualified contract; it cannot silently become an independent child.
+
+### Complete response barrier and exclusions
+
+After actual native authentication, exact target authorization and fixed profile/
+fence checks, issuer-native signing may prepare a **private bounded native
+buffer inside the authorized scope**. This preserves the proposed ADR 0003
+point-in-time semantics; it does not introduce a proxy signer or usable bytes
+before durable commit. Prepare bounded serialization/rendering while models and
+providers remain legally owned. After resource closure, no realm/theme/locale/
+entity-manager reentry may be needed to release bytes. Discard private buffers on
+error. The barrier is known durable attempt/fence outcome **plus** every required
+participant/independent security effect, resource release, frame completion and
+single response owner. None of those durable attempt/fence mechanisms exists yet.
+
+`AsyncResponseTransaction` currently resumes within the after list ([D20]); that
+must become a response intent, or the combination must be mandatorily excluded
+before provider construction/read/work. The real filter defers stream closure
+until onClose or after writing ([D21]); actual invoker/CDI/HTTP disposal needs the
+same owner ([D13]–[D17]). Initial unqualified protected async/streaming/direct-resume/
+worker/external-dispatch combinations stay unavailable at their earliest entry,
+including before SAML worker dispatch. A late exception, endpoint flag or named
+unsupported list is not enforceable exclusion. Preserve a restoration owner and
+tests for every affected feature; no feature is retired globally.
+
+Pre-admission denial uses fixed bounded no-store non-enumerating output without
+realm/theme/locale/EventBuilder/provider/signing work. Do not recursively use
+the general HTML error mapper ([D22]). If rollback-only/status fails, terminal
+core intent must prevent native default close/commit. A minimal denial is allowed
+only when no subsequent ordinary native effects can resume; otherwise terminate
+the owned response and retain unknown containment. No new HTTP status/mapper
+precedence is adopted here; earlier 503 and runtime limits remain. A crash or
+post-commit serialization/disconnect can consume an attempt without delivery.
+False resume/cancel/delivery unknown cannot authorize replay of a token or effect.
+
+### Exact patch, dependency and proof matrix
+
+Every row below is **proposed/unimplemented/unqualified**. Reference links resolve
+to exact native source anchors; the machine-readable record includes every path,
+hash and literal. P01–P10 are design groupings, not approved independent releases.
+Dependencies that form a lifecycle cycle require coherent integration before a
+protected profile opens. Source inventory and expected-negative fixtures cannot
+substitute for mandatory before-effect activation or actual runtime proof.
+
+| Unit / coverage | Exact native seam | Required change or exclusion | Dependencies and proof still required |
+| --- | --- | --- | --- |
+| P01 / A0, LC-01, LC-09, LC-10 | KeycloakProcessor.configureKeycloakSessionFactory/loadFactories/configureResteasy; KeycloakRecorder.createSessionFactory; QuarkusKeycloakSessionFactory constructor/create; DefaultKeycloakSession constructor; createKeycloakContext and DefaultKeycloakContext constructor ([D01], [D02], [D03], [D04], [D05], [D06], [D13], [D16], [D18], [D19], [D34]) | Verify build before provider class loading/instantiation, recheck activation before factory init/postInit, require restricted birth ownership before manager/context/logging construction; cover direct, internal, worker and CDI creation. Unreviewed artifact/provider/build or construction route has no serving activation; no bootstrap bypass. | reviewed immutable runtime artifact and provider closure; separate fenced maintenance/bootstrap contract. Exact constructor and concrete Quarkus factory/build negative controls, alternate constructors/subclasses/direct creation, first instruction ordering and actual augmentation/classloading proof; stop if any path can begin/read/init before ownership. |
+| P02 / A1, LC-01, LC-09, LC-10 | RealmsResource.resolveRealmAndUpdateSession; RealmManager.getRealm/getRealmByName; AdminRoot.resolveRealmAndUpdateSession/authenticateRealmAdminRequest; RealmsAdminResource.getRealmAdmin; cloneContextToSession and SessionLookup constructor ([D05], [D06], [D07], [D08], [D37], [D38], [D39], [D40]) | Primary-only scalar classification before ordinary model/context reads, then fresh classification in the protected durable scope before protected dependencies; bind exact UUID/incarnations/profile/revision. Missing/duplicate/stale/unknown classification cannot fall through to legacy unmanaged access. | P01; missing issuer-primary bootstrap adapter and authority read; future proven shared durable scope/fence. Primary outage/ambiguity/rename/ABA/restore/enrollment-change races before each resolver/clone/model read; primary-only and no cache/model recursion evidence. |
+| P03 / A2, LC-01, LC-06, LC-09 | TokenEndpoint.processGrantRequest and native authentication/grant dispatch; admin target resolution; model/provider/context entry and internal operation entry ([D05], [D06], [D07], [D37], [D39], [D40], [D41]) | Separate bounded native-auth dependency authority from authenticated fixed operation authority; retain real native auth, exact target authorization and account-missing non-creation before acquisition. Unknown route/grant/provider/target combination cannot construct its effectful implementation; cross-realm operations unavailable until independently qualified. | P01; P02; reviewed operation definitions and all entry/target coverage. All 18 route families/13 locators/10 grants plus unknown extensions, native auth failures, no provisioning repair, target mismatch/admin-principal-realm separation, internal callers. |
+| P04 / A2, LC-02, LC-03, LC-04, LC-05, LC-08 | DefaultKeycloakTransactionManager.begin/enlist/enlistPrepare/enlistAfterCompletion/commit/rollback/setRollbackOnly; AbstractKeycloakTransaction; DefaultKeycloakSession.close/closeTransactionManager/invalidate/enlistForClose; actual JTA/JPA/entity-manager/async-commit participants ([D05], [D35], [D36], [D42], [D43], [D44], [D45], [D46], [D47], [D48], [D49], [D50]) | Own registration before fallible initialization/enlist/begin; semantic paired participants and terminal abort; outcomes independent of native flags; actual resource durability/release required. Untyped/unknown protected participant or unqualified durability policy denied before construction/effect; no prepare-list blanket rollback. | P01; P02; P03; selected runtime participant and coordinator contract. Partial begin/enlist, status/marker/completed errors, earlier commit/later failure, prepared resources, paired cache cleanup, JTA suspend/resume masking, JDBC/pool/async durability/crash outcomes. |
+| P05 / A1, A2, LC-03, LC-04, LC-06, LC-08, LC-09, LC-10 | KeycloakModelUtils.runJobInTransactionWithResult/enlistAfterRollback/enlistAfterCompletion/cloneContextToSession; CodeGenerateUtil.RollbackDrivenTransaction; ScheduledTaskRunner.run/runTask; BasicTimerProvider.scheduleTask; native security/cache/brute-force callers ([D07], [D08], [D09], [D10], [D11], [D12], [D24], [D25], [D26], [D27], [D28], [D29], [D30], [D31], [D32]) | Register independent security/business intent before effect; after parent known resource completion and scope release, child reacquires fresh authority/fence before clone/read/begin/effect; explicit retry and release semantics. No child inherits admission from ThreadLocal/request context or runs while parent synchronously holds its needed barrier; unknown parent/child outcome prevents success/replay. | P01; P02; P03; P04; P06; P07; fresh child authority and writer participation. Actual rollback and completion jobs, code/revocation/logout/password/UMA/cache retry semantics, worker admission before tracing/model reads, partial parent outcomes and no parent-child fence deadlock; security cleanup preserved. |
+| P06 / A0, A2, LC-01, LC-05, LC-06, LC-07 | Native session/job creation/finally; KeycloakSessionUtil; TransactionalSessionHandler.handle/close; KeycloakBeanProducer.getKeycloakSession/dispose; handler chain; CloseSessionFilter ([D03], [D04], [D05], [D07], [D09], [D10], [D13], [D14], [D15], [D16], [D17], [D21], [D33]) | Exact internal frame binds operation/factory/session/thread/parent; one lifecycle close owner; other disposers join terminal result, cannot close/commit a second time; verified clear/restore. Foreign/reentrant/stale/unowned work and unsupported worker/async transfer rejected before use; no copied context permission. | P01; P04; one owner protocol across all disposers. Generic-clear and job-restore comparison, explicit plus implicit close, nested/foreign/thread switches, fallback CDI disposal, cancellation and parent loss all independently observed. |
+| P07 / A0, A2, LC-02, LC-04, LC-05, LC-06, LC-08, LC-10 | Manager/session/worker diagnostic and error paths, tracing invocation, provider/invalidation/JTA resume outcomes ([D05], [D10], [D35], [D36], [D42], [D47], [D48]) | Required work executes independently of observational callbacks; first plus bounded ordered secondary evidence independent of Throwable suppression; record unknown/fatal/overflow without success. Diagnostic failure cannot skip/repeat required work or trigger default commit; uncertain resource cannot be reused on an in-memory success marker. | P01; P04; P06; separate durable containment/recovery authority still missing. Same Throwable, suppression disabled, overflow, trace lookup/start/drop/repeat/reentry/end/log failure, provider/invalidation/clear/restore failures; actual exporter and fatal limits. |
+| P08 / A2, LC-04, LC-05, LC-07, LC-08, LC-09, LC-10 | AsyncResponseTransaction.finishAsyncResponseInTransaction/commit/rollback; CloseSessionFilter.filter; invoker/CDI close; KeycloakErrorHandler.getResponse; SamlService.ArtifactResolutionRunnable.run and native signing/response producers ([D13], [D14], [D15], [D17], [D20], [D21], [D22], [D23], [D41]) | Replace direct response release with owned intent; prepare bounded private native signed/serialized buffer only in authorized scope; release after durable outcome plus required child/resource/context barrier. Initial unqualified async/streaming/SAML worker/direct response/external dispatch combinations blocked before provider/read/worker dispatch; fixed pre-admission denial avoids realm/theme/locale/EventBuilder. | P01; P02; P03; P04; P05; P06; P07; actual framework and durable attempt/fence proof. Early resume/later failure, false resume, cancellation/disconnect/duplicate/streaming/body/serialization/error mapper/filter precedence; zero usable bytes before barrier and no post-close model access. |
+| P09 / A0, A1, A2, LC-01, LC-03, LC-06, LC-08, LC-09 | Every provider overload/component factory, datastore/model access, native/bulk/SQL/flush/internal/worker/config/signing path and all 22 writer categories below ([D02], [D05], [D07], [D19], [D30], [D37], [D38], [D39], [D40], [D41], [D48]) | Before protected dependencies/effects each path joins the same primary durable scope and atomic generation/fence contract or is mandatorily excluded. Endpoint flag/list or named allowlist is not enforcement; unknown provider/feature/caller fails closed at earlier construction/read/mutation seam. | P01; P02; P03; P04; P05; P08; complete transitive native/provider/writer inventory and runtime coverage. Per-category participating and excluded negative tests including AdminAPIv2/shared clients/native SCIM/feature profiles, bulk/model/SQL/import/federation and signing; selected provider identity and all nodes covered. |
+| P10 / A0, A1, A2, LC-08, LC-09, LC-10 | Build/boot/provider initialization, issuer-native migration/maintenance/import/restore entry and compatibility activation ([D02], [D03], [D18], [D19], [D42], [D43], [D44], [D45], [D46], [D49], [D50]) | All-node maintenance before import/migration/operator writes; explicit inventory classification and externally replaced recovery incarnation; reconcile and independently requalify before serving. No online mixed old/new core or unclassified legacy fallback; no normal request repairs enrollment or automatic recovery/compensation. | P01; P02; P04; P09; separate issuer mapping/native migration/recovery and compatibility qualification. Upgrade/rollback/restore/node skew/recovery epoch/key/grant/provider reconciliation; legacy explicitly-unmanaged compatibility; no stale node can issue or write after maintenance. |
+
+### All 22 writer categories remain open
+
+Each category must join the same issuer-primary durable generation/fence before
+protected dependency reads or mutation, with its revision update atomic with the
+write, **or** have enforceable pre-effect exclusion/all-node maintenance. The
+earlier category inventory remains incomplete as a transitive callgraph. Original
+paths are pinned in the design record; no row is implementation acceptance.
+
+| ID | Original writer category | Required design units | Closure |
+| --- | --- | --- | --- |
+| W01 | Admin REST and UI client changes | P03, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W02 | User lifecycle and JIT/ITDR effects | P03, P05, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W03 | Realm policy and authentication configuration | P03, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W04 | Protocol mappers | P03, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W05 | Client scopes | P03, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W06 | Roles and composites | P03, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W07 | Groups and inherited authority | P03, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W08 | Account credentials | P03, P05, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W09 | Dynamic registration | P03, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W10 | Admin SDK | P03, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W11 | Representation import and partial import | P09, P10 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W12 | Startup/offline import | P01, P10 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W13 | Bootstrap and migrations | P01, P10 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W14 | Model adapters and native provisioning | P03, P04, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W15 | Federation and synchronization | P01, P05, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W16 | Issuer workflow background writers | P05, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W17 | Credential and registration policy | P03, P05, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W18 | Native issuance and refresh | P03, P05, P08, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W19 | Browser and direct access | P03, P05, P08, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W20 | Revocation and logout | P03, P05, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W21 | Keys and signing | P03, P08, P09 | Open; participate or enforce before-effect exclusion/maintenance. |
+| W22 | Operator restore and direct database changes | P01, P10 | Open; participate or enforce before-effect exclusion/maintenance. |
+
+AdminAPIv2, shared-client changes, native SCIM and feature-profile variants stay
+inside these categories, together with every internal/constructor/worker/bulk/
+model/SQL/flush/cache/import/bootstrap/federation/key/signing/operator/restore path.
+No REST-only or Python-only inventory can close them. Direct operator database
+writes require all-node maintenance; online fencing cannot constrain an operator
+outside the qualified protocol.
+
+### Compatibility, migration and recovery
+
+The proposed typed core contract needs explicit migration of all native/custom
+providers, participants, factories, workers, grants and disposers. Inventory old
+registrations before replacing phase-list behavior. Legacy client wire behavior
+may continue only for **authoritatively classified unmanaged** paths under the
+reviewed build and owner protocol. Unclassified legacy realms do not default to
+unmanaged. No mixed old/new serving nodes, silent provider fallback or protected
+registration adapter bypass is accepted. Preserve native auth, non-creation,
+target authorization, signing, required security cleanup and existing capabilities.
+
+Future issuer-owned storage changes require paired issuer mapping and native
+Liquibase migration qualification under ADR 0004; this revision selects no DDL,
+table, lock or transaction primitive. Application SQLAlchemy/Flyway remain
+unchanged. Initial inventory/migration/restore happens with every issuing node
+quiescent; replace recovery incarnation from outside the restored backup,
+reconcile grants/keys/providers and independently requalify before reopening.
+Unknown effects require authorized containment/recovery proof, never automatic
+compensation or replay. Upgrade, rollback, node skew, historical grant/credential
+custody and durable failover remain separate acceptance gates.
+
 ## Proof sequence and next bounded experiment
 
-1. **Bounded experiments completed; full qualification remains NO-GO.** The
-   [integrated abort comparison](../../infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md)
-   passes 512 cases/six preparation controls, retaining four containment failures.
-   The [native session/job/context/response qualification](../../infra/keycloak/keycloak_registration_connector/qualification/session_ownership/README.md)
-   reruns those cases and adds 66 (578 total/six controls). It executes the real
-   job/context/scheduled-runner source and distinguishes parent restoration from
-   generic clear/double-close failure. Mandatory pre-effect ownership/exclusion
-   remains unproved; no new native patch was added. Full LC-01/02/04/05 and all
-   original failed requirements remain open. **Further optional-hook/local-catch
-   candidates stop.**
-2. **Next: coherent pre-session admission/lifecycle core-patch design.** Cover
-   concrete factory/constructor/build activation, the missing primary admission
-   lookup and bootstrap order, semantic job/participant authority, verified
-   context/close ownership and complete response release. Define exact native
-   changed seams, compatibility, enforceable pre-effect exclusions and proof
-   prerequisites together. Select no physical schema, automatic recovery store,
-   production version/fork or deployment. A carrier, late bind or ThreadLocal
-   cannot create authority. Stop with NO-GO if mandatory closure cannot be shown.
-3. After the coherent design is reviewed, qualify its mandatory source boundaries
-   and actual selected provider/JTA/JDBC/cache/HTTP/error/async/HA behavior in
-   separately isolated synthetic work with reviewed build/license/security inputs.
-   Complete all entry/writer/admission/storage/attempt/recovery and compatibility
-   gates (LC-01–10 and R3–R7) before protected issuance or caller adoption. No local
-   lifecycle pass permits R2 implementation or R3/R4 while prerequisites fail.
-   Production fork/version/deployment remains a separate later decision.
+1. Completed comparisons remain negative for full containment: 512 cases in the
+   integrated abort lab, then 578 cases/six controls in the native ownership lab.
+   Retain four abort witnesses and all added native job/context/response findings;
+   neither a passing expected-negative assertion nor this design qualifies them.
+   No native cases were rerun for this source/design revision.
+2. This coherent P01–P10 design completes a bounded design deliverable only.
+   Missing primary bootstrap/read/fence, full participant/writer closure, durable
+   containment/recovery and actual framework activation keep implementation
+   adoption and protected issuance NO-GO. Stop optional late-attach/catch fixes.
+3. **Next bounded unit: A0 mandatory session-birth deny-gate qualification.**
+   First inventory exact concrete Quarkus/build/classloading and constructor
+   prerequisites. Then, only in new owned disposable comparison projects, qualify
+   a mandatory deny-only core boundary before manager/context/provider/begin,
+   with restricted lifecycle ownership and no A1/A2 authority. Native and prior
+   candidate controls stay intact. Missing/stale/foreign/unreviewed activation,
+   direct/internal/fresh worker creation must deny before effects. No fake map,
+   caller receipt, ThreadLocal or missing-row unmanaged success path. An optional
+   attach hook cannot pass. Actual Quarkus augmentation/activation proof is a
+   prerequisite to claiming A0; mocks/direct-constructor tests alone cannot pass.
+   If those inputs or mandatory closure cannot be safely isolated and qualified,
+   record exact unmet prerequisites and NO-GO rather than invent a passing gate.
+4. That unit cannot qualify A1/A2, native auth/issuance, cleanup, all writers or
+   actual HTTP/JTA/JDBC/cache durability. Preserve the 578 inherited cases/oracles
+   and rerun affected controls only where a new candidate reaches them; explicitly
+   compare any changed initialization denial. Reviewed build/license/security
+   inputs precede any new SDK/build; no production artifact or provider adopted.
+   Later isolated units must satisfy all LC-01–10, R3–R7 and compatibility gates.
 
 This review closes the **bounded design task only**. Full cleanup/containment,
 HTTP/native SQL durability, bootstrap/admission, writer closure and all old 18
@@ -240,3 +478,54 @@ replacement governance remain unchanged.
 [S37]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/resources/META-INF/services/org.keycloak.transaction.JtaTransactionManagerLookup#L18
 [S38]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/AsyncCommitIntegrator.java#L80
 [S39]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/PostgreSQLAsyncCommitIntegrator.java#L51
+
+[D01]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/models/KeycloakSessionFactory.java#L37
+[D02]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakSessionFactory.java#L58
+[D03]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSessionFactory.java#L35
+[D04]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSession.java#L28
+[D05]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java#L93
+[D06]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakContext.java#L77
+[D07]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/models/utils/KeycloakModelUtils.java#L363
+[D08]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/models/utils/SessionLookup.java#L22
+[D09]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/transaction/RequestContextHelper.java#L57
+[D10]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/services/scheduled/ScheduledTaskRunner.java#L54
+[D11]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/services/scheduled/NamedSessionTask.java#L31
+[D12]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/timer/basic/BasicTimerProvider.java#L80
+[D13]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java#L39
+[D14]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java#L67
+[D15]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java#L44
+[D16]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/QuarkusKeycloakContext.java#L36
+[D17]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/KeycloakHandlerChainCustomizer.java#L40
+[D18]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakRecorder.java#L223
+[D19]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java#L834
+[D20]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/transaction/AsyncResponseTransaction.java#L33
+[D21]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java#L51
+[D22]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java#L65
+[D23]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/saml/SamlService.java#L1445
+[D24]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java#L180
+[D25]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java#L193
+[D26]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/grants/AuthorizationCodeGrantType.java#L92
+[D27]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/grants/ResourceOwnerPasswordCredentialsGrantType.java#L129
+[D28]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/refresh/AbstractRefreshTokenProvider.java#L260
+[D29]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/authorization/policy/evaluation/PermissionTicketAwareDecisionResultCollector.java#L102
+[D30]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProvider.java#L86
+[D31]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/DefaultBlockingBruteForceProtector.java#L86
+[D32]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/DefaultLockingBruteForceProtector.java#L123
+[D33]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/utils/KeycloakSessionUtil.java#L38
+[D34]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultPermissions.java#L35
+[D35]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java#L51
+[D36]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/models/AbstractKeycloakTransaction.java#L30
+[D37]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/RealmsResource.java#L188
+[D38]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/RealmManager.java#L113
+[D39]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/admin/AdminRoot.java#L146
+[D40]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/admin/RealmsAdminResource.java#L220
+[D41]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java#L130
+[D42]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/transaction/JtaTransactionWrapper.java#L45
+[D43]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/JpaKeycloakTransaction.java#L47
+[D44]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/QuarkusJtaTransactionManagerLookup.java#L36
+[D45]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/AbstractJpaConnectionProviderFactory.java#L55
+[D46]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/QuarkusJpaConnectionProviderFactory.java#L106
+[D47]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/DefaultJpaConnectionProvider.java#L42
+[D48]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/connections/jpa/support/EntityManagerProxy.java#L93
+[D49]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/AsyncCommitIntegrator.java#L80
+[D50]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/PostgreSQLAsyncCommitIntegrator.java#L51

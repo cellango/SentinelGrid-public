@@ -325,5 +325,14 @@ Full lifecycle and production/provider/SQL/JTA/HTTP/admission remain NO-GO.
 The [native session/job/context/response qualification](qualification/session_ownership/README.md)
 reruns all 512 earlier cases and adds 66 native ownership cases (578 total/six
 input controls). Mandatory pre-effect ownership/exclusion remains NO-GO. Further
-optional-hook candidates stop pending coherent core admission/lifecycle design;
-no new native patch, production behavior or provider/SQL/HTTP qualification follows.
+optional-hook candidates stop; no new native patch, production behavior or
+provider/SQL/HTTP qualification follows.
+
+The [coherent core lifecycle design](../../../docs/architecture/keycloak-lifecycle-containment.md#coherent-core-patch-design)
+and [design record](core-lifecycle-design-review.json) now map 50 pinned source
+units/104 literal anchors to P01–P10, A0/A1/A2, LC-01–10 and all 22 writer categories.
+They define restricted birth, missing primary admission/bootstrap contracts,
+fresh independent-job authority, one close owner and the complete response barrier.
+This documentation revision reruns no native case and supplies no implementation
+acceptance. Next is a mandatory A0 session-birth deny-gate qualification with exact
+Quarkus activation prerequisites; full lifecycle/storage/writer/issuance remains NO-GO.

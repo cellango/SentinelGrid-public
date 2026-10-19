@@ -90,10 +90,13 @@ also release thread/map/semaphore state. Suppressing every after callback would
 change security behavior or strand resources. No feature is retired by this result.
 
 **Stop further optional-hook/local-catch candidate work.** Mandatory pre-effect
-ownership and enforceable exclusions have not been demonstrated. The next bounded
-work is a **coherent pre-session admission/lifecycle core-patch design** with exact
-native seams, bootstrap/primary-lookup interfaces, semantic participant ownership,
-response/close ordering, compatibility and a proof plan before another candidate.
+ownership and enforceable exclusions have not been demonstrated. The subsequent
+[coherent core design](../../../../../docs/architecture/keycloak-lifecycle-containment.md#coherent-core-patch-design)
+now records those proposed seams, logical primary interfaces, participant/job
+semantics, response/close ordering, compatibility and proof prerequisites. It
+does not rerun or change this lab's historical results. Next research qualifies
+only a mandatory A0 session-birth deny gate with exact native/Quarkus prerequisites;
+it cannot grant primary admission or operation authority.
 Do not invent physical tables, recovery stores or automatic compensation/replay;
 R3 snapshots/R4 conditional grants/storage implementation remain NO-GO. Production
 fork/version/deployment still need a later decision and qualification.

@@ -185,8 +185,8 @@ outcome facts and required changes/exclusions. Its scoped abort/close experiment
 passes 512 cases/six input controls but retains four containment failures;
 the [native ownership qualification](../../infra/keycloak/keycloak_registration_connector/qualification/session_ownership/README.md)
 now supplies 578 expected-outcome cases/six input controls and a NO-GO result for
-mandatory pre-effect ownership or enforceable exclusions. Next is coherent core
-admission/lifecycle patch design, not another optional hook. Full lifecycle,
+mandatory pre-effect ownership or enforceable exclusions. The coherent core
+design is now recorded below; optional-hook candidates remain stopped. Full lifecycle,
 provider/SQL/JTA/HTTP and all admission/storage gates remain open.
 No further admission/storage qualification, R3 snapshot, R4 conditional grant or
 successful issuance follows from the passing tests.
@@ -200,3 +200,18 @@ build-helper license declarations and deprecated test-only SDK API remain
 limitations; this unit adds no SDK/build dependency. All IAM and other service
 restoration requirements remain open. Temporal, `case_runtime` and deferred
 engine-replacement governance are unchanged.
+
+## Coherent lifecycle design and remaining boundary
+
+The [coherent core patch design](keycloak-lifecycle-containment.md#coherent-core-patch-design)
+now maps A0/A1/A2, LC-01–10 and all 22 writer categories to proposed exact native
+seams, before-effect exclusions, dependencies and proof gates. Its primary-only
+admission/bootstrap interfaces are missing logical prerequisites, not current
+APIs or storage. A restricted birth owner grants no realm authority. Revalidate
+primary classification in the protected durable scope before ordinary protected
+dependencies; no lookup/TTL/caller hint/missing-row unmanaged fallback suffices.
+Required independent security jobs acquire fresh authority after the parent's
+known resource boundary without holding its barrier; response release waits for
+all required outcomes. No native test was rerun for this documentation revision.
+Next research qualifies only a mandatory A0 session-birth deny gate; A1/A2, full
+cleanup/durable writer closure, R2 implementation/R3/R4 remain NO-GO.

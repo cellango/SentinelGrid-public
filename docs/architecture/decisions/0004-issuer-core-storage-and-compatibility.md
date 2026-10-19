@@ -240,7 +240,7 @@ now tests those outcomes (512 cases/six input controls), with four concrete
 containment failures retained. The [native ownership qualification](../../../infra/keycloak/keycloak_registration_connector/qualification/session_ownership/README.md)
 now runs 578 cases/six controls, retaining those failures and a NO-GO result for
 mandatory pre-effect ownership/exclusion. Further optional-hook candidates stop;
-coherent core admission/lifecycle design and exact prerequisite proof are next.
+the coherent core design is now recorded below; exact prerequisite proof remains open.
 Full cleanup and actual provider, SQL/JTA and HTTP gates stay open.
 All entry/writer/storage/compatibility gates remain unqualified. No production
 fork, provider artifact, current guard or application behavior is adopted.
@@ -260,3 +260,16 @@ distinguishes proposal, source evidence and unmet implementation gates.
 - [Unsupported custom JPA API](https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/docs/documentation/server_development/topics/extensions.adoc#L100),
   [provider build and privilege model](https://www.keycloak.org/server/configuration-provider),
   [upstream security maintenance policy](https://www.keycloak.org/security).
+
+## Coherent core design follow-through
+
+The [coherent lifecycle design](../keycloak-lifecycle-containment.md#coherent-core-patch-design)
+maps proposed P01–P10 changes to exact source, A0/A1/A2, LC-01–10 and all 22 writer
+categories. It separates restricted session birth from authoritative primary
+classification and native operation authorization, preserves independent security
+cleanup, and defines a complete response barrier. These contracts remain
+unimplemented; primary bootstrap/read/fence and actual runtime closure are still
+missing. The next bounded unit is mandatory A0 session-birth deny-gate qualification,
+with exact Quarkus activation prerequisites and a stop if unproved. This design
+does not adopt a fork/version/storage primitive, supersede pre-token or proposed
+point-in-time semantics, or clear R2 implementation/R3/R4. No engine change follows.
