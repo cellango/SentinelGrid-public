@@ -106,3 +106,8 @@ All earlier 18 witnesses/nine failed latest-at-response gates, R1 limits/earlier
 open. No existing application/provider artifact, guard, grant, caller, schema,
 migration, runtime dependency, manifest or default changes follow. Temporal,
 `case_runtime` and deferred engine-replacement governance remain unchanged.
+
+The subsequent [integrated native abort comparison](../native_abort/README.md)
+retains this lab unchanged as native/limited controls. Its 512-case result
+improves scoped deny/error observation but preserves four containment failures;
+full cleanup and all provider/SQL/JTA/HTTP/admission gates remain unqualified.

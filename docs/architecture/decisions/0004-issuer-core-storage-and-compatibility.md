@@ -235,8 +235,11 @@ propagation (310 test cases/six input controls). Full cleanup, tracing/provider/
 prepare/commit branch behavior and durable outcomes remain NO-GO/unqualified.
 The [lifecycle containment review](../keycloak-lifecycle-containment.md) now defines
 the proposed participant/outcome contract and ten required core changes or
-enforceable exclusions. The next bounded experiment compares integrated native
-abort/close outcomes; actual provider, SQL/JTA and HTTP qualification stay open.
+enforceable exclusions. The [integrated native comparison](../../../infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md)
+now tests those outcomes (512 cases/six input controls), with four concrete
+containment failures retained. Mandatory session/job/context/response ownership
+qualification is next; full cleanup and actual provider, SQL/JTA and HTTP gates
+stay open.
 All entry/writer/storage/compatibility gates remain unqualified. No production
 fork, provider artifact, current guard or application behavior is adopted.
 

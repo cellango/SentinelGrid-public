@@ -315,3 +315,9 @@ core changes or enforceable exclusions. Source/design review is complete;
 implementation, actual-provider cleanup, SQL/JTA/HTTP and durable admission
 remain unqualified. Its [source record](lifecycle-containment-review.json) pins
 the reviewed units without claiming transitive or runtime closure.
+
+The [integrated native abort/close comparison](qualification/native_abort/README.md)
+adds a deny-only source overlay and retains native/limited controls (512 cases,
+six preparation checks). Child-session commit, native callback response release,
+lost parent context and late ownership remain concrete containment failures.
+Full lifecycle and production/provider/SQL/JTA/HTTP/admission remain NO-GO.

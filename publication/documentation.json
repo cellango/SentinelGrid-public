@@ -2060,6 +2060,11 @@
       "authority": "bounded_native_method_experiment_not_full_entry_enforcement"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md",
+      "class": "experimental_component_reference",
+      "authority": "bounded_deny_only_native_abort_experiment_negative_containment_not_production"
+    },
+    {
       "path": "infra/keycloak/keycloak_registration_connector/qualification/realm_entry/README.md",
       "class": "experimental_component_reference",
       "authority": "bounded_native_early_denial_fixture_negative_cleanup_result_not_production"

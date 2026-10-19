@@ -1,0 +1,89 @@
+{
+  "format_version": 1,
+  "date": "2026-10-19",
+  "status": "bounded_integrated_native_abort_comparison_complete_negative_containment",
+  "owner_choice": "P1_already_approved_bounded_research",
+  "source_version": "26.8.1",
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "native_source_units": [
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java",
+      "sha256": "1f6230bbbc3bcadff5eb476cd09147145f4bb8f8a308da397371ab9a235b0a53"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java",
+      "sha256": "5193a79eb80835b9ad96daf97e304e3b05f4aef0df9df64c5a424d8d6cafd924"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java",
+      "sha256": "bd93dc08ae8e90735dbb54b8a75ef8415404dd0f752e25343a2e6c47e28bd928"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/transaction/AsyncResponseTransaction.java",
+      "sha256": "ba4a8097287710bab65f12e3f545786cb09486f80bc9fa288567f330d42b22cb"
+    },
+    {
+      "path": "server-spi/src/main/java/org/keycloak/models/AbstractKeycloakTransaction.java",
+      "sha256": "349da55ffc96f97cfc8adef20590b27446c9d17c21781d9287255682cb74c3f5"
+    }
+  ],
+  "candidate_changed_native_units": 3,
+  "candidate_surface": "Deny-only manager/session/thread-helper research overlay and bounded independent outcome state; native and prior limited controls retained",
+  "variant_tests": {
+    "native": 160,
+    "limited": 160,
+    "integrated": 192
+  },
+  "total_tests": 512,
+  "reused_cases": 465,
+  "new_comparison_cases": 15,
+  "integrated_cases": 32,
+  "skips": 0,
+  "preparation_controls": 6,
+  "real_native_authentication_and_noncreation_controls_preserved": true,
+  "prior_negative_oracles_and_unfinished_participants_retained": true,
+  "limited_deny_only_abort_observation_controls_passed": true,
+  "full_LC01_LC02_LC04_LC05_acceptance_met": false,
+  "complete_lifecycle_cleanup_gate_passed": false,
+  "actual_job_helper_JTA_JDBC_cache_tracing_exporter_HTTP_or_SQL_durability_proved": false,
+  "negative_containment_witnesses": [
+    "Fresh unbound native child session commits during parent rollback",
+    "Actual native after-completion callback resumes an error response before outer close completes",
+    "Native helper clears nested context without restoring its parent and candidate does not detect the loss",
+    "Late attachment leaves an already-active unowned participant unfinished while recording unknown outcome"
+  ],
+  "SDK_JARs": 206,
+  "build_and_SDK_JARs": 290,
+  "exact_prior_hash_coordinate_license_set": true,
+  "production_dependency_provider_artifact_default_schema_guard_caller_or_runtime_changed": false,
+  "R2_implementation_gate_met": false,
+  "R3_R4_GO": false,
+  "all_ancestor_IAM_and_service_restoration_retained": true,
+  "next_research": "Mandatory session creation/native job/context/response ownership qualification or enforceable pre-effect exclusion; stop if closure cannot be demonstrated",
+  "fixture_inputs": [
+    {
+      "path": "inputs.json",
+      "sha256": "c167e59b7d425b85f27c918329ab06f708189156e988ee26d3a605edd6db08a7"
+    },
+    {
+      "path": "pom.xml",
+      "sha256": "315a4ab11dbf3fb3f7e89f944781d4d156196fc1c272e6474ef420ded4d5501a"
+    },
+    {
+      "path": "prepare.py",
+      "sha256": "fec0190105362d7c5b75a06359b3849332957dabeac138b8b5ca00358c808ec8"
+    },
+    {
+      "path": "src/main/java/org/keycloak/services/ResearchAbortState.java",
+      "sha256": "7713551ec100d9a00db676346fa956e81986693e47c81b47b807d724a97df60d"
+    },
+    {
+      "path": "src/test/java/org/keycloak/services/AbortCandidateCases.java",
+      "sha256": "72cbe412e06bb43cb004fe0bc89ebbaa2af99c941f8510e4de5600fee228c414"
+    },
+    {
+      "path": "src/test/java/org/keycloak/services/NativeAbortComparisonTest.java",
+      "sha256": "c43ff75b6815d6ee508b984fd35b0e6eca35cfea992c75e78ce4d6e023020336"
+    }
+  ]
+}

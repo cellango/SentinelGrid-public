@@ -182,7 +182,10 @@ tracing, prepare/commit branches, provider close, retry and durable outcomes rem
 unqualified. The [lifecycle containment contract](keycloak-lifecycle-containment.md)
 now classifies actual prepare/cache/new-job/response participants, independent
 outcome facts and required changes/exclusions. Its next bounded experiment covers
-integrated native abort/close outcomes; provider/SQL/JTA/HTTP remain separate gates.
+integrated native abort/close outcomes. The [completed comparison](../../infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md)
+passes 512 cases/six input controls but retains four containment failures;
+mandatory fresh-session/job/context/response ownership is next. Full lifecycle,
+provider/SQL/JTA/HTTP and all admission/storage gates remain open.
 No further admission/storage qualification, R3 snapshot, R4 conditional grant or
 successful issuance follows from the passing tests.
 

@@ -156,7 +156,7 @@ experiment supplies evidence for part of LC-02 only.
 
 ## Proof sequence and next bounded experiment
 
-1. **Next: integrated native abort/close outcome experiment.** In new owned
+1. **Integrated native abort/close outcome experiment, bounded result recorded.** In new owned
    temporary projects, compare unmodified source, the preserved two-catch-site
    control, and one isolated candidate covering LC-01/02/04/05 together. Exercise
    actual pinned native manager/session/abstract transaction/thread-close paths,
@@ -167,7 +167,16 @@ experiment supplies evidence for part of LC-02 only.
    independent-effect classifications as limits, not fake real-provider proof.
    A source-only outcome record is not durable admission or full cleanup. Record
    a concrete negative result if this boundary cannot be demonstrated.
-2. Only after that bounded result, qualify actual selected provider/JTA/JDBC/cache
+   The [integrated comparison](../../infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md)
+   now passes 512 cases/six preparation controls while retaining four concrete
+   containment failures: unbound child commit, native error-response resumption,
+   lost nested parent context and late attachment to unfinished work. Only scoped
+   deny/error-observation controls pass; full LC-01/02/04/05 acceptance remains
+   unmet. **Next is mandatory session-creation/job/context/response ownership
+   qualification or enforceable pre-effect exclusion**, retaining those witnesses.
+   No further local catch fix or storage/admission qualification substitutes for
+   that missing mandatory boundary. Stop with NO-GO if it cannot be shown.
+2. Only after that boundary and the remaining lifecycle requirements qualify, qualify actual selected provider/JTA/JDBC/cache
    participation and durability (LC-03/06/08), and framework response/denial
    ownership (LC-07), in separately isolated synthetic runtime work. Select exact
    prerequisite builds/licenses/security inputs first; no live issuer/state.
