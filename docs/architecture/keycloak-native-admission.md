@@ -179,7 +179,10 @@ runtime error and suppressing later distinct errors: 155 cases per variant,
 unfinished participant requirement remain. The candidate exposes the selected
 fault to native close/the fixture mapper; complete cleanup stays NO-GO because
 tracing, prepare/commit branches, provider close, retry and durable outcomes remain
-unqualified. Next is lifecycle containment and actual participant-contract review.
+unqualified. The [lifecycle containment contract](keycloak-lifecycle-containment.md)
+now classifies actual prepare/cache/new-job/response participants, independent
+outcome facts and required changes/exclusions. Its next bounded experiment covers
+integrated native abort/close outcomes; provider/SQL/JTA/HTTP remain separate gates.
 No further admission/storage qualification, R3 snapshot, R4 conditional grant or
 successful issuance follows from the passing tests.
 

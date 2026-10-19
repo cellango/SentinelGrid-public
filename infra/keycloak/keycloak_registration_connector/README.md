@@ -308,3 +308,10 @@ The [native rollback comparison](qualification/rollback_lifecycle/README.md)
 checks a two-site candidate for participant-loop error observation (310 test
 cases/six input controls). Full cleanup/containment and durable outcomes remain
 unqualified; this is an isolated source overlay, not a production issuer patch.
+
+The [lifecycle containment contract](../../../docs/architecture/keycloak-lifecycle-containment.md)
+classifies native prepare/cache/independent-job/response work and the required
+core changes or enforceable exclusions. Source/design review is complete;
+implementation, actual-provider cleanup, SQL/JTA/HTTP and durable admission
+remain unqualified. Its [source record](lifecycle-containment-review.json) pins
+the reviewed units without claiming transitive or runtime closure.

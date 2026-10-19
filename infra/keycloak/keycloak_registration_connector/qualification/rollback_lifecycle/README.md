@@ -60,8 +60,10 @@ The [review](../../rollback-lifecycle-review.json) pins 13 source units covering
 actual session close, direct callers, prepare registrations, rollback-driven
 jobs and async response handling. Those source references are not a resolved
 transitive callgraph or qualification of the actual provider/job/HTTP behavior.
-The next bounded unit must define lifecycle containment and participant contracts
-for these failure paths before further issuer admission/storage qualification.
+The [lifecycle containment review](../../../../../docs/architecture/keycloak-lifecycle-containment.md)
+now defines the proposed outcome/participant contract and ten open core-change
+or exclusion gates. Next is an integrated native abort/close outcome comparison;
+actual provider/SQL/JTA/HTTP and admission/storage qualification remain open.
 
 ## Reproduce in owned temporary projects
 

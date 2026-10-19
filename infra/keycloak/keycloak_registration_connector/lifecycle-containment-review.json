@@ -1,0 +1,861 @@
+{
+  "format_version": 1,
+  "date": "2026-10-19",
+  "status": "source_design_review_complete_contract_proposed_implementation_unqualified",
+  "owner_choice": "P1_already_approved_bounded_research",
+  "source_version": "26.8.1",
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "archive_sha256": "f67ec723e2eaf46b2d38f167ecb7578964115f1f2ce203f9b6659322223d9874",
+  "source_units": 39,
+  "anchor_count": 80,
+  "source_refs": [
+    {
+      "id": "S01",
+      "role": "manager",
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java",
+      "sha256": "1f6230bbbc3bcadff5eb476cd09147145f4bb8f8a308da397371ab9a235b0a53",
+      "anchors": [
+        {
+          "symbol": "public void begin()",
+          "line": 98,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 138,
+          "occurrences": 1
+        },
+        {
+          "symbol": "protected void rollback(RuntimeException exception)",
+          "line": 211,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public boolean getRollbackOnly()",
+          "line": 246,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java#L98"
+    },
+    {
+      "id": "S02",
+      "role": "session",
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java",
+      "sha256": "5193a79eb80835b9ad96daf97e304e3b05f4aef0df9df64c5a424d8d6cafd924",
+      "anchors": [
+        {
+          "symbol": "public void close()",
+          "line": 380,
+          "occurrences": 1
+        },
+        {
+          "symbol": "protected RuntimeException closeTransactionManager()",
+          "line": 417,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java#L380"
+    },
+    {
+      "id": "S03",
+      "role": "participant",
+      "path": "server-spi/src/main/java/org/keycloak/models/AbstractKeycloakTransaction.java",
+      "sha256": "349da55ffc96f97cfc8adef20590b27446c9d17c21781d9287255682cb74c3f5",
+      "anchors": [
+        {
+          "symbol": "public void rollback()",
+          "line": 52,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 41,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/models/AbstractKeycloakTransaction.java#L52"
+    },
+    {
+      "id": "S04",
+      "role": "auth_sessions",
+      "path": "model/jpa/src/main/java/org/keycloak/authentication/jpa/JpaAuthenticationSessionProvider.java",
+      "sha256": "27a42532a085f5252b6059ade2ebe099646b9d3c6885941e85ae1b299b2d7359",
+      "anchors": [
+        {
+          "symbol": "private void prepareTransaction()",
+          "line": 69,
+          "occurrences": 1
+        },
+        {
+          "symbol": "protected void commitImpl()",
+          "line": 188,
+          "occurrences": 1
+        },
+        {
+          "symbol": "protected void rollbackImpl()",
+          "line": 193,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/authentication/jpa/JpaAuthenticationSessionProvider.java#L69"
+    },
+    {
+      "id": "S05",
+      "role": "realm_cache",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
+      "sha256": "c823592bcc4460bd76a8690e0b4a6274777c3dac0f6387d0caf2a6bd4b24fa77",
+      "anchors": [
+        {
+          "symbol": "enlistPrepare(getPrepareTransaction())",
+          "line": 182,
+          "occurrences": 1
+        },
+        {
+          "symbol": "private KeycloakTransaction getPrepareTransaction()",
+          "line": 369,
+          "occurrences": 1
+        },
+        {
+          "symbol": "private KeycloakTransaction getAfterTransaction()",
+          "line": 414,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java#L182"
+    },
+    {
+      "id": "S06",
+      "role": "authorization_cache",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/authorization/StoreFactoryCacheSession.java",
+      "sha256": "d8d90091d3560bcd1f2b6eef2a602b467153ce1b15167cd16dd7fa7bb711b27b",
+      "anchors": [
+        {
+          "symbol": "enlistPrepare(getPrepareTransaction())",
+          "line": 121,
+          "occurrences": 1
+        },
+        {
+          "symbol": "private KeycloakTransaction getPrepareTransaction()",
+          "line": 166,
+          "occurrences": 1
+        },
+        {
+          "symbol": "private KeycloakTransaction getAfterTransaction()",
+          "line": 200,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/authorization/StoreFactoryCacheSession.java#L121"
+    },
+    {
+      "id": "S07",
+      "role": "session_cache_factory",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProviderFactory.java",
+      "sha256": "1a3ffc166b240933ec4303b6767bfb5a4ed36d9ab842735013709e39934ffb03",
+      "anchors": [
+        {
+          "symbol": "public InfinispanTransactionProvider create(",
+          "line": 53,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void postInit(",
+          "line": 94,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProviderFactory.java#L53"
+    },
+    {
+      "id": "S08",
+      "role": "session_cache",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProvider.java",
+      "sha256": "691cac589793225533a6a32073fe590b1c1dff9148fea05f76fddd5b1b23ad01",
+      "anchors": [
+        {
+          "symbol": "protected void commitImpl()",
+          "line": 65,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void prepareStep()",
+          "line": 86,
+          "occurrences": 1
+        },
+        {
+          "symbol": "protected void rollbackImpl()",
+          "line": 119,
+          "occurrences": 1
+        },
+        {
+          "symbol": "private void commitDatabaseUpdates(",
+          "line": 125,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProvider.java#L65"
+    },
+    {
+      "id": "S09",
+      "role": "async_participant",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/NonBlockingTransaction.java",
+      "sha256": "eacebf6392160e0cc0a19b8ab71049786e0d6dfddebe34177f68cb0f4bd6d552",
+      "anchors": [
+        {
+          "symbol": "void asyncCommit(",
+          "line": 46,
+          "occurrences": 1
+        },
+        {
+          "symbol": "void asyncRollback(",
+          "line": 56,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/NonBlockingTransaction.java#L46"
+    },
+    {
+      "id": "S10",
+      "role": "code_cleanup",
+      "path": "services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java",
+      "sha256": "8f3901bf75ac4049b045b89572da736765493528954a4ca89fb58a3a9da1da90",
+      "anchors": [
+        {
+          "symbol": "private static class RollbackDrivenTransaction",
+          "line": 180,
+          "occurrences": 1
+        },
+        {
+          "symbol": "KeycloakModelUtils.runJobInTransaction(this.factory, this.task)",
+          "line": 202,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java#L180"
+    },
+    {
+      "id": "S11",
+      "role": "jobs",
+      "path": "server-spi-private/src/main/java/org/keycloak/models/utils/KeycloakModelUtils.java",
+      "sha256": "1e4a43a5a9acb5dbda9a05ab35d91d254c844f57d4a433a437a8c005bc53b36c",
+      "anchors": [
+        {
+          "symbol": "public static void enlistAfterRollback(",
+          "line": 363,
+          "occurrences": 1
+        },
+        {
+          "symbol": "private static void enlistAfterCompletion(",
+          "line": 380,
+          "occurrences": 1
+        },
+        {
+          "symbol": "private static void cloneContextToSession(",
+          "line": 451,
+          "occurrences": 1
+        },
+        {
+          "symbol": "KeycloakSession existing = KeycloakSessionUtil.getKeycloakSession()",
+          "line": 527,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/models/utils/KeycloakModelUtils.java#L363"
+    },
+    {
+      "id": "S12",
+      "role": "refresh_cleanup",
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java",
+      "sha256": "4f55098516cad8a56d189baa3173b382ef8410936a6aedd0f114dceecfb61aab",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterRollback(session, ctx ->",
+          "line": 193,
+          "occurrences": 3
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java#L193"
+    },
+    {
+      "id": "S13",
+      "role": "permission_tickets",
+      "path": "server-spi-private/src/main/java/org/keycloak/authorization/policy/evaluation/PermissionTicketAwareDecisionResultCollector.java",
+      "sha256": "b4a6c9252c27fef3fedc7f00435b49ce5393432a06b132c685791ae9abc41ca7",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterCompletion(session, ctx ->",
+          "line": 102,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/authorization/policy/evaluation/PermissionTicketAwareDecisionResultCollector.java#L102"
+    },
+    {
+      "id": "S14",
+      "role": "async_response",
+      "path": "services/src/main/java/org/keycloak/transaction/AsyncResponseTransaction.java",
+      "sha256": "ba4a8097287710bab65f12e3f545786cb09486f80bc9fa288567f330d42b22cb",
+      "anchors": [
+        {
+          "symbol": "public static void finishAsyncResponseInTransaction(",
+          "line": 33,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 49,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 54,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/transaction/AsyncResponseTransaction.java#L33"
+    },
+    {
+      "id": "S15",
+      "role": "response_close",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java",
+      "sha256": "2054a1d3d7cb3b40f027b3f3aa6b646a832ea8113cc0cb71a626c62b3531be3e",
+      "anchors": [
+        {
+          "symbol": "public void filter(",
+          "line": 51,
+          "occurrences": 1
+        },
+        {
+          "symbol": "if (entity instanceof Stream)",
+          "line": 55,
+          "occurrences": 1
+        },
+        {
+          "symbol": "if (entity instanceof StreamingOutput)",
+          "line": 61,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java#L51"
+    },
+    {
+      "id": "S16",
+      "role": "invocation",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java",
+      "sha256": "9c751a303a52984a64a0cac5ba4dd07c2f639006608c2386df68f4ecba6d5e9d",
+      "anchors": [
+        {
+          "symbol": "public static final Set<Class<?>> ASYNC_TYPES",
+          "line": 51,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void handle(",
+          "line": 67,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java#L51"
+    },
+    {
+      "id": "S17",
+      "role": "thread_close",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java",
+      "sha256": "bd93dc08ae8e90735dbb54b8a75ef8415404dd0f752e25343a2e6c47e28bd928",
+      "anchors": [
+        {
+          "symbol": "default void close(",
+          "line": 44,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java#L44"
+    },
+    {
+      "id": "S18",
+      "role": "CDI_disposal",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java",
+      "sha256": "d24e2802fd33a913632798a9331eda86e2452c2e687fb4270ad5e5c1767cd1a0",
+      "anchors": [
+        {
+          "symbol": "public KeycloakSession getKeycloakSession()",
+          "line": 39,
+          "occurrences": 1
+        },
+        {
+          "symbol": "void dispose(",
+          "line": 46,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java#L39"
+    },
+    {
+      "id": "S19",
+      "role": "handler_chain",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/KeycloakHandlerChainCustomizer.java",
+      "sha256": "3e1b9dfaa8174dcdd95ce351b4570d76ddc559a2f58741f4ccd2d977cfd5f052",
+      "anchors": [
+        {
+          "symbol": "public ServerRestHandler alternateInvocationHandler(",
+          "line": 40,
+          "occurrences": 1
+        },
+        {
+          "symbol": "case BEFORE_METHOD_INVOKE:",
+          "line": 50,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/KeycloakHandlerChainCustomizer.java#L40"
+    },
+    {
+      "id": "S20",
+      "role": "error_mapper",
+      "path": "services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java",
+      "sha256": "e93dce4a743dc939b12993fd90e90e987587e45c7e08459141cef2a9d869ce76",
+      "anchors": [
+        {
+          "symbol": "public static Response getResponse(",
+          "line": 65,
+          "occurrences": 1
+        },
+        {
+          "symbol": "RealmModel realm = resolveRealm(session)",
+          "line": 101,
+          "occurrences": 1
+        },
+        {
+          "symbol": "private static RealmModel resolveRealm(",
+          "line": 162,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java#L65"
+    },
+    {
+      "id": "S21",
+      "role": "broker",
+      "path": "services/src/main/java/org/keycloak/services/resources/IdentityBrokerService.java",
+      "sha256": "cc24d52cdbe0602b3c26f2163ea8f949fed3731f0dd1fbc5e89d3df67efec845",
+      "anchors": [
+        {
+          "symbol": "private void rollback()",
+          "line": 1621,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/IdentityBrokerService.java#L1621"
+    },
+    {
+      "id": "S22",
+      "role": "bootstrap",
+      "path": "services/src/main/java/org/keycloak/services/resources/WelcomeResource.java",
+      "sha256": "5141261f12baaed256c795c28b375a8cdc675eb065d37f58008590ded05a4fb4",
+      "anchors": [
+        {
+          "symbol": "session.getTransactionManager().rollback()",
+          "line": 159,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/WelcomeResource.java#L159"
+    },
+    {
+      "id": "S23",
+      "role": "JTA",
+      "path": "services/src/main/java/org/keycloak/transaction/JtaTransactionWrapper.java",
+      "sha256": "4c1baab07fde1782442a8732ade5106eb25d63390b6ca2c14466931ac8702d79",
+      "anchors": [
+        {
+          "symbol": "public JtaTransactionWrapper(",
+          "line": 45,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 101,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 113,
+          "occurrences": 1
+        },
+        {
+          "symbol": "protected void end()",
+          "line": 164,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/transaction/JtaTransactionWrapper.java#L45"
+    },
+    {
+      "id": "S24",
+      "role": "resource_local_JPA",
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/JpaKeycloakTransaction.java",
+      "sha256": "1e1a12cc99aa447c42358f99aa9c7fdd0c018b0d574e42f34f19f4a2c97459d1",
+      "anchors": [
+        {
+          "symbol": "public void commit()",
+          "line": 47,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 57,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/JpaKeycloakTransaction.java#L47"
+    },
+    {
+      "id": "S25",
+      "role": "JPA_factory",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/AbstractJpaConnectionProviderFactory.java",
+      "sha256": "348dbed0e3a60c3b124a4ef01da0639a4b64ed6464045b0235f177c4000f467b",
+      "anchors": [
+        {
+          "symbol": "public JpaConnectionProvider create(",
+          "line": 55,
+          "occurrences": 1
+        },
+        {
+          "symbol": "protected EntityManager createEntityManager(",
+          "line": 120,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/AbstractJpaConnectionProviderFactory.java#L55"
+    },
+    {
+      "id": "S26",
+      "role": "Quarkus_JPA",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/QuarkusJpaConnectionProviderFactory.java",
+      "sha256": "dddff0ccfbe52e7853119f3deb043e3c3e3c207c806b4219f0d88004e7ef63eb",
+      "anchors": [
+        {
+          "symbol": "if (config.getBoolean(\"asyncCommit\", true))",
+          "line": 106,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/QuarkusJpaConnectionProviderFactory.java#L106"
+    },
+    {
+      "id": "S27",
+      "role": "JPA_close",
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/DefaultJpaConnectionProvider.java",
+      "sha256": "c6f80be50965bce295a9333fe6001488fa54e5bff745cb12c063c97df74b164a",
+      "anchors": [
+        {
+          "symbol": "public void close()",
+          "line": 42,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/DefaultJpaConnectionProvider.java#L42"
+    },
+    {
+      "id": "S28",
+      "role": "entity_proxy",
+      "path": "server-spi-private/src/main/java/org/keycloak/connections/jpa/support/EntityManagerProxy.java",
+      "sha256": "7ad5c53b7deeb7af148f9b5c68ad9ec38e3ed6bcd74e0eba31d9898d695b127c",
+      "anchors": [
+        {
+          "symbol": "public static EntityManager create(",
+          "line": 93,
+          "occurrences": 1
+        },
+        {
+          "symbol": "private Object invoke(",
+          "line": 135,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/connections/jpa/support/EntityManagerProxy.java#L93"
+    },
+    {
+      "id": "S29",
+      "role": "noop_trace",
+      "path": "server-spi-private/src/main/java/org/keycloak/tracing/NoopTracingProvider.java",
+      "sha256": "3550684491306337eccef7365d8b6033b0dc45ea2da305736dd8e162e120112c",
+      "anchors": [
+        {
+          "symbol": "public void trace(String tracerName",
+          "line": 58,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/tracing/NoopTracingProvider.java#L58"
+    },
+    {
+      "id": "S30",
+      "role": "OTel_trace",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/tracing/OTelTracingProvider.java",
+      "sha256": "c80d7f9fe64749bf32a8bf4e110291c68c4ef5f1fb7d2db8af136e0e1096f52f",
+      "anchors": [
+        {
+          "symbol": "public void trace(String tracerName",
+          "line": 116,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void endSpan()",
+          "line": 81,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/tracing/OTelTracingProvider.java#L116"
+    },
+    {
+      "id": "S31",
+      "role": "thread_context",
+      "path": "server-spi/src/main/java/org/keycloak/utils/KeycloakSessionUtil.java",
+      "sha256": "bdad8094c93f8998ff19647a6916dfc1e78f61847f95e956d22932ec9a580e80",
+      "anchors": [
+        {
+          "symbol": "public static KeycloakSession getKeycloakSession()",
+          "line": 38,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public static KeycloakSession setKeycloakSession(",
+          "line": 49,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/utils/KeycloakSessionUtil.java#L38"
+    },
+    {
+      "id": "S32",
+      "role": "event_queue",
+      "path": "server-spi-private/src/main/java/org/keycloak/events/EventListenerTransaction.java",
+      "sha256": "cd80c8c2a6ae9039866cb3368bdb71f466926fa988b3f71bc9cb669536c1ae20",
+      "anchors": [
+        {
+          "symbol": "protected void commitImpl()",
+          "line": 59,
+          "occurrences": 1
+        },
+        {
+          "symbol": "protected void rollbackImpl()",
+          "line": 73,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/events/EventListenerTransaction.java#L59"
+    },
+    {
+      "id": "S33",
+      "role": "SAML_worker",
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlService.java",
+      "sha256": "159734b9e2f11fd9741ae5906bd968d401e6862f53318ce21701c67bb3ee1db3",
+      "anchors": [
+        {
+          "symbol": "private class ArtifactResolutionRunnable",
+          "line": 1445,
+          "occurrences": 1
+        },
+        {
+          "symbol": "public void run(KeycloakSession session)",
+          "line": 1470,
+          "occurrences": 1
+        },
+        {
+          "symbol": "httpClient.execute(httpPost)",
+          "line": 1494,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/saml/SamlService.java#L1445"
+    },
+    {
+      "id": "S34",
+      "role": "JTA_lookup",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/QuarkusJtaTransactionManagerLookup.java",
+      "sha256": "8a2d07e2b4e7f98427dbbddffaecb050a086d4b7cd70ea2168c8647ecb8436dd",
+      "anchors": [
+        {
+          "symbol": "public TransactionManager getTransactionManager()",
+          "line": 36,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/QuarkusJtaTransactionManagerLookup.java#L36"
+    },
+    {
+      "id": "S35",
+      "role": "trace_factory",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/tracing/OTelTracingProviderFactory.java",
+      "sha256": "974271568aa486978a77dad0e2b844c47f82e633a563bc513ba77403cb78a251",
+      "anchors": [
+        {
+          "symbol": "public boolean isSupported(",
+          "line": 76,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/tracing/OTelTracingProviderFactory.java#L76"
+    },
+    {
+      "id": "S36",
+      "role": "trace_registration",
+      "path": "quarkus/runtime/src/main/resources/META-INF/services/org.keycloak.tracing.TracingProviderFactory",
+      "sha256": "06dc9a9ba3c33bd932b979f08300bdc8577ea2041911441348155f831ee5067c",
+      "anchors": [
+        {
+          "symbol": "org.keycloak.quarkus.runtime.tracing.OTelTracingProviderFactory",
+          "line": 18,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/resources/META-INF/services/org.keycloak.tracing.TracingProviderFactory#L18"
+    },
+    {
+      "id": "S37",
+      "role": "JTA_registration",
+      "path": "quarkus/runtime/src/main/resources/META-INF/services/org.keycloak.transaction.JtaTransactionManagerLookup",
+      "sha256": "84eb0363b3088e1c6d12d7125a7a4c072f6d50cce7612bcc49d04117b5fc76fb",
+      "anchors": [
+        {
+          "symbol": "org.keycloak.quarkus.runtime.transaction.QuarkusJtaTransactionManagerLookup",
+          "line": 18,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/resources/META-INF/services/org.keycloak.transaction.JtaTransactionManagerLookup#L18"
+    },
+    {
+      "id": "S38",
+      "role": "async_commit",
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/AsyncCommitIntegrator.java",
+      "sha256": "2bf1c843343dbe523cbd44a07f7df705b0a18bf59539027a9dceb1d3397e0d5a",
+      "anchors": [
+        {
+          "symbol": "public static void registerListeners(",
+          "line": 80,
+          "occurrences": 1
+        },
+        {
+          "symbol": "session.getTransactionCompletionCallbacks().registerCallback(",
+          "line": 169,
+          "occurrences": 2
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/AsyncCommitIntegrator.java#L80"
+    },
+    {
+      "id": "S39",
+      "role": "PostgreSQL_commit",
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/PostgreSQLAsyncCommitIntegrator.java",
+      "sha256": "34cde68a86514ddd1ee5d23b09618cf2bb12a903ba87ba51837848b412800636",
+      "anchors": [
+        {
+          "symbol": "protected void applyAsyncCommit(",
+          "line": 51,
+          "occurrences": 1
+        }
+      ],
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/PostgreSQLAsyncCommitIntegrator.java#L51"
+    }
+  ],
+  "literal_inventory": {
+    "command": [
+      "rg",
+      "-n",
+      "--glob",
+      "*.java",
+      "enlistPrepare\\(|enlistAfterCompletion\\(|enlistAfterRollback\\(|getTransactionManager\\(\\)\\.rollback\\(",
+      "services",
+      "model",
+      "quarkus",
+      "server-spi-private",
+      "server-spi"
+    ],
+    "matching_lines": 59,
+    "files": 34,
+    "transitive_or_dynamic_closure": false
+  },
+  "prior_13_source_pins_match": true,
+  "contract_document": "docs/architecture/keycloak-lifecycle-containment.md",
+  "outcome_axes": [
+    "protected_effects",
+    "participant_work",
+    "resource_release",
+    "context_ownership",
+    "response_ownership",
+    "independent_bounded_failure_evidence"
+  ],
+  "required_core_changes_or_exclusions": [
+    {
+      "id": "LC-01",
+      "implemented": false,
+      "acceptance": "open"
+    },
+    {
+      "id": "LC-02",
+      "implemented": false,
+      "acceptance": "open"
+    },
+    {
+      "id": "LC-03",
+      "implemented": false,
+      "acceptance": "open"
+    },
+    {
+      "id": "LC-04",
+      "implemented": false,
+      "acceptance": "open"
+    },
+    {
+      "id": "LC-05",
+      "implemented": false,
+      "acceptance": "open"
+    },
+    {
+      "id": "LC-06",
+      "implemented": false,
+      "acceptance": "open"
+    },
+    {
+      "id": "LC-07",
+      "implemented": false,
+      "acceptance": "open"
+    },
+    {
+      "id": "LC-08",
+      "implemented": false,
+      "acceptance": "open"
+    },
+    {
+      "id": "LC-09",
+      "implemented": false,
+      "acceptance": "open"
+    },
+    {
+      "id": "LC-10",
+      "implemented": false,
+      "acceptance": "open"
+    }
+  ],
+  "inherited_experiment": {
+    "commit": "a61dda8bac2c34db0c7add7006aa701017f0bef6",
+    "native_tests": 155,
+    "candidate_tests": 155,
+    "total_tests": 310,
+    "preparation_controls": 6,
+    "rerun": false,
+    "complete_cleanup_proved": false
+  },
+  "review_is_dynamic_or_transitive_closure": false,
+  "actual_runtime_provider_selection_proved": false,
+  "issuer_JTA_JDBC_cache_tracing_background_HTTP_executed": false,
+  "complete_lifecycle_cleanup_gate_passed": false,
+  "R2_implementation_gate_met": false,
+  "R3_R4_GO": false,
+  "production_patch_fork_version_provider_schema_dependency_or_runtime_change": false,
+  "all_prior_native_negative_and_IAM_service_restoration_requirements_retained": true,
+  "next_bounded_experiment": "Integrated native abort/close outcome comparison for LC-01/02/04/05 only; actual provider/SQL/HTTP/durable admission remain separate gates"
+}

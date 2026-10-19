@@ -233,7 +233,10 @@ session close. The [rollback lifecycle comparison](../../../infra/keycloak/keycl
 now demonstrates a limited two-site candidate for participant-loop runtime-error
 propagation (310 test cases/six input controls). Full cleanup, tracing/provider/
 prepare/commit branch behavior and durable outcomes remain NO-GO/unqualified.
-The next bounded review defines lifecycle containment and participant contracts.
+The [lifecycle containment review](../keycloak-lifecycle-containment.md) now defines
+the proposed participant/outcome contract and ten required core changes or
+enforceable exclusions. The next bounded experiment compares integrated native
+abort/close outcomes; actual provider, SQL/JTA and HTTP qualification stay open.
 All entry/writer/storage/compatibility gates remain unqualified. No production
 fork, provider artifact, current guard or application behavior is adopted.
 
