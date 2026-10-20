@@ -2070,6 +2070,11 @@
       "authority": "bounded_deny_only_native_abort_experiment_negative_containment_not_production"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/qualification/offline_model/README.md",
+      "class": "experimental_component_reference",
+      "authority": "bounded_offline_model_API_only_not_executable_artifact_provider_native_harness_or_A0_qualification"
+    },
+    {
       "path": "infra/keycloak/keycloak_registration_connector/qualification/os_boundary/README.md",
       "class": "experimental_component_reference",
       "authority": "trusted_owned_OS_sentinels_only_full_JVM_input_harness_A0_NO_GO_not_production"
@@ -2218,7 +2223,7 @@
   "counts_by_class": {
     "repository_reference": 3,
     "repository_entrypoint": 6,
-    "experimental_component_reference": 107,
+    "experimental_component_reference": 108,
     "contributor_instructions": 1,
     "documentation_index": 1,
     "current_architecture": 14,

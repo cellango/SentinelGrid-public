@@ -611,7 +611,7 @@ and were not rerun. Every old failure/oracle remains applicable.
 The [JDK-only comparison record](../../infra/keycloak/keycloak_registration_connector/jvm-boundary-review.json)
 now qualifies one bounded **trusted JDK startup/owned-sentinel** control, with
 **51 observations and 12 preparation/integrity controls**. The [opt-in recipe](../../infra/keycloak/keycloak_registration_connector/qualification/jvm_boundary/README.md)
-pins the archive/all459installed JDK files and reconstructs the same default-deny
+pins the archive/all 459 installed JDK files and reconstructs the same default-deny
 resource policy. The old JVM failure and every earlier witness remain recorded.
 This closes neither the effective executable graph nor the full issuer harness.
 
@@ -630,7 +630,7 @@ to the earlier failing control after substituting owned output paths.
 Only the revalidated JDK compiler and new trusted sentinel ran. Compilation uses
 `jdk.compiler` with annotation processing disabled, empty source/dependency paths
 and owned output; execution limits modules to `java.base`. The two generated
-class hashes are recorded. There is **no Maven CLI/model resolver, plugin,
+class hashes are recorded. That JDK-only unit ran **no Maven CLI/model resolver, plugin,
 annotation processor, Quarkus augmentation, issuer/provider or A0 candidate**.
 All69Keycloaksource/162anchors and263POMpins were reverified. JDK459/Maven96
 installed files still match pinned archives; Maven was not executed.
@@ -647,7 +647,7 @@ Initial new-lab expectations assumed exact baseline environment and EPERM text
 from ProcessBuilder. The unguarded runtime adds `__CF_USER_TEXT_ENCODING`, and
 the Java spawn-helper error is generic. Raw initial reports/input revisions were
 retained; final assertions reflect these actual observations and do not call the
-generic error EPERM. Existing native sources/oracles and578cases/sixcontrols
+generic error EPERM. Existing native sources/oracles and578cases/six controls
 remain unchanged and inherited, not rerun. The separate twelve integrity controls
 reject input/policy/payload/output/compiled-class drift before compiler execution.
 
@@ -659,24 +659,85 @@ The private/deprecated Apple API is an exact-host research mechanism, not a
 production choice. Interpreted mode and absence of an explicit dynamic-code allow
 do not establish dynamic-code enforcement or authority for unknown provider code.
 
+## Offline selected-model prerequisite qualification
+
+The [offline model record](../../infra/keycloak/keycloak_registration_connector/offline-model-review.json)
+qualifies a bounded **model-library API input and boundary** check, with
+**15 model/boundary assertions and 16 preparation/integrity controls**. The
+[opt-in recipe](../../infra/keycloak/keycloak_registration_connector/qualification/offline_model/README.md)
+uses six hash-pinned Maven 3.9.11 model/Plexus libraries and the revalidated JDK,
+without Maven CLI/core/transport/plugin/Guice/Sisu/ASM runtime on the classpath.
+Eighteen exact Apache source units and425 static classes were inspected; this is
+not a complete dynamic callgraph or native provider qualification.
+
+The explicitly constructed [model API](https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/building/DefaultModelBuilder.java)
+uses checked byte-array sources, not file/URL/ModelSource2, and an exact offline
+resolver. POM hash/coordinate checks and DTD/entity rejection precede parsing.
+Repository callbacks record IDs as data and never use transport. Automatic host/
+file/JDK/OS/environment/default-profile activation is replaced by explicit profile
+selection; request properties are empty, and plugin processing is disabled. No
+settings/workspace/lifecycle-extension listener or POM-supplied fetch is used.
+
+The outer deny policy precedes JVM/library initialization. Its only new scope is
+a **task-owned read-only input tree**; external file/network/process/Mach/service
+permissions remain unchanged. Outside-canary read, input-write and socket-bind
+denials plus owned write/stdinEOF controls run before builder construction. Child
+native/Java home, environment and descriptors are confined as before. Copied
+hashes and policy are reconstructed from trusted fixture definitions; forged state
+cannot authorize changed JARs or POM tables. Class-origin logs resolve only to the
+JDK, six exact libraries and owned code, following generated lambda origins to
+their verified defining classes. The inputs remain byte-identical after the run.
+
+All five models succeed under **explicit `crypto-default` plus `upstream-adapters`**:
+
+| Model | Direct dependency declarations | Managed entries |
+| --- | ---: | ---: |
+| Root parent / Quarkus parent | 0 each | 2419 each |
+| Native runtime | 102 | 2419 |
+| Native deployment | 26 | 2419 |
+| Native server app | 6 | 2419 |
+
+All 134 direct dependency versions are interpolated. The initial crypto-only plan
+omitted EE coordinate properties from the pinned root's `upstream-adapters`
+profile and failed all five models. That incomplete-profile failure is retained
+as a negative; host-default activation was not enabled to get a pass. This is an
+upstream non-FIPS model plan, not default/native/production build equivalence or
+feature retirement. Raw effective XML, tuples, lookup requests and class logs stay
+private; public metadata contains selected declarations and hashes.
+
+Only existing six libraries/JDK and263 pinned POMs plus three synthetic fixture POMs
+were used; no new JAR was fetched. All 69 source units, 162 anchors, 263 POMs and 459 JDK / 96 Maven
+installed pins were reverified. Four `ModelSource` deprecation warnings, historical
+helper-license/deprecated API limits, source-output/class-origin limits and all
+full license/CVE/PGP/SBOM/security/distribution gates remain. Apache declarations
+and archive notices (including Indiana parser attribution) do not clear unrelated
+bundle components or the future native distribution.
+
+No Maven CLI/plugin/extension/annotation processor, Quarkus augmentation, native
+build, issuer/provider operation or A0 candidate ran. The 578 native cases and six controls
+were not rerun or changed. Earlier failed startup/inherited FD/stdin witnesses,
+Java localhost success and unqualified arbitrary-native/DNS/Mach/bootstrap/IOKit/
+service/container/DB/secret/resource/sidechannel scope remain. Private/deprecated
+Apple API and trusted controller/JDK/system/cryptex/sysctl scope are research limits.
+
 ## Proof sequence and next bounded work
 
-The P01–P10 design remains. The trusted JDK-only startup/sentinel prerequisite has
-a bounded qualified result. **Full effective executable input closure and the
-effect-disabled issuer harness stay NO-GO; parent input/harness and A0 stay open.**
-Next review exact **offline non-plugin effective-model resolver inputs**, including
-provenance/hash/license/security and narrowly permitted resource scope, before
-any model-only check. No Maven CLI/extension/plugin/auto-fetch/provider build is
-authorized by a passing JDK probe. Revalidate the tools and inputs; use owned
-home/cache/tmp and an explicit hash-verified resolver that fails on missing input.
+The bounded offline model API now has qualified inputs, owned effects controls
+and five explicit-profile outputs. **Full transitive artifact/plugin/processor/
+extension/provider/classloader/build-step closure and native issuer isolation
+stay NO-GO; parent input/harness and A0 remain open.** The 2,419 management entries
+and 134 direct declarations are not a mediated executable graph or approval to
+fetch binaries. The earlier133-coordinate plugin descriptor pool still needs
+selected-graph/provenance/license/security reconciliation before resolution/use.
 
-Then close selected profile/BOM/mediation/transitive artifact/scopes/classifiers/
-exclusions/plugin/processor/provider/classloader/generated-index/build-step and
-native effect closure. Both `KeycloakProcessor` and `LiquibaseProcessor`, earlier
-initialization, dev-file DB defaults and framework/container/dev-services paths
-remain mandatory. Only after **both full** input and issuer-isolation gates pass
-may the same A0 prototype resume with source-built candidate, actual Quarkus
-activation/class-origin negative proof and all native denial requirements.
+Next use these outputs to review and close the selected transitive executable
+inputs and provider/build-step effects. Preserve scopes/classifiers/optional/
+exclusions/profile/BOM/mediation identity and compare source-built candidate versus
+published controls. No POM repository URL may trigger auto-fetch. Both native
+processors, earlier initialization, dev-file DB defaults and framework/container/
+dev-services paths remain mandatory. Only after both full input and issuer-
+isolation gates pass may the same A0 prototype resume with source-built candidate,
+actual Quarkus activation/class-origin negative proof and every native denial gate.
 
 The A0 prototype remains open. All LC-01–10/A0/A1/A2, full entry/all-22-writer
 closure, native cleanup/response, actual HTTP/JTA/JDBC/cache/durable effects,

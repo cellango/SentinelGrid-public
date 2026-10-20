@@ -346,10 +346,9 @@ coordinates (99 absent from old evidence). Next closes full executable input and
 isolation prerequisites before any candidate. No binaries are published; full
 lifecycle/storage/writer/issuance and actual runtime activation remain NO-GO.
 
-The current [JDK-only qualification](../../../docs/architecture/keycloak-lifecycle-containment.md#compatible-jdk-only-control-qualification)
-records same-policy startup -11/0/-11 with only owned native child home changed,
-51 JVM observations and 12 integrity controls. File/socket/thread denials pass;
-inherited stdin still conveys canary access and Java localhost lookup succeeds.
-This is a bounded trusted control, not full issuer isolation. Next review exact
-offline non-plugin effective-model inputs before any model-only run. Full input/
-provider/harness and A0 gates remain open; no Maven/provider/native candidate ran.
+The current [offline model qualification](../../../docs/architecture/keycloak-lifecycle-containment.md#offline-selected-model-prerequisite-qualification)
+passes 15 model/boundary checks, 16 integrity controls and five selected-profile model
+builds. Runtime/deployment/server direct declarations are 102/26/6, with versions
+interpolated. Six pinned libraries execute as a model API only; no CLI/plugin/
+processor/augmentation/issuer/provider candidate runs. Next close transitive
+artifact/plugin/processor/provider and native-effect inputs; full harness/A0 stay open.

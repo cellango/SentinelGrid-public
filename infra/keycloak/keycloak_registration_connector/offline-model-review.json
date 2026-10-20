@@ -1,0 +1,2318 @@
+{
+  "format_version": 1,
+  "status": "BOUNDED_OFFLINE_MODEL_API_QUALIFIED_FULL_ARTIFACT_AND_ISSUER_HARNESS_NO_GO",
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "all69sourcepins_162anchors_and263POMpins_reverified": true,
+  "JDK_installed_files_revalidated": 459,
+  "Maven_installed_files_revalidated": 96,
+  "Maven_model_library_API_executed": true,
+  "Maven_CLI_plugins_extensions_annotation_processors_Quarkus_issuer_or_provider_executed": false,
+  "maven_source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+  "model_API_source_refs": [
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/building/DefaultModelBuilderFactory.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/building/DefaultModelBuilderFactory.java",
+      "sha256": "ceb452e40ffa70cd8738a4f9082b71ce0797e55fea1f047415a22edbe7cb1f3a",
+      "bytes": 10347,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/building/DefaultModelBuilder.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/building/DefaultModelBuilder.java",
+      "sha256": "f186d57d43ac06df515ba1177ff858516156814b3c8b8977532c2436952ca476",
+      "bytes": 56485,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/building/DefaultModelBuildingRequest.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/building/DefaultModelBuildingRequest.java",
+      "sha256": "9d2f92e5f21dd75b6939ec0d551442857183ccf6632baccc4e5a20f989010210",
+      "bytes": 9361,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/building/FileModelSource.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/building/FileModelSource.java",
+      "sha256": "e733c7c3d7b34df6842d6c5a786eb2ce3dae49a0a835de177489db6f639bd4a9",
+      "bytes": 2627,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/building/UrlModelSource.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/building/UrlModelSource.java",
+      "sha256": "4364f390824ec5089cac319aa5e1dd2afec8508050b385a80d3f276a609e738a",
+      "bytes": 1358,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/building/ModelSource2.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/building/ModelSource2.java",
+      "sha256": "36135a74667a5509a121338c069b4573212c9a5d3f3e3beaad96aa7b2db835c7",
+      "bytes": 2377,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/building/DefaultModelProcessor.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/building/DefaultModelProcessor.java",
+      "sha256": "26e6246df7dabc7bfeb295e34230a0bd49b02e0ca98602f341511fb827e47947",
+      "bytes": 3800,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/io/DefaultModelReader.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/io/DefaultModelReader.java",
+      "sha256": "3cade54ea2e40ac092dd08d60054c0b212200e69e95e6a985fea4f140b908041",
+      "bytes": 3398,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/profile/DefaultProfileSelector.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/profile/DefaultProfileSelector.java",
+      "sha256": "b9bcbe0dfd63c25ab0b87ca496f616bfa75afbbcb632d584637c836ddd8369f0",
+      "bytes": 4664,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/interpolation/AbstractStringBasedModelInterpolator.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/interpolation/AbstractStringBasedModelInterpolator.java",
+      "sha256": "72dedd6a6090a8209fb4c8f3eaf36df42c6e9c3b99da3d140f50da41d07fb9a0",
+      "bytes": 8016,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/interpolation/StringSearchModelInterpolator.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/interpolation/StringSearchModelInterpolator.java",
+      "sha256": "9b8cb24246c3e060becaa24f669d7fd99106531c3bf9ca430a257617e345f354",
+      "bytes": 16156,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/resolution/ModelResolver.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/resolution/ModelResolver.java",
+      "sha256": "407172b15b80f18fa192eadd48f5403dcfd046b31593867fff7065f79260d9ab",
+      "bytes": 5840,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/superpom/DefaultSuperPomProvider.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/superpom/DefaultSuperPomProvider.java",
+      "sha256": "835502b313136b812651707f743df64f98dbd35d9a0950741781b3ca6f95a808",
+      "bytes": 3139,
+      "license": "Apache-2.0 source header;static source inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/interpolation/StringVisitorModelInterpolator.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/interpolation/StringVisitorModelInterpolator.java",
+      "sha256": "b414f0010bc5f6a5542aefd8fda07393c861e89997f6a022e7998a55f0e9e5c7",
+      "bytes": 44108,
+      "license": "Apache-2.0 source header;static inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/validation/DefaultModelValidator.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/validation/DefaultModelValidator.java",
+      "sha256": "e67a2da1fe7328d677cc4eebffbb1ef111d7f327c784f0f7355440af15fc2d05",
+      "bytes": 66942,
+      "license": "Apache-2.0 source header;static inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/path/DefaultUrlNormalizer.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/path/DefaultUrlNormalizer.java",
+      "sha256": "8d3b1aa89bd5829a71dd282a6f98e77dc513322f8f4602bf289b534fa0086294",
+      "bytes": 1923,
+      "license": "Apache-2.0 source header;static inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/profile/activation/JdkVersionProfileActivator.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/profile/activation/JdkVersionProfileActivator.java",
+      "sha256": "a2739fb49c2c966c50e2b1be23e305e3397d8eb9968f7a0e64c01848fbaaf6a7",
+      "bytes": 6652,
+      "license": "Apache-2.0 source header;static inspection only"
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/profile/activation/FileProfileActivator.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/profile/activation/FileProfileActivator.java",
+      "sha256": "e6ce53803c67815e3ca5ea947a3ba04d1ef0701251092a75537d9391464e08cf",
+      "bytes": 4383,
+      "license": "Apache-2.0 source header;static inspection only"
+    }
+  ],
+  "model_library_pins": [
+    {
+      "path": "maven-model-builder-3.9.11.jar",
+      "sha256": "c4c72accdcd848332c1a37995610a6a369d49fdaabc43e85f0022a5b77de3ba7"
+    },
+    {
+      "path": "maven-model-3.9.11.jar",
+      "sha256": "163aa596f976264384efeb50b4cb8a806086fd64a9b755ad1f69195fed3998ad"
+    },
+    {
+      "path": "maven-builder-support-3.9.11.jar",
+      "sha256": "5b1de1560ec19c4c69a655f986455888f3a0bcc3c160cac1f1edb87de3825f77"
+    },
+    {
+      "path": "maven-artifact-3.9.11.jar",
+      "sha256": "0bfd1c121f907642344311d81e4dfd93eba6c24dc712cc0aeae273eb22833022"
+    },
+    {
+      "path": "plexus-utils-3.6.0.jar",
+      "sha256": "27ef130e32c236090e408fb5498d94cb9ea26d14070fb1c8985d607b62d098d1"
+    },
+    {
+      "path": "plexus-interpolation-1.28.jar",
+      "sha256": "ab2a8715570438a2e4164d85ad3e8d489eabc38ea5093c2eb8ab7f58403535b5"
+    }
+  ],
+  "model_library_count": 6,
+  "static_class_reference_inventory": 425,
+  "multi_release_entries_and_super_POM_pins": [
+    {
+      "jar": "maven-model-builder-3.9.11.jar",
+      "entry": "org/apache/maven/model/pom-4.0.0.xml",
+      "sha256": "ce6ed00f600fdbba815ec03e1797382bcbbcbf154b1b7311a5f5750100dec704"
+    },
+    {
+      "jar": "plexus-utils-3.6.0.jar",
+      "entry": "META-INF/versions/10/org/codehaus/plexus/util/BaseIOUtil.class",
+      "sha256": "e0769b6145f222164f7768f3839ef063d125fec7b35a71e7e93ffde4110c2fdb"
+    },
+    {
+      "jar": "plexus-utils-3.6.0.jar",
+      "entry": "META-INF/versions/11/org/codehaus/plexus/util/BaseFileUtils.class",
+      "sha256": "182ef124cacb3d79ca43b0e28a15795f9f1a4f731ca0537451aafc394bffbdfb"
+    },
+    {
+      "jar": "plexus-utils-3.6.0.jar",
+      "entry": "META-INF/versions/9/org/codehaus/plexus/util/BaseIOUtil.class",
+      "sha256": "e0025b705fd8a0fbdd3665c62a41c43a9000c25b69c69df2ea60976b017cadc8"
+    }
+  ],
+  "static_inventory_not_full_dynamic_callgraph": true,
+  "license_limit": "Four model components and two Plexus libraries Apache2declarations plus retained archive NOTICE/Indiana parser attribution. Six are research inputs only,not bundle-wide/production/security/CVE/SBOM/distribution approval. Other bundle libraries are excluded,oldhelper-license/deprecatedAPI limits remain.",
+  "selected_profiles": [
+    "crypto-default",
+    "upstream-adapters"
+  ],
+  "explicit_profile_review": {
+    "parent_coordinate": "org.keycloak:keycloak-parent:26.8.1",
+    "parent_sha256": "a7ffee473325d7ce5a83903686d229ede985c3a6b12846d792a98def5ac21fa7",
+    "selected_profile_ids": [
+      "crypto-default",
+      "upstream-adapters"
+    ],
+    "profile_XML_sha256": "114b765098e1121c4d4a7c37713c63a5f69909438d8d55df5ca6facd626e5228",
+    "reason": "Pinned upstream-adapters supplies ee.maven.groupId/org.wildfly and related version properties;crypto-only5models failmodelvalidation. Select explicitly for this model-only upstream nonFIPS plan;not production/build activation.",
+    "property_declarations": {
+      "ee.maven.groupId": "org.wildfly",
+      "ee.maven.version": "${upstream.wildfly.version}",
+      "wildfly.version": "${upstream.wildfly.version}",
+      "wildfly.core.version": "${upstream.wildfly.core.version}",
+      "saml.adapter.galleon.pack.metadata.dir": "metadata",
+      "org.wildfly.galleon-plugins.version": "8.1.2.Final",
+      "org.jboss.galleon.version": "7.0.5.Final",
+      "org.wildfly.maven.plugins.licenses-plugin.version": "2.3.1.Final"
+    },
+    "initial_crypto_only_NO_GO_retained_as_negative": true,
+    "no_plugin_module_or_provider_execution": true
+  },
+  "profile_limit": "Explicit upstream nonFIPS model plan;automatic file/OS/JDK/environment/default/module activation disabled. Not default/native build equivalence,production fork/version or feature retirement.",
+  "model_POM_inputs": 263,
+  "synthetic_fixture_POMs": 3,
+  "model_boundary_assertions": 15,
+  "preparation_integrity_controls": [
+    {
+      "name": "fresh_owned_output",
+      "passed": true
+    },
+    {
+      "name": "existing_output_preserved",
+      "passed": true
+    },
+    {
+      "name": "changed_model_library_pin_before_output",
+      "passed": true
+    },
+    {
+      "name": "foreign_POM_coordinate_before_output",
+      "passed": true
+    },
+    {
+      "name": "fixture_drift_before_output",
+      "passed": true
+    },
+    {
+      "name": "helper_drift_before_loading",
+      "passed": true
+    },
+    {
+      "name": "metadata_symlink_rejected",
+      "passed": true
+    },
+    {
+      "name": "output_inside_fixture",
+      "passed": true
+    },
+    {
+      "name": "output_inside_tools",
+      "passed": true
+    },
+    {
+      "name": "output_inside_metadata",
+      "passed": true
+    },
+    {
+      "name": "forged_policy_digest_not_authority",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "forged_copied_library_and_state_not_authority",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "duplicate_POM_table_and_state_not_authority",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "payload_drift_before_compiler",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "prebuilt_class_rejected_before_compiler",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "optimized_runner_rejected_before_state",
+      "passed": true
+    }
+  ],
+  "selected_native_models_successful": 5,
+  "selected_native_models": [
+    {
+      "coordinate": "org.keycloak:keycloak-parent:26.8.1",
+      "effective_XML_sha256": "ef6c95e3b63d537687050dcec52c480bc5765fc012d89275319b2e2d9b23d0cf",
+      "direct_dependency_count": 0,
+      "dependency_management_count": 2419,
+      "dependencies": [],
+      "plugin_declarations_data_only": [],
+      "all_direct_versions_interpolated": true,
+      "explicit_profiles": [
+        "crypto-default",
+        "upstream-adapters"
+      ],
+      "production_default_profile_or_native_build_equivalence_proved": false
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-quarkus-parent:26.8.1",
+      "effective_XML_sha256": "a0c67d7b8d251d44cc9cac10e5fd8c66db3463fb5a37dc79f87e9edb13c64a37",
+      "direct_dependency_count": 0,
+      "dependency_management_count": 2419,
+      "dependencies": [],
+      "plugin_declarations_data_only": [],
+      "all_direct_versions_interpolated": true,
+      "explicit_profiles": [
+        "crypto-default",
+        "upstream-adapters"
+      ],
+      "production_default_profile_or_native_build_equivalence_proved": false
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-quarkus-server:26.8.1",
+      "effective_XML_sha256": "47cf06dcf0c2d70c7dba64354fbee202b9b7b1c6615586c89fc756ba94e23681",
+      "direct_dependency_count": 102,
+      "dependency_management_count": 2419,
+      "dependencies": [
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-vertx-http",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.vertx",
+              "artifactId": "vertx-uri-template"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-vertx",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "com.aayushatharva.brotli4j",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "io.vertx",
+          "artifactId": "vertx-web-client",
+          "version": "4.5.34",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-rest",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-rest-jackson",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-hibernate-orm",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-agroal",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.hibernate.orm",
+          "artifactId": "hibernate-community-dialects",
+          "version": "7.4.9.Final",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-h2",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-postgresql",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-mariadb",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-mysql",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-mssql",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-oracle",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "com.oracle.database.jdbc",
+              "artifactId": "ojdbc17"
+            },
+            {
+              "groupId": "com.oracle.database.nls",
+              "artifactId": "orai18n"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-core",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-smallrye-health",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-micrometer",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-micrometer-registry-prometheus",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-logging-json",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-opentelemetry",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.opentelemetry.instrumentation",
+          "artifactId": "opentelemetry-jdbc",
+          "version": "2.28.1-alpha",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.opentelemetry.instrumentation",
+          "artifactId": "opentelemetry-apache-httpclient-4.3",
+          "version": "2.28.1-alpha",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-micrometer-opentelemetry",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "com.apicatalog",
+          "artifactId": "titanium-json-ld",
+          "version": "1.3.3",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.setl",
+          "artifactId": "rdf-urdna",
+          "version": "1.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-hibernate-validator",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.smallrye.config",
+          "artifactId": "smallrye-config-source-keystore",
+          "version": "3.17.2",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-smallrye-openapi",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "org.jboss.shrinkwrap",
+              "artifactId": "shrinkwrap-api"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-swagger-ui",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "info.picocli",
+          "artifactId": "picocli",
+          "version": "4.7.7",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-services",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-common",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-core",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-crypto-default",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-crypto-fips1402",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-server-spi",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-server-spi-private",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-themes",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-themes-vendor",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-saml-core-public",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-saml-core",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-model-jpa",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-model-infinispan",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-model-storage",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-model-storage-private",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-model-storage-services",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-authz-policy-common",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-kerberos-federation",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-sssd-federation",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-ldap-federation",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-ipatuura-federation",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-config-api",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-account-ui",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-admin-ui",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-rest-admin-ui-ext",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-admin-v2-api",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-admin-v2-services",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-scim-services",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-authzen-services",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-scim-core",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-scim-model",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-ssf-core",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-ssf-transmitter",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-ssf-services",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.jboss.logging",
+          "artifactId": "commons-logging-jboss-logging",
+          "version": "2.0.0.Final",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "commons-io",
+          "artifactId": "commons-io",
+          "version": "2.22.0",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "com.webauthn4j",
+          "artifactId": "webauthn4j-core",
+          "version": "0.30.3.RELEASE",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "com.webauthn4j",
+          "artifactId": "webauthn4j-util",
+          "version": "0.30.3.RELEASE",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "com.fasterxml.jackson.dataformat",
+          "artifactId": "jackson-dataformat-cbor",
+          "version": "2.21.7",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.freemarker",
+          "artifactId": "freemarker",
+          "version": "2.3.35",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "com.google.guava",
+          "artifactId": "guava",
+          "version": "33.6.0-jre",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "com.googlecode.owasp-java-html-sanitizer",
+          "artifactId": "owasp-java-html-sanitizer",
+          "version": "20260101.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "com.googlecode.owasp-java-html-sanitizer",
+          "artifactId": "java8-shim",
+          "version": "20260101.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "com.googlecode.owasp-java-html-sanitizer",
+          "artifactId": "java10-shim",
+          "version": "20260101.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.apache.httpcomponents",
+          "artifactId": "httpcore",
+          "version": "4.4.16",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.apache.httpcomponents",
+          "artifactId": "httpclient",
+          "version": "4.5.14",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "com.github.ua-parser",
+          "artifactId": "uap-java",
+          "version": "1.6.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.yaml",
+          "artifactId": "snakeyaml",
+          "version": "2.0",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "org.snakeyaml",
+          "artifactId": "snakeyaml-engine",
+          "version": "2.6",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "com.google.zxing",
+          "artifactId": "core",
+          "version": "3.4.0",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "com.google.zxing",
+          "artifactId": "javase",
+          "version": "3.4.0",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "*",
+              "artifactId": "*"
+            }
+          ]
+        },
+        {
+          "groupId": "jakarta.mail",
+          "artifactId": "jakarta.mail-api",
+          "version": "2.1.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.eclipse.angus",
+          "artifactId": "angus-mail",
+          "version": "2.0.5",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "jakarta.xml.soap",
+          "artifactId": "jakarta.xml.soap-api",
+          "version": "3.0.0",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "com.sun.xml.messaging.saaj",
+          "artifactId": "saaj-impl",
+          "version": "2.0.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.apache.santuario",
+          "artifactId": "xmlsec",
+          "version": "3.0.6",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "com.fasterxml.woodstox",
+              "artifactId": "woodstox-core"
+            }
+          ]
+        },
+        {
+          "groupId": "org.apache.commons",
+          "artifactId": "commons-lang3",
+          "version": "3.20.0",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.liquibase",
+          "artifactId": "liquibase-core",
+          "version": "4.33.0",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "org.yaml",
+              "artifactId": "snakeyaml"
+            },
+            {
+              "groupId": "org.apache.commons",
+              "artifactId": "commons-text"
+            }
+          ]
+        },
+        {
+          "groupId": "org.infinispan",
+          "artifactId": "infinispan-commons",
+          "version": "16.0.15",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "org.infinispan.protostream",
+              "artifactId": "protostream-processor"
+            }
+          ]
+        },
+        {
+          "groupId": "org.infinispan",
+          "artifactId": "infinispan-core",
+          "version": "16.0.15",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.infinispan",
+          "artifactId": "infinispan-api",
+          "version": "16.0.15",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.infinispan",
+          "artifactId": "infinispan-cachestore-remote",
+          "version": "16.0.15",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.infinispan",
+          "artifactId": "infinispan-component-annotations",
+          "version": "16.0.15",
+          "type": null,
+          "classifier": null,
+          "scope": "provided",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "jakarta.xml.bind",
+          "artifactId": "jakarta.xml.bind-api",
+          "version": "4.0.5",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "jakarta.transaction",
+          "artifactId": "jakarta.transaction-api",
+          "version": "2.0.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.openjdk.nashorn",
+          "artifactId": "nashorn-core",
+          "version": "15.4",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "net.java.dev.jna",
+          "artifactId": "jna",
+          "version": "5.8.0",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "com.fasterxml.jackson.jakarta.rs",
+          "artifactId": "jackson-jakarta-rs-yaml-provider",
+          "version": "2.21.7",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "junit",
+          "artifactId": "junit",
+          "version": "4.13.2",
+          "type": null,
+          "classifier": null,
+          "scope": "test",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.hamcrest",
+          "artifactId": "hamcrest",
+          "version": "2.2",
+          "type": null,
+          "classifier": null,
+          "scope": "test",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.twitter4j",
+          "artifactId": "twitter4j-core",
+          "version": "4.1.2",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "org.jetbrains",
+              "artifactId": "annotations"
+            }
+          ]
+        },
+        {
+          "groupId": "com.github.hypfvieh",
+          "artifactId": "dbus-java-transport-native-unixsocket",
+          "version": "5.2.0",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        }
+      ],
+      "plugin_declarations_data_only": [
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-extension-maven-plugin",
+          "version": "3.40.1",
+          "extensions": null
+        },
+        {
+          "groupId": null,
+          "artifactId": "maven-compiler-plugin",
+          "version": "3.13.0",
+          "extensions": null
+        },
+        {
+          "groupId": null,
+          "artifactId": "maven-failsafe-plugin",
+          "version": "2.22.2",
+          "extensions": null
+        }
+      ],
+      "all_direct_versions_interpolated": true,
+      "explicit_profiles": [
+        "crypto-default",
+        "upstream-adapters"
+      ],
+      "production_default_profile_or_native_build_equivalence_proved": false
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-quarkus-server-deployment:26.8.1",
+      "effective_XML_sha256": "9692252618bc7652c8555e90cc106baa26f36a41ccd349320904e6a4865879f9",
+      "direct_dependency_count": 26,
+      "dependency_management_count": 2419,
+      "dependencies": [
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-quarkus-server",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-core",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-core-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "org.junit.platform",
+              "artifactId": "junit-platform-launcher"
+            },
+            {
+              "groupId": "org.junit.jupiter",
+              "artifactId": "junit-jupiter"
+            },
+            {
+              "groupId": "org.eclipse.sisu",
+              "artifactId": "org.eclipse.sisu.inject"
+            },
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devtools-utilities"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-arc-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-arc-dev"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-rest-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-rest-dev"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-rest-jackson-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-hibernate-validator-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-hibernate-orm-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devservices-common"
+            },
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devservices-deployment"
+            },
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-datasource-dev"
+            },
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-agroal-dev"
+            },
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-assistant-dev"
+            },
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-hibernate-orm-dev"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-h2-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devservices-h2"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-postgresql-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devservices-postgresql"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-mariadb-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devservices-mariadb"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-mysql-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devservices-mysql"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-mssql-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devservices-mssql"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-jdbc-oracle-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devservices-oracle"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-bootstrap-core",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-smallrye-health-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-smallrye-openapi-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "org.jetbrains.kotlinx",
+              "artifactId": "kotlinx-metadata-jvm"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-swagger-ui-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-micrometer-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "org.jboss.metadata",
+              "artifactId": "jboss-metadata-web"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-micrometer-registry-prometheus-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-logging-json-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-opentelemetry-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-micrometer-opentelemetry-deployment",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-junit5-internal",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "test",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "io.quarkus",
+              "artifactId": "quarkus-devtools-utilities"
+            }
+          ]
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-junit5-mockito",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "test",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.rest-assured",
+          "artifactId": "rest-assured",
+          "version": "6.0.1",
+          "type": null,
+          "classifier": null,
+          "scope": "test",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "javax.activation",
+              "artifactId": "activation"
+            },
+            {
+              "groupId": "javax.activation",
+              "artifactId": "javax.activation-api"
+            },
+            {
+              "groupId": "jakarta.activation",
+              "artifactId": "jakarta.activation-api"
+            },
+            {
+              "groupId": "com.sun.xml.bind",
+              "artifactId": "jaxb-osgi"
+            },
+            {
+              "groupId": "commons-logging",
+              "artifactId": "commons-logging"
+            }
+          ]
+        }
+      ],
+      "plugin_declarations_data_only": [
+        {
+          "groupId": null,
+          "artifactId": "maven-compiler-plugin",
+          "version": "3.13.0",
+          "extensions": null
+        },
+        {
+          "groupId": null,
+          "artifactId": "maven-surefire-plugin",
+          "version": "3.5.6",
+          "extensions": null
+        }
+      ],
+      "all_direct_versions_interpolated": true,
+      "explicit_profiles": [
+        "crypto-default",
+        "upstream-adapters"
+      ],
+      "production_default_profile_or_native_build_equivalence_proved": false
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-quarkus-server-app:26.8.1",
+      "effective_XML_sha256": "2e480784b756ac462c0017c70c909762f09a22b2cffbea18d0f0cbec35976218",
+      "direct_dependency_count": 6,
+      "dependency_management_count": 2419,
+      "dependencies": [
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-quarkus-server",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "org.keycloak",
+          "artifactId": "keycloak-quarkus-server-deployment",
+          "version": "26.8.1",
+          "type": null,
+          "classifier": null,
+          "scope": "provided",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "com.fasterxml.jackson.core",
+          "artifactId": "jackson-databind",
+          "version": "2.21.7",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "com.fasterxml.jackson.core",
+          "artifactId": "jackson-core",
+          "version": "2.21.7",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.mvnpm",
+          "artifactId": "importmap",
+          "version": "1.0.11",
+          "type": null,
+          "classifier": null,
+          "scope": "provided",
+          "optional": null,
+          "exclusions": []
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-smallrye-openapi",
+          "version": "3.40.1",
+          "type": null,
+          "classifier": null,
+          "scope": "compile",
+          "optional": null,
+          "exclusions": [
+            {
+              "groupId": "org.jetbrains.kotlinx",
+              "artifactId": "kotlinx-metadata-jvm"
+            }
+          ]
+        }
+      ],
+      "plugin_declarations_data_only": [
+        {
+          "groupId": null,
+          "artifactId": "maven-surefire-plugin",
+          "version": "3.5.6",
+          "extensions": null
+        },
+        {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-maven-plugin",
+          "version": "3.40.1",
+          "extensions": "true"
+        }
+      ],
+      "all_direct_versions_interpolated": true,
+      "explicit_profiles": [
+        "crypto-default",
+        "upstream-adapters"
+      ],
+      "production_default_profile_or_native_build_equivalence_proved": false
+    }
+  ],
+  "model_controls": [
+    {
+      "name": "owned_work_write",
+      "outcome": "passed",
+      "detail": "bounded model/control only"
+    },
+    {
+      "name": "outside_canary_read",
+      "outcome": "expected_denial",
+      "detail": "Operation not permitted"
+    },
+    {
+      "name": "read_only_input_write",
+      "outcome": "expected_denial",
+      "detail": "Operation not permitted"
+    },
+    {
+      "name": "socket_bind_no_listener",
+      "outcome": "expected_denial",
+      "detail": "Operation not permitted"
+    },
+    {
+      "name": "sanitized_stdin",
+      "outcome": "passed",
+      "detail": "bounded model/control only"
+    },
+    {
+      "name": "synthetic_parent_BOM_inheritance",
+      "outcome": "passed",
+      "detail": "bounded model/control only"
+    },
+    {
+      "name": "explicit_synthetic_profile",
+      "outcome": "passed",
+      "detail": "bounded model/control only"
+    },
+    {
+      "name": "unknown_profile",
+      "outcome": "expected_denial",
+      "detail": "UNREVIEWED_PROFILE"
+    },
+    {
+      "name": "missing_parent_no_fetch",
+      "outcome": "expected_denial",
+      "detail": "UNPINNED_COORDINATE"
+    },
+    {
+      "name": "unknown_version_range",
+      "outcome": "expected_denial",
+      "detail": "UNPINNED_COORDINATE"
+    },
+    {
+      "name": "foreign_coordinate_payload",
+      "outcome": "expected_denial",
+      "detail": "FOREIGN_IDENTITY"
+    },
+    {
+      "name": "forged_digest",
+      "outcome": "expected_denial",
+      "detail": "HASH_DRIFT"
+    },
+    {
+      "name": "DTD_payload",
+      "outcome": "expected_denial",
+      "detail": "DTD_ENTITY_FORBIDDEN"
+    },
+    {
+      "name": "DTD_entity_rejected_before_model",
+      "outcome": "passed",
+      "detail": "bounded model/control only"
+    },
+    {
+      "name": "incomplete_native_profile_selection",
+      "outcome": "expected_denial",
+      "detail": "ee.maven.groupId"
+    }
+  ],
+  "resolver_request_count": 45,
+  "resolver_requested_unique_coordinates": 10,
+  "expected_unpinned_range_negative": [
+    "review.fixture:parent:[1,2)"
+  ],
+  "resolver_effect_policy": "Exact hash/coordinate/identity to byte-array ModelSource,not ModelSource2;no relative-file parent,repository URL/transport,settings,workspace,plugin listener or auto resolution. Repository callbacks record IDs only;processPlugins=false.",
+  "copied_input_identity_not_caller_state_authority": true,
+  "read_only_copied_inputs_unchanged": true,
+  "policy_delta": "One new read-only task-owned input subtree;owned work remains writable;no new external file/network/process/Mach/service permission. Outside-read/input-write/socket-bind denials occur before builder construction;stdinEOF.",
+  "closed_FDs_minimal_environment_native_Java_owned_home": true,
+  "classload_origins": [
+    "OfflineModelProbe",
+    "__JVM_LookupDefineClass__",
+    "file:<owned-output>/inputs/lib/maven-artifact-3.9.11.jar",
+    "file:<owned-output>/inputs/lib/maven-builder-support-3.9.11.jar",
+    "file:<owned-output>/inputs/lib/maven-model-3.9.11.jar",
+    "file:<owned-output>/inputs/lib/maven-model-builder-3.9.11.jar",
+    "file:<owned-output>/inputs/lib/plexus-interpolation-1.28.jar",
+    "file:<owned-output>/inputs/lib/plexus-utils-3.6.0.jar",
+    "file:<owned-output>/work/classes/",
+    "java.security.Security",
+    "java.util.function.Function",
+    "java.util.regex.CharPredicates",
+    "java.util.regex.Pattern",
+    "java.util.stream.Collectors",
+    "java.util.stream.FindOps",
+    "jdk.internal.module.DefaultRoots",
+    "jdk.internal.module.ModuleBootstrap",
+    "jdk.xml.internal.SecuritySupport",
+    "jrt:/java.base",
+    "jrt:/java.xml",
+    "org.apache.maven.model.building.DefaultModelBuilder",
+    "org.apache.maven.model.profile.DefaultProfileActivationContext",
+    "org.apache.maven.model.validation.DefaultModelValidator",
+    "sun.nio.ch.NioSocketImpl"
+  ],
+  "generated_class_origins_validated_through_reviewed_defining_class_sources": true,
+  "compiled_class_sha256": {
+    "OfflineModelProbe$CheckedOperation.class": "cfc234bd25416068e4d0524382a3cc80e8e8b5188f13ba7a935c2aac9a622de5",
+    "OfflineModelProbe.class": "d289cf896dc677a0a5736b1d8f987556f7a55856a85143584deaf3769b2f78e5",
+    "OfflineModelProbe$PinnedResolver.class": "1fbe38a33e88364bcd331288c2a560473e5c0e0e40b5e71f5f6fad80809573f4",
+    "OfflineModelProbe$1.class": "f339a3c5d7dc1823a1319edaecd0c6ea3de4f8659c548c7795a9828212899159",
+    "OfflineModelProbe$Pin.class": "0c815c29ce482bee299e9bc1abab5486a647792716c5f5a4cb3b8c5541569489",
+    "OfflineModelProbe$BytesSource.class": "15c3a43f22c7fc8b08f6eb692da3f4603dc712928c1fca7bdc8d964d24e40f5a"
+  },
+  "deprecated_model_API_warnings": [
+    "<owned-output>/work/OfflineModelProbe.java:53: warning: [deprecation] ModelSource in org.apache.maven.model.building has been deprecated",
+    "<owned-output>/work/OfflineModelProbe.java:60: warning: [deprecation] ModelSource in org.apache.maven.model.building has been deprecated",
+    "<owned-output>/work/OfflineModelProbe.java:67: warning: [deprecation] ModelSource in org.apache.maven.model.building has been deprecated",
+    "<owned-output>/work/OfflineModelProbe.java:68: warning: [deprecation] ModelSource in org.apache.maven.model.building has been deprecated"
+  ],
+  "initial_failures_retained": [
+    "Java request return type compile correction",
+    "Initial crypto-only profile leaves ee.maven.groupId unresolved in all5models",
+    "Class-origin validator initially did not recognize VM-generated lambda defining-class aliases"
+  ],
+  "incomplete_profile_selection_retained_as_expected_negative": true,
+  "old_JVM_inherited_FD_and_stdin_witnesses_unchanged": true,
+  "metadata_limit": "263POMs/192publisherSHA512/71checksumabsent and133plugin-POM/license chains/9multiversionfamilies remain;no binary/transitive/license/security/CVE/PGP/SBOM/distribution clearance or new JAR fetch.",
+  "recipe": "qualification/offline_model/README.md",
+  "fixture_sha256": {
+    "OfflineModelProbe.java": "1f6aeb169cefeb9703599443b2b52cb933c6abf34122e8ac8c706d33d8d4d504",
+    "prepare.py": "e9f9aa1f36aee8992f3ac05ab3776a8af8071c3c0b6d54f307e8b7fcbd1f660d",
+    "run.py": "f78f7e4c8d5f31758de6db0f2229220b295d82202d8ac9c9232158060c91fad3"
+  },
+  "bounded_offline_model_API_input_and_boundary_qualified": true,
+  "full_effective_artifact_plugin_processor_provider_classloader_buildstep_closure_qualified": false,
+  "full_effect_disabled_native_issuer_harness_qualified": false,
+  "mandatory_A0_qualification_complete": false,
+  "Task25_2_and_Task25_remain_open": true,
+  "native_tests_rerun": false,
+  "inherited_native_cases": 578,
+  "inherited_preparation_controls": 6,
+  "production_changes": false,
+  "trusted_controller_JDK_OS_cryptex_sysctl_and_unqualified_Mach_DNS_container_service_DB_secret_native_resource_sidechannel_limits_remain": true,
+  "all_22writers_LC01to10_A0A1A2_cleanup_witnesses_R1limits_R2implementation_R3_R7_ancestor_and_Task6_restoration_retained": true,
+  "next_prerequisite": "Use five explicit-profile models to review and close selected transitive artifact/plugin/processor/extension/provider identities and effects under OPEN25.2;review newly required coordinates and license/security/provenance before resolution/use;no native candidate before both full gates pass."
+}
