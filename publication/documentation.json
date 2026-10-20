@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "review_date": "2026-10-19",
+  "review_date": "2026-10-20",
   "policy": "One current page per topic; archived references do not establish architecture or release approval. Component docs remain experimental. Root scope and security/licensing entrypoints govern the preview. Accepted target decisions and proposed contracts/roles are explicitly labeled and do not establish implemented or enabled behavior.",
   "review_record": "docs/release/documentation.md",
   "files": [
@@ -2065,6 +2065,11 @@
       "authority": "bounded_deny_only_native_abort_experiment_negative_containment_not_production"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/qualification/os_boundary/README.md",
+      "class": "experimental_component_reference",
+      "authority": "trusted_owned_OS_sentinels_only_full_JVM_input_harness_A0_NO_GO_not_production"
+    },
+    {
       "path": "infra/keycloak/keycloak_registration_connector/qualification/realm_entry/README.md",
       "class": "experimental_component_reference",
       "authority": "bounded_native_early_denial_fixture_negative_cleanup_result_not_production"
@@ -2208,10 +2213,10 @@
   "counts_by_class": {
     "repository_reference": 3,
     "repository_entrypoint": 6,
-    "experimental_component_reference": 98,
+    "experimental_component_reference": 106,
     "contributor_instructions": 1,
     "documentation_index": 1,
-    "current_architecture": 9,
+    "current_architecture": 14,
     "historical_reference": 285,
     "developer_guidance": 3,
     "current_source_reference": 7,

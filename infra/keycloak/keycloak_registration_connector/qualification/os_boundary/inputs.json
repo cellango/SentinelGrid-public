@@ -1,0 +1,28 @@
+{
+  "format_version": 1,
+  "platform": "Darwin",
+  "macOS_version": "15.5",
+  "architecture": "arm64",
+  "runtime": "existing trusted control Python 3.14.4 app binary;not its spawning launcher",
+  "runtime_relative_path": "Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python",
+  "runtime_sha256": "215bbc555459056d393376b89d859582c4731f5fb97bdc458f67c51592e2abd1",
+  "runtime_additional_pins": {
+    "Frameworks/Python.framework/Versions/3.14/Python": "aad669c46b437b5404e661501016bff9cff5df015f9aab929bda870890d9704d"
+  },
+  "OS_input_sha256": {
+    "/usr/bin/sandbox-exec": "ed623503b81d80362bfa2ab135ddcfa2a4b806dafb91315c8a8f1824bac51910",
+    "/usr/bin/true": "c47fc62ac859701140170813e76101c68fc1235a45d1d1b77a48f61dd942a6a9",
+    "/System/Library/Sandbox/Profiles/dyld-support.sb": "06215a5d32689aefe395c29710e182eb54ba22162f50df8b4842290f8a19bf1c",
+    "/usr/share/man/man1/sandbox-exec.1": "0d264f72dc6a8e0db5474840f33b512542c469beb109ed146c17055da287336b",
+    "/usr/share/man/man7/sandbox.7": "9043d9296715714f95b4de6c5f88a5436c5cc3b83b62641327212078c5c69b04"
+  },
+  "fixture_sha256": {
+    "probe.py": "494b1fc622b9981616c2efc7ab0ebf2533dffa98bda6620dc4726f348f433e53",
+    "prepare.py": "a7b1e26e352420d38d0b04558907fe38083ba762a19d79612a514043efe8ad20",
+    "run.py": "4b3b1cf10184f9a6216ac08f9a38233b3a6593e92dc214251e865dbf82843a2d"
+  },
+  "read_only_OS_and_runtime_tree_is_trusted_controller_TCB_not_complete_hash_or_license_closure": true,
+  "deprecated_private_OS_API_not_a_production_choice": true,
+  "source_or_caller_data_is_not_issuer_authority": true,
+  "no_fallback_when_profile_install_or_input_validation_fails": true
+}

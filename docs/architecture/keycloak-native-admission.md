@@ -223,3 +223,10 @@ native build processors and a 133-coordinate plugin pool, including 99 absent
 from the earlier record. The full effective input lock/isolation boundary and A0
 prototype remain open; close those prerequisites before a candidate. A1/A2,
 cleanup/durable writer closure and R2/R3/R4 stay NO-GO. No native cases were rerun.
+
+The later [OS/input prerequisite result](keycloak-lifecycle-containment.md#os-boundary-and-executable-input-prerequisite-result)
+records 263 POMs, 42 trusted OS observations and nine integrity controls. An
+archive-revalidated JDK version-only control failed SIGSEGV before output; no
+Maven/plugin/processor/augmentation/provider/native candidate ran. The full input
+graph and JVM/harness remain NO-GO. Next qualify compatible JVM isolation before
+offline model resolution; parent A0 stays open and all earlier native oracles remain.

@@ -280,3 +280,10 @@ input and isolation qualification. No Maven/JVM/plugin/native build or test ran.
 These records neither adopt a fork/version/storage primitive, supersede pre-token
 or proposed point-in-time semantics, nor clear R2 implementation/R3/R4. No engine
 change follows.
+
+The later [OS/input prerequisite result](../keycloak-lifecycle-containment.md#os-boundary-and-executable-input-prerequisite-result)
+records 263 POMs, 42 trusted OS observations and nine integrity controls. An
+archive-revalidated JDK version-only control failed SIGSEGV before output; no
+Maven/plugin/processor/augmentation/provider/native candidate ran. The full input
+graph and JVM/harness remain NO-GO. Next qualify compatible JVM isolation before
+offline model resolution; parent A0 stays open and all earlier native oracles remain.

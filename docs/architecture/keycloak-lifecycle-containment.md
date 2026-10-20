@@ -536,15 +536,94 @@ execution/activation gates. Required ordering remains:
    the 578 historical cases/oracles/six controls and rerun affected cases when
    a candidate actually reaches them. No native cases ran for this static review.
 
+## OS boundary and executable-input prerequisite result
+
+The subsequent [harness-boundary review](../../infra/keycloak/keycloak_registration_connector/harness-boundary-review.json)
+reverified all **69 source units/162 anchors** and inspected **263 POMs** from
+fixed credential-free Maven Central URLs. **192** match publisher SHA-512 files;
+**71** checksum files returned 404 and retain local SHA-256/SHA-512 pins only.
+All 133 declared plugin coordinates now have POM/nearest-parent license metadata.
+This closes their explicit parent/root-imported-BOM metadata ancestry only. It
+does **not** resolve effective profiles, mediation, transitive artifacts, scopes,
+classifiers, exclusions, selected processors/providers or the executable graph.
+No new JAR was fetched or automatically resolved through a POM repository.
+
+Two legacy namespace-free Maven POMs needed a parsing-only element-name
+projection; original response bytes and initial strict-reader failures were
+retained privately. DTD/entities remain forbidden. Nearest-parent declarations
+include Apache, MIT, BSD, EPL, GPL with Classpath Exception and UPL variants,
+plus a custom named declaration. Nine plugin dependency families have multiple
+declared versions. Literal POM declarations and checksums establish neither
+binary/transitive licensing, version mediation, security nor distribution
+clearance. The historical two helper-license declarations/deprecated test API,
+all earlier SPI/version/HA/image/security limits, and source-output/class-origin
+requirements remain.
+
+### Trusted OS sentinels: limited result, inherited-FD failure retained
+
+The opt-in [OS research recipe](../../infra/keycloak/keycloak_registration_connector/qualification/os_boundary/README.md)
+passed **42 expected observations** and **nine preparation/integrity controls**
+on pinned macOS 15.5 arm64/Python 3.14.4. Its Apple `sandbox-exec` default-deny
+profile precedes the child payload, imports only pinned dyld support and confines
+writes to owned work. It allows trusted read-only Python/system trees and sysctl
+reads; that TCB is not a complete immutable runtime closure. The OS command is
+deprecated and SBPL private API; this is not a production isolation choice.
+
+With closed inherited descriptors and minimal environment, the trusted payload
+can read/write owned work while outside-work owned canary access, symlink/hardlink
+escape, owned TCP/Unix connect, socket bind, fork and unapproved exec return EPERM.
+The controller only binds new sockets and never listens. Baseline TCP/Unix
+connect times out/refuses, so there is no positive network-delivery comparator.
+Guarded `localhost` lookup fails, but external DNS and arbitrary Mach/bootstrap/
+service/container/DB/host-secret operations were not tested. No genuine secret or
+existing service was accessed. Resource/side-channel/arbitrary-native coverage
+also remains open. Nested tool-sandbox policy installation initially failed
+exit71/EPERM; a separately reviewed host launch worked. No fallback weakened
+the policy after failure.
+
+The **intentional inherited-FD control writes the outside-work owned canary**
+under the same deny profile. The secure comparison closes that descriptor
+(EBADF; canary unchanged). Therefore descriptor/capability sanitization must
+precede installation; the policy alone is insufficient. Both the negative witness
+and initial Python runtime/bootstrap failures remain in private evidence. The
+recipe verifies trusted policy text, rather than trusting a caller state digest.
+
+### JVM prerequisite: NO-GO before model resolution or native build
+
+The pinned JDK 21.0.12.1+1 and Maven 3.9.11 archives were revalidated, including
+all **459 JDK and 96 Maven installed files**, with no extra files or symlinks.
+Only an isolated **JDK version-print** control was attempted under a separate
+default-deny policy with closed descriptors, owned home/tmp, interpreted mode,
+attach/performance/core-dump settings disabled, and network/fork/file-link denied.
+It exited **-11 (SIGSEGV)** before stdout, stderr or an owned JVM error report.
+There was no unguarded Java comparator; the cause is **unknown**. This is a failed
+compatibility/startup control, not proof of which policy operation caused failure
+or of safe JVM execution. No dynamic-code-generation permission was added to
+make it pass. The exact pinned inputs, flags and policy digest are in the record.
+
+**No Maven CLI/model resolver, plugin, processor, Quarkus augmentation, issuer
+build, provider or A0 candidate executed.** The Python sentinels do not qualify
+the JVM. The 578 historical native cases/six controls are inherited unchanged
+and were not rerun. Every old failure/oracle remains applicable.
+
 ## Proof sequence and next bounded work
 
-The coherent P01–P10 design and every earlier failure remain. Static seed identity,
-source/POM comparison and descriptor review are complete within the stated scope;
-effective executable input closure and harness isolation are **not qualified**.
-**Next: close the remaining transitive/plugin/provider inputs and qualify the
-effect-disabled harness boundary before any A0 candidate or augmentation run.**
-The reviewed seed metadata/artifact pins are reusable only within that limited
-review scope; any newly required input still needs review before resolution/use.
+The P01–P10 design remains. The metadata/owned-OS evaluation reached a precise
+**NO-GO for full executable input closure, compatible JVM and effect-disabled
+harness**. Parent A0 and its input/harness prerequisite stay open. The next
+bounded prerequisite is **compatible JVM isolation qualification**, using reviewed
+toolchain/OS inputs and harmless owned controls before any offline model resolver.
+Retain the startup failure without attributing a cause or broadening privileges.
+If compatibility and required resource exclusions cannot be proved, stop NO-GO.
+
+After that, complete effective-model/transitive artifact/plugin/processor/provider/
+classloader/generated-index/build-step selection and provenance/license/security
+review. Both native processors (`KeycloakProcessor` and `LiquibaseProcessor`),
+earlier initialization order, dev-file DB defaults and selected framework
+container/dev-services paths still require pre-effect proof. Only after **both**
+input and isolation gates pass may the same A0 prototype resume with source-built
+candidate and actual Quarkus activation/class-origin negative proof. No caller
+receipt, fake map or synthetic owner substitutes for that activation.
 
 The A0 prototype remains open. All LC-01–10/A0/A1/A2, full entry/all-22-writer
 closure, native cleanup/response, actual HTTP/JTA/JDBC/cache/durable effects,
@@ -561,7 +640,7 @@ The proposed point-in-time semantic contract, R3–R7, credential custody/grants
 provisioning/rotation/revocation/CAS/audit, actual claims/JWKS/mappers/scopes/tenant,
 paired models/Flyway/RLS/existing-data/upgrades/restore and caller adoption remain
 required. The two historical build-helper license declarations and deprecated
-test-only API remain limitations; no dependency or artifact is added.
+test-only API remain limitations; no production dependency or artifact is added.
 
 Existing IAM ITDR, SCIM and user/JIT lifecycle and all other service/source/data/
 action/approval/SoD/audit/durability/recovery/verification restoration requirements
