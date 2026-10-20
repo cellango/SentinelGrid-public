@@ -3020,6 +3020,7 @@
     "infra/keycloak/keycloak_registration_connector/rollback-lifecycle-review.json",
     "infra/keycloak/keycloak_registration_connector/runtime-artifacts.json",
     "infra/keycloak/keycloak_registration_connector/runtime-review.json",
+    "infra/keycloak/keycloak_registration_connector/session-birth-preflight-review.json",
     "infra/keycloak/keycloak_registration_connector/session-ownership-review.json",
     "infra/keycloak/keycloak_registration_connector/src/main/java/ai/sentinelgrid/keycloak/registration/AssociationProviderFactory.java",
     "infra/keycloak/keycloak_registration_connector/src/main/java/ai/sentinelgrid/keycloak/registration/AssociationResource.java",

@@ -269,7 +269,10 @@ categories. It separates restricted session birth from authoritative primary
 classification and native operation authorization, preserves independent security
 cleanup, and defines a complete response barrier. These contracts remain
 unimplemented; primary bootstrap/read/fence and actual runtime closure are still
-missing. The next bounded unit is mandatory A0 session-birth deny-gate qualification,
-with exact Quarkus activation prerequisites and a stop if unproved. This design
-does not adopt a fork/version/storage primitive, supersede pre-token or proposed
-point-in-time semantics, or clear R2 implementation/R3/R4. No engine change follows.
+missing. The [A0 preflight](../keycloak-lifecycle-containment.md#mandatory-a0-prerequisite-result-no-go-before-candidate)
+has now stopped before candidate implementation: selected native Quarkus build/
+provider activation prerequisites are unqualified. The session-birth prototype
+remains open, with isolated augmentation-input review next. No native build/test
+or new executable input was used. Neither design nor this stop adopts a fork/
+version/storage primitive, supersedes pre-token or proposed point-in-time semantics,
+or clears R2 implementation/R3/R4. No engine change follows.

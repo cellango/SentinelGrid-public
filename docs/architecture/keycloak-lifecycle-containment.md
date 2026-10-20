@@ -390,35 +390,115 @@ Unknown effects require authorized containment/recovery proof, never automatic
 compensation or replay. Upgrade, rollback, node skew, historical grant/credential
 custody and durable failover remain separate acceptance gates.
 
-## Proof sequence and next bounded experiment
+## Mandatory A0 prerequisite result: NO-GO before candidate
 
-1. Completed comparisons remain negative for full containment: 512 cases in the
-   integrated abort lab, then 578 cases/six controls in the native ownership lab.
-   Retain four abort witnesses and all added native job/context/response findings;
-   neither a passing expected-negative assertion nor this design qualifies them.
-   No native cases were rerun for this source/design revision.
-2. This coherent P01–P10 design completes a bounded design deliverable only.
-   Missing primary bootstrap/read/fence, full participant/writer closure, durable
-   containment/recovery and actual framework activation keep implementation
-   adoption and protected issuance NO-GO. Stop optional late-attach/catch fixes.
-3. **Next bounded unit: A0 mandatory session-birth deny-gate qualification.**
-   First inventory exact concrete Quarkus/build/classloading and constructor
-   prerequisites. Then, only in new owned disposable comparison projects, qualify
-   a mandatory deny-only core boundary before manager/context/provider/begin,
-   with restricted lifecycle ownership and no A1/A2 authority. Native and prior
-   candidate controls stay intact. Missing/stale/foreign/unreviewed activation,
-   direct/internal/fresh worker creation must deny before effects. No fake map,
-   caller receipt, ThreadLocal or missing-row unmanaged success path. An optional
-   attach hook cannot pass. Actual Quarkus augmentation/activation proof is a
-   prerequisite to claiming A0; mocks/direct-constructor tests alone cannot pass.
-   If those inputs or mandatory closure cannot be safely isolated and qualified,
-   record exact unmet prerequisites and NO-GO rather than invent a passing gate.
-4. That unit cannot qualify A1/A2, native auth/issuance, cleanup, all writers or
-   actual HTTP/JTA/JDBC/cache durability. Preserve the 578 inherited cases/oracles
-   and rerun affected controls only where a new candidate reaches them; explicitly
-   compare any changed initialization denial. Reviewed build/license/security
-   inputs precede any new SDK/build; no production artifact or provider adopted.
-   Later isolated units must satisfy all LC-01–10, R3–R7 and compatibility gates.
+The [session-birth preflight record](../../infra/keycloak/keycloak_registration_connector/session-birth-preflight-review.json)
+reverifies all 50 earlier source pins and adds 18 native/build units: **68 units,
+158 literal anchors** at the same immutable commit. It reviews source and earlier
+manifest evidence only. No new candidate, native test, augmentation, JAR fetch,
+SDK build or provider operation ran. The 578 cases/six controls are inherited
+results, not rerun. **The mandatory A0 prototype remains open.** The prescribed
+prerequisite stop fired; this is not a passing denial/constructor experiment.
+
+The source shows why a session-only guard cannot establish A0:
+
+1. `KeycloakProcessor.configureKeycloakSessionFactory` calls `loadFactories`;
+   `Providers.getProviderManager`, `ProviderManager` and `DefaultProviderLoader`
+   participate in SPI/factory discovery through ServiceLoader. Factory instances
+   and deployed script factories are obtained before the processor's `isEnabled`
+   filter. Supplied deployment/filesystem loaders add inputs ([B19], [B51]–[B58]).
+   This is source ordering, not an observed runtime trace or exhaustive callgraph.
+2. The recorder constructs the concrete Quarkus factory; its constructor can
+   reflectively instantiate provider factories and calls `init`. The abstract
+   factory's later `init` invokes dependency-aware `postInit`. Neither an enabled
+   flag, provider ID nor the symbolic pre-init build item attests prior safe class
+   loading ([B02], [B03], [B18], [B62]). Privileged providers need an immutable
+   reviewed artifact/classloader/descriptor/feature boundary before discovery.
+3. `DefaultKeycloakSession` has instance collection initializers and a static
+   logger; its constructor body creates the transaction manager, invokes virtual
+   context construction and logs. Quarkus delegates to the superclass and creates
+   its framework context ([B04], [B05], [B06], [B16], [B34], [B35]). A body-only
+   guard cannot precede earlier JVM initialization. Source review does not prove
+   the selected JVM/logger/framework initialization safe or qualify direct paths.
+4. Startup invokes factory init/postInit and transactional bootstrap; Quarkus can
+   schedule startup asynchronously. The native app build config includes a
+   `dev-file` DB setting, and `exit_before_bootstrap` is checked **after** factory
+   init ([B59], [B60], [B68]). No native command was run; a future harness must
+   prevent unintended DB/import/listener/provider/secret effects before use.
+
+### Build-input gap and exact return conditions
+
+The earlier 290-JAR evidence record contains 21 coordinates under `io.quarkus`,
+but does **not** contain these 11 minimum source-declared module/input seeds.
+Comparison rereads recorded coordinates/hashes; it neither fetches nor rechecks
+JAR bytes. Module versions and Quarkus properties come from the pinned POMs
+([B64]–[B68]). Effective BOM/profile/plugin/transitive resolution has **not** run.
+These seeds are not a complete dependency graph, artifact lockfile, security/
+license clearance or evidence that a source-built alternative is impossible.
+
+| Coordinate seed | Native role | In inherited reviewed JAR record |
+| --- | --- | --- |
+| `org.keycloak:keycloak-quarkus-server:26.8.1` | native runtime module | Absent. |
+| `org.keycloak:keycloak-quarkus-server-deployment:26.8.1` | native augmentation module | Absent. |
+| `org.keycloak:keycloak-quarkus-server-app:26.8.1` | native server assembly | Absent. |
+| `io.quarkus:quarkus-core-deployment:3.40.1` | augmentation dependency | Absent. |
+| `io.quarkus:quarkus-arc-deployment:3.40.1` | CDI build dependency | Absent. |
+| `io.quarkus:quarkus-rest-deployment:3.40.1` | REST build dependency | Absent. |
+| `io.quarkus:quarkus-hibernate-orm-deployment:3.40.1` | ORM build dependency | Absent. |
+| `io.quarkus:quarkus-bootstrap-core:3.40.1` | bootstrap dependency | Absent. |
+| `io.quarkus:quarkus-maven-plugin:3.40.1` | executing build plugin | Absent. |
+| `io.quarkus:quarkus-extension-maven-plugin:3.40.1` | generated extension descriptor plugin | Absent. |
+| `io.quarkus:quarkus-extension-processor:3.40.1` | executing annotation processor | Absent. |
+
+The native runtime/deployment/server POMs declare 102/26/6 direct dependencies;
+those literal declarations do not establish the effective graph or selected
+providers. Native extension-descriptor generation, annotation processing and the
+Quarkus build plugin also differ from the earlier services/SPI fixture, which
+disables annotation processing. Source-building the native modules still needs
+reviewed dependency/plugin inputs, exact output identity and isolation. Do not
+fill gaps with arbitrary SDKs, default repositories or real server startup.
+
+| Gate | Required evidence before returning to the candidate | Current result |
+| --- | --- | --- |
+| PF-01 — Reviewed artifact/build input closure before execution | Review metadata/BOM/profile/plugin/processor/provider closure and exact provenance/hash/license/security inputs; source-built modules need source/output identity and isolation too. | Unqualified; stop before candidate. |
+| PF-02 — Provider admission before discovery/initialization | Verify the exact immutable build/classloader/provider/descriptor/feature set before class loading or factory construction; a late enabled flag or ID allowlist is insufficient. | Unqualified; stop before candidate. |
+| PF-03 — Restricted birth before native initialization | Qualify JVM superclass/static/instance/virtual order and source/bytecode origin; prove earlier initialization effect-free or place ownership earlier; no body guard can retroactively protect earlier work. | Unqualified; stop before candidate. |
+| PF-04 — Concrete native factory/augmentation activation | Actual isolated Quarkus augmentation and selected provider/classloading proof; no synthetic factory receipt, abstract interface or direct constructor fixture can pass. | Unqualified; stop before candidate. |
+| PF-05 — Startup/maintenance before model work and job creation | Safe owned harness must fence bootstrap and block DB/listener/import/secret/provider effects before use; never run native defaults or use exit-before-bootstrap as proof that init was prevented. | Unqualified; stop before candidate. |
+| PF-06 — Direct/internal/new/nested/worker/CDI session ownership | Fresh exact restricted lifecycle owner before initialization; missing/stale/foreign/reentry/worker denial with controls; birth grants no primary realm/auth/read/write/signing authority. | Unqualified; stop before candidate. |
+| PF-07 — Historical fixture versus actual framework proof | Keep historical 578 cases/six controls and all failures unchanged; distinguish any later rerun and new oracle; actual framework/provenance proof remains mandatory before A0 passes. | Unqualified; stop before candidate. |
+
+## Proof sequence and next bounded work
+
+1. Keep the coherent P01–P10 design and all historical native/limited/integrated
+   controls unchanged. Source preflight completed with NO-GO before a candidate;
+   mandatory session-birth qualification is still open. No A0, A1/A2, cleanup,
+   writer fence, response or storage acceptance follows from this record.
+2. **Next substep: review and lock isolated native Quarkus augmentation inputs.**
+   Start with the pinned native runtime/deployment/server POMs and missing seeds.
+   Review metadata/BOM/profile/plugin/processor/provider/descriptor closure and
+   an effect-disabled owned harness plan before any executable input/build.
+   Pin exact provenance, hashes, coordinates, licenses and security limits; new
+   artifacts require review before resolution/execution. Select source-built
+   versus published inputs explicitly, with exact source/output identities.
+   Credential-free metadata inspection is separate from executing Maven plugins.
+   No full issuer build, live DB/listener/bootstrap/provider operation or production
+   artifact adoption is implied. Retain the two historical build-helper license
+   declarations/deprecated test-only API limits. Missing closure stays NO-GO.
+3. Return to the **same open A0 session-birth prototype** only after those inputs
+   and before-effect isolation are qualified. Use new owned projects and exact
+   native/Quarkus activation negative proof. Deny missing/stale/foreign/unreviewed
+   activation before manager/context/provider/begin/read. Restricted ownership
+   grants no realm/auth/write/signing authority; no fake primary map, receipt,
+   caller hint, ThreadLocal or missing-row unmanaged allow path. Direct constructor
+   fixtures cannot substitute for actual augmentation/classloading evidence.
+4. Preserve 578 inherited cases/oracles/six controls; rerun affected controls when
+   a candidate reaches them and explicitly compare any initialization-denial
+   change. Stop if mandatory closure cannot be shown. No optional attach/local
+   catch candidate, silent security cleanup suppression or feature retirement.
+   Later separate work still needs every LC-01–10/A0/A1/A2/R3–R7, native provider/
+   HTTP/JTA/JDBC/cache/durable writer/HA/recovery/compatibility gate. Production
+   fork/version/storage/deployment remains a separate decision.
 
 This review closes the **bounded design task only**. Full cleanup/containment,
 HTTP/native SQL durability, bootstrap/admission, writer closure and all old 18
@@ -529,3 +609,43 @@ replacement governance remain unchanged.
 [D48]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/connections/jpa/support/EntityManagerProxy.java#L93
 [D49]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/AsyncCommitIntegrator.java#L80
 [D50]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/PostgreSQLAsyncCommitIntegrator.java#L51
+
+[B01]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/models/KeycloakSessionFactory.java#L37
+[B02]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakSessionFactory.java#L58
+[B03]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSessionFactory.java#L35
+[B04]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSession.java#L28
+[B05]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java#L93
+[B06]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakContext.java#L77
+[B07]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/models/utils/KeycloakModelUtils.java#L363
+[B08]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/models/utils/SessionLookup.java#L22
+[B09]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/transaction/RequestContextHelper.java#L57
+[B10]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/services/scheduled/ScheduledTaskRunner.java#L54
+[B11]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/services/scheduled/NamedSessionTask.java#L31
+[B12]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/timer/basic/BasicTimerProvider.java#L80
+[B13]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java#L39
+[B14]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java#L67
+[B15]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java#L44
+[B16]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/QuarkusKeycloakContext.java#L36
+[B18]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakRecorder.java#L223
+[B19]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java#L834
+[B33]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/utils/KeycloakSessionUtil.java#L38
+[B34]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultPermissions.java#L35
+[B35]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java#L51
+[B51]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/Providers.java#L25
+[B52]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/ProviderManager.java#L44
+[B53]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/DefaultProviderLoader.java#L44
+[B54]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/DeploymentProviderLoader.java#L40
+[B55]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/FileSystemProviderLoaderFactory.java#L41
+[B56]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/DefaultProviderLoaderFactory.java#L31
+[B57]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/resources/META-INF/services/org.keycloak.provider.ProviderLoaderFactory#L19
+[B58]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/provider/KeycloakDeploymentInfo.java#L24
+[B59]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/KeycloakApplication.java#L76
+[B60]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/QuarkusKeycloakApplication.java#L74
+[B61]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakMain.java#L68
+[B62]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakSessionFactoryPreInitBuildItem.java#L26
+[B63]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/resources/META-INF/quarkus-extension.yaml#L2
+[B64]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/pom.xml#L43
+[B65]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/pom.xml#L30
+[B66]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/pom.xml#L14
+[B67]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/pom.xml#L16
+[B68]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/server/pom.xml#L17

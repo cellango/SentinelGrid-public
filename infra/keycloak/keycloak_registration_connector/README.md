@@ -334,5 +334,9 @@ units/104 literal anchors to P01–P10, A0/A1/A2, LC-01–10 and all 22 writer c
 They define restricted birth, missing primary admission/bootstrap contracts,
 fresh independent-job authority, one close owner and the complete response barrier.
 This documentation revision reruns no native case and supplies no implementation
-acceptance. Next is a mandatory A0 session-birth deny-gate qualification with exact
-Quarkus activation prerequisites; full lifecycle/storage/writer/issuance remains NO-GO.
+acceptance. The [mandatory A0 preflight](session-birth-preflight-review.json)
+now records a prerequisite NO-GO before candidate implementation: 68 source/build
+units/158 anchors, with 11 minimum native Quarkus input seeds absent from inherited
+artifact evidence. This is source/manifest inspection, not a build or rerun. The
+session-birth prototype remains open; next is isolated augmentation-input review.
+Full lifecycle/storage/writer/issuance and actual runtime activation remain NO-GO.

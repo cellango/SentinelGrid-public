@@ -213,5 +213,9 @@ dependencies; no lookup/TTL/caller hint/missing-row unmanaged fallback suffices.
 Required independent security jobs acquire fresh authority after the parent's
 known resource boundary without holding its barrier; response release waits for
 all required outcomes. No native test was rerun for this documentation revision.
-Next research qualifies only a mandatory A0 session-birth deny gate; A1/A2, full
-cleanup/durable writer closure, R2 implementation/R3/R4 remain NO-GO.
+The [A0 prerequisite review](keycloak-lifecycle-containment.md#mandatory-a0-prerequisite-result-no-go-before-candidate)
+stopped before a candidate: actual augmentation/provider initialization inputs
+are not qualified. It reviews 68 source/build units/158 anchors and 11 minimum
+missing input seeds, not a complete resolved graph. The A0 prototype stays open;
+next is isolated Quarkus build-input review before returning to it. No native
+tests/builds ran. A1/A2, full cleanup/durable writer closure and R2/R3/R4 stay NO-GO.

@@ -1,0 +1,2571 @@
+{
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "archive_sha256": "f67ec723e2eaf46b2d38f167ecb7578964115f1f2ce203f9b6659322223d9874",
+  "source_units": 68,
+  "anchor_count": 158,
+  "all_50_prior_source_pins_reverified": true,
+  "source_refs": [
+    {
+      "path": "server-spi/src/main/java/org/keycloak/models/KeycloakSessionFactory.java",
+      "sha256": "9e1542b375bbf4cf8dffe12faa3048a836e0a80b0489bda1615a66f058328cef",
+      "anchors": [
+        {
+          "symbol": "KeycloakSession create();",
+          "line": 37,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B01",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/models/KeycloakSessionFactory.java#L37"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakSessionFactory.java",
+      "sha256": "685f093a607610193e4a93f3a1c3e9e941ae93bb59462d913a1f0e8f29f7747d",
+      "anchors": [
+        {
+          "symbol": "public abstract class DefaultKeycloakSessionFactory",
+          "line": 58,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected void initProviderFactories(",
+          "line": 97,
+          "literal_occurrences": 2
+        },
+        {
+          "symbol": "private void initializeProviders(",
+          "line": 118,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void publish(",
+          "line": 85,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private static final Logger logger = Logger.getLogger(DefaultKeycloakSessionFactory.class);",
+          "line": 60,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void init()",
+          "line": 91,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "factory.postInit(this);",
+          "line": 140,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B02",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakSessionFactory.java#L58"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSessionFactory.java",
+      "sha256": "092af4553215b3bf5736df43eb92fecebf07b89da1f4c03f0cf2285ff3124fe9",
+      "anchors": [
+        {
+          "symbol": "public QuarkusKeycloakSessionFactory(",
+          "line": 35,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public KeycloakSession create()",
+          "line": 78,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "factory.init(scope);",
+          "line": 58,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private ProviderFactory lookupProviderFactory(",
+          "line": 65,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "factoryClazz.getDeclaredConstructor().newInstance()",
+          "line": 69,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B03",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSessionFactory.java#L35"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSession.java",
+      "sha256": "31da8a70358237ec06cd6ab93d922593e1277d61f72c5a3a1fa262aed7693b8c",
+      "anchors": [
+        {
+          "symbol": "public QuarkusKeycloakSession(",
+          "line": 28,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected DefaultKeycloakContext createKeycloakContext(",
+          "line": 33,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B04",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/QuarkusKeycloakSession.java#L28"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java",
+      "sha256": "5193a79eb80835b9ad96daf97e304e3b05f4aef0df9df64c5a424d8d6cafd924",
+      "anchors": [
+        {
+          "symbol": "public DefaultKeycloakSession(",
+          "line": 93,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void close()",
+          "line": 380,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected RuntimeException closeTransactionManager()",
+          "line": 417,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private <T extends Provider> T getOrCreateProvider(",
+          "line": 205,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void invalidate(",
+          "line": 113,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void enlistForClose(",
+          "line": 121,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public RealmProvider realms()",
+          "line": 285,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private final Map<List<String>, Provider> providers = new HashMap<>();",
+          "line": 79,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private static final Logger LOG = Logger.getLogger(DefaultKeycloakSession.class);",
+          "line": 377,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected abstract DefaultKeycloakContext createKeycloakContext(",
+          "line": 440,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B05",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakSession.java#L93"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakContext.java",
+      "sha256": "d97a65002888f3e66da8e15ff2831aa98511da0f96540e31a8d8d5d3d6375a4a",
+      "anchors": [
+        {
+          "symbol": "public DefaultKeycloakContext(",
+          "line": 77,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void setRealm(",
+          "line": 127,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void setClient(",
+          "line": 145,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B06",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakContext.java#L77"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/models/utils/KeycloakModelUtils.java",
+      "sha256": "1e4a43a5a9acb5dbda9a05ab35d91d254c844f57d4a433a437a8c005bc53b36c",
+      "anchors": [
+        {
+          "symbol": "public static void enlistAfterRollback(",
+          "line": 363,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private static void enlistAfterCompletion(",
+          "line": 380,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private static void cloneContextToSession(",
+          "line": 451,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "KeycloakSession existing = KeycloakSessionUtil.getKeycloakSession()",
+          "line": 527,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B07",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/models/utils/KeycloakModelUtils.java#L363"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/models/utils/SessionLookup.java",
+      "sha256": "3b9a3717f8ed7d7c3324d2284d84574259626523146c181d790e1b5a28317143",
+      "anchors": [
+        {
+          "symbol": "public SessionLookup(",
+          "line": 22,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public UserSessionModel findUserSession(",
+          "line": 35,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B08",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/models/utils/SessionLookup.java#L22"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/transaction/RequestContextHelper.java",
+      "sha256": "a8fababf89c3ca0bf88c0e8392669a69df941c29d9dd834aef2e85caf7e510c7",
+      "anchors": [
+        {
+          "symbol": "public static RequestContextHelper getContext(",
+          "line": 57,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B09",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/transaction/RequestContextHelper.java#L57"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/services/scheduled/ScheduledTaskRunner.java",
+      "sha256": "9d9635aae148569d66e68e6a451361253df16d6f1f3bfbe97a5c8a9467a596d1",
+      "anchors": [
+        {
+          "symbol": "public void run()",
+          "line": 54,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected void runTask(",
+          "line": 85,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B10",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/services/scheduled/ScheduledTaskRunner.java#L54"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/services/scheduled/NamedSessionTask.java",
+      "sha256": "9b4ba30f637e734048f5b3281acd1058f78b8e6eb30d9724494eebd6f8a80ed8",
+      "anchors": [
+        {
+          "symbol": "public NamedSessionTask(",
+          "line": 31,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B11",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/services/scheduled/NamedSessionTask.java#L31"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/timer/basic/BasicTimerProvider.java",
+      "sha256": "8791afca26e23b60ef3546807e01bfcea63ef58b99b073eca1d65ba7a9ebb431",
+      "anchors": [
+        {
+          "symbol": "public void scheduleTask(",
+          "line": 80,
+          "literal_occurrences": 2
+        },
+        {
+          "symbol": "timer.schedule(task,",
+          "line": 76,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B12",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/timer/basic/BasicTimerProvider.java#L80"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java",
+      "sha256": "d24e2802fd33a913632798a9331eda86e2452c2e687fb4270ad5e5c1767cd1a0",
+      "anchors": [
+        {
+          "symbol": "public KeycloakSession getKeycloakSession()",
+          "line": 39,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "void dispose(",
+          "line": 46,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B13",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/cdi/KeycloakBeanProducer.java#L39"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java",
+      "sha256": "9c751a303a52984a64a0cac5ba4dd07c2f639006608c2386df68f4ecba6d5e9d",
+      "anchors": [
+        {
+          "symbol": "public void handle(",
+          "line": 67,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "beginTransaction(currentSession)",
+          "line": 81,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B14",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/TransactionalSessionHandler.java#L67"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java",
+      "sha256": "bd93dc08ae8e90735dbb54b8a75ef8415404dd0f752e25343a2e6c47e28bd928",
+      "anchors": [
+        {
+          "symbol": "default void close(",
+          "line": 44,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B15",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/TransactionalSessionHandler.java#L44"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/QuarkusKeycloakContext.java",
+      "sha256": "8549c2e07d434dae6f2645ec5a88a0e2a867a05e8b7488fa84626d0c584b3c9e",
+      "anchors": [
+        {
+          "symbol": "public QuarkusKeycloakContext(",
+          "line": 36,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private Optional<ResteasyReactiveRequestContext> getResteasyReactiveRequestContext()",
+          "line": 55,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B16",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/QuarkusKeycloakContext.java#L36"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/KeycloakHandlerChainCustomizer.java",
+      "sha256": "3e1b9dfaa8174dcdd95ce351b4570d76ddc559a2f58741f4ccd2d977cfd5f052",
+      "anchors": [
+        {
+          "symbol": "public ServerRestHandler alternateInvocationHandler(",
+          "line": 40,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "case BEFORE_METHOD_INVOKE:",
+          "line": 50,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B17",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/resteasy/KeycloakHandlerChainCustomizer.java#L40"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakRecorder.java",
+      "sha256": "f80d51fe106aafc7b9dd19c7b05e1154d750fb56770c51d537f9972b0dcfcbcd",
+      "anchors": [
+        {
+          "symbol": "public RuntimeValue<QuarkusKeycloakSessionFactory> createSessionFactory(",
+          "line": 223,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B18",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakRecorder.java#L223"
+    },
+    {
+      "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java",
+      "sha256": "2479b51bf75bae3a11a20a4bc3a90b97eaba1001ee5e81a8216e3022fb9edddf",
+      "anchors": [
+        {
+          "symbol": "SyntheticBeanBuildItem.configure(QuarkusKeycloakSessionFactory.class)",
+          "line": 834,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "chainCustomizers.add(new KeycloakHandlerChainCustomizer())",
+          "line": 1019,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "SyntheticBeanBuildItem configureKeycloakSessionFactory(",
+          "line": 804,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private Map<Spi, Map<Class<? extends Provider>, Map<String, ProviderFactory>>> loadFactories(",
+          "line": 1075,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "@Record(ExecutionTime.STATIC_INIT)",
+          "line": 267,
+          "literal_occurrences": 11
+        },
+        {
+          "symbol": "@Produce(KeycloakSessionFactoryPreInitBuildItem.class)",
+          "line": 803,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private Map<String, ProviderFactory<?>> loadDeployedScriptProviders(",
+          "line": 1126,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "if (isEnabled(factory, scope))",
+          "line": 1108,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B19",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java#L834"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/transaction/AsyncResponseTransaction.java",
+      "sha256": "ba4a8097287710bab65f12e3f545786cb09486f80bc9fa288567f330d42b22cb",
+      "anchors": [
+        {
+          "symbol": "public static void finishAsyncResponseInTransaction(",
+          "line": 33,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 49,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 54,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B20",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/transaction/AsyncResponseTransaction.java#L33"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java",
+      "sha256": "2054a1d3d7cb3b40f027b3f3aa6b646a832ea8113cc0cb71a626c62b3531be3e",
+      "anchors": [
+        {
+          "symbol": "public void filter(",
+          "line": 51,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "if (entity instanceof Stream)",
+          "line": 55,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "if (entity instanceof StreamingOutput)",
+          "line": 61,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B21",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/CloseSessionFilter.java#L51"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java",
+      "sha256": "e93dce4a743dc939b12993fd90e90e987587e45c7e08459141cef2a9d869ce76",
+      "anchors": [
+        {
+          "symbol": "public static Response getResponse(",
+          "line": 65,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "RealmModel realm = resolveRealm(session)",
+          "line": 101,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B22",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/error/KeycloakErrorHandler.java#L65"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/saml/SamlService.java",
+      "sha256": "159734b9e2f11fd9741ae5906bd968d401e6862f53318ce21701c67bb3ee1db3",
+      "anchors": [
+        {
+          "symbol": "private class ArtifactResolutionRunnable",
+          "line": 1445,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void run(KeycloakSession session)",
+          "line": 1470,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "httpClient.execute(httpPost)",
+          "line": 1494,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B23",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/saml/SamlService.java#L1445"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java",
+      "sha256": "8f3901bf75ac4049b045b89572da736765493528954a4ca89fb58a3a9da1da90",
+      "anchors": [
+        {
+          "symbol": "private static class RollbackDrivenTransaction",
+          "line": 180,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "KeycloakModelUtils.runJobInTransaction(this.factory, this.task)",
+          "line": 202,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B24",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java#L180"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java",
+      "sha256": "4f55098516cad8a56d189baa3173b382ef8410936a6aedd0f114dceecfb61aab",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterRollback(session, ctx ->",
+          "line": 193,
+          "literal_occurrences": 3
+        }
+      ],
+      "id": "B25",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/TokenManager.java#L193"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/AuthorizationCodeGrantType.java",
+      "sha256": "fce5e6da02159381bf8e53f784447518adabfdf86f864573effb5030f0ef2946",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterRollback(session, ctx ->",
+          "line": 92,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B26",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/grants/AuthorizationCodeGrantType.java#L92"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/grants/ResourceOwnerPasswordCredentialsGrantType.java",
+      "sha256": "b318a10f5e2e242311ef487cf58b5570729b1719b136ac8ee1a3266075b6a968",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterRollback(session, ctx ->",
+          "line": 129,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B27",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/grants/ResourceOwnerPasswordCredentialsGrantType.java#L129"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/refresh/AbstractRefreshTokenProvider.java",
+      "sha256": "fb620bc5df7de572fb11ecd8bf8d6273d6a7a8f4f3dc0ecea00302b988996cac",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.runJobInTransaction(factory, s -> s.singleUseObjects().remove(lockId))",
+          "line": 260,
+          "literal_occurrences": 2
+        },
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterRollback(session, ctx ->",
+          "line": 297,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B28",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/refresh/AbstractRefreshTokenProvider.java#L260"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/authorization/policy/evaluation/PermissionTicketAwareDecisionResultCollector.java",
+      "sha256": "b4a6c9252c27fef3fedc7f00435b49ce5393432a06b132c685791ae9abc41ca7",
+      "anchors": [
+        {
+          "symbol": "KeycloakModelUtils.enlistAfterCompletion(session, ctx ->",
+          "line": 102,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B29",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/authorization/policy/evaluation/PermissionTicketAwareDecisionResultCollector.java#L102"
+    },
+    {
+      "path": "model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProvider.java",
+      "sha256": "691cac589793225533a6a32073fe590b1c1dff9148fea05f76fddd5b1b23ad01",
+      "anchors": [
+        {
+          "symbol": "public void prepareStep()",
+          "line": 86,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private void commitDatabaseUpdates(",
+          "line": 125,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B30",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/transaction/DefaultInfinispanTransactionProvider.java#L86"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/DefaultBlockingBruteForceProtector.java",
+      "sha256": "87184de5fe2993a1ec413789bd5d69d7b29342687c29f2a4f5cee50e46df37bb",
+      "anchors": [
+        {
+          "symbol": "private boolean tryEnlistBlockingTransactionOrSameThread(",
+          "line": 86,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private void enlistRemoval(",
+          "line": 123,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B31",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/DefaultBlockingBruteForceProtector.java#L86"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/DefaultLockingBruteForceProtector.java",
+      "sha256": "95538bbf159a3c48eabed8b569b873bb27e39de3880c86b1d531c4545b4539c8",
+      "anchors": [
+        {
+          "symbol": "private void releaseAllLocks()",
+          "line": 123,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B32",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/DefaultLockingBruteForceProtector.java#L123"
+    },
+    {
+      "path": "server-spi/src/main/java/org/keycloak/utils/KeycloakSessionUtil.java",
+      "sha256": "bdad8094c93f8998ff19647a6916dfc1e78f61847f95e956d22932ec9a580e80",
+      "anchors": [
+        {
+          "symbol": "public static KeycloakSession getKeycloakSession()",
+          "line": 38,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public static KeycloakSession setKeycloakSession(",
+          "line": 49,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B33",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/utils/KeycloakSessionUtil.java#L38"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultPermissions.java",
+      "sha256": "43d640966ee38fcbac6c5a173855ee7e1044d2e118438dde5e5c2fd30cd2aee2",
+      "anchors": [
+        {
+          "symbol": "public DefaultPermissions(",
+          "line": 35,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B34",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultPermissions.java#L35"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java",
+      "sha256": "1f6230bbbc3bcadff5eb476cd09147145f4bb8f8a308da397371ab9a235b0a53",
+      "anchors": [
+        {
+          "symbol": "public void enlist(",
+          "line": 51,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void enlistPrepare(",
+          "line": 75,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void enlistAfterCompletion(",
+          "line": 63,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void begin()",
+          "line": 98,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 138,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected void rollback(RuntimeException exception)",
+          "line": 211,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void setRollbackOnly()",
+          "line": 241,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public DefaultKeycloakTransactionManager(",
+          "line": 46,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B35",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/DefaultKeycloakTransactionManager.java#L51"
+    },
+    {
+      "path": "server-spi/src/main/java/org/keycloak/models/AbstractKeycloakTransaction.java",
+      "sha256": "349da55ffc96f97cfc8adef20590b27446c9d17c21781d9287255682cb74c3f5",
+      "anchors": [
+        {
+          "symbol": "public void begin()",
+          "line": 30,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 41,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 52,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B36",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi/src/main/java/org/keycloak/models/AbstractKeycloakTransaction.java#L30"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/RealmsResource.java",
+      "sha256": "7320f461b227f9022d451d26a4834621f8303762c9e5eeb0470dfb04d338b8de",
+      "anchors": [
+        {
+          "symbol": "private static void resolveRealmAndUpdateSession(",
+          "line": 188,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B37",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/RealmsResource.java#L188"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/managers/RealmManager.java",
+      "sha256": "cdc4a19a9c7d906efb612300d39603429acf9ef94be1142c2839f4a2e9883337",
+      "anchors": [
+        {
+          "symbol": "public RealmModel getRealm(",
+          "line": 113,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public RealmModel getRealmByName(",
+          "line": 117,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B38",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/managers/RealmManager.java#L113"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/admin/AdminRoot.java",
+      "sha256": "667a987683701dea3e0f73fedfe07b43d846c6410fe8a334cd595c543fdcd14b",
+      "anchors": [
+        {
+          "symbol": "protected void resolveRealmAndUpdateSession(",
+          "line": 146,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public static AdminAuth authenticateRealmAdminRequest(",
+          "line": 188,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B39",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/admin/AdminRoot.java#L146"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/admin/RealmsAdminResource.java",
+      "sha256": "a9e729ff0f5f169e2c878131ebf739827c2d263c49b6cb402522ba4ce5c2b5b3",
+      "anchors": [
+        {
+          "symbol": "public RealmAdminResource getRealmAdmin(",
+          "line": 220,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B40",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/admin/RealmsAdminResource.java#L220"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java",
+      "sha256": "23c8c74cbaeee855b77ae71c855a0e577b61c14e2c0c0a3ba97f66d0b8103ef7",
+      "anchors": [
+        {
+          "symbol": "public Response processGrantRequest()",
+          "line": 130,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B41",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/protocol/oidc/endpoints/TokenEndpoint.java#L130"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/transaction/JtaTransactionWrapper.java",
+      "sha256": "4c1baab07fde1782442a8732ade5106eb25d63390b6ca2c14466931ac8702d79",
+      "anchors": [
+        {
+          "symbol": "public JtaTransactionWrapper(",
+          "line": 45,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void commit()",
+          "line": 101,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 113,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected void end()",
+          "line": 164,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B42",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/transaction/JtaTransactionWrapper.java#L45"
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/JpaKeycloakTransaction.java",
+      "sha256": "1e1a12cc99aa447c42358f99aa9c7fdd0c018b0d574e42f34f19f4a2c97459d1",
+      "anchors": [
+        {
+          "symbol": "public void commit()",
+          "line": 47,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public void rollback()",
+          "line": 57,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B43",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/JpaKeycloakTransaction.java#L47"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/QuarkusJtaTransactionManagerLookup.java",
+      "sha256": "8a2d07e2b4e7f98427dbbddffaecb050a086d4b7cd70ea2168c8647ecb8436dd",
+      "anchors": [
+        {
+          "symbol": "public TransactionManager getTransactionManager()",
+          "line": 36,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B44",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/transaction/QuarkusJtaTransactionManagerLookup.java#L36"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/AbstractJpaConnectionProviderFactory.java",
+      "sha256": "348dbed0e3a60c3b124a4ef01da0639a4b64ed6464045b0235f177c4000f467b",
+      "anchors": [
+        {
+          "symbol": "public JpaConnectionProvider create(",
+          "line": 55,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "protected EntityManager createEntityManager(",
+          "line": 120,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B45",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/AbstractJpaConnectionProviderFactory.java#L55"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/QuarkusJpaConnectionProviderFactory.java",
+      "sha256": "dddff0ccfbe52e7853119f3deb043e3c3e3c207c806b4219f0d88004e7ef63eb",
+      "anchors": [
+        {
+          "symbol": "if (config.getBoolean(\"asyncCommit\", true))",
+          "line": 106,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B46",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/storage/database/jpa/QuarkusJpaConnectionProviderFactory.java#L106"
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/DefaultJpaConnectionProvider.java",
+      "sha256": "c6f80be50965bce295a9333fe6001488fa54e5bff745cb12c063c97df74b164a",
+      "anchors": [
+        {
+          "symbol": "public void close()",
+          "line": 42,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B47",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/DefaultJpaConnectionProvider.java#L42"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/connections/jpa/support/EntityManagerProxy.java",
+      "sha256": "7ad5c53b7deeb7af148f9b5c68ad9ec38e3ed6bcd74e0eba31d9898d695b127c",
+      "anchors": [
+        {
+          "symbol": "public static EntityManager create(",
+          "line": 93,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private Object invoke(",
+          "line": 135,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B48",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/connections/jpa/support/EntityManagerProxy.java#L93"
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/AsyncCommitIntegrator.java",
+      "sha256": "2bf1c843343dbe523cbd44a07f7df705b0a18bf59539027a9dceb1d3397e0d5a",
+      "anchors": [
+        {
+          "symbol": "public static void registerListeners(",
+          "line": 80,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B49",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/AsyncCommitIntegrator.java#L80"
+    },
+    {
+      "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/PostgreSQLAsyncCommitIntegrator.java",
+      "sha256": "34cde68a86514ddd1ee5d23b09618cf2bb12a903ba87ba51837848b412800636",
+      "anchors": [
+        {
+          "symbol": "protected void applyAsyncCommit(",
+          "line": 51,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B50",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/model/jpa/src/main/java/org/keycloak/connections/jpa/PostgreSQLAsyncCommitIntegrator.java#L51"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/Providers.java",
+      "sha256": "65baef173850468b67dee77e31a164cfd795ea998960fb4d71de001fec578e1c",
+      "anchors": [
+        {
+          "symbol": "public static ProviderManager getProviderManager(",
+          "line": 25,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B51",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/Providers.java#L25"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/provider/ProviderManager.java",
+      "sha256": "1b7a9ea554f5c2428b363da440622856e3bd4b00e2fcdfbe85c94ec41b2d2080",
+      "anchors": [
+        {
+          "symbol": "public ProviderManager(KeycloakDeploymentInfo info, ClassLoader baseClassLoader, String... resources)",
+          "line": 44,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "for (ProviderLoaderFactory f : ServiceLoader.load(",
+          "line": 47,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public synchronized List<Spi> loadSpis()",
+          "line": 89,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public synchronized List<ProviderFactory> load(Spi spi)",
+          "line": 103,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public ProviderFactory compareFactories(",
+          "line": 135,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B52",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/ProviderManager.java#L44"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/provider/DefaultProviderLoader.java",
+      "sha256": "9266799ad3cacfcf10653b509137ac975402df41240a223385afb88d1e231b83",
+      "anchors": [
+        {
+          "symbol": "public List<Spi> loadSpis()",
+          "line": 44,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public List<ProviderFactory> load(Spi spi)",
+          "line": 57,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "ServiceLoader.load(spi.getProviderFactoryClass(), classLoader)",
+          "line": 60,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B53",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/DefaultProviderLoader.java#L44"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/provider/DeploymentProviderLoader.java",
+      "sha256": "b15ba7aebd40703c8152932c9f1e771b9d456ab84ce2a4a0fd8592a8468a54a0",
+      "anchors": [
+        {
+          "symbol": "public List<ProviderFactory> load(Spi spi)",
+          "line": 40,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B54",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/DeploymentProviderLoader.java#L40"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/provider/FileSystemProviderLoaderFactory.java",
+      "sha256": "83c53dbfa37d9012ac4515b532a66389c28090e07e360199b46632c0df6b944c",
+      "anchors": [
+        {
+          "symbol": "public ProviderLoader create(",
+          "line": 41,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private static URLClassLoader createClassLoader(",
+          "line": 45,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B55",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/FileSystemProviderLoaderFactory.java#L41"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/provider/DefaultProviderLoaderFactory.java",
+      "sha256": "d53310ca098e62a189accd7614ddf69c6cd4f9c86b91a61a5ffdd2d70088d92c",
+      "anchors": [
+        {
+          "symbol": "public ProviderLoader create(",
+          "line": 31,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B56",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/provider/DefaultProviderLoaderFactory.java#L31"
+    },
+    {
+      "path": "services/src/main/resources/META-INF/services/org.keycloak.provider.ProviderLoaderFactory",
+      "sha256": "c29aefc418279ebb93bda9d3e272c07e3e931a07e11e70c742f2e3a2f43cb1fb",
+      "anchors": [
+        {
+          "symbol": "org.keycloak.provider.FileSystemProviderLoaderFactory",
+          "line": 19,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B57",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/resources/META-INF/services/org.keycloak.provider.ProviderLoaderFactory#L19"
+    },
+    {
+      "path": "server-spi-private/src/main/java/org/keycloak/provider/KeycloakDeploymentInfo.java",
+      "sha256": "acb66bb6e13164fac9ebada9a362c06132024877f063b4aea6ff226e89eb56da",
+      "anchors": [
+        {
+          "symbol": "public static KeycloakDeploymentInfo create()",
+          "line": 24,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public KeycloakDeploymentInfo services()",
+          "line": 44,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B58",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/server-spi-private/src/main/java/org/keycloak/provider/KeycloakDeploymentInfo.java#L24"
+    },
+    {
+      "path": "services/src/main/java/org/keycloak/services/resources/KeycloakApplication.java",
+      "sha256": "5dac0724c0c8e25c954a689a441403b713f83b12400f1913e06b3d71f46cbb1c",
+      "anchors": [
+        {
+          "symbol": "protected synchronized void startup()",
+          "line": 76,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "private void runBootstrap(",
+          "line": 85,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "keycloakSessionFactory.init();",
+          "line": 88,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B59",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/services/src/main/java/org/keycloak/services/resources/KeycloakApplication.java#L76"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/QuarkusKeycloakApplication.java",
+      "sha256": "401da8d23dd797ed1fcc3319c8e490f2f3f1ae5cfb7b127b86444489247cccdf",
+      "anchors": [
+        {
+          "symbol": "void onStartupEvent(",
+          "line": 74,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "CompletableFuture.runAsync(this::startup, executor)",
+          "line": 83,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public DefaultKeycloakSessionFactory createSessionFactory()",
+          "line": 103,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B60",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/integration/jaxrs/QuarkusKeycloakApplication.java#L74"
+    },
+    {
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakMain.java",
+      "sha256": "2dedc4cdef5ec209e7095d2ce07e6359c9023ae850ac6d5506d91d52c3dfa151",
+      "anchors": [
+        {
+          "symbol": "InfinispanUtils.configureVirtualThreads();",
+          "line": 68,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "public static void main(String[] args)",
+          "line": 71,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "Quarkus.run(KeycloakMain.class,",
+          "line": 144,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B61",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/KeycloakMain.java#L68"
+    },
+    {
+      "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakSessionFactoryPreInitBuildItem.java",
+      "sha256": "eedcfd5daf6ffc2f708befe0f8034e493de2a43111b00176c4e0b295ff63c110",
+      "anchors": [
+        {
+          "symbol": "public final class KeycloakSessionFactoryPreInitBuildItem",
+          "line": 26,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B62",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakSessionFactoryPreInitBuildItem.java#L26"
+    },
+    {
+      "path": "quarkus/runtime/src/main/resources/META-INF/quarkus-extension.yaml",
+      "sha256": "07cad9bc69560fb03e6342db3aba47ee3ae5f8ade0466deadc34062ba48a8e4b",
+      "anchors": [
+        {
+          "symbol": "artifact:",
+          "line": 2,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B63",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/src/main/resources/META-INF/quarkus-extension.yaml#L2"
+    },
+    {
+      "path": "pom.xml",
+      "sha256": "a7ffee473325d7ce5a83903686d229ede985c3a6b12846d792a98def5ac21fa7",
+      "anchors": [
+        {
+          "symbol": "<quarkus.version>3.40.1</quarkus.version>",
+          "line": 43,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "<quarkus.build.version>3.40.1</quarkus.build.version>",
+          "line": 44,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B64",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/pom.xml#L43"
+    },
+    {
+      "path": "quarkus/pom.xml",
+      "sha256": "1523c7771672d7749a51047c8fa2ebf55500770f2d898ba2f37cec34e4f462d2",
+      "anchors": [
+        {
+          "symbol": "<artifactId>keycloak-quarkus-parent</artifactId>",
+          "line": 30,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "<module>deployment</module>",
+          "line": 40,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B65",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/pom.xml#L30"
+    },
+    {
+      "path": "quarkus/runtime/pom.xml",
+      "sha256": "c95ad4dcacb7686317304c076d270a078d05a97d33f25029fa66e8085e9b9121",
+      "anchors": [
+        {
+          "symbol": "<artifactId>keycloak-quarkus-server</artifactId>",
+          "line": 14,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "<artifactId>quarkus-extension-maven-plugin</artifactId>",
+          "line": 794,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "<artifactId>quarkus-extension-processor</artifactId>",
+          "line": 816,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B66",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/pom.xml#L14"
+    },
+    {
+      "path": "quarkus/deployment/pom.xml",
+      "sha256": "6e5baf01d0947b599dad9ff4cfb74031ef623775b23175f9aacaa13090cc825b",
+      "anchors": [
+        {
+          "symbol": "<artifactId>keycloak-quarkus-server-deployment</artifactId>",
+          "line": 16,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "<artifactId>quarkus-core-deployment</artifactId>",
+          "line": 29,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "<artifactId>quarkus-bootstrap-core</artifactId>",
+          "line": 169,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B67",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/pom.xml#L16"
+    },
+    {
+      "path": "quarkus/server/pom.xml",
+      "sha256": "ffaff3ac960ab42d3ef5baa2f6ab342b267431e57c6d10f06983318c39dfa2ec",
+      "anchors": [
+        {
+          "symbol": "<artifactId>keycloak-quarkus-server-app</artifactId>",
+          "line": 17,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "<artifactId>quarkus-maven-plugin</artifactId>",
+          "line": 75,
+          "literal_occurrences": 1
+        },
+        {
+          "symbol": "<kc.db>dev-file</kc.db>",
+          "line": 82,
+          "literal_occurrences": 1
+        }
+      ],
+      "id": "B68",
+      "url": "https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/server/pom.xml#L17"
+    }
+  ],
+  "review_scope": "Mandatory A0 preflight; stop before candidate because selected actual augmentation/build/provider activation prerequisites are unqualified",
+  "source_inventory_is_complete_callgraph": false,
+  "prior_290_jar_record_sha256": "420477fd577a48cf1f3ceb67a9f191eb54cebe851397d57f45c0799acf08f111",
+  "prior_290_jar_coordinate_record_rechecked": true,
+  "prior_JAR_bytes_not_reread_or_fetched": true,
+  "minimum_missing_input_seeds": [
+    {
+      "coordinate": "org.keycloak:keycloak-quarkus-server:26.8.1",
+      "source_pom": "quarkus/runtime/pom.xml",
+      "role": "native runtime module",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-quarkus-server-deployment:26.8.1",
+      "source_pom": "quarkus/deployment/pom.xml",
+      "role": "native augmentation module",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "org.keycloak:keycloak-quarkus-server-app:26.8.1",
+      "source_pom": "quarkus/server/pom.xml",
+      "role": "native server assembly",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-core-deployment:3.40.1",
+      "source_pom": "quarkus/deployment/pom.xml",
+      "role": "augmentation dependency",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-arc-deployment:3.40.1",
+      "source_pom": "quarkus/deployment/pom.xml",
+      "role": "CDI build dependency",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-rest-deployment:3.40.1",
+      "source_pom": "quarkus/deployment/pom.xml",
+      "role": "REST build dependency",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-hibernate-orm-deployment:3.40.1",
+      "source_pom": "quarkus/deployment/pom.xml",
+      "role": "ORM build dependency",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-bootstrap-core:3.40.1",
+      "source_pom": "quarkus/deployment/pom.xml",
+      "role": "bootstrap dependency",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-maven-plugin:3.40.1",
+      "source_pom": "quarkus/server/pom.xml",
+      "role": "executing build plugin",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-extension-maven-plugin:3.40.1",
+      "source_pom": "quarkus/runtime/pom.xml",
+      "role": "generated extension descriptor plugin",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    },
+    {
+      "coordinate": "io.quarkus:quarkus-extension-processor:3.40.1",
+      "source_pom": "quarkus/runtime/pom.xml",
+      "role": "executing annotation processor",
+      "present_in_inherited_290_jar_record": false,
+      "version_source": "native module version or root quarkus.version/quarkus.build.version; BOM-effective and full transitive resolution NOT performed",
+      "qualification": "missing_reviewed_input_and_activation_proof",
+      "source_build_is_possible_but_not_performed": true
+    }
+  ],
+  "minimum_missing_input_count": 11,
+  "seeds_are_not_a_complete_effective_dependency_graph": true,
+  "declared_native_module_dependencies": [
+    {
+      "path": "quarkus/runtime/pom.xml",
+      "sha256": "c95ad4dcacb7686317304c076d270a078d05a97d33f25029fa66e8085e9b9121",
+      "declared_direct_dependencies": [
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-vertx-http",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-vertx",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.vertx",
+          "artifact": "vertx-web-client",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-rest",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-rest-jackson",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-hibernate-orm",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-agroal",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.hibernate.orm",
+          "artifact": "hibernate-community-dialects",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-h2",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-postgresql",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-mariadb",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-mysql",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-mssql",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-oracle",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-smallrye-health",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-micrometer",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-micrometer-registry-prometheus",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-logging-json",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-opentelemetry",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.opentelemetry.instrumentation",
+          "artifact": "opentelemetry-jdbc",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.opentelemetry.instrumentation",
+          "artifact": "opentelemetry-apache-httpclient-4.3",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-micrometer-opentelemetry",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.apicatalog",
+          "artifact": "titanium-json-ld",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.setl",
+          "artifact": "rdf-urdna",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-hibernate-validator",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.smallrye.config",
+          "artifact": "smallrye-config-source-keystore",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-smallrye-openapi",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-swagger-ui",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "info.picocli",
+          "artifact": "picocli",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-services",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-common",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-crypto-default",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-crypto-fips1402",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-server-spi",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-server-spi-private",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-themes",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-themes-vendor",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-saml-core-public",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-saml-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-model-jpa",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-model-infinispan",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-model-storage",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-model-storage-private",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-model-storage-services",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-authz-policy-common",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-kerberos-federation",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-sssd-federation",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-ldap-federation",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-ipatuura-federation",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-config-api",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-account-ui",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-admin-ui",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-rest-admin-ui-ext",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-admin-v2-api",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-admin-v2-services",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-scim-services",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-authzen-services",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-scim-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-scim-model",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-ssf-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-ssf-transmitter",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-ssf-services",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.jboss.logging",
+          "artifact": "commons-logging-jboss-logging",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "commons-io",
+          "artifact": "commons-io",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.webauthn4j",
+          "artifact": "webauthn4j-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.webauthn4j",
+          "artifact": "webauthn4j-util",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.fasterxml.jackson.dataformat",
+          "artifact": "jackson-dataformat-cbor",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.freemarker",
+          "artifact": "freemarker",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.google.guava",
+          "artifact": "guava",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.googlecode.owasp-java-html-sanitizer",
+          "artifact": "owasp-java-html-sanitizer",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.googlecode.owasp-java-html-sanitizer",
+          "artifact": "java8-shim",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.googlecode.owasp-java-html-sanitizer",
+          "artifact": "java10-shim",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.apache.httpcomponents",
+          "artifact": "httpcore",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.apache.httpcomponents",
+          "artifact": "httpclient",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.github.ua-parser",
+          "artifact": "uap-java",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.yaml",
+          "artifact": "snakeyaml",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.snakeyaml",
+          "artifact": "snakeyaml-engine",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.google.zxing",
+          "artifact": "core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.google.zxing",
+          "artifact": "javase",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "jakarta.mail",
+          "artifact": "jakarta.mail-api",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.eclipse.angus",
+          "artifact": "angus-mail",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "jakarta.xml.soap",
+          "artifact": "jakarta.xml.soap-api",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.sun.xml.messaging.saaj",
+          "artifact": "saaj-impl",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.apache.santuario",
+          "artifact": "xmlsec",
+          "literal_version": "${xmlsec.version}",
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.apache.commons",
+          "artifact": "commons-lang3",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.liquibase",
+          "artifact": "liquibase-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.infinispan",
+          "artifact": "infinispan-commons",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.infinispan",
+          "artifact": "infinispan-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.infinispan",
+          "artifact": "infinispan-api",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.infinispan",
+          "artifact": "infinispan-cachestore-remote",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.infinispan",
+          "artifact": "infinispan-component-annotations",
+          "literal_version": null,
+          "literal_scope": "provided",
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "jakarta.xml.bind",
+          "artifact": "jakarta.xml.bind-api",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "jakarta.transaction",
+          "artifact": "jakarta.transaction-api",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.openjdk.nashorn",
+          "artifact": "nashorn-core",
+          "literal_version": "${nashorn.version}",
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "net.java.dev.jna",
+          "artifact": "jna",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.fasterxml.jackson.jakarta.rs",
+          "artifact": "jackson-jakarta-rs-yaml-provider",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "junit",
+          "artifact": "junit",
+          "literal_version": null,
+          "literal_scope": "test",
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.hamcrest",
+          "artifact": "hamcrest",
+          "literal_version": null,
+          "literal_scope": "test",
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.twitter4j",
+          "artifact": "twitter4j-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.github.hypfvieh",
+          "artifact": "dbus-java-transport-native-unixsocket",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        }
+      ]
+    },
+    {
+      "path": "quarkus/deployment/pom.xml",
+      "sha256": "6e5baf01d0947b599dad9ff4cfb74031ef623775b23175f9aacaa13090cc825b",
+      "declared_direct_dependencies": [
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-quarkus-server",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-core-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-arc-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-rest-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-rest-jackson-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-hibernate-validator-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-hibernate-orm-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-h2-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-postgresql-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-mariadb-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-mysql-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-mssql-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-jdbc-oracle-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-bootstrap-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-smallrye-health-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-smallrye-openapi-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-swagger-ui-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-micrometer-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-micrometer-registry-prometheus-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-logging-json-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-opentelemetry-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-micrometer-opentelemetry-deployment",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-junit5-internal",
+          "literal_version": null,
+          "literal_scope": "test",
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-junit5-mockito",
+          "literal_version": null,
+          "literal_scope": "test",
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.rest-assured",
+          "artifact": "rest-assured",
+          "literal_version": null,
+          "literal_scope": "test",
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        }
+      ]
+    },
+    {
+      "path": "quarkus/server/pom.xml",
+      "sha256": "ffaff3ac960ab42d3ef5baa2f6ab342b267431e57c6d10f06983318c39dfa2ec",
+      "declared_direct_dependencies": [
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-quarkus-server",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "org.keycloak",
+          "artifact": "keycloak-quarkus-server-deployment",
+          "literal_version": null,
+          "literal_scope": "provided",
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.fasterxml.jackson.core",
+          "artifact": "jackson-databind",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "com.fasterxml.jackson.core",
+          "artifact": "jackson-core",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.mvnpm",
+          "artifact": "importmap",
+          "literal_version": null,
+          "literal_scope": "provided",
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        },
+        {
+          "group": "io.quarkus",
+          "artifact": "quarkus-smallrye-openapi",
+          "literal_version": null,
+          "literal_scope": null,
+          "effective_BOM_profile_or_optional_resolution_performed": false
+        }
+      ]
+    }
+  ],
+  "recorded_Quarkus_JARs": 21,
+  "native_build_executed": false,
+  "native_tests_rerun": false,
+  "inherited_native_cases": 578,
+  "inherited_preparation_controls": 6,
+  "new_candidate_overlay": false,
+  "A0_mandatory_birth_gate_qualified": false,
+  "A1_A2_authority_implemented": false,
+  "enforceable_exclusion_proved": false,
+  "complete_cleanup_proved": false,
+  "R2_implementation_gate_met": false,
+  "R3_R4_GO": false,
+  "format_version": 1,
+  "status": "NO_GO_at_mandatory_A0_prerequisite_gate_before_candidate",
+  "canonical_design": "docs/architecture/keycloak-lifecycle-containment.md",
+  "parent_design_record": "core-lifecycle-design-review.json",
+  "preflight_gates": [
+    {
+      "id": "PF-01",
+      "boundary": "Reviewed artifact/build input closure before execution",
+      "refs": [
+        "B64",
+        "B65",
+        "B66",
+        "B67",
+        "B68"
+      ],
+      "observation": "11 minimum native module/dependency/plugin/processor coordinates are absent from the inherited 290-JAR record; 102/26/6 direct dependency declarations are not effective graphs",
+      "required": "Review metadata/BOM/profile/plugin/processor/provider closure and exact provenance/hash/license/security inputs; source-built modules need source/output identity and isolation too",
+      "qualified": false,
+      "candidate_created": false,
+      "runtime_executed": false
+    },
+    {
+      "id": "PF-02",
+      "boundary": "Provider admission before discovery/initialization",
+      "refs": [
+        "B19",
+        "B51",
+        "B52",
+        "B53",
+        "B54",
+        "B55",
+        "B56",
+        "B57",
+        "B58"
+      ],
+      "observation": "Processor obtains ProviderManager, loads SPI/factory instances and deployed script factories before its isEnabled filter; ServiceLoader and supplied loaders participate",
+      "required": "Verify the exact immutable build/classloader/provider/descriptor/feature set before class loading or factory construction; a late enabled flag or ID allowlist is insufficient",
+      "qualified": false,
+      "candidate_created": false,
+      "runtime_executed": false
+    },
+    {
+      "id": "PF-03",
+      "boundary": "Restricted birth before native initialization",
+      "refs": [
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B16",
+        "B34",
+        "B35"
+      ],
+      "observation": "Default session has instance collection initializers and static logger; its body constructs manager, calls virtual context construction and logs; Quarkus constructor delegates to super",
+      "required": "Qualify JVM superclass/static/instance/virtual order and source/bytecode origin; prove earlier initialization effect-free or place ownership earlier; no body guard can retroactively protect earlier work",
+      "qualified": false,
+      "candidate_created": false,
+      "runtime_executed": false
+    },
+    {
+      "id": "PF-04",
+      "boundary": "Concrete native factory/augmentation activation",
+      "refs": [
+        "B01",
+        "B02",
+        "B03",
+        "B18",
+        "B19",
+        "B62",
+        "B63",
+        "B66",
+        "B67",
+        "B68"
+      ],
+      "observation": "Concrete factory reflectively constructs factories and calls init; recorder/processor assemble it; symbolic pre-init build item is not an admission check",
+      "required": "Actual isolated Quarkus augmentation and selected provider/classloading proof; no synthetic factory receipt, abstract interface or direct constructor fixture can pass",
+      "qualified": false,
+      "candidate_created": false,
+      "runtime_executed": false
+    },
+    {
+      "id": "PF-05",
+      "boundary": "Startup/maintenance before model work and job creation",
+      "refs": [
+        "B02",
+        "B07",
+        "B59",
+        "B60",
+        "B61",
+        "B68"
+      ],
+      "observation": "Native startup invokes factory init/postInit and bootstrap jobs; async startup and native app build config differ from the earlier fixture; native app POM includes dev-file DB configuration",
+      "required": "Safe owned harness must fence bootstrap and block DB/listener/import/secret/provider effects before use; never run native defaults or use exit-before-bootstrap as proof that init was prevented",
+      "qualified": false,
+      "candidate_created": false,
+      "runtime_executed": false
+    },
+    {
+      "id": "PF-06",
+      "boundary": "Direct/internal/new/nested/worker/CDI session ownership",
+      "refs": [
+        "B03",
+        "B04",
+        "B05",
+        "B07",
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B13",
+        "B14",
+        "B15",
+        "B33"
+      ],
+      "observation": "CDI uses factory.create; native jobs create session, begin and clone context before job body; direct construction and worker creation need the same mandatory boundary",
+      "required": "Fresh exact restricted lifecycle owner before initialization; missing/stale/foreign/reentry/worker denial with controls; birth grants no primary realm/auth/read/write/signing authority",
+      "qualified": false,
+      "candidate_created": false,
+      "runtime_executed": false
+    },
+    {
+      "id": "PF-07",
+      "boundary": "Historical fixture versus actual framework proof",
+      "refs": [
+        "B18",
+        "B19",
+        "B60",
+        "B66",
+        "B67",
+        "B68"
+      ],
+      "observation": "Earlier fixture targets services/SPI and controlled native source, not native runtime/deployment/server assembly or generated augmentation; it disables annotation processing",
+      "required": "Keep historical 578 cases/six controls and all failures unchanged; distinguish any later rerun and new oracle; actual framework/provenance proof remains mandatory before A0 passes",
+      "qualified": false,
+      "candidate_created": false,
+      "runtime_executed": false
+    }
+  ],
+  "minimum_seed_inventory_is_resolution_plan_not_lockfile": true,
+  "prior_two_build_helper_license_declarations_and_deprecated_test_API_limits_retained": true,
+  "provider_or_descriptor_activation_closure_proved": false,
+  "actual_Quarkus_classloading_augmentation_or_JVM_initialization_order_executed": false,
+  "source_prerequisite_review_complete": true,
+  "mandatory_A0_qualification_complete": false,
+  "prototype_implementation_remains_open": true,
+  "next_bounded_work": "Review and lock isolated native Quarkus augmentation build/provider inputs before returning to mandatory deny-only session-birth qualification; no production adoption or authority implementation",
+  "all_prior_four_containment_witnesses_and_native_failure_findings_retained": true,
+  "all_22_writers_LC01_to_10_A0A1A2_R3_to_R7_and_capability_restoration_retained": true,
+  "production_changes": false
+}
