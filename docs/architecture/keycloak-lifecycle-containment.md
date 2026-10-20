@@ -720,24 +720,80 @@ Java localhost success and unqualified arbitrary-native/DNS/Mach/bootstrap/IOKit
 service/container/DB/secret/resource/sidechannel scope remain. Private/deprecated
 Apple API and trusted controller/JDK/system/cryptex/sysctl scope are research limits.
 
+## Selected executable-input declaration frontier
+
+The [frontier record](../../infra/keycloak/keycloak_registration_connector/selected-input-frontier.json)
+reconciles the five explicit-profile models with the two packaged plugin
+descriptors. **This completes a declaration inventory, while full executable
+input closure and native issuer isolation remain NO-GO.** It is not a lockfile,
+dependency resolver, build recipe or approval to execute the listed artifacts.
+
+| Retained input layer | Result |
+| --- | --- |
+| Direct dependencies | 134 occurrences, 131 distinct GAVs: 126 compile, 3 provided, 5 test |
+| Declared build plugins | 7 declarations, 5 distinct plugins |
+| Explicit annotation-processor paths | 2 declarations of the Quarkus extension processor |
+| Packaged plugin dependency pools | 183 occurrences, 133 distinct GAVs, kept in separate plugin realms |
+| Source-root Maven bootstrap extension | `maven-build-cache-extension:1.2.0` |
+| Combined declaration frontier | 265 distinct GAVs; 144 have pinned POM metadata, **121 still lack POM metadata** |
+| Multiple-version families | 9; no global winner or classloader equivalence claimed |
+| Keycloak source/control identities | 39 GAVs mapped to source POM paths; published binaries are not source-built candidates |
+
+Every occurrence retains owner/order, version, literal type/classifier/scope/
+optional/exclusions and its selection reason. Provided and test declarations
+remain visible; neither scope nor optional status proves safe provider exclusion.
+The 2,419 management entries in each model supply version-management context,
+not a transitive graph or artifact selection. Each model also contains 33
+plugin-management entries; management alone does not select an executable plugin.
+Raw selected-POM declarations and management provenance stay in private evidence;
+the public record contains selected declarations, hashes and exact missing GAVs.
+
+The source [`.mvn/extensions.xml`](https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/.mvn/extensions.xml)
+declares the build-cache extension, outside the model API's project-extension
+view. The server model declares `quarkus-maven-plugin` with `extensions=true`,
+the `build` goal and **`kc.db=dev-file`**. The runtime binds the extension-descriptor
+goal and both runtime/deployment compiler configurations specify the Quarkus
+annotation processor. A source-root Maven launch would need those bootstrap/
+plugin/processor inputs reviewed separately. No Maven lifecycle/default packaging
+bindings were injected by the model-only check, so absent resource/jar/test goals
+cannot be inferred absent from an eventual build. No such launch occurred.
+
+Both packaged native build steps, **KeycloakProcessor and LiquibaseProcessor**,
+and the 16 source/runtime service-descriptor matches remain in the frontier.
+They do not prove provider reach, constructor/init/postInit behavior or safe
+exclusion. Generated extension descriptors/indexes/classes, conditional deployment
+dependencies, devservices/container/native paths and classloader realms still
+need actual selected-input and effect evidence. Earlier static/superclass/instance/
+virtual/logger/context initialization findings remain applicable.
+
+All 69 source pins/162 anchors, 263 POM pins, five model-output hashes, 54 seed
+metadata entries, six model libraries and all 459 JDK/96 Maven installed files
+were reverified without running Java or Maven. The POM corpus still has 192
+publisher checksum matches and 71 missing publisher checksums. Nearest-parent
+license declarations are metadata only; binary notices/license/security/CVE/PGP/
+SBOM/distribution and source-output equivalence remain unqualified. No new
+network fetch, binary, upstream source or raw POM is published by this unit.
+The 578 native cases and six controls remain inherited and unchanged.
+
 ## Proof sequence and next bounded work
 
-The bounded offline model API now has qualified inputs, owned effects controls
-and five explicit-profile outputs. **Full transitive artifact/plugin/processor/
-extension/provider/classloader/build-step closure and native issuer isolation
-stay NO-GO; parent input/harness and A0 remain open.** The 2,419 management entries
-and 134 direct declarations are not a mediated executable graph or approval to
-fetch binaries. The earlier133-coordinate plugin descriptor pool still needs
-selected-graph/provenance/license/security reconciliation before resolution/use.
+Next review the **121 exact missing POM coordinates** and their parent/BOM/license
+ancestry, then qualify bounded child-model expansion for the selected project,
+plugin, processor and extension realms. Preserve profile/BOM provenance, scopes,
+classifiers, optional/exclusions, dependency order and path-specific mediation.
+Any permitted metadata retrieval uses only the fixed credential-free destination
+after review; no POM-supplied repositories, redirects, auth/settings/cache or
+unreviewed automatic fetch. Missing metadata or unresolved mediation stops closed.
 
-Next use these outputs to review and close the selected transitive executable
-inputs and provider/build-step effects. Preserve scopes/classifiers/optional/
-exclusions/profile/BOM/mediation identity and compare source-built candidate versus
-published controls. No POM repository URL may trigger auto-fetch. Both native
-processors, earlier initialization, dev-file DB defaults and framework/container/
-dev-services paths remain mandatory. Only after both full input and issuer-
-isolation gates pass may the same A0 prototype resume with source-built candidate,
-actual Quarkus activation/class-origin negative proof and every native denial gate.
+The remaining gates are explicit in the record: child effective-model/transitive
+mediation; actual lifecycle/bootstrap selection; binary/static extension/provider/
+classloader closure; source-built output and both native-processor effects; and
+the independent full effect-disabled issuer harness. No native build may run to
+discover those inputs. Both full input and issuer-isolation gates must pass before
+the same open A0 deny-only prototype resumes. Earlier inherited FD/stdin witnesses,
+Java localhost success, private/deprecated Apple API, trusted controller/JDK/OS/
+cryptex/sysctl assumptions and Mach/bootstrap/IOKit/DNS/service/container/DB/secret/
+native/resource/sidechannel gaps remain unchanged.
 
 The A0 prototype remains open. All LC-01–10/A0/A1/A2, full entry/all-22-writer
 closure, native cleanup/response, actual HTTP/JTA/JDBC/cache/durable effects,

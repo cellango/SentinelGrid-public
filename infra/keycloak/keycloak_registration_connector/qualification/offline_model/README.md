@@ -110,9 +110,10 @@ service/container/DB/secret/resource/sidechannel mediation is unqualified. The o
 Python/JVM inherited-capability witnesses and Java localhost success remain;
 neither model success nor this policy makes those gaps disappear.
 
-Next use the five explicit models to review and close selected transitive binary,
-plugin/processor/extension/provider/classloader/build-step inputs and effects.
-Review every new coordinate/hash/license/provenance/security limit before use;
-never auto-fetch from POM repositories. Both full input and issuer-isolation gates
-must pass before the same open A0 native prototype resumes. All earlier lifecycle,
-writer, cleanup, durability and Task6capability-restoration requirements remain.
+The [subsequent declaration frontier](../../../../../docs/architecture/keycloak-lifecycle-containment.md#selected-executable-input-declaration-frontier)
+reconciles these outputs with plugin/processor/bootstrap declarations: 265 GAVs,
+including 121 missing POMs. It also records the source-root build-cache extension,
+which this API never loads. Next review missing metadata and bounded child-model
+expansion. Full binary/provider/classloader/build-step closure and issuer isolation
+remain NO-GO; both gates precede A0. All earlier lifecycle, writer, cleanup,
+durability and Task 6 capability-restoration requirements remain.

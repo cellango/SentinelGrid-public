@@ -346,9 +346,9 @@ coordinates (99 absent from old evidence). Next closes full executable input and
 isolation prerequisites before any candidate. No binaries are published; full
 lifecycle/storage/writer/issuance and actual runtime activation remain NO-GO.
 
-The current [offline model qualification](../../../docs/architecture/keycloak-lifecycle-containment.md#offline-selected-model-prerequisite-qualification)
-passes 15 model/boundary checks, 16 integrity controls and five selected-profile model
-builds. Runtime/deployment/server direct declarations are 102/26/6, with versions
-interpolated. Six pinned libraries execute as a model API only; no CLI/plugin/
-processor/augmentation/issuer/provider candidate runs. Next close transitive
-artifact/plugin/processor/provider and native-effect inputs; full harness/A0 stay open.
+The [selected-input frontier](../../../docs/architecture/keycloak-lifecycle-containment.md#selected-executable-input-declaration-frontier)
+reconciles 265 distinct GAVs from the five models, plugin pools, processors and
+source-root build-cache extension. Of these, 121 still lack POM metadata. It
+retains scope/exclusion and separate-realm provenance; it is not a mediated
+executable lock. Next review those metadata gaps and bounded child models.
+Full native input, issuer isolation and A0 remain open; no native/plugin code ran.
