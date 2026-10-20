@@ -2952,6 +2952,7 @@
     "infra/keycloak/README.md",
     "infra/keycloak/keycloak_registration_connector/README.md",
     "infra/keycloak/keycloak_registration_connector/attempts-review.json",
+    "infra/keycloak/keycloak_registration_connector/augmentation-input-review.json",
     "infra/keycloak/keycloak_registration_connector/build-review.json",
     "infra/keycloak/keycloak_registration_connector/controlled-failures-review.json",
     "infra/keycloak/keycloak_registration_connector/core-audit-review.json",

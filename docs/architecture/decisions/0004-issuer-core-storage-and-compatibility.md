@@ -272,7 +272,11 @@ unimplemented; primary bootstrap/read/fence and actual runtime closure are still
 missing. The [A0 preflight](../keycloak-lifecycle-containment.md#mandatory-a0-prerequisite-result-no-go-before-candidate)
 has now stopped before candidate implementation: selected native Quarkus build/
 provider activation prerequisites are unqualified. The session-birth prototype
-remains open, with isolated augmentation-input review next. No native build/test
-or new executable input was used. Neither design nor this stop adopts a fork/
-version/storage primitive, supersedes pre-token or proposed point-in-time semantics,
-or clears R2 implementation/R3/R4. No engine change follows.
+remains open. The subsequent
+[static input review](../keycloak-lifecycle-containment.md#static-seed-input-review-and-candidate-identity-lock)
+pins 38 POMs and 11 checksum-matched seed JARs without executing them. Five native
+POMs match source; the declared provider/build-step/plugin pools still need full
+input and isolation qualification. No Maven/JVM/plugin/native build or test ran.
+These records neither adopt a fork/version/storage primitive, supersede pre-token
+or proposed point-in-time semantics, nor clear R2 implementation/R3/R4. No engine
+change follows.

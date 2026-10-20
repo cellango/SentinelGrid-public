@@ -261,9 +261,9 @@ observations from supported Admin writes through commit. The deliberate logger
 failure/crash tails and unresolved startup/background scopes retain their failed
 whole-log evidence gate. All nine earlier provider gates remain open; the new
 interleaved native disable still returns earlier enabled state. The provider JAR
-and existing application/guard/defaults remain unchanged. ADR 0003 R2 source/API/
-writer/storage/conditional-issuance feasibility is next, with every prior gate
-retained. No provider/caller deployment is enabled.
+and existing application/guard/defaults remain unchanged. Subsequent ADR 0003 R2
+source/API/writer/storage/conditional-issuance research is recorded below, with
+every prior gate retained. No provider/caller deployment is enabled.
 
 ## Maintained-candidate issuer feasibility
 
@@ -297,7 +297,7 @@ The [native admission design review](../../../docs/architecture/keycloak-native-
 traces the earlier request/realm/event and alternate/internal/error/worker paths.
 Its proposed three core layers remain unimplemented; no full entry/writer closure
 or R2 implementation/R3/R4 gate is cleared. The review supplies pinned source
-references and the next denial-only experiment boundary.
+references used by the following denial-only experiments.
 
 The [early realm-denial experiment](qualification/realm_entry/README.md) tests a
 native resolver hook and minimal direct failure path (260 test cases/six input
@@ -338,5 +338,10 @@ acceptance. The [mandatory A0 preflight](session-birth-preflight-review.json)
 now records a prerequisite NO-GO before candidate implementation: 68 source/build
 units/158 anchors, with 11 minimum native Quarkus input seeds absent from inherited
 artifact evidence. This is source/manifest inspection, not a build or rerun. The
-session-birth prototype remains open; next is isolated augmentation-input review.
-Full lifecycle/storage/writer/issuance and actual runtime activation remain NO-GO.
+session-birth prototype remains open. The subsequent
+[static augmentation-input review](augmentation-input-review.json) pins 38 POMs,
+11 checksum-matched seed JARs and 69 source/build units/162 anchors, without code
+execution. It identifies both native processors and 133 plugin dependency
+coordinates (99 absent from old evidence). Next closes full executable input and
+isolation prerequisites before any candidate. No binaries are published; full
+lifecycle/storage/writer/issuance and actual runtime activation remain NO-GO.

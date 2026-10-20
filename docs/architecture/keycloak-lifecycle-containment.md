@@ -394,9 +394,9 @@ custody and durable failover remain separate acceptance gates.
 
 The [session-birth preflight record](../../infra/keycloak/keycloak_registration_connector/session-birth-preflight-review.json)
 reverifies all 50 earlier source pins and adds 18 native/build units: **68 units,
-158 literal anchors** at the same immutable commit. It reviews source and earlier
-manifest evidence only. No new candidate, native test, augmentation, JAR fetch,
-SDK build or provider operation ran. The 578 cases/six controls are inherited
+158 literal anchors** at the same immutable commit. That earlier preflight reviewed
+source and inherited manifest evidence only. No candidate, native test, augmentation,
+JAR fetch, SDK build or provider operation ran in that preflight. The 578 cases/six controls are inherited
 results, not rerun. **The mandatory A0 prototype remains open.** The prescribed
 prerequisite stop fired; this is not a passing denial/constructor experiment.
 
@@ -468,37 +468,90 @@ fill gaps with arbitrary SDKs, default repositories or real server startup.
 | PF-06 — Direct/internal/new/nested/worker/CDI session ownership | Fresh exact restricted lifecycle owner before initialization; missing/stale/foreign/reentry/worker denial with controls; birth grants no primary realm/auth/read/write/signing authority. | Unqualified; stop before candidate. |
 | PF-07 — Historical fixture versus actual framework proof | Keep historical 578 cases/six controls and all failures unchanged; distinguish any later rerun and new oracle; actual framework/provenance proof remains mandatory before A0 passes. | Unqualified; stop before candidate. |
 
+## Static seed-input review and candidate identity lock
+
+The [augmentation input record](../../infra/keycloak/keycloak_registration_connector/augmentation-input-review.json)
+now pins **11 reviewed seed artifacts**, **38 POMs**, and **69 native source/build
+units with 162 literal anchors**. All 68 earlier source pins match. This is a
+bounded static seed review and harness plan; **the full effective build-input
+lock and A0 qualification remain NO-GO**. The existing P1 research approval
+persists. No new production decision follows from inspecting these inputs.
+
+Only fixed credential-free Maven Central URLs were fetched. Data stayed in owned
+private review paths; no existing Maven home/settings/repository or credentials
+were used. Nothing invoked Maven, a JVM, a plugin/annotation processor, Quarkus
+augmentation, native tests, a server, a database or provider code. ZIP members
+were read without extraction or class loading. No binary enters public source;
+owned quarantine binaries are removed after recording hashes and static metadata.
+
+| Reviewed evidence | Exact scope and limits |
+| --- | --- |
+| POM ancestry/BOM metadata | 38 seed, parent and root-imported-BOM POMs have local SHA-256/SHA-512 pins. 35 match publisher SHA-512 metadata; three Apache-directory/Apache ancestor POMs return 404 for that checksum file and retain local hashes only. This is not effective profile/dependency resolution or independently signed provenance. |
+| Source versus publication | Five native POMs (root, Quarkus parent, runtime, deployment and server) match the pinned source byte for byte. The candidate plan uses exact source-built changed native units; the three published native JARs are static/native control references, not a patched candidate or adopted issuer. Compiled source/output equivalence remains unproved. |
+| Seed artifact identity | All 11 quarantined JARs match their pre-pinned publisher SHA-512 values: three native controls and eight framework/plugin/processor seeds from the previous gap list. The record includes their SHA-256/SHA-512, exact URLs and metadata. Seed identity alone cannot approve the remaining graph or execution. |
+| License/security boundary | All 11 seed POM license chains declare Apache-2.0; eight framework JARs contain inspected Apache-2.0 license text. The three native JARs lack inspected LICENSE/NOTICE entries; their POM/source declarations are separate evidence. PGP signatures, full transitive licensing/SBOM/CVE/security and distribution clearance are not established. Two historical helper-license declarations and the deprecated test-only API remain limits. |
+| Static artifact metadata | 54 entry hashes, nine native class-entry hashes and 16 runtime service descriptors were reviewed. All 16 source service-descriptor files match the published runtime JAR byte for byte. Those declarations are not proof of selected runtime providers or initialization safety. |
+| Plugin input gap | Two plugin descriptors declare 183 dependency entries, 133 unique coordinates. **99 are absent from the earlier 290-JAR record.** This is a declared input pool, not a Maven-effective/transitive closure or approval to auto-fetch/execute them; prior presence also does not establish current reuse clearance. |
+
+The runtime artifact's generated extension metadata points to the exact native
+deployment coordinate. Its packaged build-step list names **both**
+`KeycloakProcessor` and `LiquibaseProcessor`. The added source pin shows
+`LiquibaseProcessor.configure` collects indexed service implementations using the
+datasource kind and records Liquibase service configuration ([B69], [B18]). This
+does not demonstrate a DB connection or migration ran; none was executed. It
+does mean a guard covering only Keycloak factory creation cannot establish the
+whole augmentation boundary. Framework build-step declarations also include
+Docker/Podman/dev-services related processors; names alone prove neither their
+execution nor their exclusion. The complete reached graph still needs proof.
+
+### Effect-disabled harness plan and open input gates
+
+The record's IN-01–07 matrix distinguishes static identity checks from unqualified
+execution/activation gates. Required ordering remains:
+
+1. Fix the exact candidate/control source and artifact identities, root POM/BOM/
+   profile selections, extensions, plugin dependencies/Mojos, annotation processors,
+   generated descriptors/indexes and provider/classloader inputs. The current
+   eleven-seed lock is **not** a complete executable classpath. No repository URL
+   embedded in a downloaded POM may cause an automatic request or unreviewed fetch.
+2. Close the remaining effective/transitive input graph, including the 133 plugin
+   coordinate pool and native dependencies, with reviewed provenance/hashes/
+   licenses/security limits before use. Any future executable model check must
+   use separately reviewed inputs, owned settings/cache/home and a fixed permitted
+   input set; this input-only substep executes none. Missing input denies, rather
+   than activating extensions or fetching arbitrary dependencies.
+3. Implement and verify an outer owned isolation boundary **before** JVM/build-step/
+   provider/static initialization. It must enforce the required network/DNS,
+   process/container/service/DB/listener/secret/unowned-file exclusions and confine
+   environment and writes to owned state. Select and qualify the actual mechanism
+   separately; no mechanism is adopted or proved here. Flags, a classpath list,
+   synthetic factory or tests that start after initialization cannot prove this.
+   Native main/startup/dev-file DB defaults and both native processors require
+   explicit treatment; no global feature retirement or silent suppression.
+4. Only then return to the same open mandatory session-birth prototype, in fresh
+   owned comparison projects with exact class-origin checks. Prove denial for
+   missing/stale/foreign/unreviewed activation before manager/context/provider/
+   begin/clone/read/effect, using actual selected Quarkus activation. A restricted
+   birth owner grants no A1/A2 realm/model/auth/write/signing authority. Preserve
+   the 578 historical cases/oracles/six controls and rerun affected cases when
+   a candidate actually reaches them. No native cases ran for this static review.
+
 ## Proof sequence and next bounded work
 
-1. Keep the coherent P01–P10 design and all historical native/limited/integrated
-   controls unchanged. Source preflight completed with NO-GO before a candidate;
-   mandatory session-birth qualification is still open. No A0, A1/A2, cleanup,
-   writer fence, response or storage acceptance follows from this record.
-2. **Next substep: review and lock isolated native Quarkus augmentation inputs.**
-   Start with the pinned native runtime/deployment/server POMs and missing seeds.
-   Review metadata/BOM/profile/plugin/processor/provider/descriptor closure and
-   an effect-disabled owned harness plan before any executable input/build.
-   Pin exact provenance, hashes, coordinates, licenses and security limits; new
-   artifacts require review before resolution/execution. Select source-built
-   versus published inputs explicitly, with exact source/output identities.
-   Credential-free metadata inspection is separate from executing Maven plugins.
-   No full issuer build, live DB/listener/bootstrap/provider operation or production
-   artifact adoption is implied. Retain the two historical build-helper license
-   declarations/deprecated test-only API limits. Missing closure stays NO-GO.
-3. Return to the **same open A0 session-birth prototype** only after those inputs
-   and before-effect isolation are qualified. Use new owned projects and exact
-   native/Quarkus activation negative proof. Deny missing/stale/foreign/unreviewed
-   activation before manager/context/provider/begin/read. Restricted ownership
-   grants no realm/auth/write/signing authority; no fake primary map, receipt,
-   caller hint, ThreadLocal or missing-row unmanaged allow path. Direct constructor
-   fixtures cannot substitute for actual augmentation/classloading evidence.
-4. Preserve 578 inherited cases/oracles/six controls; rerun affected controls when
-   a candidate reaches them and explicitly compare any initialization-denial
-   change. Stop if mandatory closure cannot be shown. No optional attach/local
-   catch candidate, silent security cleanup suppression or feature retirement.
-   Later separate work still needs every LC-01–10/A0/A1/A2/R3–R7, native provider/
-   HTTP/JTA/JDBC/cache/durable writer/HA/recovery/compatibility gate. Production
-   fork/version/storage/deployment remains a separate decision.
+The coherent P01–P10 design and every earlier failure remain. Static seed identity,
+source/POM comparison and descriptor review are complete within the stated scope;
+effective executable input closure and harness isolation are **not qualified**.
+**Next: close the remaining transitive/plugin/provider inputs and qualify the
+effect-disabled harness boundary before any A0 candidate or augmentation run.**
+The reviewed seed metadata/artifact pins are reusable only within that limited
+review scope; any newly required input still needs review before resolution/use.
+
+The A0 prototype remains open. All LC-01–10/A0/A1/A2, full entry/all-22-writer
+closure, native cleanup/response, actual HTTP/JTA/JDBC/cache/durable effects,
+R2 implementation/R3–R7 and compatibility/recovery gates remain. No optional
+late attach/catch fix, fake primary map/ThreadLocal/caller hint/missing-row
+unmanaged fallback, replay or security-cleanup suppression follows. Production
+fork/version/storage/deployment remains a separate later decision.
 
 This review closes the **bounded design task only**. Full cleanup/containment,
 HTTP/native SQL durability, bootstrap/admission, writer closure and all old 18
@@ -649,3 +702,5 @@ replacement governance remain unchanged.
 [B66]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/runtime/pom.xml#L14
 [B67]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/pom.xml#L16
 [B68]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/server/pom.xml#L17
+
+[B69]: https://github.com/keycloak/keycloak/blob/24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b/quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/LiquibaseProcessor.java#L34

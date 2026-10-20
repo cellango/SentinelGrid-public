@@ -99,8 +99,12 @@ only a mandatory A0 session-birth deny gate with exact native/Quarkus prerequisi
 it cannot grant primary admission or operation authority. The subsequent
 [preflight record](../../session-birth-preflight-review.json) stops before a candidate
 because actual native augmentation/provider initialization inputs remain
-unqualified. The prototype stays open; review its isolated build inputs first.
-This source/manifest review does not rerun or alter any historical lab result.
+unqualified. The prototype stays open. The subsequent
+[seed-input review](../../augmentation-input-review.json) statically inspects
+POMs/JAR metadata and proposes the effect-disabled harness. It establishes no
+effective input/provider/isolation or A0 gate; close those prerequisites before
+returning to a candidate. Neither review reruns or changes this lab's historical
+578 cases/six controls, source, oracles or failure results.
 Do not invent physical tables, recovery stores or automatic compensation/replay;
 R3 snapshots/R4 conditional grants/storage implementation remain NO-GO. Production
 fork/version/deployment still need a later decision and qualification.

@@ -216,6 +216,10 @@ all required outcomes. No native test was rerun for this documentation revision.
 The [A0 prerequisite review](keycloak-lifecycle-containment.md#mandatory-a0-prerequisite-result-no-go-before-candidate)
 stopped before a candidate: actual augmentation/provider initialization inputs
 are not qualified. It reviews 68 source/build units/158 anchors and 11 minimum
-missing input seeds, not a complete resolved graph. The A0 prototype stays open;
-next is isolated Quarkus build-input review before returning to it. No native
-tests/builds ran. A1/A2, full cleanup/durable writer closure and R2/R3/R4 stay NO-GO.
+missing input seeds, not a complete resolved graph. The subsequent
+[static seed-input review](keycloak-lifecycle-containment.md#static-seed-input-review-and-candidate-identity-lock)
+pins 38 POMs/11 checksum-matched JARs with no code execution. It exposes both
+native build processors and a 133-coordinate plugin pool, including 99 absent
+from the earlier record. The full effective input lock/isolation boundary and A0
+prototype remain open; close those prerequisites before a candidate. A1/A2,
+cleanup/durable writer closure and R2/R3/R4 stay NO-GO. No native cases were rerun.
