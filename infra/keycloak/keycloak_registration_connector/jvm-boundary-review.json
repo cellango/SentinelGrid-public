@@ -1,0 +1,502 @@
+{
+  "format_version": 1,
+  "status": "BOUNDED_JDK_CONTROL_STARTUP_AND_OWNED_SENTINELS_QUALIFIED_FULL_HARNESS_NO_GO",
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "all_69_Keycloak_source_pins_162_anchors_and_263_POM_pins_reverified": true,
+  "inherited_input_review": "augmentation-input-review.json",
+  "inherited_harness_review": "harness-boundary-review.json",
+  "input_limits": "263POM metadata/192publisherchecksums/71checksumabsent;133pluginPOM nearestparentlicensechains/9multiversionfamilies are not effective/profile/mediation/transitive artifact/provider closure;no new JAR fetched",
+  "JDK_source_commit": "1c417fbfc2f70ab03a565b0af0a5a3c6f5e15ad6",
+  "JDK_source_refs": [
+    {
+      "path": "src/hotspot/os/bsd/os_bsd.cpp",
+      "url": "https://raw.githubusercontent.com/adoptium/jdk21u/1c417fbfc2f70ab03a565b0af0a5a3c6f5e15ad6/src/hotspot/os/bsd/os_bsd.cpp",
+      "sha256": "759c2663db3d07597e730ca7e8c6666b772eb461fd4b3d13e880fa929ac70a5b",
+      "bytes": 83602,
+      "license": "GPL-2.0-only file-header declaration;research source inspection only,no redistribution or production adoption"
+    },
+    {
+      "path": "src/hotspot/os_cpu/bsd_aarch64/os_bsd_aarch64.cpp",
+      "url": "https://raw.githubusercontent.com/adoptium/jdk21u/1c417fbfc2f70ab03a565b0af0a5a3c6f5e15ad6/src/hotspot/os_cpu/bsd_aarch64/os_bsd_aarch64.cpp",
+      "sha256": "af78a011b7bd1e242bbb7f4b2d791a2abdccee69474338cf7b733b857d95f3d2",
+      "bytes": 20572,
+      "license": "GPL-2.0-only file-header declaration;research source inspection only,no redistribution or production adoption"
+    },
+    {
+      "path": "src/java.base/macosx/native/libjli/java_md_macosx.m",
+      "url": "https://raw.githubusercontent.com/adoptium/jdk21u/1c417fbfc2f70ab03a565b0af0a5a3c6f5e15ad6/src/java.base/macosx/native/libjli/java_md_macosx.m",
+      "sha256": "5069d51d1dc826483cbd52c433d614d0d956273aae111cae27de8843d1b6c67f",
+      "bytes": 31209,
+      "license": "GPL-2.0-only file-header declaration;research source inspection only,no redistribution or production adoption"
+    },
+    {
+      "path": "src/hotspot/share/interpreter/templateInterpreter.cpp",
+      "url": "https://raw.githubusercontent.com/adoptium/jdk21u/1c417fbfc2f70ab03a565b0af0a5a3c6f5e15ad6/src/hotspot/share/interpreter/templateInterpreter.cpp",
+      "sha256": "0ff844c70d403cf52ddf6d788dba7952b8640dce1058306d89cc008bf640553c",
+      "bytes": 14894,
+      "license": "GPL-2.0-only file-header declaration;research source inspection only,no redistribution or production adoption"
+    }
+  ],
+  "JDK_native_home_source_anchors": [
+    {
+      "literal": "const char *home_dir = ::getenv(\"HOME\");",
+      "line": 278
+    },
+    {
+      "literal": "struct passwd *passwd_info = getpwuid(geteuid());",
+      "line": 280
+    },
+    {
+      "literal": "const char *user_home_dir = get_home();",
+      "line": 412
+    },
+    {
+      "literal": "size_t system_ext_size = strlen(user_home_dir)",
+      "line": 414
+    }
+  ],
+  "source_inference": "Pinned native startup reads HOME or passwd lookup and then uses strlen without null guard. Same-policy A/B/A supports the missing-native-home failure mechanism;no native crash backtrace was collected.",
+  "startup_comparison": [
+    {
+      "mode": "missing_native_home_A",
+      "returncode": -11,
+      "native_home_owned": false,
+      "stdout_empty": true,
+      "stderr_empty": true
+    },
+    {
+      "mode": "owned_native_home_B",
+      "returncode": 0,
+      "native_home_owned": true,
+      "stdout_empty": false,
+      "stderr_empty": true
+    },
+    {
+      "mode": "missing_native_home_A_repeat",
+      "returncode": -11,
+      "native_home_owned": false,
+      "stdout_empty": true,
+      "stderr_empty": true
+    }
+  ],
+  "prior_failed_JVM_and_inherited_FD_witnesses_retained": true,
+  "parent_environment_unchanged": true,
+  "native_home_fix": "Child-only HOME names the fresh owned home and matches -Duser.home;parent environment and existing home/settings/credentials are not changed or read",
+  "resource_policy_shape_unchanged_from_previous_failed_control": true,
+  "normalized_policy_sha256": "6b354b52695fa360e9aec2d33efef6aa9420f51132b218b1f1fce74badd9c6dd",
+  "new_dynamic_code_generation_or_network_Mach_service_process_file_permissions_added": false,
+  "runtime_compiler_and_probe": "Pinned JDK21.0.12.1+1 only;459installed JDK files archive-revalidated;96Maven files also revalidated but none executed;source compiled using jdk.compiler with -proc:none,-implicit:none,empty source/dependency paths;run limits modules to java.base",
+  "toolchain": [
+    {
+      "tool": "JDK",
+      "archive_algorithm": "sha256",
+      "archive_digest": "3623232f33a9c3baadf304480b2535f9a3cba8a58d42ecbb438ba267315d9998",
+      "installed_files": 459,
+      "symlinks": 0,
+      "extra_files": 0
+    },
+    {
+      "tool": "Maven",
+      "archive_algorithm": "sha512",
+      "archive_digest": "bcfe4fe305c962ace56ac7b5fc7a08b87d5abd8b7e89027ab251069faebee516b0ded8961445d6d91ec1985dfe30f8153268843c89aa392733d1a3ec956c9978",
+      "installed_files": 96,
+      "symlinks": 0,
+      "extra_files": 0
+    }
+  ],
+  "recipe": "qualification/jvm_boundary/README.md",
+  "fixture_sha256": {
+    "JvmBoundaryProbe.java": "955519673e0b65f3d65e0c9e11ef83087960768993899a62725ec60afc02881f",
+    "prepare.py": "8dea13b1001fae21cc0483a9328488ab2eed066b59165879bb13e6160c81295e",
+    "run.py": "0556c19558d787b679661e3e8c41ff67d8c7067c77e957b3a16ebe004531ae11"
+  },
+  "compiler_proc_none_success": true,
+  "compiled_class_sha256": {
+    "JvmBoundaryProbe$Operation.class": "1f42f625330584b552e97bbfe6a167625878c6d68a10d2e6b578aed846afbb1a",
+    "JvmBoundaryProbe.class": "ce16fe81ac91026d26f3ce6264ce0eb3fe7870cdb445b215b10927505f0cff51"
+  },
+  "JVM_observations": 51,
+  "preparation_integrity_controls": [
+    {
+      "name": "valid_fresh_owned_output",
+      "passed": true
+    },
+    {
+      "name": "existing_output_preserved",
+      "passed": true
+    },
+    {
+      "name": "wrong_archive_before_output",
+      "passed": true
+    },
+    {
+      "name": "tool_root_symlink_rejected",
+      "passed": true
+    },
+    {
+      "name": "fixture_drift_before_output",
+      "passed": true
+    },
+    {
+      "name": "output_inside_fixture_rejected",
+      "passed": true
+    },
+    {
+      "name": "output_inside_tool_root_rejected",
+      "passed": true
+    },
+    {
+      "name": "forged_state_cannot_authorize_policy",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "payload_drift_before_compiler",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "prebuilt_class_rejected_before_compiler",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "nonprivate_output_rejected",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "optimized_runner_rejected_before_state_or_effects",
+      "passed": true,
+      "returncode": 1
+    }
+  ],
+  "observations": [
+    {
+      "mode": "unguarded_baseline",
+      "returncode": 0,
+      "intentionally_inherited_owned_stdin": false,
+      "canary_changed": false,
+      "observations": [
+        {
+          "name": "owned_home_and_environment",
+          "outcome": "allowed",
+          "value": "[HOME, LC_ALL, PATH, TMPDIR, __CF_USER_TEXT_ENCODING]"
+        },
+        {
+          "name": "owned_work_write",
+          "outcome": "allowed",
+          "value": "<owned-output>/work/inside.txt"
+        },
+        {
+          "name": "owned_work_read",
+          "outcome": "allowed",
+          "value": "OWNED_JVM_SENTINEL"
+        },
+        {
+          "name": "outside_owned_canary_read",
+          "outcome": "allowed",
+          "value": "SYNTHETIC_OWNED_JVM_CANARY_NO_SECRET\n"
+        },
+        {
+          "name": "outside_owned_canary_stat",
+          "outcome": "allowed",
+          "value": "37"
+        },
+        {
+          "name": "outside_owned_canary_write",
+          "outcome": "allowed",
+          "value": "<owned-output>/denied-canary.txt.write"
+        },
+        {
+          "name": "symlink_escape_read",
+          "outcome": "allowed",
+          "value": "SYNTHETIC_OWNED_JVM_CANARY_NO_SECRET\n"
+        },
+        {
+          "name": "hardlink_escape_create",
+          "outcome": "allowed",
+          "value": "<owned-output>/work/hardlink-escape"
+        },
+        {
+          "name": "loopback_owned_bound_port_connect",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.SocketTimeoutException",
+          "message": "Connect timed out"
+        },
+        {
+          "name": "loopback_socket_bind_no_listen",
+          "outcome": "allowed",
+          "value": "true"
+        },
+        {
+          "name": "owned_unix_socket_connect",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.ConnectException",
+          "message": "Connection refused"
+        },
+        {
+          "name": "localhost_name_resolution_only",
+          "outcome": "allowed",
+          "value": "[localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1]"
+        },
+        {
+          "name": "unapproved_OS_child_exec",
+          "outcome": "allowed",
+          "value": "0"
+        },
+        {
+          "name": "inherited_stdin_canary_read",
+          "outcome": "allowed",
+          "value": "-1"
+        },
+        {
+          "name": "thread_owned_work_write",
+          "outcome": "allowed",
+          "value": "<owned-output>/work/thread.txt"
+        },
+        {
+          "name": "thread_outside_canary_read",
+          "outcome": "allowed",
+          "value": "SYNTHETIC_OWNED_JVM_CANARY_NO_SECRET\n"
+        },
+        {
+          "name": "thread_loopback_socket_bind_no_listen",
+          "outcome": "allowed",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "mode": "guarded_closed_fds",
+      "returncode": 0,
+      "intentionally_inherited_owned_stdin": false,
+      "canary_changed": false,
+      "observations": [
+        {
+          "name": "owned_home_and_environment",
+          "outcome": "allowed",
+          "value": "[HOME, LC_ALL, PATH, TMPDIR]"
+        },
+        {
+          "name": "owned_work_write",
+          "outcome": "allowed",
+          "value": "<owned-output>/work/inside.txt"
+        },
+        {
+          "name": "owned_work_read",
+          "outcome": "allowed",
+          "value": "OWNED_JVM_SENTINEL"
+        },
+        {
+          "name": "outside_owned_canary_read",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/denied-canary.txt: Operation not permitted"
+        },
+        {
+          "name": "outside_owned_canary_stat",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/denied-canary.txt: Operation not permitted"
+        },
+        {
+          "name": "outside_owned_canary_write",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/denied-canary.txt.write: Operation not permitted"
+        },
+        {
+          "name": "symlink_escape_read",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/work/escape-link: Operation not permitted"
+        },
+        {
+          "name": "hardlink_escape_create",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/work/hardlink-escape -> <owned-output>/denied-canary.txt: Operation not permitted"
+        },
+        {
+          "name": "loopback_owned_bound_port_connect",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.SocketException",
+          "message": "Operation not permitted"
+        },
+        {
+          "name": "loopback_socket_bind_no_listen",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.SocketException",
+          "message": "Operation not permitted"
+        },
+        {
+          "name": "owned_unix_socket_connect",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.SocketException",
+          "message": "Operation not permitted"
+        },
+        {
+          "name": "localhost_name_resolution_only",
+          "outcome": "allowed",
+          "value": "[localhost/127.0.0.1]"
+        },
+        {
+          "name": "unapproved_OS_child_exec",
+          "outcome": "denied_or_failed",
+          "error_type": "java.io.IOException",
+          "message": "Cannot run program \"/usr/bin/true\": posix_spawn failed, error: 0 (none) "
+        },
+        {
+          "name": "inherited_stdin_canary_read",
+          "outcome": "allowed",
+          "value": "-1"
+        },
+        {
+          "name": "thread_owned_work_write",
+          "outcome": "allowed",
+          "value": "<owned-output>/work/thread.txt"
+        },
+        {
+          "name": "thread_outside_canary_read",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/denied-canary.txt: Operation not permitted"
+        },
+        {
+          "name": "thread_loopback_socket_bind_no_listen",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.SocketException",
+          "message": "Operation not permitted"
+        }
+      ]
+    },
+    {
+      "mode": "guarded_inherited_stdin_negative",
+      "returncode": 0,
+      "intentionally_inherited_owned_stdin": true,
+      "canary_changed": false,
+      "observations": [
+        {
+          "name": "owned_home_and_environment",
+          "outcome": "allowed",
+          "value": "[HOME, LC_ALL, PATH, TMPDIR]"
+        },
+        {
+          "name": "owned_work_write",
+          "outcome": "allowed",
+          "value": "<owned-output>/work/inside.txt"
+        },
+        {
+          "name": "owned_work_read",
+          "outcome": "allowed",
+          "value": "OWNED_JVM_SENTINEL"
+        },
+        {
+          "name": "outside_owned_canary_read",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/denied-canary.txt: Operation not permitted"
+        },
+        {
+          "name": "outside_owned_canary_stat",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/denied-canary.txt: Operation not permitted"
+        },
+        {
+          "name": "outside_owned_canary_write",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/denied-canary.txt.write: Operation not permitted"
+        },
+        {
+          "name": "symlink_escape_read",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/work/escape-link: Operation not permitted"
+        },
+        {
+          "name": "hardlink_escape_create",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/work/hardlink-escape -> <owned-output>/denied-canary.txt: Operation not permitted"
+        },
+        {
+          "name": "loopback_owned_bound_port_connect",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.SocketException",
+          "message": "Operation not permitted"
+        },
+        {
+          "name": "loopback_socket_bind_no_listen",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.SocketException",
+          "message": "Operation not permitted"
+        },
+        {
+          "name": "owned_unix_socket_connect",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.SocketException",
+          "message": "Operation not permitted"
+        },
+        {
+          "name": "localhost_name_resolution_only",
+          "outcome": "allowed",
+          "value": "[localhost/127.0.0.1]"
+        },
+        {
+          "name": "unapproved_OS_child_exec",
+          "outcome": "denied_or_failed",
+          "error_type": "java.io.IOException",
+          "message": "Cannot run program \"/usr/bin/true\": posix_spawn failed, error: 0 (none) "
+        },
+        {
+          "name": "inherited_stdin_canary_read",
+          "outcome": "allowed",
+          "value": "83"
+        },
+        {
+          "name": "thread_owned_work_write",
+          "outcome": "allowed",
+          "value": "<owned-output>/work/thread.txt"
+        },
+        {
+          "name": "thread_outside_canary_read",
+          "outcome": "denied_or_failed",
+          "error_type": "java.nio.file.FileSystemException",
+          "message": "<owned-output>/denied-canary.txt: Operation not permitted"
+        },
+        {
+          "name": "thread_loopback_socket_bind_no_listen",
+          "outcome": "denied_or_failed",
+          "error_type": "java.net.SocketException",
+          "message": "Operation not permitted"
+        }
+      ]
+    }
+  ],
+  "process_limit": "Guarded Java ProcessBuilder fails with generic posix_spawn helper diagnostic;unguarded same-input /usr/bin/true exits0. This is observed helper-path failure,not an exposed raw fork/exec errno or proof of every process path.",
+  "DNS_limit": "Guarded Java localhost lookup SUCCEEDS with127.0.0.1,unlike prior Python lookup. No external DNS target was used. Neither result proves full resolver/Mach/bootstrap mediation.",
+  "network_limit": "Owned TCP/Unix sockets bound only,never listening;baseline connect timeout/refusal,guarded SocketException EPERM. No positive delivery comparator or real DB/service/container contacted.",
+  "inherited_stdin_negative": "Same guarded policy can read the outside-work owned canary through deliberately inherited FD0;secure stdin is DEVNULL and reads EOF. Old Python inherited-write witness unchanged. Sanitize capabilities before installation.",
+  "thread_scope": "One actual Java worker thread retains tested file/socket denials and allowed owned work write;not issuer session/parent/CDI/async lifecycle proof",
+  "initial_oracle_corrections": "Initial new-lab expectations assumed exact baseline environment and EPERM text from ProcessBuilder. Baseline adds __CF_USER_TEXT_ENCODING;spawn helper emits generic failure. Inputs/raw reports retained;final checks explicitly distinguish these diagnostics,retain51rows,and do not relabel generic failure as EPERM. Old native oracles were untouched.",
+  "trusted_TCB_and_remaining_limits": "Trusted controller,JDK,System/Library,usr/lib,dyld-support cryptex scope and sysctl-read;not complete immutable OS/service/native-code closure. Deprecated private Apple API research only;no enforced arbitrary Mach/bootstrap/IOKit/container/DB/host-secret/resource/sidechannel guarantee,agent/provider loading or production isolation choice.",
+  "bounded_compatible_JDK_only_control_qualification": true,
+  "full_effective_executable_input_lock_qualified": false,
+  "full_effect_disabled_issuer_harness_qualified": false,
+  "offline_effective_model_resolution_executed": false,
+  "Maven_CLI_extensions_plugins_processors_Quarkus_issuer_or_provider_executed": false,
+  "JDK_compiler_executed": true,
+  "annotation_processing_enabled": false,
+  "new_A0_candidate": false,
+  "mandatory_A0_qualification_complete": false,
+  "Task25_2_and_Task25_remain_open": true,
+  "native_tests_rerun": false,
+  "inherited_native_cases": 578,
+  "inherited_preparation_controls": 6,
+  "production_application_provider_POM_runtime_dependency_schema_default_guard_or_caller_changed": false,
+  "all_22writers_LC01_to10_A0A1A2_R2implementation_R3_R7_witnesses_ancestor_and_Task6_restoration_retained": true,
+  "next_prerequisite": "Return to OPEN25.2:review exact non-plugin offline effective-model resolver/toolchain/classpath/license/security inputs and default-deny resource scope before any model-only check. No MavenCLI/plugin/extension/provider/augmentation. Full artifact/provider closure and native effect exclusions remain gates before OPEN25A0."
+}

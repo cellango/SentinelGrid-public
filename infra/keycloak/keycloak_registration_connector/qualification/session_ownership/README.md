@@ -156,9 +156,10 @@ requirements. No MCP operations, production application/provider code, artifact,
 schema, runtime dependency/default, IAM guard, caller, lease or metadata changes.
 Temporal, case_runtime and deferred engine-replacement governance remain unchanged.
 
-The later [OS/input prerequisite result](../../../../../docs/architecture/keycloak-lifecycle-containment.md#os-boundary-and-executable-input-prerequisite-result)
-records 263 POMs, 42 trusted OS observations and nine integrity controls. An
-archive-revalidated JDK version-only control failed SIGSEGV before output; no
-Maven/plugin/processor/augmentation/provider/native candidate ran. The full input
-graph and JVM/harness remain NO-GO. Next qualify compatible JVM isolation before
-offline model resolution; parent A0 stays open and all earlier native oracles remain.
+The current [JDK-only qualification](../../../../../docs/architecture/keycloak-lifecycle-containment.md#compatible-jdk-only-control-qualification)
+records same-policy startup -11/0/-11 with only owned native child home changed,
+51 JVM observations and 12 integrity controls. File/socket/thread denials pass;
+inherited stdin still conveys canary access and Java localhost lookup succeeds.
+This is a bounded trusted control, not full issuer isolation. Next review exact
+offline non-plugin effective-model inputs before any model-only run. Full input/
+provider/harness and A0 gates remain open; no Maven/provider/native candidate ran.

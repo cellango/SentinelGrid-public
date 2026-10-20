@@ -588,7 +588,7 @@ precede installation; the policy alone is insufficient. Both the negative witnes
 and initial Python runtime/bootstrap failures remain in private evidence. The
 recipe verifies trusted policy text, rather than trusting a caller state digest.
 
-### JVM prerequisite: NO-GO before model resolution or native build
+### Initial JVM prerequisite stop (retained evidence)
 
 The pinned JDK 21.0.12.1+1 and Maven 3.9.11 archives were revalidated, including
 all **459 JDK and 96 Maven installed files**, with no extra files or symlinks.
@@ -606,24 +606,77 @@ build, provider or A0 candidate executed.** The Python sentinels do not qualify
 the JVM. The 578 historical native cases/six controls are inherited unchanged
 and were not rerun. Every old failure/oracle remains applicable.
 
+## Compatible JDK-only control qualification
+
+The [JDK-only comparison record](../../infra/keycloak/keycloak_registration_connector/jvm-boundary-review.json)
+now qualifies one bounded **trusted JDK startup/owned-sentinel** control, with
+**51 observations and 12 preparation/integrity controls**. The [opt-in recipe](../../infra/keycloak/keycloak_registration_connector/qualification/jvm_boundary/README.md)
+pins the archive/all459installed JDK files and reconstructs the same default-deny
+resource policy. The old JVM failure and every earlier witness remain recorded.
+This closes neither the effective executable graph nor the full issuer harness.
+
+The vendor [native startup source](https://github.com/adoptium/jdk21u/blob/1c417fbfc2f70ab03a565b0af0a5a3c6f5e15ad6/src/hotspot/os/bsd/os_bsd.cpp#L259)
+reads native home from environment or user lookup, then uses its length without
+a null guard. Java `-Duser.home` alone does not supply that earlier native value.
+The same-policy version A/B/A comparison returned **SIGSEGV(-11), success(0),
+SIGSEGV(-11)** when toggling only native child home. Configuring child native
+home to the same new owned home as Java resolves this observed startup failure.
+The source supports that mechanism; no native crash backtrace was collected.
+The controller environment is unchanged; no existing home/settings/credentials
+are read or changed. **No new dynamic-code, network, Mach, service, process or
+file permission was added.** The normalized resource policy is byte-identical
+to the earlier failing control after substituting owned output paths.
+
+Only the revalidated JDK compiler and new trusted sentinel ran. Compilation uses
+`jdk.compiler` with annotation processing disabled, empty source/dependency paths
+and owned output; execution limits modules to `java.base`. The two generated
+class hashes are recorded. There is **no Maven CLI/model resolver, plugin,
+annotation processor, Quarkus augmentation, issuer/provider or A0 candidate**.
+All69Keycloaksource/162anchors and263POMpins were reverified. JDK459/Maven96
+installed files still match pinned archives; Maven was not executed.
+
+| Actual JVM observation | Result and qualification limit |
+| --- | --- |
+| Main and Java worker thread | Owned work IO succeeds. Outside-work owned canary/file/link and socket operations get EPERM; one worker retains tested read/bind denials. No issuer session/CDI/parent/async lifecycle proof follows. |
+| Owned socket connect/bind | Guarded EPERM; targets only bound TCP/Unix sockets, never listening. Baseline connect times out/refuses, not a positive delivery comparator. No real DB/service/container/host-secret or external target is used. |
+| Child process path | Baseline `/usr/bin/true` exits0; guarded ProcessBuilder returns generic spawn-helper failure. The API does not expose a reliable raw fork/exec errno or every-process-path proof. |
+| Resolver limit | **Guarded Java resolves `localhost` to127.0.0.1.** The older Python lookup failure cannot generalize to JVM/external DNS/Mach/bootstrap isolation. |
+| Inherited capability | Deliberately inherited FD0 lets the guarded JVM read the outside-work canary. Secure DEVNULL stdin returns EOF. Retain this witness and the earlier Python inherited-write bypass; capability sanitization precedes policy installation. |
+
+Initial new-lab expectations assumed exact baseline environment and EPERM text
+from ProcessBuilder. The unguarded runtime adds `__CF_USER_TEXT_ENCODING`, and
+the Java spawn-helper error is generic. Raw initial reports/input revisions were
+retained; final assertions reflect these actual observations and do not call the
+generic error EPERM. Existing native sources/oracles and578cases/sixcontrols
+remain unchanged and inherited, not rerun. The separate twelve integrity controls
+reject input/policy/payload/output/compiled-class drift before compiler execution.
+
+Trusted read-only JDK/system/cryptex inputs and sysctl access are TCB assumptions,
+not full immutable OS or arbitrary-native isolation proof. External DNS/Mach/
+bootstrap/IOKit/service/container/DB/secret/resource/side-channel mediation and
+actual selected native provider/classloader/initialization remain unqualified.
+The private/deprecated Apple API is an exact-host research mechanism, not a
+production choice. Interpreted mode and absence of an explicit dynamic-code allow
+do not establish dynamic-code enforcement or authority for unknown provider code.
+
 ## Proof sequence and next bounded work
 
-The P01–P10 design remains. The metadata/owned-OS evaluation reached a precise
-**NO-GO for full executable input closure, compatible JVM and effect-disabled
-harness**. Parent A0 and its input/harness prerequisite stay open. The next
-bounded prerequisite is **compatible JVM isolation qualification**, using reviewed
-toolchain/OS inputs and harmless owned controls before any offline model resolver.
-Retain the startup failure without attributing a cause or broadening privileges.
-If compatibility and required resource exclusions cannot be proved, stop NO-GO.
+The P01–P10 design remains. The trusted JDK-only startup/sentinel prerequisite has
+a bounded qualified result. **Full effective executable input closure and the
+effect-disabled issuer harness stay NO-GO; parent input/harness and A0 stay open.**
+Next review exact **offline non-plugin effective-model resolver inputs**, including
+provenance/hash/license/security and narrowly permitted resource scope, before
+any model-only check. No Maven CLI/extension/plugin/auto-fetch/provider build is
+authorized by a passing JDK probe. Revalidate the tools and inputs; use owned
+home/cache/tmp and an explicit hash-verified resolver that fails on missing input.
 
-After that, complete effective-model/transitive artifact/plugin/processor/provider/
-classloader/generated-index/build-step selection and provenance/license/security
-review. Both native processors (`KeycloakProcessor` and `LiquibaseProcessor`),
-earlier initialization order, dev-file DB defaults and selected framework
-container/dev-services paths still require pre-effect proof. Only after **both**
-input and isolation gates pass may the same A0 prototype resume with source-built
-candidate and actual Quarkus activation/class-origin negative proof. No caller
-receipt, fake map or synthetic owner substitutes for that activation.
+Then close selected profile/BOM/mediation/transitive artifact/scopes/classifiers/
+exclusions/plugin/processor/provider/classloader/generated-index/build-step and
+native effect closure. Both `KeycloakProcessor` and `LiquibaseProcessor`, earlier
+initialization, dev-file DB defaults and framework/container/dev-services paths
+remain mandatory. Only after **both full** input and issuer-isolation gates pass
+may the same A0 prototype resume with source-built candidate, actual Quarkus
+activation/class-origin negative proof and all native denial requirements.
 
 The A0 prototype remains open. All LC-01–10/A0/A1/A2, full entry/all-22-writer
 closure, native cleanup/response, actual HTTP/JTA/JDBC/cache/durable effects,
