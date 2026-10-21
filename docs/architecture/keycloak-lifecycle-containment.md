@@ -939,16 +939,80 @@ Node/Quarkus/native issuer/provider/A0 candidate ran. Four ModelSource warnings
 and all previous license/security/checksum/source-output/effect-boundary limits
 remain; the 578 native cases and six controls remain inherited and unchanged.
 
+## Role-aware model and next-hop declaration frontier
+
+The [static frontier record](../../infra/keycloak/keycloak_registration_connector/role-transitive-frontier.json)
+now maps **265 model data templates to 332 distinct original role occurrences**.
+It reuses the prior 263 successful strict research models, the new strict Surefire
+model and the scoped JCTools descriptor-validation model. Their exact POM/output
+hashes, validation levels, explicit profile/model provenance and ordered parent/BOM
+requests remain attached. JCTools' strict denial, project-default warning and both
+raw bundle-plugin declarations remain witnesses. This is **264 strict model data
+results plus one limited validation-dimension result**, not a rerun or a passing
+265-target strict suite. None establishes an actual role's descriptor/project context.
+
+| Original role | Occurrences preserved |
+| --- | ---: |
+| Project dependency declarations | 134 (126 compile, 3 provided, 5 test) |
+| Packaged plugin dependency-pool entries | 183, across 133 GAVs |
+| Declared build plugins | 7, across 5 identities |
+| Explicit processor paths and bootstrap extension | 2 and 1 |
+| Parent-model and source-native-module contexts | 2 and 3 |
+
+Every occurrence retains its owner, original list position, dependency ordinal
+where available, type/classifier/scope/optional/exclusions and source/control role.
+A shared data-template reference does not choose a globally authoritative model,
+artifact, version or context. Packaged plugin pools are not resolved parent paths.
+The 39 source/control mappings, 16 service descriptors, nine original realm-specific
+multiversion families and both native processors remain required.
+
+The templates contain **2,068 ordered dependency declarations**, projecting to
+**2,731 role-specific next-hop candidates** and 923 distinct target expressions.
+The separately hashed 217,020 managed declarations are not selected dependencies;
+the original five roots' 2,419 management entries each remain data. Matching owner
+management entries are retained per edge without claiming consumer management or
+field-level parent/BOM origin tracing. Scope/optionality propagation and conflict
+resolution remain explicit NO-GO for every path. The 363 candidate incoming-exclusion
+matches do not prove an excluded artifact or safe effect boundary.
+
+The exact next-input frontier is **676 missing POM coordinates**: 675 ordinary
+next-hop coordinates and two relocation targets, with one shared between those
+sets. Three additional expressions are unresolved version ranges, kept separately
+without a guessed version or fetch URL. They occur in the HTML sanitizer model:
+`commons-codec:[1.15,)`, FindBugs `jsr305:[2.0.1,)` and `annotations:[2.0.1,)`.
+Three more next-hop coordinates already have pinned POMs but no reviewed target
+model: Quarkus BOM, bootstrap BOM and bootstrap BOM test, all 3.40.1. Metadata
+presence is not a model, artifact or selection qualification.
+
+The Quarkus `quarkus-junit5-internal` and `quarkus-junit5-mockito` 3.40.1 models
+contain relocation records to `quarkus-junit-internal` and `quarkus-junit-mockito`.
+Neither relocation was applied. The record retains target identity, input need and
+unqualified relocation/cycle semantics. No system paths or cycles among the 265
+available declaration templates were found; missing/unmodeled/relocated nodes and
+unqualified role semantics prevent a complete graph or cycle-clearance claim.
+The 108 cross-template multiversion families retain every version and edge; no
+cross-realm winner is chosen. Literal dependency types include `test-jar`, `pom`
+and `zip`. Projected `jar`/empty-classifier comparison keys are assumptions pending
+artifact-handler review, not approved classifier, extension or classpath mappings.
+
+This unit performs **no fetch, JVM/model run, binary resolution or native execution**.
+All 69 source/162 anchors/457 POM/54 metadata/18 prior plus four context Maven source/
+six-library/JDK459/Maven96 pins and five original model hashes were reverified.
+The three opt-in model recipes, all prior code and native controls remain unchanged.
+The canonical record carries exact edge IDs for each missing input and the role,
+mediation, handler, generated-effect and binary/harness NO-GO gates. Candidate URLs
+are review destinations only; they authorize no automatic fetch or input use.
+
 ## Proof sequence and next bounded work
 
-Next prepare the **role-aware model and transitive dependency frontier**. Reuse
-the prior 263 successful research models, the new Surefire strict model and the
-target-scoped JCTools descriptor-validation model as data with explicit provenance.
-Retain the strict negative and both raw plugin declarations. Separate project,
-plugin, processor and extension roles; preserve types/classifiers/scopes/optional/
-exclusions, parent/BOM/profile/validation context, order and path-specific mediation.
-Identify each additional input and why it is needed before resolution or reuse.
-Do not treat a declaration inventory or validation comparison as an executable lock.
+Next review **role-specific collection semantics and the first bounded next-input
+wave**. Pin the relevant descriptor/collector/dependency-management/selector/scope/
+conflict/handler sources before using them. Determine which declared paths need
+which exact inputs without dropping test/provided/optional or plugin/processor/
+extension capabilities on static presence alone. Preserve the three ranges, two
+relocations, all ordering and context witnesses. Review each fixed credential-free
+metadata wave, ancestry and child-context imports before any later model execution
+or recursion. Do not fetch all candidate coordinates as though they were a lock.
 
 Full transitive binary/plugin/processor/extension/provider/classloader/generated-
 output/source-built effect closure and independent native issuer isolation remain

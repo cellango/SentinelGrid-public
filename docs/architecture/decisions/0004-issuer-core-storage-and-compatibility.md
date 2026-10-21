@@ -281,9 +281,9 @@ These records neither adopt a fork/version/storage primitive, supersede pre-toke
 or proposed point-in-time semantics, nor clear R2 implementation/R3/R4. No engine
 change follows.
 
-The [child-model context review](../keycloak-lifecycle-containment.md#child-model-blocker-and-validation-context-review)
-passes 17 model/boundary assertions and 22 integrity controls over 457 POMs and
-four fixed comparisons. Surefire succeeds with its reviewed JUnit BOM; JCTools'
-strict rejection remains, while source-backed validation-dimension comparisons
-produce model data. Earlier recipes/results are unchanged. Next prepare the
-role-aware transitive frontier; full executable inputs, issuer isolation and A0 stay open.
+The [role-aware declaration frontier](../keycloak-lifecycle-containment.md#role-aware-model-and-next-hop-declaration-frontier)
+preserves 332 owner/role occurrences across 265 model data templates and 2,731
+next-hop candidates. It identifies 676 missing exact POMs, three ranges, two
+relocations and three pinned-but-unmodeled coordinates. No fetch, build or model
+rerun occurred. Role-specific collection/mediation and input review come next;
+full executable inputs, native issuer isolation and A0 remain open.
