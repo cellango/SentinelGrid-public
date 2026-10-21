@@ -1003,16 +1003,64 @@ The canonical record carries exact edge IDs for each missing input and the role,
 mediation, handler, generated-effect and binary/harness NO-GO gates. Candidate URLs
 are review destinations only; they authorize no automatic fetch or input use.
 
+## Version-pinned collection semantics and next-input plan
+
+The [source review and input plan](../../infra/keycloak/keycloak_registration_connector/collection-semantics-review.json)
+records **37 exact-commit source texts, 67 anchors and 12 semantic findings** for
+Maven 3.9.11 and its bundled Resolver 1.9.24. Resolver's tag resolves to
+`7176b8c476c35b301e21e910dcf96d0792c24397`; pinned archive `pom.properties` entries
+confirm the version. This is source/version evidence, not executed collector or
+complete source/binary equivalence. No new dependency POM, library or binary was
+retrieved; the only new network inputs were fixed source texts and tag metadata.
+
+| Boundary | Source-backed finding | Remaining qualification |
+| --- | --- | --- |
+| Project and plugin roots | Project requests supply a root artifact/direct/managed lists. Plugin requests use a root dependency, plugin filters and runtime treatment of explicit plugin dependencies except system. | Root/depth/owner/session and resolution filters differ; a packaged plugin pool is not a selected tree. |
+| Management and selectors | Maven's helper installs Classic management, depth-sensitive scope/optional selectors and inherited exclusions. Consumer management and pre-managed fields are separate. | Do not drop all test/provided/optional declarations or use child management as consumer selection. |
+| Conflict handling | Actual identity uses extension/classifier and relocation/alias keys. Nearest selection honors range constraints; sibling candidates compare versions, other candidates compare depth. | Preserve graph order and complete conflict groups; no global version winner or generic first-declaration rule. |
+| Artifact types | The stock core handler resource maps `test-jar` to extension `jar`, classifier `tests`. Its bytes match the reviewed archive resource. | Real handler contributions and model/session context remain unqualified; old comparison keys stay unchanged. |
+| Bootstrap and processors | Core extensions use plugin-like resolution plus request interpolation and realm/core-export rules. | Build-cache/bootstrap remains required. Compiler-plugin 3.13.0 processor-path source still needs its own exact-commit review. |
+
+The [Maven session helper](https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/MavenRepositorySystemUtils.java)
+sets Classic management and graph policies. The actual core session factory adds
+settings/request/cache/workspace state and replaces the helper's type registry
+with handler-manager lookup. These defaults are evidence to review; they do not
+change the empty-property, explicit-profile, checked-byte research recipes or
+permit settings, caches, credentials, transports or host workspace discovery.
+
+The prior 2,068 declarations include 1,985 absent XML types, 67 `pom`, 15 `test-jar`
+and one `zip`. Source-backed stock projections are recorded separately. Model type
+has a `jar` default; compile scope is injected after management, not a simple MDO
+field default. Unknown handler types have a source fallback, but that fallback is
+not adopted as runtime policy. Packaging `bundle` alone is not a dependency-type
+mapping. No old frontier, raw null, classifier, selected input or capability is
+rewritten by the stock projections.
+
+Collector sources also distinguish range metadata, descriptor relocations, cycle
+records and traversal from final conflict selection. The three existing ranges
+remain unsupported and no version was guessed. Both Quarkus JUnit relocations
+remain unapplied. No live repository version metadata or workspace was queried.
+No collector, model API, JVM, CLI, plugin, extension, processor, Node, Quarkus,
+native issuer/provider or A0 candidate ran. The three old model recipes, all prior
+code, 578 native cases/six controls and all effect-boundary limits are unchanged.
+
 ## Proof sequence and next bounded work
 
-Next review **role-specific collection semantics and the first bounded next-input
-wave**. Pin the relevant descriptor/collector/dependency-management/selector/scope/
-conflict/handler sources before using them. Determine which declared paths need
-which exact inputs without dropping test/provided/optional or plugin/processor/
-extension capabilities on static presence alone. Preserve the three ranges, two
-relocations, all ordering and context witnesses. Review each fixed credential-free
-metadata wave, ancestry and child-context imports before any later model execution
-or recursion. Do not fetch all candidate coordinates as though they were a lock.
+The next fixed metadata wave contains only two explicitly named relocation targets:
+`io.quarkus:quarkus-junit-internal:3.40.1` and
+`io.quarkus:quarkus-junit-mockito:3.40.1`, with their adjacent publisher SHA512
+metadata. The plan records exact Maven Central destinations, original needed-by
+edges/contexts and why each is needed. **They have not been fetched.** Their license
+ancestry and hashes remain unknown. Review any newly discovered parent/import/
+property/relocation input before another fixed wave. This small review wave does
+not establish runtime priority, selection or authority to fetch all 676 coordinates.
+
+The remaining 674 exact missing coordinates, three ranges and three already pinned
+Quarkus BOMs lacking reviewed target models remain preserved. Before processor
+collection design, pin compiler-plugin 3.13.0's source and review its actual path,
+management,scope/classifier and discovery rules. Any later model/collector driver
+needs separate source/API/input/context/controller and effect-boundary review;
+this unit authorizes no execution or broader validation/default policy.
 
 Full transitive binary/plugin/processor/extension/provider/classloader/generated-
 output/source-built effect closure and independent native issuer isolation remain

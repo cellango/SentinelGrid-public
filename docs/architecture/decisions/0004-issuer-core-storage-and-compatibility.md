@@ -281,9 +281,9 @@ These records neither adopt a fork/version/storage primitive, supersede pre-toke
 or proposed point-in-time semantics, nor clear R2 implementation/R3/R4. No engine
 change follows.
 
-The [role-aware declaration frontier](../keycloak-lifecycle-containment.md#role-aware-model-and-next-hop-declaration-frontier)
-preserves 332 owner/role occurrences across 265 model data templates and 2,731
-next-hop candidates. It identifies 676 missing exact POMs, three ranges, two
-relocations and three pinned-but-unmodeled coordinates. No fetch, build or model
-rerun occurred. Role-specific collection/mediation and input review come next;
+The [version-pinned collection review](../keycloak-lifecycle-containment.md#version-pinned-collection-semantics-and-next-input-plan)
+records 37 source texts/67 anchors and 12 findings for Maven 3.9.11/Resolver 1.9.24.
+Project/plugin roots, management depth, selectors, conflict identity and artifact
+handlers require distinct contexts. Two exact relocation-target POMs form the next
+metadata plan; none was fetched. Processor-path semantics, actual collection,
 full executable inputs, native issuer isolation and A0 remain open.

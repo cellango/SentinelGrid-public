@@ -1,0 +1,1516 @@
+{
+  "format_version": 1,
+  "status": "BOUNDED_VERSION_PINNED_SOURCE_SEMANTICS_AND_NEXT_INPUT_PLAN_COMPLETE_FULL_COLLECTION_NO_GO",
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "Maven_version": "3.9.11",
+  "Maven_source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+  "Resolver_version": "1.9.24",
+  "Resolver_source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+  "source_units": 37,
+  "source_anchors": 67,
+  "official_source_refs": [
+    {
+      "id": "S01",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-core/src/main/java/org/apache/maven/internal/aether/DefaultRepositorySystemSessionFactory.java",
+      "sha256": "baa6275c8ba02b58e298d8faba1e2013546d0ca49a3af0509ddb13a4623b0da7",
+      "bytes": 21301,
+      "purpose": "Actual Maven session selector/manager/transformer/type defaults and settings effects",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/internal/aether/DefaultRepositorySystemSessionFactory.java",
+      "anchors": [
+        {
+          "line": 158,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/internal/aether/DefaultRepositorySystemSessionFactory.java#L158"
+        },
+        {
+          "line": 192,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/internal/aether/DefaultRepositorySystemSessionFactory.java#L192"
+        },
+        {
+          "line": 345,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/internal/aether/DefaultRepositorySystemSessionFactory.java#L345"
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-core/src/main/java/org/apache/maven/project/DefaultProjectDependenciesResolver.java",
+      "sha256": "ca110893c4a53d75d84fd581171a4ed35ae88af6b5b83b020e8e4b797a5bfb07",
+      "bytes": 13348,
+      "purpose": "Project collect request construction, direct dependencies and management",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/project/DefaultProjectDependenciesResolver.java",
+      "anchors": [
+        {
+          "line": 94,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/project/DefaultProjectDependenciesResolver.java#L94"
+        },
+        {
+          "line": 141,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/project/DefaultProjectDependenciesResolver.java#L141"
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-core/src/main/java/org/apache/maven/plugin/internal/DefaultPluginDependenciesResolver.java",
+      "sha256": "81eb3943ef4ca2608cdc801aa74f1ed07dff59e3f4a2e143a2793edc4a60c872",
+      "bytes": 14365,
+      "purpose": "Plugin-specific collect session, filters and project plugin dependencies",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/plugin/internal/DefaultPluginDependenciesResolver.java",
+      "anchors": [
+        {
+          "line": 185,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/plugin/internal/DefaultPluginDependenciesResolver.java#L185"
+        },
+        {
+          "line": 206,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/plugin/internal/DefaultPluginDependenciesResolver.java#L206"
+        },
+        {
+          "line": 201,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/plugin/internal/DefaultPluginDependenciesResolver.java#L201"
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-embedder/src/main/java/org/apache/maven/cli/internal/BootstrapCoreExtensionManager.java",
+      "sha256": "e0e457eb7671cc528796c828c7ee78671d303a2abbc5eb3d0664bed8478a6e6d",
+      "bytes": 8814,
+      "purpose": "Source .mvn core extension bootstrap collection and realm construction",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-embedder/src/main/java/org/apache/maven/cli/internal/BootstrapCoreExtensionManager.java",
+      "anchors": [
+        {
+          "line": 157,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-embedder/src/main/java/org/apache/maven/cli/internal/BootstrapCoreExtensionManager.java#L157"
+        },
+        {
+          "line": 174,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-embedder/src/main/java/org/apache/maven/cli/internal/BootstrapCoreExtensionManager.java#L174"
+        },
+        {
+          "line": 150,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-embedder/src/main/java/org/apache/maven/cli/internal/BootstrapCoreExtensionManager.java#L150"
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/manager/ClassicDependencyManager.java",
+      "sha256": "1658ee97cfe870250f8e097d617469b6b477ea7fc8a95d3ca0327b24698a413e",
+      "bytes": 10903,
+      "purpose": "Maven legacy dependency-management depth behavior",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/manager/ClassicDependencyManager.java",
+      "anchors": [
+        {
+          "line": 87,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/manager/ClassicDependencyManager.java#L87"
+        },
+        {
+          "line": 100,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/manager/ClassicDependencyManager.java#L100"
+        },
+        {
+          "line": 141,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/manager/ClassicDependencyManager.java#L141"
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/manager/DefaultDependencyManager.java",
+      "sha256": "28a6afe25a312cc3012f1d5f9c8a06a53797af50efc7b99a2382c7c03fb7feac",
+      "bytes": 10299,
+      "purpose": "Alternative transitive management,not default by declaration alone",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/manager/DefaultDependencyManager.java",
+      "anchors": [
+        {
+          "line": 50,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/manager/DefaultDependencyManager.java#L50"
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/AndDependencySelector.java",
+      "sha256": "a85369bb19009ce45dd46e910274684efd0ba5f80a0d77a7451f05f099d2b1f9",
+      "bytes": 6570,
+      "purpose": "Selector combination and child contexts",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/AndDependencySelector.java",
+      "anchors": [
+        {
+          "line": 38,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/AndDependencySelector.java#L38"
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/ScopeDependencySelector.java",
+      "sha256": "0f780c8a84970e946ea18351cc6cd4664592873c27df443a9425d7e3bb042832",
+      "bytes": 5060,
+      "purpose": "Scope selector root/depth behavior",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/ScopeDependencySelector.java",
+      "anchors": [
+        {
+          "line": 93,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/ScopeDependencySelector.java#L93"
+        },
+        {
+          "line": 103,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/ScopeDependencySelector.java#L103"
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/OptionalDependencySelector.java",
+      "sha256": "3bee033149433bde92d2fd8bfbc7e9e730e719c45da1c6dcf9b6e24a823039a6",
+      "bytes": 2674,
+      "purpose": "Optional selection and transitive root/depth behavior",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/OptionalDependencySelector.java",
+      "anchors": [
+        {
+          "line": 49,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/OptionalDependencySelector.java#L49"
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/ExclusionDependencySelector.java",
+      "sha256": "b59990c518e9d79f557c5ac8138457fed2db79640ef09b5f11ce4b0dc14c072e",
+      "bytes": 6917,
+      "purpose": "Inherited exclusion matching and child selectors",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/ExclusionDependencySelector.java",
+      "anchors": [
+        {
+          "line": 83,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/ExclusionDependencySelector.java#L83"
+        },
+        {
+          "line": 97,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/selector/ExclusionDependencySelector.java#L97"
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/ConflictResolver.java",
+      "sha256": "234ba2fe7814ef0c0215935a1acfc99a21bb2701b30ea91e3c30b19e5b8b8593",
+      "bytes": 57662,
+      "purpose": "Conflict groups and mediation/output state",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/ConflictResolver.java",
+      "anchors": [
+        {
+          "line": 66,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/ConflictResolver.java#L66"
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/NearestVersionSelector.java",
+      "sha256": "38c7fec46addc44a4a7cd3255a4ba9fe6852ccdf39b2c6a7d578576316e33a81",
+      "bytes": 5604,
+      "purpose": "Depth/order/version-range conflict semantics",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/NearestVersionSelector.java",
+      "anchors": [
+        {
+          "line": 59,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/NearestVersionSelector.java#L59"
+        },
+        {
+          "line": 114,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/NearestVersionSelector.java#L114"
+        },
+        {
+          "line": 115,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/NearestVersionSelector.java#L115"
+        },
+        {
+          "line": 117,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/NearestVersionSelector.java#L117"
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/JavaScopeSelector.java",
+      "sha256": "60e563e08009d96fe4966f6ee11c6e551d741b41c11e30cfd61147ef1b759504",
+      "bytes": 3257,
+      "purpose": "Conflict-group effective scope selection",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/JavaScopeSelector.java",
+      "anchors": [
+        {
+          "line": 55,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/JavaScopeSelector.java#L55"
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/JavaScopeDeriver.java",
+      "sha256": "9eb830209b0dd165ef17aa1d134238300d0d0424c37d1f04f0e154fd104c4882",
+      "bytes": 2385,
+      "purpose": "Parent-child scope derivation",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/JavaScopeDeriver.java",
+      "anchors": [
+        {
+          "line": 41,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/JavaScopeDeriver.java#L41"
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/SimpleOptionalitySelector.java",
+      "sha256": "f2bc224138d30997273e7c2d30bb08f4e0eda1029b03949d94486af70e553b09",
+      "bytes": 2299,
+      "purpose": "Conflict-group optionality selection",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/SimpleOptionalitySelector.java",
+      "anchors": [
+        {
+          "line": 33,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/SimpleOptionalitySelector.java#L33"
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/JavaDependencyContextRefiner.java",
+      "sha256": "436816f80599d24c1b862762412673e2748b18c9e846a3568ec1a4b0752e04c2",
+      "bytes": 2957,
+      "purpose": "Java project/plugin classpath context refinement",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/JavaDependencyContextRefiner.java",
+      "anchors": [
+        {
+          "line": 37,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/JavaDependencyContextRefiner.java#L37"
+        }
+      ]
+    },
+    {
+      "id": "S17",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/artifact/DefaultArtifactTypeRegistry.java",
+      "sha256": "bba87d4a14fb49efe05dbca7b7a68c4b218db3de8b1045e9385cb938f3295430",
+      "bytes": 1575,
+      "purpose": "Artifact type lookup registry,not global mapping authority",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/artifact/DefaultArtifactTypeRegistry.java",
+      "anchors": [
+        {
+          "line": 26,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/artifact/DefaultArtifactTypeRegistry.java#L26"
+        }
+      ]
+    },
+    {
+      "id": "S18",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-api/src/main/java/org/eclipse/aether/artifact/DefaultArtifactType.java",
+      "sha256": "1c063a87e6e2fd5fe3caeb1cfaefe3f07581968ced9df202ec61b8761f833524",
+      "bytes": 6013,
+      "purpose": "Type/extension/classifier/language/properties semantics",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-api/src/main/java/org/eclipse/aether/artifact/DefaultArtifactType.java",
+      "anchors": [
+        {
+          "line": 30,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-api/src/main/java/org/eclipse/aether/artifact/DefaultArtifactType.java#L30"
+        }
+      ]
+    },
+    {
+      "id": "S19",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-api/src/main/java/org/eclipse/aether/artifact/DefaultArtifact.java",
+      "sha256": "a71247f74d10329e2903b8952cd784c64657d0f22b058f92cb4990135f1cab6e",
+      "bytes": 11909,
+      "purpose": "Coordinate type/classifier/extension construction",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-api/src/main/java/org/eclipse/aether/artifact/DefaultArtifact.java",
+      "anchors": [
+        {
+          "line": 32,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-api/src/main/java/org/eclipse/aether/artifact/DefaultArtifact.java#L32"
+        }
+      ]
+    },
+    {
+      "id": "S20",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/DefaultDependencyCollector.java",
+      "sha256": "8e8c195e8c95562ede40d69f23d3a74cccc82d048fb06fcf6f7faeb467232cb9",
+      "bytes": 3464,
+      "purpose": "Collector implementation dispatch/configuration default",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/DefaultDependencyCollector.java",
+      "anchors": [
+        {
+          "line": 49,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/DefaultDependencyCollector.java#L49"
+        },
+        {
+          "line": 81,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/DefaultDependencyCollector.java#L81"
+        }
+      ]
+    },
+    {
+      "id": "S21",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/df/DfDependencyCollector.java",
+      "sha256": "6bbff23ff32be0e45d68e737624be705a167ae2288855ce23fad3ec80f5b52b7",
+      "bytes": 17603,
+      "purpose": "Depth-first descriptor/range/management/cycle processing",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/df/DfDependencyCollector.java",
+      "anchors": [
+        {
+          "line": 189,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/df/DfDependencyCollector.java#L189"
+        },
+        {
+          "line": 224,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/df/DfDependencyCollector.java#L224"
+        },
+        {
+          "line": 236,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/df/DfDependencyCollector.java#L236"
+        }
+      ]
+    },
+    {
+      "id": "S22",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/bf/BfDependencyCollector.java",
+      "sha256": "44de68e535e0d76a8e512342ae1fea9c21ec75c1a1de2948cd8f9b49fdc41a83",
+      "bytes": 27592,
+      "purpose": "Breadth-first descriptor/range/management/cycle processing",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/bf/BfDependencyCollector.java",
+      "anchors": [
+        {
+          "line": 86,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/bf/BfDependencyCollector.java#L86"
+        }
+      ]
+    },
+    {
+      "id": "S23",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "pom.xml",
+      "sha256": "6ad2158ab7ea911d4e0b66ba3838f8e5b1d6b5ab31721770d914d0e8771d2917",
+      "bytes": 24519,
+      "purpose": "Source release version/license/SCM metadata for the matching Resolver tag",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/pom.xml",
+      "anchors": [
+        {
+          "line": 31,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/pom.xml#L31"
+        }
+      ]
+    },
+    {
+      "id": "S24",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/MavenRepositorySystemUtils.java",
+      "sha256": "8d661b806d0ab9a026b3bf8ec21a2db7b5a4d7b906accc36e6de358a3d22eab7",
+      "bytes": 7108,
+      "purpose": "Actual newSession selector/manager/conflict/type defaults delegated by core factory",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/MavenRepositorySystemUtils.java",
+      "anchors": [
+        {
+          "line": 94,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/MavenRepositorySystemUtils.java#L94"
+        },
+        {
+          "line": 98,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/MavenRepositorySystemUtils.java#L98"
+        },
+        {
+          "line": 104,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/MavenRepositorySystemUtils.java#L104"
+        },
+        {
+          "line": 115,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/MavenRepositorySystemUtils.java#L115"
+        }
+      ]
+    },
+    {
+      "id": "S25",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-core/src/main/java/org/apache/maven/RepositoryUtils.java",
+      "sha256": "47997a290e615ee35c73f995e17560b032cad08177bee945dfa4f050db7cee80",
+      "bytes": 15318,
+      "purpose": "Maven model dependencies to Resolver artifacts, types/classifiers/systemPath/exclusions",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/RepositoryUtils.java",
+      "anchors": [
+        {
+          "line": 159,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/RepositoryUtils.java#L159"
+        },
+        {
+          "line": 269,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/RepositoryUtils.java#L269"
+        },
+        {
+          "line": 303,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/RepositoryUtils.java#L303"
+        }
+      ]
+    },
+    {
+      "id": "S26",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-core/src/main/java/org/apache/maven/artifact/handler/manager/DefaultArtifactHandlerManager.java",
+      "sha256": "6c9060137da2eeee7f923d104ceb2fb2f055e926da3b53a6f9a54f1f7401b8a6",
+      "bytes": 2244,
+      "purpose": "Installed and fallback artifact handlers used by core session",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/artifact/handler/manager/DefaultArtifactHandlerManager.java",
+      "anchors": [
+        {
+          "line": 48,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/artifact/handler/manager/DefaultArtifactHandlerManager.java#L48"
+        },
+        {
+          "line": 57,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/artifact/handler/manager/DefaultArtifactHandlerManager.java#L57"
+        }
+      ]
+    },
+    {
+      "id": "S27",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-core/src/main/java/org/apache/maven/artifact/handler/DefaultArtifactHandler.java",
+      "sha256": "dbbff8886bde67301c4d9b1f325962412eb8e423d3f80992eeb78ae571bf93e5",
+      "bytes": 2817,
+      "purpose": "Type fallback classifier/extension/language/classpath semantics",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/artifact/handler/DefaultArtifactHandler.java",
+      "anchors": [
+        {
+          "line": 53,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/artifact/handler/DefaultArtifactHandler.java#L53"
+        },
+        {
+          "line": 94,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/artifact/handler/DefaultArtifactHandler.java#L94"
+        }
+      ]
+    },
+    {
+      "id": "S28",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-core/src/main/resources/META-INF/plexus/artifact-handlers.xml",
+      "sha256": "91dfcd6689d1204a4742496bad880a2801a52e10a5db0ec0c689b2b625abc637",
+      "bytes": 6129,
+      "purpose": "Exact stock handler mappings,compare archive resource bytes",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/resources/META-INF/plexus/artifact-handlers.xml",
+      "anchors": [
+        {
+          "line": 89,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/resources/META-INF/plexus/artifact-handlers.xml#L89"
+        },
+        {
+          "line": 92,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/resources/META-INF/plexus/artifact-handlers.xml#L92"
+        }
+      ]
+    },
+    {
+      "id": "S29",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-core/src/main/java/org/apache/maven/plugin/internal/WagonExcluder.java",
+      "sha256": "53a6aef3d308d89a7b7c5587da4f7bf1de8a340a9c7449b86b102d725c554362",
+      "bytes": 3385,
+      "purpose": "Plugin session-specific exclusion rule",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/plugin/internal/WagonExcluder.java",
+      "anchors": [
+        {
+          "line": 35,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/plugin/internal/WagonExcluder.java#L35"
+        }
+      ]
+    },
+    {
+      "id": "S30",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/DependencyCollectorDelegate.java",
+      "sha256": "23aa047abfa1c3f9bab6fcedcd8743fc7ec7cd1e6c9b5ebee4f598e70d94bd89",
+      "bytes": 22193,
+      "purpose": "Collector root setup,descriptor/range/relocation/session/manager lifecycle",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/DependencyCollectorDelegate.java",
+      "anchors": [
+        {
+          "line": 192,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/DependencyCollectorDelegate.java#L192"
+        },
+        {
+          "line": 193,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/DependencyCollectorDelegate.java#L193"
+        },
+        {
+          "line": 203,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/DependencyCollectorDelegate.java#L203"
+        }
+      ]
+    },
+    {
+      "id": "S31",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/PremanagedDependency.java",
+      "sha256": "bf6e9a95acd96ef5ad2105c2c41eb67f0352765d3272dce24276f0eeb31369b6",
+      "bytes": 6157,
+      "purpose": "Pre-management order/version/scope/optional/exclusion application",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/PremanagedDependency.java",
+      "anchors": [
+        {
+          "line": 39,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-impl/src/main/java/org/eclipse/aether/internal/impl/collect/PremanagedDependency.java#L39"
+        }
+      ]
+    },
+    {
+      "id": "S32",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/filter/ScopeDependencyFilter.java",
+      "sha256": "fb5b3cf2d9224d5f7485e32bc066369e95193c1b9a7ac44021ff81c948374579",
+      "bytes": 3449,
+      "purpose": "Resolution filter is separate from depth-sensitive collection selector",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/filter/ScopeDependencyFilter.java",
+      "anchors": [
+        {
+          "line": 37,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/filter/ScopeDependencyFilter.java#L37"
+        }
+      ]
+    },
+    {
+      "id": "S33",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-model/src/main/mdo/maven.mdo",
+      "sha256": "576e049ae297ada90562e56bb08683beb3aad3179f10057b3ffbba38aa308dab",
+      "bytes": 118643,
+      "purpose": "Model field defaults for dependency type/classifier/scope and generated getters",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model/src/main/mdo/maven.mdo",
+      "anchors": [
+        {
+          "line": 1052,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model/src/main/mdo/maven.mdo#L1052"
+        },
+        {
+          "line": 1153,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model/src/main/mdo/maven.mdo#L1153"
+        }
+      ]
+    },
+    {
+      "id": "S34",
+      "repository": "maven",
+      "source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+      "path": "maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/DefaultVersionRangeResolver.java",
+      "sha256": "bbae89311b63b3020df738e2353354d5d6ab4f9dc3891f64af318b176fe07c0f",
+      "bytes": 13500,
+      "purpose": "Range constraints versus repository version metadata;no range selection authorized",
+      "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/DefaultVersionRangeResolver.java",
+      "anchors": [
+        {
+          "line": 149,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/DefaultVersionRangeResolver.java#L149"
+        },
+        {
+          "line": 230,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/DefaultVersionRangeResolver.java#L230"
+        },
+        {
+          "line": 232,
+          "url": "https://github.com/apache/maven/blob/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/DefaultVersionRangeResolver.java#L232"
+        }
+      ]
+    },
+    {
+      "id": "S35",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/traverser/FatArtifactTraverser.java",
+      "sha256": "8297d31781d0b00e5061c4cf2efbf9ad64752bb76707eb1bdb17a7834246cb00",
+      "bytes": 2433,
+      "purpose": "Includes-dependencies traversal gate used by Maven default session",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/traverser/FatArtifactTraverser.java",
+      "anchors": [
+        {
+          "line": 45,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/traverser/FatArtifactTraverser.java#L45"
+        }
+      ]
+    },
+    {
+      "id": "S36",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/ConflictMarker.java",
+      "sha256": "623e16d03af7c243488d6cf8cd5e35c600755dd3caca919ce2c3e8e55f77d8de",
+      "bytes": 9079,
+      "purpose": "Conflict identity uses actual artifact classifier and extension,not a rawtype key",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/ConflictMarker.java",
+      "anchors": [
+        {
+          "line": 157,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/ConflictMarker.java#L157"
+        }
+      ]
+    },
+    {
+      "id": "S37",
+      "repository": "maven-resolver",
+      "source_commit": "7176b8c476c35b301e21e910dcf96d0792c24397",
+      "path": "maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/ConflictIdSorter.java",
+      "sha256": "58156c826a07bdb549a9b71a06d6d7129d1fb415a8199422f8df019c3e16adb8",
+      "bytes": 10706,
+      "purpose": "Conflict ID topology and cycle/group ordering before mediation",
+      "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/ConflictIdSorter.java",
+      "anchors": [
+        {
+          "line": 49,
+          "url": "https://github.com/apache/maven-resolver/blob/7176b8c476c35b301e21e910dcf96d0792c24397/maven-resolver-util/src/main/java/org/eclipse/aether/util/graph/transformer/ConflictIdSorter.java#L49"
+        }
+      ]
+    }
+  ],
+  "source_release_archive_evidence": [
+    {
+      "archive_file": "maven-core-3.9.11.jar",
+      "sha256": "93d3c0523dda6c86c6620d9e692e7df39d0e2e4e4cd860061a8c0d274c2ad185",
+      "metadata_entry": "META-INF/maven/org.apache.maven/maven-core/pom.properties",
+      "metadata_sha256": "26b7d91ac0d3d882d1f8662ae7b86f735a496301b50d92b7294c9b8f023d614b",
+      "properties": "artifactId=maven-core\ngroupId=org.apache.maven\nversion=3.9.11\n"
+    },
+    {
+      "archive_file": "maven-resolver-api-1.9.24.jar",
+      "sha256": "c0ce14849298720dcf3b09fe9e263b3c576d2d6cd43c61f8aa9d6117e04e5e47",
+      "metadata_entry": "META-INF/maven/org.apache.maven.resolver/maven-resolver-api/pom.properties",
+      "metadata_sha256": "0658a75c6ee763181628f7d3163fd7aa3e9c235c1f490806b3aa6a16ab4149f7",
+      "properties": "artifactId=maven-resolver-api\ngroupId=org.apache.maven.resolver\nversion=1.9.24\n"
+    },
+    {
+      "archive_file": "maven-resolver-util-1.9.24.jar",
+      "sha256": "aeb7e776a8c47b1c317a2581f299e2525b044cb8abde31164e970bbbefab12b1",
+      "metadata_entry": "META-INF/maven/org.apache.maven.resolver/maven-resolver-util/pom.properties",
+      "metadata_sha256": "ecc6ae244b5025b5c9c9a769c5ac7b9c0d8bc3aa1f125f927c297bcda53945d8",
+      "properties": "artifactId=maven-resolver-util\ngroupId=org.apache.maven.resolver\nversion=1.9.24\n"
+    },
+    {
+      "archive_file": "maven-resolver-impl-1.9.24.jar",
+      "sha256": "3cd88edda00c46242cdbe57aefb47703519d176d9e8a500333de15faf41b0e1d",
+      "metadata_entry": "META-INF/maven/org.apache.maven.resolver/maven-resolver-impl/pom.properties",
+      "metadata_sha256": "6dd7abfdb04b44753d78bbc5eb5411fc3d42fdbe3983db8a6f48b9720f4a6e86",
+      "properties": "artifactId=maven-resolver-impl\ngroupId=org.apache.maven.resolver\nversion=1.9.24\n"
+    }
+  ],
+  "version_provenance_limit": "Resolver tag metadata matches pinned commit;archive pom.properties match1.9.24. No PGP signature,complete source/binary reproducibility or newlibrary/runtime qualification.",
+  "semantic_findings": [
+    {
+      "id": "D01",
+      "topic": "Session defaults and actual request state",
+      "source_refs": [
+        "S24",
+        "S01"
+      ],
+      "observed_source_semantics": "newSession installs ClassicDependencyManager, scope(test/provided)+optional+exclusion selectors, FatArtifactTraverser, nearest/Java scope/optionality transforms and a type registry. Core factory replaces that registry with handler-manager lookup and adds request cache/settings/profile/system/user/workspace/repository state.",
+      "qualification_limit": "A newSession helper and empty-property byte-model recipe do not recreate a stock project/descriptor/CLI session;no settings,cache,workspace,credentials or repository state is adopted.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D02",
+      "topic": "Project versus rooted artifact collection",
+      "source_refs": [
+        "S02",
+        "S30"
+      ],
+      "observed_source_semantics": "Project collection supplies a root artifact plus direct and managed dependencies. A root Dependency instead causes descriptor loading and merges request dependencies/management ahead of descriptor lists;different root forms affect child selector/manager contexts.",
+      "qualification_limit": "Preserve per-owner roles and root/depth/order. A GAV data template cannot select a unique project/plugin/root context or prove field-origin provenance.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D03",
+      "topic": "Plugin-specific collection and resolution",
+      "source_refs": [
+        "S03",
+        "S29",
+        "S32"
+      ],
+      "observed_source_semantics": "Plugin requests use a plugin root Dependency, clone the session and add WagonExcluder. Declared plugin dependencies become runtime except system. A provided/test ScopeDependencyFilter is combined with caller filters for resolution;this is separate from collection selector depth handling.",
+      "qualification_limit": "Packaged plugin.xml pools are not resolved trees or a transferable project classpath. Effective filter/core exports/provider/Mojo execution remains unqualified.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D04",
+      "topic": "Bootstrap extension realm",
+      "source_refs": [
+        "S04",
+        "S03"
+      ],
+      "observed_source_semantics": "Core extension coordinates are interpolated using request user/system properties and passed through resolveCoreExtension. Class-loading strategy/core exports affect realm imports and artifact inclusion before normal project goals.",
+      "qualification_limit": "Retain build-cache1.2.0 and source bootstrap behavior. No extension/realm/CLI was loaded;plugin-like resolution does not confer ordinary project authority or safe exclusion.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D05",
+      "topic": "Classic management depth and alternatives",
+      "source_refs": [
+        "S05",
+        "S06",
+        "S31"
+      ],
+      "observed_source_semantics": "Classic manager captures root managed information and stops adding deeper lists;version/scope/optional management is depth gated,while managed exclusions are merged. PremanagedDependency records/replaces distinct fields before descriptor traversal. DefaultDependencyManager is a separate implementation,not the installed default merely because its class exists.",
+      "qualification_limit": "Do not substitute transitive management or match a child owner management entry as consumer selection. Root management,pre-managed fields,depth and direct model defaults remain separate.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D06",
+      "topic": "Scope and optional selectors",
+      "source_refs": [
+        "S08",
+        "S09",
+        "S07"
+      ],
+      "observed_source_semantics": "Scope selector accepts direct dependencies before becoming transitive on a dependency-bearing child context;the configured test/provided exclusion is depth sensitive. Optional selector permits depth<2 and otherwise rejects optional dependencies. And selector composes child selectors.",
+      "qualification_limit": "Do not discard all test/provided/optional declarations. Root shape,call path and model/collector semantics must be qualified per role before any graph is pruned.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D07",
+      "topic": "Exclusions and propagation",
+      "source_refs": [
+        "S10",
+        "S25"
+      ],
+      "observed_source_semantics": "Selector compares groupId/artifactId/extension/classifier with exact-or-star matching and accumulates exclusions in child contexts. Maven model exclusions convert group/artifact to wildcard extension/classifier.",
+      "qualification_limit": "The prior363 incoming GA matches remain candidate data;consumer management,normalization,relocation and selector path are required before a resolved exclusion/effect claim.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D08",
+      "topic": "Derived and selected scope/optionality",
+      "source_refs": [
+        "S14",
+        "S13",
+        "S15"
+      ],
+      "observed_source_semantics": "Scope derivation distinguishes child system/test,parent compile/empty,parent test/runtime,parent provided/system and fallback. Conflict scope/optionality selection is a separate stage,with direct dependency treatment. Winning version alone does not determine selected scope or optionality.",
+      "qualification_limit": "No scope matrix or optional propagation is applied to candidate paths;full conflict group/root/depth inputs remain missing.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D09",
+      "topic": "Conflict identity and version constraints",
+      "source_refs": [
+        "S36",
+        "S37",
+        "S11",
+        "S12"
+      ],
+      "observed_source_semantics": "Conflict keys use actual group/artifact/extension/classifier and include relocation/alias keys. Groups are ordered before conflict resolution. NearestVersionSelector honors range constraints/backtracking;among siblings it prefers a higher version,otherwise lower depth,with iteration order retained when no candidate is nearer.",
+      "qualification_limit": "No global GAV winner or generic first-declaration rule. Raw type comparison keys are not actual resolver identity.108 cross-template families and original9 realm families remain unmediated.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D10",
+      "topic": "Artifact handlers and model defaults",
+      "source_refs": [
+        "S33",
+        "S25",
+        "S18",
+        "S19",
+        "S26",
+        "S27",
+        "S28"
+      ],
+      "observed_source_semantics": "Dependency type has a jar model default;scope compile is not a simple MDO field default and is injected after management by the previously pinned model normalizer. Core converts through an artifact-handler registry. Stock test-jar maps to extension jar/classifier tests;unknown handler types fall back to type-as-extension and default handler attributes. Extensions can contribute handlers.",
+      "qualification_limit": "Stock source mapping is evidence only;not actual installed realm registry,classifier selection or output equivalence. Keep raw nulls/literals in old frontiers. Packaging bundle does not establish a bundle dependency type.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D11",
+      "topic": "Traversal and collector implementation",
+      "source_refs": [
+        "S35",
+        "S20",
+        "S21",
+        "S22"
+      ],
+      "observed_source_semantics": "FatArtifactTraverser gates traversal on includesDependencies. DefaultDependencyCollector selects df unless session config chooses a delegate;both df/bf sources are retained. Df applies management,range/descriptor processing,cycle recording and relocation reprocessing before recursion.",
+      "qualification_limit": "No collector was run. Traversal omission,classpath properties or no cycle in available templates is not binary/provider/effect isolation or full cycle clearance.",
+      "actual_role_collection_qualified": false
+    },
+    {
+      "id": "D12",
+      "topic": "Range metadata and relocations",
+      "source_refs": [
+        "S34",
+        "S21",
+        "S30"
+      ],
+      "observed_source_semantics": "Exact version and range handling differ. Range resolution can combine local/remote repository metadata and workspace versions under repository/config policies. Relocations can re-enter collection and alter version-management handling. Existing descriptor reader source also has relocation/model/session behavior absent from the byte diagnostic.",
+      "qualification_limit": "Three original ranges and two Quarkus relocations remain unapplied. No live metadata/version selection,range guess,redirect,repository discovery or automatic relocation follow is authorized.",
+      "actual_role_collection_qualified": false
+    }
+  ],
+  "stock_handler_resource_comparison": {
+    "archive_file": "maven-core-3.9.11.jar",
+    "archive_sha256": "93d3c0523dda6c86c6620d9e692e7df39d0e2e4e4cd860061a8c0d274c2ad185",
+    "entry": "META-INF/plexus/artifact-handlers.xml",
+    "source_sha256": "91dfcd6689d1204a4742496bad880a2801a52e10a5db0ec0c689b2b625abc637",
+    "archive_entry_sha256": "91dfcd6689d1204a4742496bad880a2801a52e10a5db0ec0c689b2b625abc637",
+    "source_and_archive_resource_bytes_match": true,
+    "parsed_handler_mapping_matches": true,
+    "class_or_source_binary_equivalence_qualified": false
+  },
+  "stock_handler_mappings": [
+    {
+      "type": "pom",
+      "configured": {
+        "type": "pom"
+      },
+      "stock_extension": "pom",
+      "stock_classifier": "",
+      "stock_language": "none",
+      "stock_added_to_classpath": false,
+      "stock_includes_dependencies": false,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "jar",
+      "configured": {
+        "type": "jar",
+        "language": "java",
+        "addedToClasspath": "true"
+      },
+      "stock_extension": "jar",
+      "stock_classifier": "",
+      "stock_language": "java",
+      "stock_added_to_classpath": true,
+      "stock_includes_dependencies": false,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "ejb",
+      "configured": {
+        "type": "ejb",
+        "extension": "jar",
+        "language": "java",
+        "addedToClasspath": "true"
+      },
+      "stock_extension": "jar",
+      "stock_classifier": "",
+      "stock_language": "java",
+      "stock_added_to_classpath": true,
+      "stock_includes_dependencies": false,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "ejb-client",
+      "configured": {
+        "type": "ejb-client",
+        "extension": "jar",
+        "packaging": "ejb",
+        "classifier": "client",
+        "language": "java",
+        "addedToClasspath": "true"
+      },
+      "stock_extension": "jar",
+      "stock_classifier": "client",
+      "stock_language": "java",
+      "stock_added_to_classpath": true,
+      "stock_includes_dependencies": false,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "test-jar",
+      "configured": {
+        "classifier": "tests",
+        "extension": "jar",
+        "type": "test-jar",
+        "packaging": "jar",
+        "language": "java",
+        "addedToClasspath": "true"
+      },
+      "stock_extension": "jar",
+      "stock_classifier": "tests",
+      "stock_language": "java",
+      "stock_added_to_classpath": true,
+      "stock_includes_dependencies": false,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "maven-plugin",
+      "configured": {
+        "type": "maven-plugin",
+        "extension": "jar",
+        "language": "java",
+        "addedToClasspath": "true"
+      },
+      "stock_extension": "jar",
+      "stock_classifier": "",
+      "stock_language": "java",
+      "stock_added_to_classpath": true,
+      "stock_includes_dependencies": false,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "java-source",
+      "configured": {
+        "classifier": "sources",
+        "type": "java-source",
+        "extension": "jar",
+        "language": "java",
+        "addedToClasspath": "false"
+      },
+      "stock_extension": "jar",
+      "stock_classifier": "sources",
+      "stock_language": "java",
+      "stock_added_to_classpath": false,
+      "stock_includes_dependencies": false,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "javadoc",
+      "configured": {
+        "classifier": "javadoc",
+        "type": "javadoc",
+        "extension": "jar",
+        "language": "java",
+        "addedToClasspath": "true"
+      },
+      "stock_extension": "jar",
+      "stock_classifier": "javadoc",
+      "stock_language": "java",
+      "stock_added_to_classpath": true,
+      "stock_includes_dependencies": false,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "war",
+      "configured": {
+        "type": "war",
+        "includesDependencies": "true",
+        "language": "java",
+        "addedToClasspath": "false"
+      },
+      "stock_extension": "war",
+      "stock_classifier": "",
+      "stock_language": "java",
+      "stock_added_to_classpath": false,
+      "stock_includes_dependencies": true,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "ear",
+      "configured": {
+        "type": "ear",
+        "includesDependencies": "true",
+        "language": "java",
+        "addedToClasspath": "false"
+      },
+      "stock_extension": "ear",
+      "stock_classifier": "",
+      "stock_language": "java",
+      "stock_added_to_classpath": false,
+      "stock_includes_dependencies": true,
+      "actual_registry_qualified": false
+    },
+    {
+      "type": "rar",
+      "configured": {
+        "type": "rar",
+        "includesDependencies": "true",
+        "language": "java",
+        "addedToClasspath": "false"
+      },
+      "stock_extension": "rar",
+      "stock_classifier": "",
+      "stock_language": "java",
+      "stock_added_to_classpath": false,
+      "stock_includes_dependencies": true,
+      "actual_registry_qualified": false
+    }
+  ],
+  "prior_dependency_type_stock_projections": [
+    {
+      "raw_XML_type": "<absent_XML_type>",
+      "occurrences": 1985,
+      "model_default_type": "jar",
+      "stock_handler": {
+        "type": "jar",
+        "configured": {
+          "type": "jar",
+          "language": "java",
+          "addedToClasspath": "true"
+        },
+        "stock_extension": "jar",
+        "stock_classifier": "",
+        "stock_language": "java",
+        "stock_added_to_classpath": true,
+        "stock_includes_dependencies": false,
+        "actual_registry_qualified": false
+      },
+      "actual_role_registry_and_classifier_mapping_qualified": false,
+      "old_data_modified": false
+    },
+    {
+      "raw_XML_type": "pom",
+      "occurrences": 67,
+      "model_default_type": "pom",
+      "stock_handler": {
+        "type": "pom",
+        "configured": {
+          "type": "pom"
+        },
+        "stock_extension": "pom",
+        "stock_classifier": "",
+        "stock_language": "none",
+        "stock_added_to_classpath": false,
+        "stock_includes_dependencies": false,
+        "actual_registry_qualified": false
+      },
+      "actual_role_registry_and_classifier_mapping_qualified": false,
+      "old_data_modified": false
+    },
+    {
+      "raw_XML_type": "test-jar",
+      "occurrences": 15,
+      "model_default_type": "test-jar",
+      "stock_handler": {
+        "type": "test-jar",
+        "configured": {
+          "classifier": "tests",
+          "extension": "jar",
+          "type": "test-jar",
+          "packaging": "jar",
+          "language": "java",
+          "addedToClasspath": "true"
+        },
+        "stock_extension": "jar",
+        "stock_classifier": "tests",
+        "stock_language": "java",
+        "stock_added_to_classpath": true,
+        "stock_includes_dependencies": false,
+        "actual_registry_qualified": false
+      },
+      "actual_role_registry_and_classifier_mapping_qualified": false,
+      "old_data_modified": false
+    },
+    {
+      "raw_XML_type": "zip",
+      "occurrences": 1,
+      "model_default_type": "zip",
+      "stock_handler": {
+        "type": "zip",
+        "stock_extension": "zip",
+        "stock_classifier": "",
+        "stock_language": "none",
+        "stock_added_to_classpath": false,
+        "stock_includes_dependencies": false,
+        "fallback_source_only": true
+      },
+      "actual_role_registry_and_classifier_mapping_qualified": false,
+      "old_data_modified": false
+    }
+  ],
+  "role_context_counts": {
+    "declared_build_plugin": 7,
+    "model_parent_only": 2,
+    "plugin_descriptor": 183,
+    "processor_or_extension": 3,
+    "project_declaration": 134,
+    "source_candidate_native_module_with_published_control_only": 3
+  },
+  "original_frontier_summary": {
+    "target_GAVs": 265,
+    "strict_research_models": 264,
+    "JCTools_descriptor_validation_dimension_models": 1,
+    "original_role_occurrences": 332,
+    "role_counts": {
+      "declared_build_plugin": 7,
+      "model_parent_only": 2,
+      "plugin_descriptor": 183,
+      "processor_or_extension": 3,
+      "project_declaration": 134,
+      "source_candidate_native_module_with_published_control_only": 3
+    },
+    "ordered_model_dependency_declarations": 2068,
+    "ordered_managed_declarations": 217020,
+    "role_expanded_next_hop_candidates": 2731,
+    "unique_next_hop_GAVs": 923,
+    "missing_exact_POMs": 676,
+    "missing_dependency_POMs": 675,
+    "missing_relocation_target_POMs": 2,
+    "pinned_POMs_missing_reviewed_model": 3,
+    "unresolved_or_range_edges": 3,
+    "relocations": 2,
+    "system_paths": 0,
+    "immediate_path_return_candidates": 0,
+    "candidate_template_cycle_components": 0,
+    "same_context_version_conflicts": 0,
+    "cross_template_multiversion_families": 108,
+    "exclusion_match_candidates": 363
+  },
+  "next_input_plan": {
+    "id": "W1",
+    "status": "PREPARED_TWO_EXACT_POM_CHECKSUM_INPUTS_NOT_FETCHED",
+    "selection_basis": "Close the two named relocation-target metadata holes as a small data-review wave. This is not a mediated runtime dependency set or license/security approval.",
+    "inputs": [
+      {
+        "coordinate": "io.quarkus:quarkus-junit-internal:3.40.1",
+        "url": "https://repo.maven.apache.org/maven2/io/quarkus/quarkus-junit-internal/3.40.1/quarkus-junit-internal-3.40.1.pom",
+        "checksum_URL": "https://repo.maven.apache.org/maven2/io/quarkus/quarkus-junit-internal/3.40.1/quarkus-junit-internal-3.40.1.pom.sha512",
+        "needed_by_edges": [
+          "model-0039/dependency-0010",
+          "model-0041/dependency-0008",
+          "model-0053/dependency-0003",
+          "model-0063/dependency-0016",
+          "model-0064/dependency-0005",
+          "model-0065/dependency-0008",
+          "model-0070/dependency-0006",
+          "model-0072/dependency-0007",
+          "model-0074/dependency-0007",
+          "model-0076/dependency-0007",
+          "model-0078/dependency-0007",
+          "model-0079/dependency-0006",
+          "model-0082/dependency-0004",
+          "model-0085/dependency-0010",
+          "model-0086/dependency-0003",
+          "model-0091/dependency-0014",
+          "model-0092/dependency-0029",
+          "model-0094/dependency-0014",
+          "model-0095/dependency-0004",
+          "model-0098/dependency-0009",
+          "model-0100/dependency-0019",
+          "model-0102/dependency-0006",
+          "model-0080/relocation"
+        ],
+        "needed_by_original_context_ids": [
+          "context-0005",
+          "context-0006",
+          "context-0009",
+          "context-0019",
+          "context-0105",
+          "context-0106",
+          "context-0107",
+          "context-0108",
+          "context-0109",
+          "context-0111",
+          "context-0112",
+          "context-0113",
+          "context-0114",
+          "context-0115",
+          "context-0117",
+          "context-0118",
+          "context-0119",
+          "context-0120",
+          "context-0122",
+          "context-0123",
+          "context-0124",
+          "context-0125",
+          "context-0241"
+        ],
+        "purpose": "Review a specifically named unapplied Quarkus relocation target;not runtime selection or priority over other preserved capabilities.",
+        "reviewed_for_future_fixed_POM_checksum_only": true,
+        "fetched_or_used": false,
+        "POM_digest": null,
+        "license_provenance": "Unknown until exact POM and ancestry reviewed;do not presume owner or project license.",
+        "security_limit": "POM/checksum metadata only;no binary/notices/CVE/PGP/SBOM/distribution/source-output clearance.",
+        "followup_rule": "Stop after this exact POM/checksum wave. Review newly discovered parent/import/property/relocation metadata before a separately fixed wave. No target model or relocation application in this plan."
+      },
+      {
+        "coordinate": "io.quarkus:quarkus-junit-mockito:3.40.1",
+        "url": "https://repo.maven.apache.org/maven2/io/quarkus/quarkus-junit-mockito/3.40.1/quarkus-junit-mockito-3.40.1.pom",
+        "checksum_URL": "https://repo.maven.apache.org/maven2/io/quarkus/quarkus-junit-mockito/3.40.1/quarkus-junit-mockito-3.40.1.pom.sha512",
+        "needed_by_edges": [
+          "model-0081/relocation"
+        ],
+        "needed_by_original_context_ids": [
+          "context-0126"
+        ],
+        "purpose": "Review a specifically named unapplied Quarkus relocation target;not runtime selection or priority over other preserved capabilities.",
+        "reviewed_for_future_fixed_POM_checksum_only": true,
+        "fetched_or_used": false,
+        "POM_digest": null,
+        "license_provenance": "Unknown until exact POM and ancestry reviewed;do not presume owner or project license.",
+        "security_limit": "POM/checksum metadata only;no binary/notices/CVE/PGP/SBOM/distribution/source-output clearance.",
+        "followup_rule": "Stop after this exact POM/checksum wave. Review newly discovered parent/import/property/relocation metadata before a separately fixed wave. No target model or relocation application in this plan."
+      }
+    ],
+    "existing_pinned_BOM_model_candidates": [
+      {
+        "coordinate": "io.quarkus:quarkus-bom:3.40.1",
+        "POM_sha256": "7197134291f663ce0a751e4b9bcaa03512a0fff093df0fe8c0bb35459d01770f",
+        "needed_by_edges": [
+          "model-0039/dependency-0012",
+          "model-0041/dependency-0011",
+          "model-0048/dependency-0008",
+          "model-0049/dependency-0000",
+          "model-0051/dependency-0034",
+          "model-0052/dependency-0022",
+          "model-0053/dependency-0005",
+          "model-0054/dependency-0002",
+          "model-0061/dependency-0012",
+          "model-0063/dependency-0029",
+          "model-0064/dependency-0020",
+          "model-0065/dependency-0012",
+          "model-0066/dependency-0002",
+          "model-0067/dependency-0010",
+          "model-0068/dependency-0005",
+          "model-0069/dependency-0005",
+          "model-0070/dependency-0008",
+          "model-0071/dependency-0005",
+          "model-0072/dependency-0009",
+          "model-0073/dependency-0007",
+          "model-0074/dependency-0009",
+          "model-0075/dependency-0006",
+          "model-0076/dependency-0009",
+          "model-0077/dependency-0007",
+          "model-0078/dependency-0011",
+          "model-0079/dependency-0008",
+          "model-0080/dependency-0000",
+          "model-0081/dependency-0000",
+          "model-0082/dependency-0009",
+          "model-0083/dependency-0004",
+          "model-0084/dependency-0031",
+          "model-0085/dependency-0028",
+          "model-0086/dependency-0014",
+          "model-0087/dependency-0005",
+          "model-0088/dependency-0003",
+          "model-0089/dependency-0004",
+          "model-0090/dependency-0025",
+          "model-0091/dependency-0034",
+          "model-0092/dependency-0032",
+          "model-0093/dependency-0002",
+          "model-0094/dependency-0023",
+          "model-0095/dependency-0012",
+          "model-0096/dependency-0003",
+          "model-0097/dependency-0008",
+          "model-0098/dependency-0015",
+          "model-0099/dependency-0005",
+          "model-0100/dependency-0024",
+          "model-0101/dependency-0005",
+          "model-0102/dependency-0008",
+          "model-0103/dependency-0003",
+          "model-0105/dependency-0018",
+          "model-0106/dependency-0015"
+        ],
+        "role_model_review_or_execution_authorized": false,
+        "next_action": "Retain existing POM digest and review exact target/profile/context/controller/manifest before any later model run;no new fetch or model execution now."
+      },
+      {
+        "coordinate": "io.quarkus:quarkus-bootstrap-bom-test:3.40.1",
+        "POM_sha256": "e8edacdbbb7b386056b4005f6af14205c51a0fb5504543f8f9abbe8c5c5a216d",
+        "needed_by_edges": [
+          "model-0042/dependency-0007",
+          "model-0043/dependency-0011",
+          "model-0044/dependency-0002",
+          "model-0045/dependency-0019",
+          "model-0047/dependency-0009"
+        ],
+        "role_model_review_or_execution_authorized": false,
+        "next_action": "Retain existing POM digest and review exact target/profile/context/controller/manifest before any later model run;no new fetch or model execution now."
+      },
+      {
+        "coordinate": "io.quarkus:quarkus-bootstrap-bom:3.40.1",
+        "POM_sha256": "828e32f0981bb2fcd7ad31ceb0f3f8abfc158d03b3b7603d5cb97ed57153d981",
+        "needed_by_edges": [
+          "model-0042/dependency-0006",
+          "model-0043/dependency-0010",
+          "model-0044/dependency-0001",
+          "model-0045/dependency-0018",
+          "model-0047/dependency-0008"
+        ],
+        "role_model_review_or_execution_authorized": false,
+        "next_action": "Retain existing POM digest and review exact target/profile/context/controller/manifest before any later model run;no new fetch or model execution now."
+      }
+    ],
+    "unsupported_ranges": [
+      {
+        "edge": "model-0024/dependency-0002",
+        "target": "commons-codec:commons-codec:[1.15,)",
+        "unresolved_scalar_fields": [],
+        "version_range": true,
+        "missing_scalar_fields": []
+      },
+      {
+        "edge": "model-0024/dependency-0003",
+        "target": "com.google.code.findbugs:jsr305:[2.0.1,)",
+        "unresolved_scalar_fields": [],
+        "version_range": true,
+        "missing_scalar_fields": []
+      },
+      {
+        "edge": "model-0024/dependency-0004",
+        "target": "com.google.code.findbugs:annotations:[2.0.1,)",
+        "unresolved_scalar_fields": [],
+        "version_range": true,
+        "missing_scalar_fields": []
+      }
+    ],
+    "unapplied_relocations": [
+      {
+        "model": "model-0080",
+        "coordinate": "io.quarkus:quarkus-junit5-internal:3.40.1",
+        "fields": {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-junit-internal",
+          "version": "3.40.1",
+          "message": "Update the artifactId in your project build file. Refer to https://github.com/quarkusio/quarkus/wiki/Migration-Guide-3.31 for more information."
+        },
+        "followed": false,
+        "prospective_target": "io.quarkus:quarkus-junit-internal:3.40.1",
+        "target_metadata_state": "missing_exact_POM",
+        "relocation_application_and_cycle_checks_qualified": false
+      },
+      {
+        "model": "model-0081",
+        "coordinate": "io.quarkus:quarkus-junit5-mockito:3.40.1",
+        "fields": {
+          "groupId": "io.quarkus",
+          "artifactId": "quarkus-junit-mockito",
+          "version": "3.40.1",
+          "message": "Update the artifactId in your project build file. Refer to https://github.com/quarkusio/quarkus/wiki/Migration-Guide-3.31 for more information."
+        },
+        "followed": false,
+        "prospective_target": "io.quarkus:quarkus-junit-mockito:3.40.1",
+        "target_metadata_state": "missing_exact_POM",
+        "relocation_application_and_cycle_checks_qualified": false
+      }
+    ],
+    "all_other_missing_coordinates_preserved_in": "role-transitive-frontier.json#missing_exact_POM_frontier",
+    "other_exact_missing_coordinates": 674,
+    "roots_roles_order_scopes_optional_exclusions_source_controls_retained": true,
+    "blanket_fetch_or_resolution": false,
+    "model_execution_in_this_unit": false
+  },
+  "remaining_gaps": [
+    {
+      "id": "G01",
+      "role": "processor_paths",
+      "status": "NO_GO",
+      "reason": "The two paths name compiler-plugin3.13.0 and quarkus-extension-processor3.40.1. Resolver/core sources do not establish the compiler plugin processor-path request,dependency management,scope/classifier or discovery rules.",
+      "next_exact_source_review": {
+        "repository": "apache/maven-compiler-plugin",
+        "tag": "maven-compiler-plugin-3.13.0",
+        "source_path": "src/main/java/org/apache/maven/plugin/compiler/AbstractCompilerMojo.java",
+        "commit_not_yet_pinned": true
+      },
+      "paths_preserved": 2
+    },
+    {
+      "id": "G02",
+      "role": "all_332_contexts",
+      "status": "NO_GO",
+      "reason": "No actual role model/descriptor/project/collector/API driver or effect boundary equivalence. Existing byte models have explicit profiles/empty props/fixed inputs;real session settings/cache/file/workspace/transport/listeners/components remain excluded."
+    },
+    {
+      "id": "G03",
+      "role": "runtime_and_build_effects",
+      "status": "NO_GO",
+      "reason": "Provider/default-lifecycle/Mojo/annotation-processor/build-extension/conditional-deployment/classloader/generated/source-built outputs and early/native effects remain mandatory;both native processors and every old capability retained."
+    },
+    {
+      "id": "G04",
+      "role": "range_relocation_metadata",
+      "status": "NO_GO",
+      "reason": "Three ranges and two relocations unapplied;676 exact missing POMs/three existing unmodeled BOMs retained. W1 is only a two-input metadata review plan."
+    },
+    {
+      "id": "G05",
+      "role": "binary_input_lock_and_native_harness_A0",
+      "status": "NO_GO",
+      "reason": "Full mediated input/binary/license/security/distribution closure,independent issuer harness isolation and mandatory A0 remain open. No fallback/default permission/global validation change."
+    }
+  ],
+  "inherited_model_context_review": "model-context-review.json",
+  "inherited_model_normalizer_source": {
+    "path": "maven-model-builder/src/main/java/org/apache/maven/model/normalization/DefaultModelNormalizer.java",
+    "sha256": "11e586267322c840f17ec1439d692c7ead518ee1bf1f364249dcb496c0b709fc",
+    "scope_default_line": 116
+  },
+  "provenance_pins": [
+    {
+      "path": "infra/keycloak/keycloak_registration_connector/role-transitive-frontier.json",
+      "sha256": "050d42234843491ce12668c50bad25769e0c47db116f1ffc27c367825c2d394c"
+    },
+    {
+      "path": "infra/keycloak/keycloak_registration_connector/role-transitive-paths.json",
+      "sha256": "ffbcacdaa173f6e212b8f553da8ded100353454ed6f557085e288db170f79cbd"
+    },
+    {
+      "path": "infra/keycloak/keycloak_registration_connector/model-context-review.json",
+      "sha256": "fab5be5c501688c57183fbc2f8b61f9a11e7a23a593f0a761db48f8a7ea39fbb"
+    },
+    {
+      "path": "infra/keycloak/keycloak_registration_connector/selected-input-frontier.json",
+      "sha256": "a5552d226339cd0b238a5ae1dde6d9e87561886a77fd22906e0297af0296d038"
+    }
+  ],
+  "bounded_source_semantics_and_next_input_plan_complete": true,
+  "actual_role_collection_or_mediation_qualified": false,
+  "processor_path_semantics_qualified": false,
+  "full_transitive_graph_or_executable_lock_qualified": false,
+  "full_native_issuer_harness_qualified": false,
+  "mandatory_A0_qualification_complete": false,
+  "new_official_source_texts": 37,
+  "new_dependency_POMs": 0,
+  "new_libraries": 0,
+  "new_binaries": 0,
+  "collector_or_model_or_JVM_Maven_plugin_native_or_A0_executed": false,
+  "native_tests_rerun": false,
+  "inherited_native_cases": 578,
+  "inherited_preparation_controls": 6,
+  "production_changes": false,
+  "all_ancestor_and_Task6_restoration_retained": true,
+  "next_prerequisite": "Review and retrieve only W1 exact two relocation-target POM/checksum metadata inputs,then separately review newly discovered ancestry/imports/context holes. Pin compiler-plugin3.13.0 source identity/processor-path semantics before any processor collection design or execution. Preserve every original capability/context and full NO_GO gate."
+}
