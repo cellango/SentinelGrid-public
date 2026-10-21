@@ -1,0 +1,604 @@
+{
+  "format_version": 1,
+  "status": "BOUNDED_BLOCKER_REVIEW_AND_CONTEXT_DIAGNOSTIC_QUALIFIED_STRICT_NEGATIVE_RETAINED_FULL_PARENTS_OPEN",
+  "source_commit": "24ed1dadf3f246a555adb6d3d4a99e9b3003fb3b",
+  "Maven_source_commit": "3e54c93a704957b63ee3494413a2b544fd3d825b",
+  "official_context_source_refs": [
+    {
+      "path": "maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/DefaultArtifactDescriptorReader.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-resolver-provider/src/main/java/org/apache/maven/repository/internal/DefaultArtifactDescriptorReader.java",
+      "scope": "Version-pinned official Apache Maven source for static validation-context review only;not executable input or distribution approval",
+      "sha256": "744d3bfd120af291c3f0326790ade93b65cd6d97ead7c256534724214c49694f",
+      "bytes": 18657,
+      "license": "Apache-2.0 header;static source review only",
+      "anchors": [
+        {
+          "symbol": "modelRequest.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);",
+          "lines": [
+            270
+          ]
+        },
+        {
+          "symbol": "modelRequest.setProcessPlugins(false);",
+          "lines": [
+            271
+          ]
+        },
+        {
+          "symbol": "modelRequest.setTwoPhaseBuilding(false);",
+          "lines": [
+            272
+          ]
+        },
+        {
+          "symbol": "modelRequest.setModelSource(new FileModelSource(pomArtifact.getFile()));",
+          "lines": [
+            290
+          ]
+        }
+      ]
+    },
+    {
+      "path": "maven-core/src/main/java/org/apache/maven/project/DefaultProjectBuildingRequest.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-core/src/main/java/org/apache/maven/project/DefaultProjectBuildingRequest.java",
+      "scope": "Version-pinned official Apache Maven source for static validation-context review only;not executable input or distribution approval",
+      "sha256": "cb193513c03fcedd5f95eeea6fbfa49fd6389e207d55ae18fb5069613181d05e",
+      "bytes": 9123,
+      "license": "Apache-2.0 header;static source review only",
+      "anchors": [
+        {
+          "symbol": "private int validationLevel = ModelBuildingRequest.VALIDATION_LEVEL_STRICT;",
+          "lines": [
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/building/ModelBuildingRequest.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/building/ModelBuildingRequest.java",
+      "scope": "Version-pinned official Apache Maven source for static validation-context review only;not executable input or distribution approval",
+      "sha256": "b0c326d4d2387be3f68b37020cbac5842ce52f1db04d07d15c47b15c12b6c004",
+      "bytes": 12988,
+      "license": "Apache-2.0 header;static source review only",
+      "anchors": [
+        {
+          "symbol": "int VALIDATION_LEVEL_MINIMAL = 0;",
+          "lines": [
+            42
+          ]
+        },
+        {
+          "symbol": "int VALIDATION_LEVEL_MAVEN_3_0 = 30;",
+          "lines": [
+            53
+          ]
+        },
+        {
+          "symbol": "int VALIDATION_LEVEL_MAVEN_3_1 = 31;",
+          "lines": [
+            58
+          ]
+        },
+        {
+          "symbol": "int VALIDATION_LEVEL_STRICT = VALIDATION_LEVEL_MAVEN_3_0;",
+          "lines": [
+            63
+          ]
+        }
+      ]
+    },
+    {
+      "path": "maven-model-builder/src/main/java/org/apache/maven/model/normalization/DefaultModelNormalizer.java",
+      "url": "https://raw.githubusercontent.com/apache/maven/3e54c93a704957b63ee3494413a2b544fd3d825b/maven-model-builder/src/main/java/org/apache/maven/model/normalization/DefaultModelNormalizer.java",
+      "sha256": "11e586267322c840f17ec1439d692c7ead518ee1bf1f364249dcb496c0b709fc",
+      "bytes": 4493,
+      "license": "Apache-2.0 header;static source review only",
+      "anchors": [
+        {
+          "symbol": "public void mergeDuplicates(",
+          "lines": [
+            51
+          ]
+        },
+        {
+          "symbol": "merger.mergePlugin(plugin, first);",
+          "lines": [
+            61
+          ]
+        },
+        {
+          "symbol": "build.setPlugins(new ArrayList<>(normalized.values()));",
+          "lines": [
+            67
+          ]
+        }
+      ]
+    }
+  ],
+  "source_validation_contexts": {
+    "artifact_descriptor_level": "MINIMAL(0)",
+    "project_request_default": "STRICT=MAVEN_3_0(30)",
+    "prior_research_level": "MAVEN_3_1(31)"
+  },
+  "JUnit_BOM": {
+    "coordinate": "org.junit:junit-bom:5.12.2",
+    "url": "https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.12.2/junit-bom-5.12.2.pom",
+    "scope": "Exact denied child-context imported BOM. Static XML/checksum/license/provenance discovery only;noJAR or binary/security/license/distribution clearance",
+    "path": "org/junit/junit-bom/5.12.2/junit-bom-5.12.2.pom",
+    "sha256": "cef80fec86454f6806bfb0df24669b5c6f32e2cb728539ea859f47dfdc9bbc17",
+    "sha512": "ab6408540062233f4986b8b10c875d8eb7e6b8beb633be7a8e743140882789cf9fe9a25f4886e05e5bd24bc44df97b97396b89a05f39452135bfd4f2c35c3be0",
+    "bytes": 5649,
+    "repository_sha512_match": true,
+    "parent": null,
+    "root_imported_BOMs": [],
+    "licenses_literal": [
+      {
+        "name": "Eclipse Public License v2.0",
+        "url": "https://www.eclipse.org/legal/epl-v20.html"
+      }
+    ],
+    "namespace": "http://maven.apache.org/POM/4.0.0",
+    "no_binary_or_code_execution": true
+  },
+  "child_context_BOM_override_provenance": [
+    {
+      "coordinate": "org.apache.maven.surefire:surefire:3.5.6",
+      "POM_sha256": "419678335ab6c41d3eee332ade9bf1274c284b226c3b4d8ac1aa407961561ce7",
+      "property": "5.12.2",
+      "imported_BOM_versions": []
+    },
+    {
+      "coordinate": "org.apache.maven:maven-parent:47",
+      "POM_sha256": "82d0112ba1907ff5fd13a2485829c97df66c6a81e075359a561a422f7d1582d3",
+      "property": "5.14.2",
+      "imported_BOM_versions": [
+        "${versions.junit5}"
+      ]
+    }
+  ],
+  "POM_corpus": 457,
+  "source_POMs": 46,
+  "published_metadata_POMs": 411,
+  "synthetic_POMs": 3,
+  "unique_target_GAVs": 2,
+  "context_cases": 4,
+  "successful_context_models": 3,
+  "retained_strict_denials": 1,
+  "unexpected_model_NO_GO": 0,
+  "case_results": [
+    {
+      "id": "surefire_strict_with_reviewed_BOM",
+      "coordinate": "org.apache.maven.plugins:maven-surefire-plugin:3.5.6",
+      "validation_level": 31,
+      "validation_name": "MAVEN_3_1",
+      "expectation": "model_only_success",
+      "role": "original_strict_research_target",
+      "outcome": "model_only_success",
+      "output_id": "context-0000",
+      "resolver_requests": [
+        "org.apache.maven.surefire:surefire:3.5.6",
+        "org.apache.maven:maven-parent:47",
+        "org.apache:apache:37",
+        "org.junit:junit-bom:5.12.2"
+      ],
+      "ignored_repository_ids": [
+        "central",
+        "central"
+      ],
+      "direct_dependency_count": 9,
+      "managed_dependency_count": 55,
+      "problems": [],
+      "effective_bundle_plugin_declarations": 0,
+      "effective_bundle_plugin_XML_sha256": [],
+      "direct_dependency_tuples_sha256": "a2e6d644705d03453ef0b81db1b2bd7c7d718f588531e8ad03e673d8ccfdad95",
+      "effective_XML_sha256": "4baa645064324314d364dd75bbd749e37f6a0136e147fb7b2456419a48ec3d70",
+      "ordered_dependency_text_sha256": "80608ce014bda7cdd77ef11e2dbee071a52cfa9f7c488e9fb36830d0465e7c83",
+      "provenance_sha256": "981ca7c0e4ff55eda8ee91dc6dac76884fc2f09eb460e8f717128a1cb5a47cb3",
+      "problems_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "id": "jctools_strict_retained_negative",
+      "coordinate": "org.jctools:jctools-core:4.0.5",
+      "validation_level": 31,
+      "validation_name": "MAVEN_3_1",
+      "expectation": "expected_strict_denial",
+      "role": "historical_strict_negative",
+      "outcome": "expected_strict_denial",
+      "output_id": "context-0001",
+      "resolver_requests": [],
+      "ignored_repository_ids": [
+        "central"
+      ],
+      "failure": "org.apache.maven.model.building.ModelBuildingException: 1 problem was encountered while building the effective model for org.jctools:jctools-core:4.0.5\n[ERROR] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.felix:maven-bundle-plugin @ \n"
+    },
+    {
+      "id": "jctools_project_default_comparison",
+      "coordinate": "org.jctools:jctools-core:4.0.5",
+      "validation_level": 30,
+      "validation_name": "STRICT_alias_MAVEN_3_0",
+      "expectation": "model_only_success",
+      "role": "validation_dimension_comparison_only_not_project_build",
+      "outcome": "model_only_success",
+      "output_id": "context-0002",
+      "resolver_requests": [],
+      "ignored_repository_ids": [
+        "central"
+      ],
+      "direct_dependency_count": 5,
+      "managed_dependency_count": 0,
+      "problems": [
+        "WARNING:'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.apache.felix:maven-bundle-plugin"
+      ],
+      "effective_bundle_plugin_declarations": 1,
+      "effective_bundle_plugin_XML_sha256": [
+        "8ca887f3d35b8157a2b7792620b3a64f677845dba32dbaa5a651bf6f7b513348"
+      ],
+      "direct_dependency_tuples_sha256": "a75f514d89f40d1815cb24957d19e6bad5d9b0c7fb7659a1b66ccdbe9b21821a",
+      "effective_XML_sha256": "0fc58fe91b1f966913c7fe78392195e8bbefb90e13b64372827699107e35ba5c",
+      "ordered_dependency_text_sha256": "186217051c20482307fa24ce547ef7dccdad8b77c8fdd5b9af10f2caa775b9d1",
+      "provenance_sha256": "38ce484959d0a07968feaa32fed2bc5fa9a3ed8fc10047010d8310d8d6c32594",
+      "problems_sha256": "7244b04ffbd407d47f05236468154f95f389d4d57c77f7304ddde5894542bb1a"
+    },
+    {
+      "id": "jctools_descriptor_validation_comparison",
+      "coordinate": "org.jctools:jctools-core:4.0.5",
+      "validation_level": 0,
+      "validation_name": "MINIMAL",
+      "expectation": "model_only_success",
+      "role": "validation_dimension_of_dependency_descriptor_only",
+      "outcome": "model_only_success",
+      "output_id": "context-0003",
+      "resolver_requests": [],
+      "ignored_repository_ids": [
+        "central"
+      ],
+      "direct_dependency_count": 5,
+      "managed_dependency_count": 0,
+      "problems": [],
+      "effective_bundle_plugin_declarations": 1,
+      "effective_bundle_plugin_XML_sha256": [
+        "8ca887f3d35b8157a2b7792620b3a64f677845dba32dbaa5a651bf6f7b513348"
+      ],
+      "direct_dependency_tuples_sha256": "a75f514d89f40d1815cb24957d19e6bad5d9b0c7fb7659a1b66ccdbe9b21821a",
+      "effective_XML_sha256": "0fc58fe91b1f966913c7fe78392195e8bbefb90e13b64372827699107e35ba5c",
+      "ordered_dependency_text_sha256": "186217051c20482307fa24ce547ef7dccdad8b77c8fdd5b9af10f2caa775b9d1",
+      "provenance_sha256": "e2eca61df0b3291a04ea097c60261a81ee3325828bbddeba5b4f74efc89b8eb9",
+      "problems_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    }
+  ],
+  "model_boundary_assertions": 17,
+  "original15_model_assertions_preserved": true,
+  "preparation_integrity_controls": [
+    {
+      "name": "fresh_owned_output",
+      "passed": true
+    },
+    {
+      "name": "existing_output_preserved",
+      "passed": true
+    },
+    {
+      "name": "changed_model_library_pin_before_output",
+      "passed": true
+    },
+    {
+      "name": "foreign_POM_coordinate_before_output",
+      "passed": true
+    },
+    {
+      "name": "dropped_target_manifest_before_output",
+      "passed": true
+    },
+    {
+      "name": "reordered_target_manifest_before_output",
+      "passed": true
+    },
+    {
+      "name": "duplicate_target_manifest_before_output",
+      "passed": true
+    },
+    {
+      "name": "matching_but_unapproved_POM_table_before_output",
+      "passed": true
+    },
+    {
+      "name": "unreviewed_context_target_before_output",
+      "passed": true
+    },
+    {
+      "name": "strict_witness_context_rewrite_before_output",
+      "passed": true
+    },
+    {
+      "name": "fixture_drift_before_output",
+      "passed": true
+    },
+    {
+      "name": "helper_drift_before_loading",
+      "passed": true
+    },
+    {
+      "name": "metadata_symlink_rejected",
+      "passed": true
+    },
+    {
+      "name": "output_inside_fixture",
+      "passed": true
+    },
+    {
+      "name": "output_inside_tools",
+      "passed": true
+    },
+    {
+      "name": "output_inside_metadata",
+      "passed": true
+    },
+    {
+      "name": "forged_policy_digest_not_authority",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "forged_copied_library_and_state_not_authority",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "duplicate_POM_table_and_state_not_authority",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "payload_drift_before_compiler",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "prebuilt_class_rejected_before_compiler",
+      "passed": true,
+      "returncode": 1
+    },
+    {
+      "name": "optimized_runner_rejected_before_state",
+      "passed": true
+    }
+  ],
+  "original20_integrity_controls_preserved": true,
+  "source_backed_validation_contexts_target_scoped": true,
+  "old_global_research_MAVEN_3_1_unchanged": true,
+  "old_five_and_265target_recipes_and_evidence_unchanged": true,
+  "strict_JCTools_negative_preserved": true,
+  "raw_JCTools_POM_and_two_duplicate_declarations_unchanged": true,
+  "raw_main_build_bundle_plugins": [
+    {
+      "ordinal": 1,
+      "sha256": "0d82214a36d15d41886779385043bb1e31a965d7cf27267ffc127e0788919e35"
+    },
+    {
+      "ordinal": 6,
+      "sha256": "af0af160e6b253fd21eb1f05aa91089fbcbbc773f603d4416d962151fae19f3f"
+    }
+  ],
+  "normalization_limit": "Pinned raw duplicate declarations remain two. Maven model normalizer merges duplicates in model data;effective normalized plugin list is not executable selection/exclusion or permission to run plugins.",
+  "context_equivalence_limit": "Only model-validation level matches official descriptor request. Our checked byte sources,exact offline resolver,empty properties,explicit profile policy,no model cache differ from its file/repository/session pipeline;not full descriptor equivalence or binary safety.",
+  "actual_artifact_descriptor_reader_project_builder_or_resolver_pipeline_executed": false,
+  "Surefire_missing_BOM_negative_retained": true,
+  "Surefire_strict_success_with_reviewed_BOM": true,
+  "vintage_engine_version": "5.12.2",
+  "immutable_context_matrix": [
+    {
+      "id": "surefire_strict_with_reviewed_BOM",
+      "coordinate": "org.apache.maven.plugins:maven-surefire-plugin:3.5.6",
+      "validation_level": 31,
+      "validation_name": "MAVEN_3_1",
+      "expectation": "model_only_success",
+      "role": "original_strict_research_target"
+    },
+    {
+      "id": "jctools_strict_retained_negative",
+      "coordinate": "org.jctools:jctools-core:4.0.5",
+      "validation_level": 31,
+      "validation_name": "MAVEN_3_1",
+      "expectation": "expected_strict_denial",
+      "role": "historical_strict_negative"
+    },
+    {
+      "id": "jctools_project_default_comparison",
+      "coordinate": "org.jctools:jctools-core:4.0.5",
+      "validation_level": 30,
+      "validation_name": "STRICT_alias_MAVEN_3_0",
+      "expectation": "model_only_success",
+      "role": "validation_dimension_comparison_only_not_project_build"
+    },
+    {
+      "id": "jctools_descriptor_validation_comparison",
+      "coordinate": "org.jctools:jctools-core:4.0.5",
+      "validation_level": 0,
+      "validation_name": "MINIMAL",
+      "expectation": "model_only_success",
+      "role": "validation_dimension_of_dependency_descriptor_only"
+    }
+  ],
+  "fixture_sha256": {
+    "OfflineModelProbe.java": "60209bb702faad4f192a2953ed3f4e9d8145d79d0f6c65c3a90afd9450ad14f6",
+    "prepare.py": "2a2d615908ee9a641609b7a789465f112331b5811e795d0b30d52539853f3d24",
+    "run.py": "9544c741ffdbbba727ab4bbfe9a3b9bf52c7bbdb710c2b0d88982d37308ad0d9"
+  },
+  "library_pins": [
+    {
+      "path": "apache-maven-3.9.11/lib/maven-model-builder-3.9.11.jar",
+      "sha256": "c4c72accdcd848332c1a37995610a6a369d49fdaabc43e85f0022a5b77de3ba7"
+    },
+    {
+      "path": "apache-maven-3.9.11/lib/maven-model-3.9.11.jar",
+      "sha256": "163aa596f976264384efeb50b4cb8a806086fd64a9b755ad1f69195fed3998ad"
+    },
+    {
+      "path": "apache-maven-3.9.11/lib/maven-builder-support-3.9.11.jar",
+      "sha256": "5b1de1560ec19c4c69a655f986455888f3a0bcc3c160cac1f1edb87de3825f77"
+    },
+    {
+      "path": "apache-maven-3.9.11/lib/maven-artifact-3.9.11.jar",
+      "sha256": "0bfd1c121f907642344311d81e4dfd93eba6c24dc712cc0aeae273eb22833022"
+    },
+    {
+      "path": "apache-maven-3.9.11/lib/plexus-utils-3.6.0.jar",
+      "sha256": "27ef130e32c236090e408fb5498d94cb9ea26d14070fb1c8985d607b62d098d1"
+    },
+    {
+      "path": "apache-maven-3.9.11/lib/plexus-interpolation-1.28.jar",
+      "sha256": "ab2a8715570438a2e4164d85ad3e8d489eabc38ea5093c2eb8ab7f58403535b5"
+    }
+  ],
+  "recipe": "qualification/model_context_review/README.md",
+  "read_only_inputs_unchanged": true,
+  "caller_state_not_manifest_context_target_input_or_policy_authority": true,
+  "policy_or_external_effect_permission_change": false,
+  "classload_origins": [
+    "OfflineModelProbe",
+    "__JVM_LookupDefineClass__",
+    "file:<owned-output>/inputs/lib/maven-artifact-3.9.11.jar",
+    "file:<owned-output>/inputs/lib/maven-builder-support-3.9.11.jar",
+    "file:<owned-output>/inputs/lib/maven-model-3.9.11.jar",
+    "file:<owned-output>/inputs/lib/maven-model-builder-3.9.11.jar",
+    "file:<owned-output>/inputs/lib/plexus-interpolation-1.28.jar",
+    "file:<owned-output>/inputs/lib/plexus-utils-3.6.0.jar",
+    "file:<owned-output>/work/classes/",
+    "java.lang.runtime.ObjectMethods",
+    "java.security.Security",
+    "java.util.ResourceBundle",
+    "java.util.function.Function",
+    "java.util.regex.CharPredicates",
+    "java.util.regex.Pattern",
+    "java.util.stream.Collectors",
+    "java.util.stream.FindOps",
+    "jdk.internal.module.DefaultRoots",
+    "jdk.internal.module.ModuleBootstrap",
+    "jdk.xml.internal.SecuritySupport",
+    "jrt:/java.base",
+    "jrt:/java.xml",
+    "org.apache.maven.model.building.DefaultModelBuilder",
+    "org.apache.maven.model.profile.DefaultProfileActivationContext",
+    "org.apache.maven.model.validation.DefaultModelValidator",
+    "sun.nio.ch.NioSocketImpl",
+    "sun.util.cldr.CLDRLocaleProviderAdapter",
+    "sun.util.locale.provider.JRELocaleProviderAdapter"
+  ],
+  "compiled_class_sha256": {
+    "OfflineModelProbe$CheckedOperation.class": "cfc234bd25416068e4d0524382a3cc80e8e8b5188f13ba7a935c2aac9a622de5",
+    "OfflineModelProbe$ModelCase.class": "f132b5aa1aa9533865b4f905d9926f07645487d96db5b2724e9359ee59a5ace0",
+    "OfflineModelProbe.class": "45aa9631cd7e808bdbccc3269ecd2e6e78d85514008051459089477f3f7ec938",
+    "OfflineModelProbe$PinnedResolver.class": "762072dc7a2a90bc5549fda817043797faeb04a9fbeabb1d37e086b9ef669b62",
+    "OfflineModelProbe$1.class": "2251d10cb6ec8d6f6fd9324d06d016eb91a9d1c7e7a1d20ebad090c5ec80b9e2",
+    "OfflineModelProbe$Pin.class": "1c908db82c3c2b774ff18ecbdee6446f5d8274b47d9ec334876a88f432e1e98d",
+    "OfflineModelProbe$BytesSource.class": "c42dbd09dc6245f8958f7014f617e996c37d3883a94d01808619afad5e6e209c"
+  },
+  "generated_origins_validated_through_pinned_defining_classes": true,
+  "static_data_accessor_review": [
+    {
+      "jar": "maven-model-builder-3.9.11.jar",
+      "entry": "org/apache/maven/model/building/ModelBuildingResult.class",
+      "sha256": "9b1d00f249486fff38a65e0e46bf4af175322bcd836eb2e26feeb65c41b660ed",
+      "methods": [
+        {
+          "name": "getProblems",
+          "descriptor": "()Ljava/util/List;",
+          "code_sha256": null,
+          "code_bytes": 0,
+          "static_bytecode_hex": null
+        }
+      ]
+    },
+    {
+      "jar": "maven-model-builder-3.9.11.jar",
+      "entry": "org/apache/maven/model/building/DefaultModelBuildingResult.class",
+      "sha256": "e1df1cc6b1f6828419bf50a3d7b50ae6a75059e0c616cfd0bc2ff0923c0d37b3",
+      "methods": [
+        {
+          "name": "getProblems",
+          "descriptor": "()Ljava/util/List;",
+          "code_sha256": "984110b16a92b94965b49702e737c5fb58a93087dfaf95322f82beb906982684",
+          "code_bytes": 47,
+          "static_bytecode_hex": "00010001000000052ab4001db00000000200530000000600010000008800540000000c000100000005005500560000"
+        }
+      ]
+    },
+    {
+      "jar": "maven-model-builder-3.9.11.jar",
+      "entry": "org/apache/maven/model/building/ModelProblem.class",
+      "sha256": "2ddf1bc7a74f5832bde859621299441c237282631354cccee53dcedd08898d0a",
+      "methods": [
+        {
+          "name": "getMessage",
+          "descriptor": "()Ljava/lang/String;",
+          "code_sha256": null,
+          "code_bytes": 0,
+          "static_bytecode_hex": null
+        },
+        {
+          "name": "getSeverity",
+          "descriptor": "()Lorg/apache/maven/model/building/ModelProblem$Severity;",
+          "code_sha256": null,
+          "code_bytes": 0,
+          "static_bytecode_hex": null
+        }
+      ]
+    },
+    {
+      "jar": "maven-model-builder-3.9.11.jar",
+      "entry": "org/apache/maven/model/building/DefaultModelProblem.class",
+      "sha256": "3b26d93f2b08152f3ab8cc8b743e1a63b6675088023770cd2d32712baf92525a",
+      "methods": [
+        {
+          "name": "getMessage",
+          "descriptor": "()Ljava/lang/String;",
+          "code_sha256": "ff205fce966b2a4d9b9979d5b26105d2af3d3faafef589269f8dec2e0b64e306",
+          "code_bytes": 139,
+          "static_bytecode_hex": "000100020000002a2ab40015c600152ab40015b600399e000b2ab400154ca700122ab40031b6003f4c2bc7000612224c2bb00000000300680000001a00060000008e0011008f001900910021009300250094002800980069000000200003001600030076001800010000002a006a006b000000210009007600180001006d00000009000219fc000e07003a"
+        },
+        {
+          "name": "getSeverity",
+          "descriptor": "()Lorg/apache/maven/model/building/ModelProblem$Severity;",
+          "code_sha256": "4a515a394a97a2bb0e4a72fe74684d0f3d1bdb6e67e72d84823f61c88bddfc62",
+          "code_bytes": 47,
+          "static_bytecode_hex": "00010001000000052ab4001fb00000000200680000000600010000009d00690000000c000100000005006a006b0000"
+        }
+      ]
+    }
+  ],
+  "resolver_request_count": 21,
+  "resolver_unique_coordinates": 12,
+  "unreviewed_requests_other_than_synthetic_range": [],
+  "unknown_selected_coordinate_auto_fetch": false,
+  "raw_model_output_files": 12,
+  "raw_model_output_bytes": 96615,
+  "raw_XML_ordered_tuples_provenance_and_problems_retained_privately": true,
+  "model_only_API_context_boundary_qualified": true,
+  "bounded_two_blocker_review_complete": true,
+  "all265_strict_child_models_qualified": false,
+  "role_aware_full_transitive_graph_or_binary_plugin_provider_closure_qualified": false,
+  "full_native_issuer_harness_qualified": false,
+  "mandatory_A0_qualification_complete": false,
+  "new_network_scope": "One reviewed MavenCentral POM/SHA512 and four exact-commit official Maven Java source texts for static review only;no automatic resolution,redirects,proxy,auth,settings/cache or executable downloads.",
+  "new_executable_libraries": 0,
+  "new_binaries": 0,
+  "compiler_ModelSource_deprecation_warnings": 4,
+  "CLI_plugins_extensions_processors_Node_Quarkus_native_issuer_provider_or_A0_candidate_executed": false,
+  "source_pins_revalidated": 69,
+  "source_anchors_revalidated": 162,
+  "prior_Maven_source_units_revalidated": 18,
+  "new_Maven_source_units": 4,
+  "seed_metadata_entries_revalidated": 54,
+  "JDK_files_revalidated": 459,
+  "Maven_files_revalidated": 96,
+  "license_security_limit": "Four model components and two Plexus libraries Apache2declarations plus retained archive NOTICE/Indiana parser attribution. Six are research inputs only,not bundle-wide/production/security/CVE/SBOM/distribution approval. Other bundle libraries are excluded,oldhelper-license/deprecatedAPI limits remain.",
+  "metadata_EPL_license_declaration_not_binary_transitive_license_CVE_PGP_SBOM_distribution_or_source_output_clearance": true,
+  "all_prior_effect_boundary_trust_FD_stdin_localhost_Mach_DNS_service_container_DB_secret_native_resource_sidechannel_limits_retained": true,
+  "native_tests_rerun": false,
+  "inherited_native_cases": 578,
+  "inherited_preparation_controls": 6,
+  "production_changes": false,
+  "all_ancestor_and_Task6_restoration_requirements_retained": true,
+  "next_prerequisite": "Prepare a role-aware model/edge plan and exact transitive dependency frontier using prior263successes,newSurefirestrictmodel and scopedJCToolsdescriptor-validation model as qualified data only. Preserve strictnegative/rawduplicates/context provenance;review mediation/scopes/classifiers/optional/exclusions/profiles and every newly missing input before use. No binary/native execution or full lock claim."
+}

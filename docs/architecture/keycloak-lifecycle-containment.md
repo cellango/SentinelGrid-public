@@ -882,26 +882,82 @@ SBOM/distribution/source-output limits remain. No new JAR/network fetch or nativ
 plugin/processor/extension/Node/Quarkus/issuer/provider/A0 candidate ran. The 578
 native cases and six controls remain inherited and unchanged.
 
+## Child-model blocker and validation-context review
+
+The separate [context diagnostic](../../infra/keycloak/keycloak_registration_connector/qualification/model_context_review/README.md)
+and [result record](../../infra/keycloak/keycloak_registration_connector/model-context-review.json)
+complete the bounded review of the two prior model blockers. **17 model/boundary
+assertions and 22 integrity controls pass**, preserving all earlier controls.
+Four fixed cases cover two GAVs: three successful models and one expected strict
+denial. The original five-model and 265-target fixtures/results are unchanged;
+this is not a rerun or success claim for all 265 strict models.
+
+One new POM, `org.junit:junit-bom:5.12.2`, raises the corpus to 457 (46 source/
+411 published metadata POMs). It has no parent/root BOM imports, matches publisher
+SHA512 and declares EPL v2.0. Surefire's parent overrides `versions.junit5` to
+5.12.2 while its inherited Maven-parent import has a 5.14.2 default. With the
+reviewed child-context BOM, the Surefire model succeeds at the unchanged research
+level 31 and resolves vintage-engine to 5.12.2. Removing the pin in a controlled
+negative still denies without fetch. Metadata is not binary/license/security or
+distribution clearance; no new JUnit JAR or production dependency was introduced.
+
+Four version-pinned Apache Maven source units explain validation contexts:
+
+- The artifact-descriptor reader selects `MINIMAL` (0) and plugin processing off.
+- Project requests default to `STRICT`, which aliases `MAVEN_3_0` (30) in 3.9.11.
+- The earlier research request explicitly used `MAVEN_3_1` (31).
+- The validator's duplicate-plugin severity and model normalizer account for
+  rejection versus warning/normalized model data.
+
+| JCTools 4.0.5 comparison | Observed result |
+| --- | --- |
+| Earlier research level 31 | Duplicate-plugin rejection retained as the strict witness |
+| Project-default validation dimension, level 30 | Model succeeds with the duplicate-plugin warning |
+| Descriptor-validation dimension, level 0 | Model succeeds; raw duplicate declarations remain evidence |
+
+The context matrix is immutable and target-scoped; levels 30/0 cannot be requested
+for arbitrary targets. The default research method stays at 31. Both raw bundle
+plugin declarations remain unchanged, and each successful effective model contains
+one normalized entry. That merge is not a plugin exclusion, configuration-reach
+or execution proof. No target was dropped, POM patched or global validation changed.
+
+The diagnostic matches only the reader's validation dimension. It retains our
+checked byte sources, exact offline resolver, empty properties and explicit
+profile policy. The actual Maven reader uses file/session/cache/repository paths;
+neither it nor the project builder/resolver pipeline ran. The six-library classpath,
+effect policy, source-first copies, hash/context forgery rejection, early outside-
+read/input-write/bind denials, closed descriptors/owned home/stdin/class origins
+and read-only input checks pass. Original 15 model assertions/20 integrity controls
+remain, with two new controls in each group. Twelve raw model/tuple/provenance/
+problem files remain private. No unexpected selected coordinate was requested.
+
+All 69 source/162 anchors/457 POM/54 seed metadata/18 prior plus four new Maven
+source units/six-library/JDK459/Maven96 pins were reverified. New network inputs
+were one explicitly reviewed POM/checksum and four exact-commit source texts only.
+No JAR, actual Maven descriptor/project pipeline, CLI/plugin/extension/processor/
+Node/Quarkus/native issuer/provider/A0 candidate ran. Four ModelSource warnings
+and all previous license/security/checksum/source-output/effect-boundary limits
+remain; the 578 native cases and six controls remain inherited and unchanged.
+
 ## Proof sequence and next bounded work
 
-Next review the **two explicit child-model blockers**. Review the exact missing
-JUnit BOM and its ancestry before a later fixed credential-free metadata wave.
-For JCTools, use primary Maven source/descriptor evidence to determine the relevant
-root/project versus dependency-descriptor validation context. Preserve the strict
-negative and pinned POM bytes; no validation weakening, target/capability removal
-or byte patch merely to obtain a pass. Any context/driver/input change needs its
-own bounded review and controls before reuse. Unsupported cases remain NO-GO.
+Next prepare the **role-aware model and transitive dependency frontier**. Reuse
+the prior 263 successful research models, the new Surefire strict model and the
+target-scoped JCTools descriptor-validation model as data with explicit provenance.
+Retain the strict negative and both raw plugin declarations. Separate project,
+plugin, processor and extension roles; preserve types/classifiers/scopes/optional/
+exclusions, parent/BOM/profile/validation context, order and path-specific mediation.
+Identify each additional input and why it is needed before resolution or reuse.
+Do not treat a declaration inventory or validation comparison as an executable lock.
 
-All child models are not yet qualified, and successful models still require
-path-specific transitive mediation, actual binary/plugin/processor/extension/
-provider/classloader/generated-output and source-built effect qualification.
-Source-root build-cache, Quarkus extension/build/dev-file DB, frontend/resource/
-default lifecycle, both native processors, early initialization and all provider
-constructors/init/postInit remain prerequisites. No native build may discover its
-own inputs. Both full input and independent issuer-isolation gates precede the
-same open A0 deny-only prototype. Existing inherited FD/stdin/localhost witnesses,
-trusted OS/JDK/controller/private Apple API and Mach/bootstrap/IOKit/DNS/service/
-container/DB/secret/native/resource/sidechannel limits remain unchanged.
+Full transitive binary/plugin/processor/extension/provider/classloader/generated-
+output/source-built effect closure and independent native issuer isolation remain
+NO-GO. Source/bootstrap/build-cache/Quarkus extension/build/dev-file/frontend/
+resource/default lifecycle, both native processors and early/provider initialization
+remain requirements. No native build may discover its own inputs. Both full gates
+precede the same open A0 deny-only prototype. All old FD/stdin/localhost/OS/JDK/
+controller/private Apple API/Mach/DNS/service/container/DB/secret/native/resource/
+sidechannel and capability-restoration limits remain unchanged.
 
 The A0 prototype remains open. All LC-01–10/A0/A1/A2, full entry/all-22-writer
 closure, native cleanup/response, actual HTTP/JTA/JDBC/cache/durable effects,

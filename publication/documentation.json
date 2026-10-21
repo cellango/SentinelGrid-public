@@ -447,7 +447,7 @@
     {
       "path": "docs/architecture/keycloak-lifecycle-containment.md",
       "class": "current_architecture",
-      "authority": "proposed_lifecycle_contract_bounded_expanded_model_API_evidence_263success_2NO_GO_full_native_inputs_isolation_A0_open"
+      "authority": "proposed_lifecycle_contract_bounded_model_context_review_evidence_full_transitive_native_inputs_isolation_A0_open"
     },
     {
       "path": "docs/architecture/keycloak-native-admission.md",
@@ -2065,6 +2065,11 @@
       "authority": "bounded_trusted_JDK_control_only_not_effective_input_or_issuer_harness_A0_qualification"
     },
     {
+      "path": "infra/keycloak/keycloak_registration_connector/qualification/model_context_review/README.md",
+      "class": "experimental_component_reference",
+      "authority": "bounded_target_scoped_model_context_comparison_strict_negative_retained_not_full_descriptor_transitive_or_native_qualification"
+    },
+    {
       "path": "infra/keycloak/keycloak_registration_connector/qualification/native_abort/README.md",
       "class": "experimental_component_reference",
       "authority": "bounded_deny_only_native_abort_experiment_negative_containment_not_production"
@@ -2228,7 +2233,7 @@
   "counts_by_class": {
     "repository_reference": 3,
     "repository_entrypoint": 6,
-    "experimental_component_reference": 109,
+    "experimental_component_reference": 110,
     "contributor_instructions": 1,
     "documentation_index": 1,
     "current_architecture": 14,

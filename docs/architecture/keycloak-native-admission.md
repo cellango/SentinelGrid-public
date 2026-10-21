@@ -224,9 +224,9 @@ from the earlier record. The full effective input lock/isolation boundary and A0
 prototype remain open; close those prerequisites before a candidate. A1/A2,
 cleanup/durable writer closure and R2/R3/R4 stay NO-GO. No native cases were rerun.
 
-The [expanded offline child-model review](keycloak-lifecycle-containment.md#expanded-offline-child-model-qualification)
-passes 15 model/boundary assertions and 20 integrity controls over 456 POMs/265
-targets: 263 models succeed and two remain NO-GO (missing JUnit BOM and JCTools
-duplicate-plugin validation). The original fixture is unchanged. Next review
-those exact input/context blockers; full transitive inputs, native issuer
-isolation and A0 remain open. No native/plugin/processor code ran.
+The [child-model context review](keycloak-lifecycle-containment.md#child-model-blocker-and-validation-context-review)
+passes 17 model/boundary assertions and 22 integrity controls over 457 POMs and
+four fixed comparisons. Surefire succeeds with its reviewed JUnit BOM; JCTools'
+strict rejection remains, while source-backed validation-dimension comparisons
+produce model data. Earlier recipes/results are unchanged. Next prepare the
+role-aware transitive frontier; full executable inputs, issuer isolation and A0 stay open.
