@@ -346,9 +346,9 @@ coordinates (99 absent from old evidence). Next closes full executable input and
 isolation prerequisites before any candidate. No binaries are published; full
 lifecycle/storage/writer/issuance and actual runtime activation remain NO-GO.
 
-The [selected metadata review](../../../docs/architecture/keycloak-lifecycle-containment.md#selected-metadata-ancestry-and-child-model-input-plan)
-closes the original 121 POM gaps and static parent/root-BOM ancestry within the
-bounded selection. The 456-POM input plan covers 265 target GAVs; the expanded
-child-model driver has not run. Next qualify that offline model-only expansion
-with the existing six libraries and all integrity/effect controls. Full transitive
-input closure, native issuer isolation and A0 remain open.
+The [expanded offline child-model review](../../../docs/architecture/keycloak-lifecycle-containment.md#expanded-offline-child-model-qualification)
+passes 15 model/boundary assertions and 20 integrity controls over 456 POMs/265
+targets: 263 models succeed and two remain NO-GO (missing JUnit BOM and JCTools
+duplicate-plugin validation). The original fixture is unchanged. Next review
+those exact input/context blockers; full transitive inputs, native issuer
+isolation and A0 remain open. No native/plugin/processor code ran.

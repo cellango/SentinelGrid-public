@@ -832,34 +832,76 @@ processors, generated descriptors/indexes, conditional deployment, provider disc
 initialization, classloader, devservices/container/native and early initialization
 effects all remain full-graph and harness prerequisites.
 
+## Expanded offline child-model qualification
+
+The separate [expanded recipe](../../infra/keycloak/keycloak_registration_connector/qualification/offline_child_models/README.md)
+and [result record](../../infra/keycloak/keycloak_registration_connector/offline-child-model-review.json)
+qualify the **bounded model-library API inputs and owned boundary** for 456 POMs
+and 265 targets. The original 263-POM/five-model fixture and evidence are unchanged.
+All **15 model/boundary assertions and 20 integrity controls** pass: the original
+16 integrity controls plus four fixed-manifest/target tampering checks.
+
+The resolver, byte `ModelSource`, explicit profile selector, empty request
+properties, plugin-processing-off and deny-policy functions are unchanged. Only
+the six reviewed libraries and pinned JDK execute. No CLI/core/transports/plugin/
+Guice/Sisu/ASM runtime is added. Trusted recipe definitions fix POM/library/target
+digests and copied-input/policy identities; caller state cannot widen them. Early
+outside-read/input-write/socket-bind denials precede builder construction; owned
+write/stdin EOF, closed descriptors, minimal environment/owned native-Java home,
+read-only inputs and verified class origins pass. Inputs remain unchanged.
+
+All 265 outcomes were retained: **263 successful child models and two NO-GO**.
+The successful outputs contain 2,054 ordered direct declarations and 216,965
+managed-entry occurrences, with no unresolved direct-dependency scalar properties.
+These contextual occurrences are not unique mediated executable artifacts.
+The 789 raw XML/tuple/provenance files total about 49 MB and remain private review
+evidence, with per-target public hashes/counts. Exactly 1,114 resolver requests
+were recorded; the only unexpected selected-model coordinate was the denied JUnit
+BOM below. The intentional synthetic range denial remains separate.
+
+| Target | Unresolved model qualification |
+| --- | --- |
+| `maven-surefire-plugin:3.5.6` | Its child context requires unpinned `org.junit:junit-bom:5.12.2`, also leaving the vintage-engine dependency version missing. |
+| `jctools-core:4.0.5` | Two raw main-build `maven-bundle-plugin` declarations fail the selected `MAVEN_3_1` validation level. |
+
+This validation level and explicit `crypto-default`/`upstream-adapters` selection
+apply to one research plan across multiple target roles. They do not establish
+stock/default/native/production or dependency-descriptor context equivalence.
+The JCTools failure is not proof of a binary defect or unsafe dependency. No POM
+was edited, target dropped, validation relaxed or missing input auto-fetched.
+Static parent/root-BOM ancestry closure did not close every child-context import.
+
+Compiler flags remain `--release 21`/`-proc:none`/`-implicit:none`, with an empty
+source path. The model-only batch has a 600-second limit (compiler 90 seconds),
+128 MiB heap and unique CREATE_NEW output IDs, bounded to 8 MiB per target file/
+256 MiB total target output. New provenance accessors were statically inspected
+in the pinned model library. All 69 source/162 anchors/456 POM/54 seed metadata/
+18 Maven source-unit/six-library/JDK459/Maven96 pins were reverified. Four
+ModelSource deprecation warnings and all prior license/security/checksum/CVE/PGP/
+SBOM/distribution/source-output limits remain. No new JAR/network fetch or native/
+plugin/processor/extension/Node/Quarkus/issuer/provider/A0 candidate ran. The 578
+native cases and six controls remain inherited and unchanged.
+
 ## Proof sequence and next bounded work
 
-Next review and qualify a **separate expanded offline child-model-only driver**
-for the exact 456-POM manifest and 265-target allowlist. Reuse only the six reviewed
-model libraries and pinned JDK. Preserve all old positive/negative/integrity controls,
-explicit `crypto-default`/`upstream-adapters` selection and the incomplete-profile
-negative. The existing five-model evidence stays historical and unchanged.
+Next review the **two explicit child-model blockers**. Review the exact missing
+JUnit BOM and its ancestry before a later fixed credential-free metadata wave.
+For JCTools, use primary Maven source/descriptor evidence to determine the relevant
+root/project versus dependency-descriptor validation context. Preserve the strict
+negative and pinned POM bytes; no validation weakening, target/capability removal
+or byte patch merely to obtain a pass. Any context/driver/input change needs its
+own bounded review and controls before reuse. Unsupported cases remain NO-GO.
 
-Keep hash/identity-checked byte `ModelSource` rather than `ModelSource2`, the exact
-offline resolver, no relative-file parents/URL transport/settings/workspace/listener/
-automatic profiles/plugin processing and empty request properties. Source-first
-owned copies must be reconstructed from trusted definitions; caller state or a
-new manifest cannot authorize changed code/policy. Require early outside-read/
-input-write/socket-bind denials, owned write/stdin EOF, closed descriptors, minimal
-environment/owned native-Java home, read-only inputs, unchanged post-run hashes and
-verified class origins. Do not add a library or effect permission to get a pass.
-
-Capture every target success/failure and requested coordinate without auto-fetch;
-missing metadata, ranges, unsupported profiles or validation failures stop closed.
-Retain ordered direct/managed dependency tuples with scopes/classifiers/optional/
-exclusions and root/parent/BOM/profile provenance. Successful child models will
-still need separate path-specific transitive mediation and actual binary/plugin/
-processor/extension/provider/classloader/generated-output/effect qualification.
-No native build may run to discover those inputs. Both full input and independent
-issuer-isolation gates must pass before the same open A0 deny-only prototype resumes.
-All previous inherited FD/stdin/localhost witnesses and trusted OS/JDK/controller/
-private Apple API/Mach/DNS/service/container/DB/secret/native/resource/sidechannel
-limits remain applicable.
+All child models are not yet qualified, and successful models still require
+path-specific transitive mediation, actual binary/plugin/processor/extension/
+provider/classloader/generated-output and source-built effect qualification.
+Source-root build-cache, Quarkus extension/build/dev-file DB, frontend/resource/
+default lifecycle, both native processors, early initialization and all provider
+constructors/init/postInit remain prerequisites. No native build may discover its
+own inputs. Both full input and independent issuer-isolation gates precede the
+same open A0 deny-only prototype. Existing inherited FD/stdin/localhost witnesses,
+trusted OS/JDK/controller/private Apple API and Mach/bootstrap/IOKit/DNS/service/
+container/DB/secret/native/resource/sidechannel limits remain unchanged.
 
 The A0 prototype remains open. All LC-01–10/A0/A1/A2, full entry/all-22-writer
 closure, native cleanup/response, actual HTTP/JTA/JDBC/cache/durable effects,

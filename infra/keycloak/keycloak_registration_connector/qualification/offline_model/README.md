@@ -110,12 +110,11 @@ service/container/DB/secret/resource/sidechannel mediation is unqualified. The o
 Python/JVM inherited-capability witnesses and Java localhost success remain;
 neither model success nor this policy makes those gaps disappear.
 
-The [subsequent metadata review](../../../../../docs/architecture/keycloak-lifecycle-containment.md#selected-metadata-ancestry-and-child-model-input-plan)
-closes the original 121 selected POM gaps and bounded static parent/root-BOM ancestry.
-It prepares a separate 456-POM/265-target input plan, using source-first POM bytes
-and the same six libraries. **This checked-in fixture remains the original
-263-POM/five-model check.** No expanded child-model driver has run. Its new input
-manifest/driver and integrity/effect controls need separate qualification before
-execution. Metadata ancestry is not transitive mediation or artifact/provider
-closure. Full native inputs, issuer isolation and A0 remain NO-GO; all earlier
-lifecycle, writer, cleanup, durability and capability-restoration gates remain.
+A separate [expanded child-model recipe](../offline_child_models/README.md) now
+checks the reviewed 456-POM/265-target input plan. **This fixture remains the
+original 263-POM/five-model check.** The expanded recipe passes 15 model/boundary
+and 20 integrity controls, with 263 successful models and two NO-GO targets. See
+the [current qualification](../../../../../docs/architecture/keycloak-lifecycle-containment.md#expanded-offline-child-model-qualification)
+for exact missing-input/validation-context blockers. Neither recipe establishes
+transitive artifact/provider closure, full native issuer isolation or A0. All
+earlier lifecycle, writer, cleanup, durability and capability-restoration gates remain.
