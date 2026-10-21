@@ -722,9 +722,10 @@ Apple API and trusted controller/JDK/system/cryptex/sysctl scope are research li
 
 ## Selected executable-input declaration frontier
 
-The [frontier record](../../infra/keycloak/keycloak_registration_connector/selected-input-frontier.json)
-reconciles the five explicit-profile models with the two packaged plugin
-descriptors. **This completes a declaration inventory, while full executable
+The initial [frontier record](../../infra/keycloak/keycloak_registration_connector/selected-input-frontier.json)
+reconciled the five explicit-profile models with the two packaged plugin
+descriptors. Its original metadata gaps are closed by the subsequent review below;
+the historical frontier JSON remains unchanged. **This completes a declaration inventory, while full executable
 input closure and native issuer isolation remain NO-GO.** It is not a lockfile,
 dependency resolver, build recipe or approval to execute the listed artifacts.
 
@@ -735,7 +736,7 @@ dependency resolver, build recipe or approval to execute the listed artifacts.
 | Explicit annotation-processor paths | 2 declarations of the Quarkus extension processor |
 | Packaged plugin dependency pools | 183 occurrences, 133 distinct GAVs, kept in separate plugin realms |
 | Source-root Maven bootstrap extension | `maven-build-cache-extension:1.2.0` |
-| Combined declaration frontier | 265 distinct GAVs; 144 have pinned POM metadata, **121 still lack POM metadata** |
+| Combined declaration frontier | 265 distinct GAVs; initially 144 had pinned POM metadata and **121 lacked it** |
 | Multiple-version families | 9; no global winner or classloader equivalence claimed |
 | Keycloak source/control identities | 39 GAVs mapped to source POM paths; published binaries are not source-built candidates |
 
@@ -775,25 +776,90 @@ SBOM/distribution and source-output equivalence remain unqualified. No new
 network fetch, binary, upstream source or raw POM is published by this unit.
 The 578 native cases and six controls remain inherited and unchanged.
 
+## Selected metadata ancestry and child-model input plan
+
+The [selected metadata record](../../infra/keycloak/keycloak_registration_connector/selected-metadata-review.json)
+closes the initial **121 reviewed-corpus POM gaps**: 34 use exact source-archive
+POMs and 87 use newly reviewed external POM metadata. It also records all required
+literal parents and root imported-BOM metadata within this bounded selection.
+**Zero pending static ancestry coordinates does not establish effective child
+models, transitive dependency mediation or executable input closure.**
+
+| Metadata result | Count |
+| --- | ---: |
+| Previously pinned published POMs | 263 |
+| Source POMs with checked identities and source-parent ancestry | 46 |
+| Source POMs matching prior published bytes | 5 |
+| New unique source POM coordinates | 41 |
+| New external POMs | 152: 87 selected, 65 parents/root imported BOMs |
+| Reviewed external retrieval waves | 5: 87, 46, 10, 8, 1 coordinates |
+| Expanded unique metadata corpus | **456** |
+| New publisher SHA512 matches / checksum HTTP 404 | 109 / 43 |
+| Prior publisher SHA512 matches / checksum HTTP 404 | 192 / 71 |
+
+All 39 selected Keycloak GAVs have checked source POM identities; the additional
+source POMs supply ancestry. Source paths, declared/inherited group/version and
+each source-parent identity were checked inside the pinned archive. All five
+source/published overlaps match byte for byte. The planned model input selection
+uses **46 source POMs and 410 published metadata POMs**, retaining both provenance
+records for the five identical overlaps. This is POM identity evidence, not
+source-built binary equivalence. No published Keycloak binary substitutes for a
+candidate output. UTF-8/namespace checks reject DTD/entity input; the two legacy
+namespace-free POMs remain parse-only projections with original bytes unchanged.
+
+Every new coordinate was reviewed before retrieval, in explicit ancestry waves.
+Only fixed credential-free Maven Central POMs and adjacent SHA512 metadata were
+requested. No POM repository URL, redirect, proxy, authentication, existing Maven
+settings/home/cache/repository or executable download was used. Source and fetched
+POM bytes remain private review inputs; public records contain pins and declarations.
+All 265 selected GAVs now have a nearest-parent declared license. Those declarations,
+including mixed license families, are not full binary/transitive notices, security,
+CVE/PGP/SBOM/distribution or source-output approval. Missing publisher checksums
+remain explicit gaps. Static ancestry applies no automatic or default profiles.
+
+A **data-only expanded child-model input plan** pins 456 POMs and 265 target GAVs.
+The existing five-model fixture, six-library classpath, policy, driver and its
+15 model/boundary assertions plus 16 integrity controls are unchanged. No expanded
+model API, JVM, Maven CLI/plugin/build extension/annotation processor, Quarkus
+augmentation, native issuer/provider or candidate ran in this metadata unit.
+The 578 native cases and six controls remain inherited and unchanged.
+
+The source-POM review also records 41 build-plugin declarations, including frontend
+tooling and resource generation. These are literal declarations, not selected
+effective versions/lifecycle bindings or permission to run Node/package tools.
+Source-root build-cache, Quarkus `extensions=true`/`build`/`dev-file`, both native
+processors, generated descriptors/indexes, conditional deployment, provider discovery/
+initialization, classloader, devservices/container/native and early initialization
+effects all remain full-graph and harness prerequisites.
+
 ## Proof sequence and next bounded work
 
-Next review the **121 exact missing POM coordinates** and their parent/BOM/license
-ancestry, then qualify bounded child-model expansion for the selected project,
-plugin, processor and extension realms. Preserve profile/BOM provenance, scopes,
-classifiers, optional/exclusions, dependency order and path-specific mediation.
-Any permitted metadata retrieval uses only the fixed credential-free destination
-after review; no POM-supplied repositories, redirects, auth/settings/cache or
-unreviewed automatic fetch. Missing metadata or unresolved mediation stops closed.
+Next review and qualify a **separate expanded offline child-model-only driver**
+for the exact 456-POM manifest and 265-target allowlist. Reuse only the six reviewed
+model libraries and pinned JDK. Preserve all old positive/negative/integrity controls,
+explicit `crypto-default`/`upstream-adapters` selection and the incomplete-profile
+negative. The existing five-model evidence stays historical and unchanged.
 
-The remaining gates are explicit in the record: child effective-model/transitive
-mediation; actual lifecycle/bootstrap selection; binary/static extension/provider/
-classloader closure; source-built output and both native-processor effects; and
-the independent full effect-disabled issuer harness. No native build may run to
-discover those inputs. Both full input and issuer-isolation gates must pass before
-the same open A0 deny-only prototype resumes. Earlier inherited FD/stdin witnesses,
-Java localhost success, private/deprecated Apple API, trusted controller/JDK/OS/
-cryptex/sysctl assumptions and Mach/bootstrap/IOKit/DNS/service/container/DB/secret/
-native/resource/sidechannel gaps remain unchanged.
+Keep hash/identity-checked byte `ModelSource` rather than `ModelSource2`, the exact
+offline resolver, no relative-file parents/URL transport/settings/workspace/listener/
+automatic profiles/plugin processing and empty request properties. Source-first
+owned copies must be reconstructed from trusted definitions; caller state or a
+new manifest cannot authorize changed code/policy. Require early outside-read/
+input-write/socket-bind denials, owned write/stdin EOF, closed descriptors, minimal
+environment/owned native-Java home, read-only inputs, unchanged post-run hashes and
+verified class origins. Do not add a library or effect permission to get a pass.
+
+Capture every target success/failure and requested coordinate without auto-fetch;
+missing metadata, ranges, unsupported profiles or validation failures stop closed.
+Retain ordered direct/managed dependency tuples with scopes/classifiers/optional/
+exclusions and root/parent/BOM/profile provenance. Successful child models will
+still need separate path-specific transitive mediation and actual binary/plugin/
+processor/extension/provider/classloader/generated-output/effect qualification.
+No native build may run to discover those inputs. Both full input and independent
+issuer-isolation gates must pass before the same open A0 deny-only prototype resumes.
+All previous inherited FD/stdin/localhost witnesses and trusted OS/JDK/controller/
+private Apple API/Mach/DNS/service/container/DB/secret/native/resource/sidechannel
+limits remain applicable.
 
 The A0 prototype remains open. All LC-01–10/A0/A1/A2, full entry/all-22-writer
 closure, native cleanup/response, actual HTTP/JTA/JDBC/cache/durable effects,

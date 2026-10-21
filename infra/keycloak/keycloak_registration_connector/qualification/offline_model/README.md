@@ -110,10 +110,12 @@ service/container/DB/secret/resource/sidechannel mediation is unqualified. The o
 Python/JVM inherited-capability witnesses and Java localhost success remain;
 neither model success nor this policy makes those gaps disappear.
 
-The [subsequent declaration frontier](../../../../../docs/architecture/keycloak-lifecycle-containment.md#selected-executable-input-declaration-frontier)
-reconciles these outputs with plugin/processor/bootstrap declarations: 265 GAVs,
-including 121 missing POMs. It also records the source-root build-cache extension,
-which this API never loads. Next review missing metadata and bounded child-model
-expansion. Full binary/provider/classloader/build-step closure and issuer isolation
-remain NO-GO; both gates precede A0. All earlier lifecycle, writer, cleanup,
-durability and Task 6 capability-restoration requirements remain.
+The [subsequent metadata review](../../../../../docs/architecture/keycloak-lifecycle-containment.md#selected-metadata-ancestry-and-child-model-input-plan)
+closes the original 121 selected POM gaps and bounded static parent/root-BOM ancestry.
+It prepares a separate 456-POM/265-target input plan, using source-first POM bytes
+and the same six libraries. **This checked-in fixture remains the original
+263-POM/five-model check.** No expanded child-model driver has run. Its new input
+manifest/driver and integrity/effect controls need separate qualification before
+execution. Metadata ancestry is not transitive mediation or artifact/provider
+closure. Full native inputs, issuer isolation and A0 remain NO-GO; all earlier
+lifecycle, writer, cleanup, durability and capability-restoration gates remain.

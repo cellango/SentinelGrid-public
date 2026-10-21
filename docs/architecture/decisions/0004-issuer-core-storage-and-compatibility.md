@@ -281,9 +281,9 @@ These records neither adopt a fork/version/storage primitive, supersede pre-toke
 or proposed point-in-time semantics, nor clear R2 implementation/R3/R4. No engine
 change follows.
 
-The [selected-input frontier](../keycloak-lifecycle-containment.md#selected-executable-input-declaration-frontier)
-reconciles 265 distinct GAVs from the five models, plugin pools, processors and
-source-root build-cache extension. Of these, 121 still lack POM metadata. It
-retains scope/exclusion and separate-realm provenance; it is not a mediated
-executable lock. Next review those metadata gaps and bounded child models.
-Full native input, issuer isolation and A0 remain open; no native/plugin code ran.
+The [selected metadata review](../keycloak-lifecycle-containment.md#selected-metadata-ancestry-and-child-model-input-plan)
+closes the original 121 POM gaps and static parent/root-BOM ancestry within the
+bounded selection. The 456-POM input plan covers 265 target GAVs; the expanded
+child-model driver has not run. Next qualify that offline model-only expansion
+with the existing six libraries and all integrity/effect controls. Full transitive
+input closure, native issuer isolation and A0 remain open.
