@@ -362,7 +362,7 @@
     {
       "path": "backend/services/action_service/Dockerfile",
       "kind": "container_recipe",
-      "sha256": "17d34fc170367baeb5813b543a7803e2487f64ca23df2882eec7ccc841929986",
+      "sha256": "944213babd6cc1dbc2e0b4344cd21fedbe3522a86b3e60841f9dee35d46e7c3f",
       "scope": "experimental_reference_only",
       "image_references": [
         "FROM sentinelgrid/api-base:latest"
@@ -432,6 +432,12 @@
       "path": "backend/services/automated_response_service/requirements.txt",
       "kind": "python_requirements",
       "sha256": "5794499d42b20a7be42b0465b920a5f853a7a4c4c8b2cf4bb3910736ac028dd9",
+      "scope": "experimental_reference_only"
+    },
+    {
+      "path": "backend/services/case_runtime/requirements.txt",
+      "kind": "python_requirements",
+      "sha256": "ee9d7420d2510baa996ee8dc5ee1332629cfff8294d113c79576ccb013e02e07",
       "scope": "experimental_reference_only"
     },
     {
@@ -870,7 +876,7 @@
     {
       "path": "scripts/requirements-preview.txt",
       "kind": "python_requirements",
-      "sha256": "ddbd60ee8c6234f4659a54a7c3651216963ab6667ede3339e20c182a74b81301",
+      "sha256": "238735c2b5cf7c7a2331d099658311cecef0db8cac9a3e00cb885830a6587275",
       "scope": "supported_preview"
     },
     {
@@ -901,7 +907,7 @@
     "container_recipe": 49,
     "go_mod": 2,
     "go_sum": 2,
-    "python_requirements": 53,
+    "python_requirements": 54,
     "npm_manifest": 3,
     "helm_chart_manifest": 1,
     "npm_lock": 2,

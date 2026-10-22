@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity preview-workload-issuer preview-gateway-redis
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity preview-workload-issuer preview-gateway-redis preview-action-authority preview-action-db preview-legacy-actions
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -54,6 +54,8 @@ preview-check:
 	$(MAKE) preview-observables-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-wazuh-identity PYTHON="$(PYTHON)"
 	$(MAKE) preview-workload-issuer PYTHON="$(PYTHON)"
+	$(MAKE) preview-action-authority PYTHON="$(PYTHON)"
+	$(MAKE) preview-legacy-actions PYTHON="$(PYTHON)"
 
 preview-workload-issuer:
 	$(PYTHON) -m pytest -c backend/tests/workload_issuer/pytest.ini backend/tests/workload_issuer -q
@@ -135,3 +137,14 @@ lint:
 # This suite starts and stops its own socket-only synthetic cluster; no DB_URL.
 preview-iam-db:
 	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_iam_database.py -q
+
+# Proposal/approval and bypass containment; does not enable provider execution.
+preview-action-authority:
+	PYTHONPATH=backend/libs:backend/services/case_runtime $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/case_runtime/tests/test_action_boundary.py backend/services/case_runtime/tests/test_canonical_vectors.py -q
+
+preview-legacy-actions:
+	PYTHONPATH=backend/libs:backend/services/action_service $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/action_service/tests/test_action_execution.py -q
+
+# Separate non-skipping gate: reviewed PG/Flyway, owned synthetic cluster only.
+preview-action-db:
+	PYTHONPATH=backend/libs:backend/services/case_runtime $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/case_runtime/tests/test_action_database.py -q

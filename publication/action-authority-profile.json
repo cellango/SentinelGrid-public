@@ -1,0 +1,20 @@
+{
+  "profile": "new_case_runtime_schema",
+  "history_table": "public.flyway_schema_history",
+  "automatic_baseline": false,
+  "canonical_migration_authority": "backend/migrations_consolidated",
+  "existing_iam_history_excluded": true,
+  "scope": "Fresh isolated V018 storage qualification; full shared V001-V018 install/upgrade and existing data adoption are unqualified",
+  "migrations": [
+    {
+      "path": "backend/migrations_consolidated/V018__case_runtime_action_authority.sql",
+      "sha256": "ae77319b26e61e7aa017bb5753f8b9b0311586eb7bb96df7230d7d5e7f1fc6fd"
+    }
+  ],
+  "models": {
+    "path": "backend/services/case_runtime/app/authority/models.py",
+    "tables": 12
+  },
+  "production_role_provisioning": "unqualified; application rejects superuser and BYPASSRLS",
+  "provider_execution": false
+}

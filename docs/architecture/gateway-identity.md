@@ -806,3 +806,9 @@ R3/R4 need an explicit issuer-core ownership/storage/compatibility decision firs
 No application deployment or caller adapter is supplied; the current guard stays
 closed. Historical 26.0.6 remains a compatibility candidate. All other provider,
 credential, metadata-rights, data and caller adoption gates remain required.
+
+## Action records and schema identity
+
+The gateway also mounts three exact [action-record routes](../reference/action-authority.md) under `/api/v1/cases`. It forwards the selected bearer, verified tenant and one unambiguous `Idempotency-Key` to the owned `CASE_RUNTIME_URL`. There is no generic case execution proxy. The receiver revalidates identity and case access; proposal and approval records do not grant provider execution.
+
+The OpenAPI schema has one operation ID per method/path. Ambiguous generated IDs from multi-method handlers and slash aliases are replaced deterministically using method/path and a digest. Existing unique operation IDs and HTTP methods/paths remain unchanged. FastAPI's other schema metadata is retained. These schema checks do not qualify downstream domain behavior.

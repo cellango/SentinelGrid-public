@@ -390,3 +390,37 @@ def test_mounted_proxy_aliases_use_exact_owned_upstreams_and_signed_identity(gat
         assert outbound[0].headers['authorization']=='Bearer '+token
         assert outbound[0].headers['x-tenant-id']==TENANT
     assert gateway.opened==[]
+
+
+@pytest.mark.parametrize("method,suffix",[("POST","/action-proposals"),("GET","/action-proposals/33333333-3333-4333-8333-333333333333"),("POST","/action-proposals/33333333-3333-4333-8333-333333333333/approvals")])
+def test_exact_case_record_routes_preserve_verified_actor_and_idempotency(gateway,monkeypatch,method,suffix):
+    from app.core import proxy
+    calls=[]
+    async def upstream(request):
+        calls.append(request)
+        return httpx.Response(201,json={"execution_available":False,"status":"pending_approval"})
+    real_client=_HTTP_ASYNC_CLIENT
+    monkeypatch.setattr(proxy.httpx,"AsyncClient",lambda **kwargs:real_client(transport=httpx.MockTransport(upstream),**kwargs))
+    token=gateway.sign();key=str(uuid4());path="/api/v1/cases/44444444-4444-4444-8444-444444444444"+suffix
+    response=gateway.client.request(method,path,headers={"Authorization":"Bearer "+token,"Idempotency-Key":key},content=b'{"reason":"synthetic"}')
+    assert response.status_code==201 and len(calls)==1
+    assert str(calls[0].url)=="http://case_runtime:8000"+path
+    assert calls[0].headers["authorization"]=="Bearer "+token and calls[0].headers["x-tenant-id"]==TENANT
+    assert calls[0].headers["idempotency-key"]==key and calls[0].content==b'{"reason":"synthetic"}'
+    assert not {"cookie","x-user-id","x-roles","x-internal-token"}&set(calls[0].headers)
+
+
+def test_unreviewed_case_route_is_not_a_generic_write_proxy(gateway,monkeypatch):
+    from app.core import proxy
+    opened=[]
+    monkeypatch.setattr(proxy.httpx,"AsyncClient",lambda **kwargs:opened.append(True))
+    response=gateway.client.post("/api/v1/cases/44444444-4444-4444-8444-444444444444/execute",headers={"Authorization":"Bearer "+gateway.sign()},json={})
+    assert response.status_code==404 and opened==[]
+
+
+def test_duplicate_action_idempotency_key_rejected_before_upstream(gateway,monkeypatch):
+    from app.core import proxy
+    opened=[]
+    monkeypatch.setattr(proxy.httpx,"AsyncClient",lambda **kwargs:opened.append(True))
+    response=gateway.client.post("/api/v1/cases/44444444-4444-4444-8444-444444444444/action-proposals",headers=[("Authorization","Bearer "+gateway.sign()),("Idempotency-Key",str(uuid4())),("Idempotency-Key",str(uuid4()))],json={})
+    assert response.status_code==400 and opened==[]

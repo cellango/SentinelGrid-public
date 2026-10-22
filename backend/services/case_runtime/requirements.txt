@@ -1,0 +1,8 @@
+# Source-review application records only; no execution engine/provider bundle qualification.
+fastapi>=0.104.0
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+httpx>=0.25.0
+rfc8785==0.1.4

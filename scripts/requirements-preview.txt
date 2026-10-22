@@ -865,3 +865,7 @@ pytest-mock==3.16.0 \
     --hash=sha256:007cfeb257801d88d9c0b2a7b5a15a15e73b71968dfd72e7bf8c4a2f8393aec8
 redis==8.1.0 \
     --hash=sha256:a4fe1aac3d3b3cc791d4b3d5931c5a956045dc951ee74d1c913ee3ac4d2ee9fb
+
+# RFC8785 proposal bytes; reviewed pure Python wheel, no runtime dependencies.
+rfc8785==0.1.4 \
+    --hash=sha256:520d690b448ecf0703691c76e1a34a24ddcd4fc5bc41d589cb7c58ec651bcd48

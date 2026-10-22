@@ -21,14 +21,14 @@ The machine-readable records are:
 
 ## October 22 gateway/transport extension
 
-The supported source-test environment now has 56 exact pins. Added
+The supported source-test environment now has 57 exact pins. Added
 `pytest-mock==3.16.0` and `redis==8.1.0` from their hash-verified official PyPI
 pure Python wheels; both declare MIT terms. The CA-trust recheck also upgraded `certifi` from2026.7.22 to2026.10.19 for
 [GHSA-6q48-6c7w-9gw2](https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2).
 Its MPL-2.0 terms remain recorded. No other existing pin changed. These three
 wheels were applied offline without transitive downloads into the existing reviewed
 macOS arm64 Python3.13 environment, and `pip check` passed. This was an incremental
-installation, not a new clean-host or Linux qualification. All56 exact package/version
+installation, not a new clean-host or Linux qualification. All57 exact package/version
 OSV queries returned zero findings on October22. The earlier54pin fresh-install
 record above retains its historical scope. The Redis server used for local tests
 was built outside the repository from pinned official7.2.16 BSD-3 source and is
@@ -38,8 +38,8 @@ not bundled or approved as a production dependency by that test.
 
 | Input | Reviewed result |
 | --- | --- |
-| `scripts/requirements-preview.txt` | 56 exact pins across both files;961 recorded artifact hashes; 53 existing pins unchanged; certifi security update |
-| Python vulnerability check | Current56pin OSV querybatch check: zero findings on October22. Historical reviews retained separately |
+| `scripts/requirements-preview.txt` | 57 exact pins across both files;962 recorded artifact hashes; 53 existing pins unchanged; certifi security update |
+| Python vulnerability check | Current57pin OSV querybatch check: zero findings on October22. Historical reviews retained separately |
 | Python installation | Two new wheels plus the fixed certifi wheel applied offline to the reviewed macOS environment; pip check passed. Expanded Linux/hosted qualification remains pending |
 | Python source checks | Current IAM/MCP boundary checks recorded with the candidate; historical Task10 Python/Ubuntu checks retain their original scope |
 | `frontend/package.json` and lockfile | 828 locked package entries, all with official npm registry URLs and SHA-512 integrity; 772 installed on the review host |
@@ -185,3 +185,7 @@ Real MCP initialization/discovery and unavailable-tool errors are required by
 current exact-version advisory check. Neither result qualifies all service/runtime
 requirements, every platform, provider operations or a redistributable bundle.
 The service SDK pin does not resolve the rest of its experimental runtime graph.
+
+## Action proposal canonicalization
+
+Added `rfc8785==0.1.4` (Apache-2.0), a reviewed pure Python wheel with no runtime dependencies. The exact wheel SHA-256 is pinned in the source-test requirements. Its bytes agree with independent JavaScript vectors. All57 exact pins had zero OSV findings on October22. The installed56pin environment was extended offline; this does not claim a fresh57pin/Linux installation. No package implementation or wheel is redistributed. This supports partial [action records](../reference/action-authority.md), with provider execution still unavailable.

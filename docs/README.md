@@ -43,3 +43,5 @@ from the publication candidate and recoverable privately. Business documents sta
 private. See [the documentation review](release/documentation.md) and
 [the classification inventory](../publication/documentation.json).
 The archive is for investigating history, not choosing a setup guide.
+
+- [Action proposal and approval records](reference/action-authority.md): partial durable boundary; execution and deployment remain unqualified.

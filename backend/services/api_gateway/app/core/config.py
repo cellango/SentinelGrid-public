@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS: List[str] = DEFAULT_CORS_ORIGINS.copy()
 
     # Service URLs
+    CASE_RUNTIME_URL: str = "http://case_runtime:8000"
     ORCHESTRATOR_URL: str = "http://orchestrator:8000"
     SCANNER_ORCHESTRATOR_URL: str = "http://scanner_orchestrator:8000"
     IAM_AGENT_URL: str = "http://iam_agent:8000"

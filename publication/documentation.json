@@ -1905,6 +1905,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/reference/action-authority.md",
+      "class": "current_source_reference",
+      "authority": "partial_implementation_with_explicit_qualification_limits"
+    },
+    {
       "path": "docs/reference/agent-components.md",
       "class": "current_source_reference",
       "authority": "current_within_source_preview_scope"
@@ -2236,16 +2241,16 @@
     }
   ],
   "counts_by_class": {
-    "repository_reference": 3,
-    "repository_entrypoint": 6,
-    "experimental_component_reference": 110,
     "contributor_instructions": 1,
-    "documentation_index": 1,
     "current_architecture": 14,
-    "historical_reference": 285,
+    "current_source_reference": 9,
     "developer_guidance": 3,
-    "current_source_reference": 7,
-    "publication_review": 15
+    "documentation_index": 1,
+    "experimental_component_reference": 110,
+    "historical_reference": 285,
+    "publication_review": 15,
+    "repository_entrypoint": 6,
+    "repository_reference": 3
   },
   "retired_original_documents": {
     "superseded_design_progress_or_duplicate": 307,

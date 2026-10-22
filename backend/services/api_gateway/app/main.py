@@ -24,6 +24,7 @@ from app.api import (
     routes_ai_shield,
     routes_ingest,
 )
+from app.api import routes_case_actions
 from app.core.config import settings
 from app.core.request_identity import require_gateway_identity
 from app.core.ingress import GatewayIngressMiddleware
@@ -75,6 +76,7 @@ app.add_middleware(GatewayIngressMiddleware, policy=settings.ingress_policy())
 app.add_middleware(RequestTracingMiddleware, service_name="api-gateway")
 
 # Include routers
+app.include_router(routes_case_actions.router,prefix="/api/v1/cases",tags=["case-actions"])
 app.include_router(routes_alerts.router, prefix="/api/v1/alerts", tags=["alerts"])
 app.include_router(routes_incidents.router, prefix="/api/v1/incidents", tags=["incidents"])
 app.include_router(routes_playbook_executions.router, prefix="/api/v1/playbook-executions", tags=["playbook-executions"])
@@ -210,3 +212,7 @@ def seed_tool_registry():
         logger.info(f"Tool registry seed: inserted {inserted} new tool(s).")
     except Exception as exc:
         logger.warning(f"Tool registry seed failed: {exc}")
+
+# Repair ambiguous generated schema IDs without changing HTTP route contracts.
+from app.core.openapi import install_openapi
+install_openapi(app)

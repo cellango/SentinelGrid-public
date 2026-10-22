@@ -31,7 +31,7 @@ _HOP = frozenset(
     }
 )
 _REQUEST_HEADERS = frozenset(
-    {"accept", "content-type", "if-match", "if-none-match", "if-modified-since"}
+    {"accept", "content-type", "if-match", "if-none-match", "if-modified-since", "idempotency-key"}
 )
 
 

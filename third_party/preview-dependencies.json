@@ -4,10 +4,10 @@
   "scope": "Dependencies referenced by the supported source-preview checks; installed implementations/binaries are not publication contents. License declarations do not relicense third-party code or certify generated bundles.",
   "python_input": {
     "path": "scripts/requirements-preview.txt",
-    "sha256": "ddbd60ee8c6234f4659a54a7c3651216963ab6667ede3339e20c182a74b81301",
-    "packages": 56,
-    "upstream_artifact_hashes": 961,
-    "platforms": "56 pins: two new wheels and fixed certifi wheel applied offline to existing reviewed54pin Python3.13 macOS arm64 environment; pip check passed. Fresh56pin/Linux/hosted qualification pending.",
+    "sha256": "238735c2b5cf7c7a2331d099658311cecef0db8cac9a3e00cb885830a6587275",
+    "packages": 57,
+    "upstream_artifact_hashes": 962,
+    "platforms": "Existing56pin macOS Python3.13 arm64 source-test environment extended offline with the pinned RFC8785 wheel; fresh57pin/Linux qualification pending",
     "includes": [
       {
         "path": "scripts/requirements-mcp-sdk.txt",
@@ -531,6 +531,15 @@
       "source": "https://pypi.org/project/requests-toolbelt/1.0.0/",
       "license_text_sha256": "1f8cf8bdacd98ed6d36d0fec0c07f7765acebd6e81205962ab5146023b3c858d",
       "release_artifact_hash_count": 2
+    },
+    {
+      "name": "rfc8785",
+      "version": "0.1.4",
+      "declared_license": "Apache-2.0",
+      "pypi_license_expression": "Apache-2.0",
+      "source": "https://pypi.org/project/rfc8785/0.1.4/",
+      "license_text_sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+      "release_artifact_hash_count": 1
     },
     {
       "name": "rpds-py",
@@ -10567,10 +10576,10 @@
   "license_limits": "Metadata and available installed license/notice files reviewed. Optional platform packages retain declared upstream terms. Native wheel/libvips component notices and source delivery must be reviewed before binary/container/dependency-bundle redistribution; none is cleared here.",
   "previous_python_input": {
     "path": "scripts/requirements-preview.txt",
-    "sha256": "70c7ae76419009bf734aefcba73ad221440fac936e8ca6404fe7a4171c4fbc6c",
-    "packages": 54,
-    "upstream_artifact_hashes": 959,
-    "platforms": "Current54pin graph: fresh Python3.13 macOS arm64 install/pip check. Historical43pin Ubuntu baseline retained; expanded Linux graph/hosted execution remains unqualified.",
+    "sha256": "ddbd60ee8c6234f4659a54a7c3651216963ab6667ede3339e20c182a74b81301",
+    "packages": 56,
+    "upstream_artifact_hashes": 961,
+    "platforms": "56 pins: two new wheels and fixed certifi wheel applied offline to existing reviewed54pin Python3.13 macOS arm64 environment; pip check passed. Fresh56pin/Linux/hosted qualification pending.",
     "includes": [
       {
         "path": "scripts/requirements-mcp-sdk.txt",
