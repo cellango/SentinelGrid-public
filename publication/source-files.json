@@ -3049,6 +3049,7 @@
     "infra/keycloak/keycloak_registration_connector/qualification/session_ownership/prepare.py",
     "infra/keycloak/keycloak_registration_connector/qualification/session_ownership/src/test/java/org/keycloak/services/NativeSessionOwnershipTest.java",
     "infra/keycloak/keycloak_registration_connector/realm-entry-review.json",
+    "infra/keycloak/keycloak_registration_connector/relocation-processor-review.json",
     "infra/keycloak/keycloak_registration_connector/role-transitive-frontier.json",
     "infra/keycloak/keycloak_registration_connector/role-transitive-paths.json",
     "infra/keycloak/keycloak_registration_connector/rollback-lifecycle-review.json",

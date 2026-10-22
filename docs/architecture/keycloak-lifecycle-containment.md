@@ -1044,32 +1044,76 @@ No collector, model API, JVM, CLI, plugin, extension, processor, Node, Quarkus,
 native issuer/provider or A0 candidate ran. The three old model recipes, all prior
 code, 578 native cases/six controls and all effect-boundary limits are unchanged.
 
+## Relocation-target metadata and processor-source review
+
+The [metadata and processor-source record](../../infra/keycloak/keycloak_registration_connector/relocation-processor-review.json)
+now pins both named Quarkus 3.40.1 relocation-target POMs and their newly reviewed
+shared parent, `quarkus-test-framework`. **All three publisher SHA512 checksums
+match.** The parent was fetched in a separate fixed wave after discovery; the
+remaining parent/root-import projection reuses reviewed POMs. Seven file contexts
+have no static pending input. The nearest inherited Apache-2.0 declaration is
+recorded with exact ancestry hashes. This is metadata provenance, not a child
+model, transitive artifact, full licensing/security or source-built-output clearance.
+
+The corpus now contains **460 POMs: 46 source and 414 published metadata inputs**.
+Two of the original 676 missing coordinates have metadata coverage, leaving 674
+original gaps. The extra parent is an ancestry input. Historical frontiers and the
+three opt-in model recipes remain unchanged; their old counts stay historical.
+The two relocations remain unapplied, three version ranges unresolved and three
+previously pinned Quarkus BOMs unmodeled as research targets. The new target POMs
+contain 22 literal direct declarations, which have not been selected or modeled.
+
+The compiler POM's SCM tag pins compiler-plugin 3.13.0 source commit
+`a1415aa3833df5985ecdc2b854ef516d3afbf348`. **Six compiler source texts and two
+Resolver 1.9.24 API texts, with 26 anchors and six findings**, explain the processor
+path boundary. The [exact source method](https://github.com/apache/maven-compiler-plugin/blob/a1415aa3833df5985ecdc2b854ef516d3afbf348/src/main/java/org/apache/maven/plugin/compiler/AbstractCompilerMojo.java#L1672)
+uses a rootless collection request with project repositories and the session's
+repository session. It converts explicit paths to runtime, nonoptional dependency
+data. It does not use the plugin root-dependency request or its explicit
+provided/test resolution filter. No resolver or plugin execution occurred here.
+
+| Source distinction | Consequence for the input plan |
+| --- | --- |
+| Explicit top-level version wins; otherwise project management is matched by group/artifact/type/classifier or resolution fails. | Keep explicit processor version and exact fallback identity separate from transitive management. |
+| `annotationProcessorPathsUseDepMgmt` defaults false and controls the transitive managed-dependency list. | False does not disable top-level version fallback or authorize copying all owner management entries. |
+| Path conversion uses the handler's extension and the configured classifier directly. | Do not import generic project `test-jar` classifier assumptions into processor conversion. |
+| Processor exclusion defaults are extension `jar` and unset classifier; Aether converts null classifier to empty. | This differs from generic Maven model exclusions with wildcard extension/classifier. |
+| Main and test compiler subclasses inherit the path logic but request different project resolution scopes. | Preserve both lifecycle roles, classpaths, generated output and discovery effects. |
+
+The two original effective owner configurations still name
+`io.quarkus:quarkus-extension-processor:3.40.1` explicitly, omit type/classifier and
+do not set the transitive-management flag. Their model/configuration hashes are
+retained. These are configuration observations, not actual parameter binding or
+proof of two executions. Empty-path/default-classpath discovery, JDK/compiler
+behavior, annotation/provider initialization and generated-source effects remain
+unqualified. No processor, compiler, JVM, model API, collector, CLI, Quarkus,
+native issuer/provider or A0 candidate ran. No binary/library was added.
+
 ## Proof sequence and next bounded work
 
-The next fixed metadata wave contains only two explicitly named relocation targets:
-`io.quarkus:quarkus-junit-internal:3.40.1` and
-`io.quarkus:quarkus-junit-mockito:3.40.1`, with their adjacent publisher SHA512
-metadata. The plan records exact Maven Central destinations, original needed-by
-edges/contexts and why each is needed. **They have not been fetched.** Their license
-ancestry and hashes remain unknown. Review any newly discovered parent/import/
-property/relocation input before another fixed wave. This small review wave does
-not establish runtime priority, selection or authority to fetch all 676 coordinates.
+Next review a **separate model-only recipe for five next-hop research targets**:
+the two new relocation targets and the three already pinned Quarkus BOMs. The
+460-POM input plan retains source-first provenance, exact hashes, validation 31
+and the explicit research profiles. It is data preparation, not execution approval
+or actual project/descriptor/processor-context equivalence. Keep all three old
+recipes and outputs immutable, including strict JCTools rejection and the
+source-backed project/descriptor validation-dimension witnesses.
 
-The remaining 674 exact missing coordinates, three ranges and three already pinned
-Quarkus BOMs lacking reviewed target models remain preserved. Before processor
-collection design, pin compiler-plugin 3.13.0's source and review its actual path,
-management,scope/classifier and discovery rules. Any later model/collector driver
-needs separate source/API/input/context/controller and effect-boundary review;
-this unit authorizes no execution or broader validation/default policy.
+Before any bounded model run, review the new controller/fixture/manifest/target/
+context digests and all applicable 17 model/22 integrity controls, early effect
+denials, class origins/aliases, read-only inputs and time/size bounds. Use only the
+same six libraries and pinned JDK. Missing imports/context failures stop closed;
+no automatic fetch, POM edit, permission change or global validation fallback.
+No native build may discover its own inputs.
 
-Full transitive binary/plugin/processor/extension/provider/classloader/generated-
-output/source-built effect closure and independent native issuer isolation remain
-NO-GO. Source/bootstrap/build-cache/Quarkus extension/build/dev-file/frontend/
-resource/default lifecycle, both native processors and early/provider initialization
-remain requirements. No native build may discover its own inputs. Both full gates
-precede the same open A0 deny-only prototype. All old FD/stdin/localhost/OS/JDK/
-controller/private Apple API/Mach/DNS/service/container/DB/secret/native/resource/
-sidechannel and capability-restoration limits remain unchanged.
+Full role-specific collection/mediation, transitive binary/plugin/processor/
+extension/provider/classloader/generated/source-built effect closure and independent
+native issuer isolation remain NO-GO. Source/bootstrap/build-cache/Quarkus extension/
+build/dev-file/frontend/resource/default lifecycle, both native processors and
+early/provider initialization remain requirements. Both full gates precede the
+same open A0 deny-only prototype. All old FD/stdin/localhost/OS/JDK/controller/
+private Apple API/Mach/DNS/service/container/DB/secret/native/resource/sidechannel
+and capability-restoration limits remain unchanged.
 
 The A0 prototype remains open. All LC-01–10/A0/A1/A2, full entry/all-22-writer
 closure, native cleanup/response, actual HTTP/JTA/JDBC/cache/durable effects,

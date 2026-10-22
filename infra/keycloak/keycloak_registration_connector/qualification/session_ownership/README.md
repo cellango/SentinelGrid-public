@@ -156,9 +156,9 @@ requirements. No MCP operations, production application/provider code, artifact,
 schema, runtime dependency/default, IAM guard, caller, lease or metadata changes.
 Temporal, case_runtime and deferred engine-replacement governance remain unchanged.
 
-The [version-pinned collection review](../../../../../docs/architecture/keycloak-lifecycle-containment.md#version-pinned-collection-semantics-and-next-input-plan)
-records 37 source texts/67 anchors and 12 findings for Maven 3.9.11/Resolver 1.9.24.
-Project/plugin roots, management depth, selectors, conflict identity and artifact
-handlers require distinct contexts. Two exact relocation-target POMs form the next
-metadata plan; none was fetched. Processor-path semantics, actual collection,
+The [relocation metadata and processor review](../../../../../docs/architecture/keycloak-lifecycle-containment.md#relocation-target-metadata-and-processor-source-review)
+pins two target POMs plus their shared parent, all with matching publisher SHA512.
+Eight source texts/26 anchors distinguish processor version lookup, transitive
+management, rootless requests and conversion rules. Five next-hop research-model
+targets are prepared against 460 POMs. No model/build ran; actual processor roles,
 full executable inputs, native issuer isolation and A0 remain open.
