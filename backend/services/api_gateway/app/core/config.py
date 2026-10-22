@@ -3,6 +3,8 @@
 from typing import List
 
 from pydantic import Field, field_validator, model_validator
+from app.core.ingress import IngressPolicy
+from app.core.rate_limit import RateLimitPolicy
 from sg_core.iam_verification import IAMVerificationSettings
 from sg_core.user_principals import UserClientBinding, UserPrincipalSettings
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -53,6 +55,20 @@ class Settings(BaseSettings):
     IAM_VERIFIER_CA_BUNDLE: str | None = None
     IAM_USER_CLIENT_BINDINGS: tuple[UserClientBinding, ...] = Field(default=(), max_length=256)
 
+    MAX_REQUEST_BODY_BYTES: int = Field(default=2 * 1024 * 1024, ge=1, le=64 * 1024 * 1024)
+    MAX_UPSTREAM_RESPONSE_BYTES: int = Field(default=2 * 1024 * 1024, ge=1, le=64 * 1024 * 1024)
+    REQUEST_BODY_TIMEOUT: float = Field(default=10.0, gt=0, le=60, allow_inf_nan=False)
+    MAX_CONCURRENT_REQUESTS: int = Field(default=128, ge=1, le=4096)
+
+    RATE_LIMIT_ENABLED: bool = False
+    RATE_LIMIT_FAIL_CLOSED: bool = True
+    RATE_LIMIT_REDIS_URL: str = "redis://redis:6379/0"
+    RATE_LIMIT_NAMESPACE: str = "sentinelgrid-gateway"
+    RATE_LIMIT_RPM_PEER: int = Field(default=600, ge=1, le=1000000)
+    RATE_LIMIT_RPM_TENANT: int = Field(default=1200, ge=1, le=1000000)
+    RATE_LIMIT_RPM_SUBJECT: int = Field(default=120, ge=1, le=1000000)
+    TRUSTED_PROXY_CIDRS: tuple[str, ...] = ()
+
     # Database
     DB_URL: str = "postgresql://sg:sg@postgres:5432/sg"
 
@@ -97,10 +113,24 @@ class Settings(BaseSettings):
             disallowed_hosts=DEFAULT_KEYCLOAK_HOSTS,
         )
 
+        self.rate_limit_policy()
+        if self.ENVIRONMENT not in {"development", "test"}:
+            if not self.RATE_LIMIT_ENABLED or not self.RATE_LIMIT_FAIL_CLOSED or not self.RATE_LIMIT_REDIS_URL.startswith("rediss://"):
+                raise ValueError("Non-development ingress requires TLS Redis and fail-closed rate limiting")
         self.verification_settings()
         self.user_principal_settings()
         return self
 
+
+    def rate_limit_policy(self) -> RateLimitPolicy:
+        return RateLimitPolicy(enabled=self.RATE_LIMIT_ENABLED, fail_closed=self.RATE_LIMIT_FAIL_CLOSED,
+            redis_url=self.RATE_LIMIT_REDIS_URL, namespace=self.RATE_LIMIT_NAMESPACE,
+            peer_rpm=self.RATE_LIMIT_RPM_PEER, tenant_rpm=self.RATE_LIMIT_RPM_TENANT,
+            subject_rpm=self.RATE_LIMIT_RPM_SUBJECT, trusted_proxy_cidrs=self.TRUSTED_PROXY_CIDRS)
+
+    def ingress_policy(self) -> IngressPolicy:
+        return IngressPolicy(allowed_origins=tuple(self.CORS_ORIGINS), max_body_bytes=self.MAX_REQUEST_BODY_BYTES,
+                             body_timeout_seconds=self.REQUEST_BODY_TIMEOUT, max_concurrent_requests=self.MAX_CONCURRENT_REQUESTS)
 
     def verification_settings(self) -> IAMVerificationSettings:
         names = {"ENVIRONMENT", "IAM_AGENT_URL", "KEYCLOAK_CLIENT_ID",

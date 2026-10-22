@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity preview-workload-issuer
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity preview-workload-issuer preview-gateway-redis
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -87,14 +87,18 @@ preview-workload-reads:
 	$(PYTHON) -m pytest -c backend/services/ticketing_service/tests/pytest-workload.ini backend/services/ticketing_service/tests/test_workload_read_boundary.py -q
 
 preview-gateway:
-	$(PYTHON) -m pytest -c backend/services/api_gateway/tests/pytest-identity.ini backend/services/api_gateway/tests/test_gateway_identity_boundary.py -q
-	PYTHONPATH=backend/libs:backend/services/api_gateway $(PYTHON) -m pytest -c backend/services/api_gateway/pytest.ini backend/services/api_gateway/tests/test_auth_middleware.py backend/services/api_gateway/tests/test_config_security.py backend/services/api_gateway/tests/test_metrics.py -q
+	PYTHONPATH=backend/libs:backend/services/api_gateway $(PYTHON) -m pytest -c backend/services/api_gateway/pytest.ini backend/services/api_gateway/tests -m 'not integration' -q
+
+preview-gateway-redis:
+	test -n "$(SG_TEST_REDIS_SOCKET)"
+	SG_TEST_REDIS_SOCKET="$(SG_TEST_REDIS_SOCKET)" $(PYTHON) -m pytest -c backend/services/api_gateway/tests/pytest-boundaries.ini backend/services/api_gateway/tests/test_gateway_budgets.py -q
 
 preview-gateway-identity:
 	$(PYTHON) -m pytest -c backend/tests/gateway_identity/pytest.ini backend/tests/gateway_identity -q
 
 preview-mcp:
 	$(PYTHON) -m pytest -c backend/agents/mcp_server/tests/pytest.ini backend/agents/mcp_server/tests -q
+	$(PYTHON) -m pytest -c backend/agents/mcp_server/transport_tests/pytest-http.ini backend/agents/mcp_server/transport_tests -q
 
 preview-secrets:
 	$(PYTHON) scripts/scan_public_secrets.py snapshot

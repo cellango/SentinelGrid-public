@@ -4,7 +4,8 @@ Tests for API Gateway endpoints
 
 import pytest
 from unittest.mock import Mock, patch, MagicMock
-from uuid import uuid4
+from uuid import uuid4, UUID
+from datetime import datetime, timezone
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -19,11 +20,23 @@ def client(mock_get_db, mock_get_tenant_session, mock_get_current_tenant):
     
     app.dependency_overrides[get_db] = mock_get_db
     app.dependency_overrides[get_tenant_session] = mock_get_tenant_session
-    app.dependency_overrides[get_current_tenant] = mock_get_current_tenant
+    app.dependency_overrides[get_current_tenant] = lambda: "e53ae16f-4381-4da5-9992-8d8d85b1d0eb"
+    from sg_core.opa import require_opa_allow
+    app.dependency_overrides[require_opa_allow] = lambda: None
+    # Concrete empty query results, rather than truthy Mock objects as data.
+    session = next(mock_get_tenant_session())
+    query = session.query.return_value
+    query.filter.return_value = query
+    query.order_by.return_value = query
+    query.offset.return_value = query
+    query.limit.return_value = query
+    query.first.return_value = None
+    query.all.return_value = []
+    query.count.return_value = 0
     # Route-unit fixture; real gateway admission has its own no-override suite.
     app.dependency_overrides[require_gateway_identity] = lambda: None
     
-    yield TestClient(app)
+    yield TestClient(app, raise_server_exceptions=False)
     app.dependency_overrides.clear()
 
 
@@ -83,15 +96,20 @@ class TestAPIEndpoints:
         from app.services.alert_service import AlertService
         
         mock_service = Mock()
-        mock_alert = Mock()
-        mock_alert.id = alert_id
+        from sg_core.models import Alert
+        mock_alert = Alert(id=UUID(alert_id), tenant_id=UUID("e53ae16f-4381-4da5-9992-8d8d85b1d0eb"),
+            source="synthetic", external_id="review-1", title="Synthetic alert", raw_severity="high",
+            status="open", detection_time=datetime.now(timezone.utc),
+            created_at=datetime.now(timezone.utc), updated_at=datetime.now(timezone.utc))
         mock_service.get_alert.return_value = mock_alert
+        mock_service.get_ai_analysis.return_value = []
         
         with patch('app.api.routes_alerts.AlertService', return_value=mock_service):
             response = client.get(f"/api/v1/alerts/{alert_id}")
             
             # Should return alert if found
-            assert response.status_code in [200, 404]
+            assert response.status_code == 200
+            assert response.json()["id"] == alert_id
     
     def test_list_incidents_endpoint(self, client, mock_get_db):
         """Test listing incidents endpoint."""
@@ -112,11 +130,11 @@ class TestAPIEndpoints:
     
     def test_list_playbooks_endpoint(self, client, mock_get_db):
         """Test listing playbooks endpoint."""
-        response = client.get("/api/v1/playbooks/")
+        response = client.get("/api/v1/playbooks")
         
         assert response.status_code == 200
         data = response.json()
-        assert "items" in data
+        assert data == []
     
     def test_execute_playbook_endpoint(self, client, mock_get_db):
         """Test executing a playbook."""
@@ -129,17 +147,15 @@ class TestAPIEndpoints:
         
         assert response.status_code in [200, 404]
     
-    def test_chat_endpoint(self, client, mock_get_db):
+    def test_unknown_chat_root_has_no_fabricated_reply(self, client, mock_get_db):
         """Test chat endpoint."""
         response = client.post(
             "/api/v1/chat/",
             json={"message": "Hello"}
         )
         
-        assert response.status_code == 200
-        data = response.json()
-        assert "reply" in data
-        assert "session_id" in data
+        assert response.status_code == 404
+        assert "reply" not in response.json()
     
     def test_list_integrations_endpoint(self, client, mock_get_db):
         """Test listing integrations endpoint."""

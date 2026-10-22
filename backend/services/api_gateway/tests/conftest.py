@@ -6,6 +6,7 @@ import pytest
 from unittest.mock import Mock, patch, MagicMock
 from fastapi.testclient import TestClient
 from types import SimpleNamespace
+from contextlib import asynccontextmanager
 from uuid import uuid4
 import json
 import httpx
@@ -154,11 +155,7 @@ def proxy_response_factory():
             content = json.dumps(payload).encode()
         elif isinstance(content, str):
             content = content.encode()
-        return SimpleNamespace(
-            status_code=status_code,
-            content=content,
-            headers=headers or {"content-type": "application/json"},
-        )
+        return httpx.Response(status_code, content=content, headers=headers or {"content-type": "application/json"})
 
     return _factory
 
@@ -192,6 +189,11 @@ def proxy_async_client_factory(monkeypatch, proxy_response_factory):
             async def __aexit__(self, exc_type, exc, tb):
                 return False
 
+            @asynccontextmanager
+            async def stream(self, method, url, content=None, headers=None):
+                calls.append({"method": method, "url": url, "content": content, "headers": headers or {}})
+                yield _consume_response()
+
             async def get(self, url, headers=None, params=None):
                 calls.append(
                     {
@@ -215,7 +217,8 @@ def proxy_async_client_factory(monkeypatch, proxy_response_factory):
                 )
                 return _consume_response()
 
-        monkeypatch.setattr(target_module.httpx, "AsyncClient", FakeAsyncClient)
+        from app.core import proxy
+        monkeypatch.setattr(getattr(target_module, "httpx", proxy.httpx), "AsyncClient", FakeAsyncClient)
         return calls
 
     return _factory

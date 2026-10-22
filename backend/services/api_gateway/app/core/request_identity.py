@@ -42,4 +42,7 @@ def require_gateway_identity(request: Request):
     for name in ("x-user-id", "x-roles", "x-actor-id", "x-internal-service-token", "x-internal-token"):
         if name in request.headers:
             raise HTTPException(403, "Conflicting identity context")
+    budget_store = request.app.state.request_budget_store
+    if budget_store is not None:
+        budget_store.check_identity(identity)
     return identity

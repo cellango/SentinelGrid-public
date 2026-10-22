@@ -26,6 +26,8 @@ from app.api import (
 )
 from app.core.config import settings
 from app.core.request_identity import require_gateway_identity
+from app.core.ingress import GatewayIngressMiddleware
+from app.core.rate_limit import create_budget_store, PeerBudgetMiddleware
 from sg_core.request_credentials import AuthCookieMiddleware
 from sg_core.security import get_current_tenant
 from sg_core.request_tracing import RequestTracingMiddleware, configure_logging
@@ -57,7 +59,9 @@ app.router.redirect_slashes = False
 PROMETHEUS_MEDIA_TYPE = "text/plain; version=0.0.4; charset=utf-8"
 
 # CORS wraps credential rejection as well as successful route responses.
+app.state.request_budget_store = create_budget_store(settings.rate_limit_policy())
 app.add_middleware(AuthCookieMiddleware)
+app.add_middleware(PeerBudgetMiddleware, store=app.state.request_budget_store)
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -67,6 +71,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.add_middleware(GatewayIngressMiddleware, policy=settings.ingress_policy())
 app.add_middleware(RequestTracingMiddleware, service_name="api-gateway")
 
 # Include routers

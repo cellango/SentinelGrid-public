@@ -31,6 +31,15 @@ There is no eager HTTP client initialization. The caller's identity never replac
 a resource's `user_id`; tool arguments are not mutated. Removing text markers is
 not a prompt-injection security boundary: retrieved content remains untrusted.
 
+## Optional authenticated HTTP discovery
+
+The [verified HTTP factory](app/verified_http.py) uses the actual MCP1.30.0
+stateless Streamable HTTP SDK with owned IAM/user settings, exact host/origin
+allowlists, request-bound immutable actor/tenant context and shared ingress/Redis
+budget support. It is not mounted by the stdio entrypoint or deployed here. Every
+tool remains unavailable. Read the [current HTTP contract](../../../docs/reference/http-boundaries.md)
+for configuration, test scope and remaining action/data/issuer gates.
+
 ## Source checks
 
 From the repository root, use Python3.13 and the hash-required preview environment:
@@ -56,9 +65,9 @@ services through the selected single action boundary, with deterministic approva
 durable audit, replay/failure handling and independently verified effects. Qualify
 downstream reads/data ownership too; a shared bearer token cannot prove authority.
 
-Gateway/MCP caller compatibility, additional legacy tools, distributed limits,
-trusted proxies, CORS, error/version contracts, credential/TLS lifecycle and full
-installation remain migration work. No HTTP/OAuth transport, live provider/model,
+Full gateway/MCP caller compatibility, additional legacy tools, production ingress/Redis
+topology, remaining route contracts, credential/TLS lifecycle and full installation
+remain migration work. The shared local HTTP checks cover only the documented source scope. No deployed HTTP/OAuth service, live provider/model,
 case runtime, durable audit or complete feature equivalence is qualified here.
 All original code remains under the repository's Apache-2.0 terms; dependencies
 retain their upstream licenses.

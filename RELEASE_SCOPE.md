@@ -96,7 +96,7 @@ into a caller identity. See the [current MCP source contract](backend/agents/mcp
 
 Required MCP capabilities remain migration work. This source containment does not
 qualify verified transport identity/capabilities, data ownership, provider effects,
-durable audit, HTTP/OAuth, distributed limits, full gateway/caller compatibility or
+durable audit, deployed HTTP/OAuth, production distributed limits, full gateway/caller compatibility or
 complete runtime/feature equivalence. The additional hash-pinned MCP1.x protocol
 test graph belongs to the source-review environment; no deployment graph or SDK2
 compatibility is cleared. The frozen preview release remains unchanged.
@@ -110,8 +110,10 @@ ambiguous, workload or foreign identity before business dependencies. Its user
 bindings are empty by default. Shared-token ingestion and global ingest diagnostics
 remain blocked pending owned delegation. Offline positive data paths use spies;
 full proxy/action authorization, direct-service callers, live provider registration,
-SQL and runtime/feature equivalence remain open. A wider legacy gateway suite has
-existing failures and is not claimed passing. Core MCP remains unavailable.
+SQL and runtime/feature equivalence remain open. The wider non-integration gateway suite now passes local source tests; the real Redis
+check runs separately. See the [HTTP boundary scope](docs/reference/http-boundaries.md).
+MCP execution remains unavailable; authenticated HTTP discovery is an optional,
+undeployed factory.
 
 
 The same [identity source contract](docs/architecture/gateway-identity.md#direct-service-workload-reads)

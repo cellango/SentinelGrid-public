@@ -14,3 +14,5 @@ future contracts. They are not operating runbooks or API/runtime certifications.
 Older API tables, deployment instructions, and protocol notes are classified under
 [the historical archive](../archive/README.md). Check the current source before
 using them. Supported setup/check commands live only in the root [README](../../README.md).
+
+- [Current HTTP transport boundaries](http-boundaries.md): ingress, proxy forwarding, Redis budgets and authenticated MCP discovery; source qualification only.

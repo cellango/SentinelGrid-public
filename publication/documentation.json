@@ -1925,6 +1925,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/reference/http-boundaries.md",
+      "class": "current_source_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
       "path": "docs/reference/identity.md",
       "class": "current_source_reference",
       "authority": "current_within_source_preview_scope"

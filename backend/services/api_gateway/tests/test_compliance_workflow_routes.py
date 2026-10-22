@@ -527,25 +527,16 @@ def test_compliance_agent_recommendation_routes_proxy_authenticated_tenant(workf
     }
 
 
-def test_governance_proxy_forwards_campaign_create(workflow_client, mocker):
+def test_governance_proxy_forwards_campaign_create(workflow_client, proxy_async_client_factory, proxy_response_factory):
+    import json
+    from app.api import routes_governance
     client, tenant_id = workflow_client
-    recorder = {}
-    mocker.patch("app.api.routes_governance.httpx.AsyncClient", lambda *a, **k: FakeAsyncClient(recorder))
-
-    response = client.post(
-        "/api/governance/campaigns",
-        headers={"Authorization": "Bearer token-456"},
-        json={
-            "tenant_id": tenant_id,
-            "name": "CC6.1 Access Review",
-            "start_date": "2026-03-26T00:00:00Z",
-            "end_date": "2026-04-09T00:00:00Z",
-            "reviewer_type": "admin",
-        },
-    )
-
-    assert response.status_code == 200
-    assert recorder["url"].endswith("/api/v1/governance/campaigns")
-    assert recorder["headers"]["X-Tenant-ID"] == tenant_id
-    assert recorder["headers"]["Authorization"] == "Bearer token-456"
-    assert recorder["json"]["name"] == "CC6.1 Access Review"
+    calls = proxy_async_client_factory(routes_governance, responses=[proxy_response_factory(payload={"ok": True})])
+    payload={"tenant_id":tenant_id,"name":"CC6.1 Access Review", "start_date":"2026-03-26T00:00:00Z",
+        "end_date":"2026-04-09T00:00:00Z","reviewer_type":"admin"}
+    response=client.post("/api/governance/campaigns",headers={"Authorization":"Bearer token-456"},json=payload)
+    assert response.status_code==200
+    assert calls[0]["url"].endswith("/api/v1/governance/campaigns")
+    assert calls[0]["headers"]["x-tenant-id"]==tenant_id
+    assert calls[0]["headers"]["authorization"]=="Bearer token-456"
+    assert json.loads(calls[0]["content"])==payload

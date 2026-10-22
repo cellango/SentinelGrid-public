@@ -1,24 +1,31 @@
 {
   "format_version": 1,
-  "date": "2026-10-17",
+  "date": "2026-10-22",
   "scope": "Supported source-preview dependency inputs only",
   "python": {
     "audit_tool": "OSV querybatch API exact package/version queries",
-    "audit_date": "2026-10-17",
+    "audit_date": "2026-10-22",
     "audit_source": "https://api.osv.dev/v1/querybatch",
-    "audited_pins": 54,
+    "audited_pins": 56,
     "findings": 0,
     "hash_required": true,
     "manifest": "scripts/requirements-preview.txt",
-    "manifest_sha256": "70c7ae76419009bf734aefcba73ad221440fac936e8ca6404fe7a4171c4fbc6c",
+    "manifest_sha256": "ddbd60ee8c6234f4659a54a7c3651216963ab6667ede3339e20c182a74b81301",
     "additional_inputs": [
       {
         "path": "scripts/requirements-mcp-sdk.txt",
         "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873"
       }
     ],
-    "fresh_installation": "Python3.13 macOS arm64; official PyPI binary wheels/hash checks; pip check passed; no package version changed among the previous43pins",
-    "expanded_Linux_execution": false
+    "fresh_installation": "Historical54pin fresh install retained; two new wheels plus certifi fixed wheel applied offline without dependency downloads; pip check passed; fresh56pin/Linux execution not qualified",
+    "expanded_Linux_execution": false,
+    "security_update": {
+      "package": "certifi",
+      "from": "2026.7.22",
+      "to": "2026.10.19",
+      "advisory": "GHSA-6q48-6c7w-9gw2",
+      "source": "https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2"
+    }
   },
   "frontend": {
     "audit_command": "npm audit --package-lock-only --json (full tree; no omit or severity filter)",
@@ -133,5 +140,23 @@
     "security_advisory_clearance": false,
     "runtime_and_bundle_redistribution_clearance": false,
     "existing_application_dependency_graphs_unchanged": true
+  },
+  "previous_python_review": {
+    "audit_tool": "OSV querybatch API exact package/version queries",
+    "audit_date": "2026-10-17",
+    "audit_source": "https://api.osv.dev/v1/querybatch",
+    "audited_pins": 54,
+    "findings": 0,
+    "hash_required": true,
+    "manifest": "scripts/requirements-preview.txt",
+    "manifest_sha256": "70c7ae76419009bf734aefcba73ad221440fac936e8ca6404fe7a4171c4fbc6c",
+    "additional_inputs": [
+      {
+        "path": "scripts/requirements-mcp-sdk.txt",
+        "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873"
+      }
+    ],
+    "fresh_installation": "Python3.13 macOS arm64; official PyPI binary wheels/hash checks; pip check passed; no package version changed among the previous43pins",
+    "expanded_Linux_execution": false
   }
 }

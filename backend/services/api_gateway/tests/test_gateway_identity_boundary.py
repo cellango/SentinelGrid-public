@@ -31,6 +31,7 @@ from sg_core.security import get_current_payload, get_current_tenant, get_verifi
 from sg_core.user_principals import UserClientBinding, UserPrincipalSettings
 
 _HTTP_CLIENT = httpx.Client
+_HTTP_ASYNC_CLIENT = httpx.AsyncClient
 TENANT = "e53ae16f-4381-4da5-9992-8d8d85b1d0eb"
 USER = "238699f6-5d17-48a0-935f-539c6d3594cf"
 ISSUER = "https://identity.internal.test/realms/synthetic"
@@ -337,3 +338,55 @@ def test_production_registration_rejects_cleartext_issuer():
     with pytest.raises(ValidationError):
         UserPrincipalSettings(_env_file=None, ENVIRONMENT="production", IAM_USER_CLIENT_BINDINGS=(
             UserClientBinding(**{**BINDING, "issuer": "http://identity.internal.test/realms/synthetic"}),))
+
+
+@pytest.mark.parametrize('status', [429,503])
+def test_verified_budget_denial_happens_before_scoped_database(gateway,monkeypatch,status):
+    from fastapi import HTTPException
+    checked=[]
+    class Budget:
+        def check_identity(self,identity):
+            checked.append((identity.tenant_id,identity.user_id))
+            raise HTTPException(status,'Synthetic budget denial')
+    monkeypatch.setattr(app.state,'request_budget_store',Budget())
+    response=gateway.client.get('/api/v1/alerts/',headers={'Authorization':'Bearer '+gateway.sign()})
+    assert response.status_code==status
+    assert checked==[(TENANT,USER)] and gateway.opened==[]
+    gateway.factory.assert_not_called()
+
+
+@pytest.mark.parametrize('method,path,target,preauth', [
+    ('POST','/api/v1/auth/login','http://iam_agent:8000/api/v1/auth/login',True),
+    ('POST','/api/v1/auth/refresh','http://iam_agent:8000/api/v1/auth/refresh',True),
+    ('DELETE','/api/iam-portal/users','http://iam_agent:8000/api/iam-portal/users',False),
+    ('DELETE','/api/v1/iam/iam-portal/users','http://iam_agent:8000/api/iam-portal/users',False),
+    ('GET','/api/v1/iam/dashboard-snapshot','http://iam_agent:8000/api/v1/iam/dashboard-snapshot',False),
+    ('DELETE','/api/v1/devices','http://iam_agent:8000/api/v1/devices/',False),
+    ('DELETE','/api/v1/devices/','http://iam_agent:8000/api/v1/devices/',False),
+    ('DELETE','/api/v1/devices/one','http://iam_agent:8000/api/v1/devices/one',False),
+    ('DELETE','/api/v1/governance/campaigns','http://iam_agent:8000/api/v1/governance/campaigns',False),
+    ('DELETE','/api/governance/campaigns','http://iam_agent:8000/api/v1/governance/campaigns',False),
+    ('DELETE','/api/v1/reports','http://reporting_service:8000/api/v1/reports/',False),
+    ('DELETE','/api/v1/reports/one','http://reporting_service:8000/api/v1/reports/one',False),
+    ('DELETE','/api/v1/soar/playbooks','http://soar_agent:8000/soar/playbooks',False),
+])
+def test_mounted_proxy_aliases_use_exact_owned_upstreams_and_signed_identity(gateway,monkeypatch,method,path,target,preauth):
+    from app.core import proxy
+    outbound=[]
+    async def transport(request):
+        outbound.append(request)
+        return httpx.Response(202,content=b'accepted',headers={'content-type':'text/plain'})
+    monkeypatch.setattr(proxy.httpx,'AsyncClient',lambda **kwargs:_HTTP_ASYNC_CLIENT(transport=httpx.MockTransport(transport),**kwargs))
+    token=gateway.sign()
+    response=gateway.client.request(method,path+'?tag=a&tag=b',content=b'{"exact":true}',headers={
+        'Authorization':'Bearer '+token,'Content-Type':'application/json'})
+    assert response.status_code==202 and response.content==b'accepted'
+    assert len(outbound)==1 and str(outbound[0].url)==target+'?tag=a&tag=b'
+    assert outbound[0].content==b'{"exact":true}'
+    if preauth:
+        assert gateway.calls==[] and 'authorization' not in outbound[0].headers
+    else:
+        assert len(gateway.calls)==1
+        assert outbound[0].headers['authorization']=='Bearer '+token
+        assert outbound[0].headers['x-tenant-id']==TENANT
+    assert gateway.opened==[]

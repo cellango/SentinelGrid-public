@@ -1,4 +1,5 @@
 import httpx
+import json
 
 from app.api import routes_auth
 
@@ -24,7 +25,7 @@ def test_login_proxy_forwards_tenant_and_realm_headers(
     assert response.json() == {"access_token": "token-123"}
     assert calls[0]["headers"]["x-tenant-id"] == "tenant-123"
     assert calls[0]["headers"]["x-realm"] == "realm-123"
-    assert calls[0]["json"] == {
+    assert json.loads(calls[0]["content"]) == {
         "email": "analyst@example.com",
         "password": "DemoPassword123!",
     }
@@ -51,7 +52,7 @@ def test_refresh_proxy_forwards_tenant_and_realm_headers(
     assert response.json() == {"access_token": "token-456"}
     assert calls[0]["headers"]["x-tenant-id"] == "tenant-123"
     assert calls[0]["headers"]["x-realm"] == "realm-123"
-    assert calls[0]["json"] == {"refresh_token": "refresh-123"}
+    assert json.loads(calls[0]["content"]) == {"refresh_token": "refresh-123"}
 
 
 def test_login_proxy_only_forwards_allowlisted_pre_auth_hints(
@@ -76,8 +77,11 @@ def test_login_proxy_only_forwards_allowlisted_pre_auth_hints(
     )
 
     assert response.status_code == 200
-    assert calls[0]["headers"] == {
-        "Content-Type": "application/json",
+    forwarded = {k: v for k, v in calls[0]["headers"].items() if k.lower() not in {"x-request-id", "x-correlation-id"}}
+    assert forwarded == {
+        "content-type": "application/json",
+        "accept": "*/*",
+        "accept-encoding": "identity",
         "x-tenant-id": "tenant-123",
         "x-realm": "realm-123",
     }
@@ -105,8 +109,11 @@ def test_refresh_proxy_only_forwards_allowlisted_pre_auth_hints(
     )
 
     assert response.status_code == 200
-    assert calls[0]["headers"] == {
-        "Content-Type": "application/json",
+    forwarded = {k: v for k, v in calls[0]["headers"].items() if k.lower() not in {"x-request-id", "x-correlation-id"}}
+    assert forwarded == {
+        "content-type": "application/json",
+        "accept": "*/*",
+        "accept-encoding": "identity",
         "x-tenant-id": "tenant-123",
         "x-realm": "realm-123",
     }
@@ -175,7 +182,7 @@ def test_login_proxy_returns_503_when_iam_is_unreachable(
     )
 
     assert response.status_code == 503
-    assert "IAM login proxy failed" in response.json()["detail"]
+    assert response.json()["detail"] == "Upstream service unavailable"
 
 
 def test_refresh_proxy_returns_503_when_iam_is_unreachable(
@@ -193,4 +200,4 @@ def test_refresh_proxy_returns_503_when_iam_is_unreachable(
     )
 
     assert response.status_code == 503
-    assert "IAM refresh proxy failed" in response.json()["detail"]
+    assert response.json()["detail"] == "Upstream service unavailable"

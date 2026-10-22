@@ -7,6 +7,13 @@ supported login remain open.
 [Release scope](../../RELEASE_SCOPE.md) governs execution. The separate
 [identity reference](../reference/identity.md) describes tenant requirements.
 
+## HTTP ingress and forwarding
+
+The [current HTTP boundary reference](../reference/http-boundaries.md) records
+shared ingress/CSRF bounds, fixed-window Redis budgets, bounded proxy forwarding
+and optional authenticated MCP discovery. These local source checks do not close
+the issuer, domain/action, full caller compatibility or runtime adoption gates below.
+
 ## Owned verification transport
 
 [The shared verifier](../../backend/libs/sg_core/iam_verification.py) is called by

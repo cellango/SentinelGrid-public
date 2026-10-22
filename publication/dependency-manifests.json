@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "review_date": "2026-10-18",
+  "review_date": "2026-10-22",
   "source_scope": "Selected source paths only; local caches, installed dependencies and private artifacts excluded.",
   "manifests": [
     {
@@ -272,7 +272,7 @@
     {
       "path": "backend/agents/mcp_server/requirements.txt",
       "kind": "python_requirements",
-      "sha256": "2d2f9e82b4a45c05897726029a2d97601e09078f03ed6a9fe155c445f5d4ffec",
+      "sha256": "be56565a3c70e282246c754e01dc6481ecb29ceb14d6cb40152bad8fc3d4780d",
       "scope": "experimental_reference_only"
     },
     {
@@ -392,7 +392,7 @@
     {
       "path": "backend/services/api_gateway/Dockerfile",
       "kind": "container_recipe",
-      "sha256": "5934cb2c53c522906430bee09287db8f4bafaca7ffd1c626cb1aaf221aa090cf",
+      "sha256": "ce1f96eda34b39146171480a6b674952df68e689beab43326f01c62daa435121",
       "scope": "experimental_reference_only",
       "image_references": [
         "FROM ${SENTINELGRID_API_BASE_IMAGE}"
@@ -401,7 +401,7 @@
     {
       "path": "backend/services/api_gateway/requirements.txt",
       "kind": "python_requirements",
-      "sha256": "dd5ecc335d46e397abec15dc29af7ce2d75bd416a4d03e6df8e74ad671d02edd",
+      "sha256": "d3bad42de31ffd2d378f30e46ef062631f7b3e7e4941edf4a23f61c113386ca2",
       "scope": "experimental_reference_only"
     },
     {
@@ -870,7 +870,7 @@
     {
       "path": "scripts/requirements-preview.txt",
       "kind": "python_requirements",
-      "sha256": "70c7ae76419009bf734aefcba73ad221440fac936e8ca6404fe7a4171c4fbc6c",
+      "sha256": "ddbd60ee8c6234f4659a54a7c3651216963ab6667ede3339e20c182a74b81301",
       "scope": "supported_preview"
     },
     {
