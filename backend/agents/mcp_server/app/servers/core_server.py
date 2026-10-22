@@ -3,29 +3,44 @@
 import logging
 from mcp.server import Server
 from mcp.shared.exceptions import McpError
-from mcp.types import (Tool, TextContent, CallToolResult, CallToolRequest, ServerResult, ErrorData, INVALID_PARAMS)
+from mcp.types import (
+    Tool,
+    TextContent,
+    CallToolResult,
+    CallToolRequest,
+    ServerResult,
+    ErrorData,
+    INVALID_PARAMS,
+)
 
-from app.core.tool_admission import WIRE_TOOL_MAP, UNAVAILABLE_MESSAGE
+from ..core.tool_admission import WIRE_TOOL_MAP, UNAVAILABLE_MESSAGE
 
 logger = logging.getLogger(__name__)
 
 
-def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
+def create_core_server(
+    tenant_id: str = "", user_id: str = "", *, case_records=None
+) -> Server:
     """
-    Create discovery metadata and an explicitly unavailable execution surface.
+    Create legacy discovery/denial plus explicitly configured case-record tools.
 
     Legacy tenant_id/user_id arguments are retained for source compatibility only;
-    they confer no identity or permissions. No downstream tool module is imported.
-    
+    they confer no identity or permissions. No legacy provider tool module is imported.
+
     Args:
         tenant_id: Tenant ID for multi-tenancy
         user_id: User ID for authorization
-    
+
     Returns:
         Configured MCP Server
     """
+    if case_records is not None:
+        from ..core.case_records import CaseRecordTools
+
+        if not isinstance(case_records, CaseRecordTools):
+            raise TypeError("Owned case-record adapter required")
     server = Server("sentinelgrid-core")
-    
+
     # SIEM Tools
     @server.list_tools()
     async def list_tools() -> list[Tool]:
@@ -39,25 +54,25 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                     "properties": {
                         "query": {
                             "type": "string",
-                            "description": "OpenSearch/Lucene query string (e.g., 'failed_login AND user:admin')"
+                            "description": "OpenSearch/Lucene query string (e.g., 'failed_login AND user:admin')",
                         },
                         "time_range": {
                             "type": "string",
                             "description": "Time range to search (e.g., '1h', '24h', '7d')",
-                            "default": "1h"
+                            "default": "1h",
                         },
                         "source": {
                             "type": "string",
-                            "description": "Optional source filter (e.g., 'windows', 'linux', 'firewall')"
+                            "description": "Optional source filter (e.g., 'windows', 'linux', 'firewall')",
                         },
                         "limit": {
                             "type": "integer",
                             "description": "Maximum number of results",
-                            "default": 100
-                        }
+                            "default": 100,
+                        },
                     },
-                    "required": ["query"]
-                }
+                    "required": ["query"],
+                },
             ),
             Tool(
                 name="get_detections",
@@ -68,19 +83,21 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                         "severity": {
                             "type": "string",
                             "enum": ["critical", "high", "medium", "low"],
-                            "description": "Filter by severity level"
+                            "description": "Filter by severity level",
                         },
                         "status": {
                             "type": "string",
-                            "enum": ["new", "in_progress", "resolved", "false_positive"],
-                            "description": "Filter by status"
+                            "enum": [
+                                "new",
+                                "in_progress",
+                                "resolved",
+                                "false_positive",
+                            ],
+                            "description": "Filter by status",
                         },
-                        "limit": {
-                            "type": "integer",
-                            "default": 50
-                        }
-                    }
-                }
+                        "limit": {"type": "integer", "default": 50},
+                    },
+                },
             ),
             Tool(
                 name="get_incidents",
@@ -90,22 +107,19 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                     "properties": {
                         "status": {
                             "type": "string",
-                            "description": "Filter by incident status"
+                            "description": "Filter by incident status",
                         },
                         "severity": {
                             "type": "string",
-                            "enum": ["critical", "high", "medium", "low"]
+                            "enum": ["critical", "high", "medium", "low"],
                         },
                         "assignee": {
                             "type": "string",
-                            "description": "Filter by assigned user"
+                            "description": "Filter by assigned user",
                         },
-                        "limit": {
-                            "type": "integer",
-                            "default": 50
-                        }
-                    }
-                }
+                        "limit": {"type": "integer", "default": 50},
+                    },
+                },
             ),
             Tool(
                 name="create_incident",
@@ -113,26 +127,23 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                 inputSchema={
                     "type": "object",
                     "properties": {
-                        "title": {
-                            "type": "string",
-                            "description": "Incident title"
-                        },
+                        "title": {"type": "string", "description": "Incident title"},
                         "description": {
                             "type": "string",
-                            "description": "Detailed incident description"
+                            "description": "Detailed incident description",
                         },
                         "severity": {
                             "type": "string",
-                            "enum": ["critical", "high", "medium", "low"]
+                            "enum": ["critical", "high", "medium", "low"],
                         },
                         "observables": {
                             "type": "array",
                             "items": {"type": "string"},
-                            "description": "List of observable IDs to attach"
-                        }
+                            "description": "List of observable IDs to attach",
+                        },
                     },
-                    "required": ["title", "description", "severity"]
-                }
+                    "required": ["title", "description", "severity"],
+                },
             ),
             # SOAR Tools
             Tool(
@@ -143,10 +154,10 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                     "properties": {
                         "category": {
                             "type": "string",
-                            "description": "Filter by category (e.g., 'phishing', 'malware', 'bruteforce')"
+                            "description": "Filter by category (e.g., 'phishing', 'malware', 'bruteforce')",
                         }
-                    }
-                }
+                    },
+                },
             ),
             Tool(
                 name="get_playbook",
@@ -154,13 +165,10 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                 inputSchema={
                     "type": "object",
                     "properties": {
-                        "playbook_id": {
-                            "type": "string",
-                            "description": "Playbook ID"
-                        }
+                        "playbook_id": {"type": "string", "description": "Playbook ID"}
                     },
-                    "required": ["playbook_id"]
-                }
+                    "required": ["playbook_id"],
+                },
             ),
             Tool(
                 name="run_playbook",
@@ -170,19 +178,19 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                     "properties": {
                         "playbook_id": {
                             "type": "string",
-                            "description": "Playbook ID to execute"
+                            "description": "Playbook ID to execute",
                         },
                         "params": {
                             "type": "object",
-                            "description": "Playbook parameters as key-value pairs"
+                            "description": "Playbook parameters as key-value pairs",
                         },
                         "incident_id": {
                             "type": "string",
-                            "description": "Optional incident ID to associate with execution"
-                        }
+                            "description": "Optional incident ID to associate with execution",
+                        },
                     },
-                    "required": ["playbook_id", "params"]
-                }
+                    "required": ["playbook_id", "params"],
+                },
             ),
             Tool(
                 name="get_playbook_execution",
@@ -192,11 +200,11 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                     "properties": {
                         "execution_id": {
                             "type": "string",
-                            "description": "Execution ID"
+                            "description": "Execution ID",
                         }
                     },
-                    "required": ["execution_id"]
-                }
+                    "required": ["execution_id"],
+                },
             ),
             # IAM Tools
             Tool(
@@ -205,13 +213,10 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                 inputSchema={
                     "type": "object",
                     "properties": {
-                        "user_id": {
-                            "type": "string",
-                            "description": "User ID or email"
-                        }
+                        "user_id": {"type": "string", "description": "User ID or email"}
                     },
-                    "required": ["user_id"]
-                }
+                    "required": ["user_id"],
+                },
             ),
             Tool(
                 name="lock_account",
@@ -219,17 +224,14 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                 inputSchema={
                     "type": "object",
                     "properties": {
-                        "user_id": {
-                            "type": "string",
-                            "description": "User ID to lock"
-                        },
+                        "user_id": {"type": "string", "description": "User ID to lock"},
                         "reason": {
                             "type": "string",
-                            "description": "Reason for locking account"
-                        }
+                            "description": "Reason for locking account",
+                        },
                     },
-                    "required": ["user_id", "reason"]
-                }
+                    "required": ["user_id", "reason"],
+                },
             ),
             # Observable Tools
             Tool(
@@ -240,11 +242,11 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                     "properties": {
                         "observable_id": {
                             "type": "string",
-                            "description": "Observable ID"
+                            "description": "Observable ID",
                         }
                     },
-                    "required": ["observable_id"]
-                }
+                    "required": ["observable_id"],
+                },
             ),
             Tool(
                 name="search_observables",
@@ -254,42 +256,66 @@ def create_core_server(tenant_id: str = "", user_id: str = "") -> Server:
                     "properties": {
                         "observable_type": {
                             "type": "string",
-                            "enum": ["ip", "domain", "url", "hash", "email", "user_id", "cve"],
-                            "description": "Type of observable"
+                            "enum": [
+                                "ip",
+                                "domain",
+                                "url",
+                                "hash",
+                                "email",
+                                "user_id",
+                                "cve",
+                            ],
+                            "description": "Type of observable",
                         },
                         "value": {
                             "type": "string",
-                            "description": "Observable value (partial match)"
+                            "description": "Observable value (partial match)",
                         },
                         "status": {
                             "type": "string",
-                            "enum": ["pending", "enriching", "completed", "failed"]
+                            "enum": ["pending", "enriching", "completed", "failed"],
                         },
-                        "limit": {
-                            "type": "integer",
-                            "default": 50
-                        }
-                    }
-                }
+                        "limit": {"type": "integer", "default": 50},
+                    },
+                },
             ),
         ]
         for tool in tools:
-            tool.description = "Unavailable source-preview tool. " + (tool.description or "")
-        return tools
+            tool.description = "Unavailable source-preview tool. " + (
+                tool.description or ""
+            )
+        return tools + (case_records.tools() if case_records is not None else [])
 
     async def reject_unadmitted_call(request: CallToolRequest) -> ServerResult:
         """Reject before argument traversal, mutation or downstream imports.
 
         The source-preview transport has no verified caller/capabilities. Unknown
         wire names are protocol errors; declared but unavailable operations are
-        explicit tool errors. No executable dispatcher is installed.
+        explicit tool errors. Optional case-record tools use their authenticated
+        request and receiving API; no provider dispatcher is installed.
         """
+        if case_records is not None and request.params.name in {
+            t.name for t in case_records.tools()
+        }:
+            try:
+                context = server.request_context.request
+            except LookupError:
+                context = None
+            if context is None:
+                return ServerResult(case_records.unavailable())
+            return ServerResult(
+                await case_records.call(
+                    context, request.params.name, request.params.arguments
+                )
+            )
         if request.params.name not in WIRE_TOOL_MAP:
             raise McpError(ErrorData(code=INVALID_PARAMS, message="Unknown MCP tool"))
-        return ServerResult(CallToolResult(
-            isError=True,
-            content=[TextContent(type="text", text=UNAVAILABLE_MESSAGE)],
-        ))
+        return ServerResult(
+            CallToolResult(
+                isError=True,
+                content=[TextContent(type="text", text=UNAVAILABLE_MESSAGE)],
+            )
+        )
 
     server.request_handlers[CallToolRequest] = reject_unadmitted_call
     return server

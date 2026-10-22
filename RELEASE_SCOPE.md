@@ -112,8 +112,11 @@ remain blocked pending owned delegation. Offline positive data paths use spies;
 full proxy/action authorization, direct-service callers, live provider registration,
 SQL and runtime/feature equivalence remain open. The wider non-integration gateway suite now passes local source tests; the real Redis
 check runs separately. See the [HTTP boundary scope](docs/reference/http-boundaries.md).
-MCP execution remains unavailable; authenticated HTTP discovery is an optional,
-undeployed factory.
+Legacy provider-tool execution remains unavailable. The optional, undeployed HTTP
+factory can explicitly add [case proposal/inspection tools](docs/reference/mcp-case-records.md)
+that use the same receiving API and case-grant checks. These record operations
+cannot approve or execute an action; isolated native storage tests are not a
+production runtime qualification.
 
 
 The same [identity source contract](docs/architecture/gateway-identity.md#direct-service-workload-reads)

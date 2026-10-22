@@ -130,6 +130,8 @@ class ActionAuthority:
 
     def view(self, p, *, status="pending_approval"):
         return {
+            "tenant_id": str(p.tenant_id),
+            "case_id": str(p.case_id),
             "action_id": str(p.action_id),
             "proposal_id": str(p.id),
             "proposal_hash": p.proposal_hash,
@@ -277,6 +279,7 @@ class ActionAuthority:
                 or payload["proposal_id"] != str(p.id)
                 or payload["action_id"] != str(p.action_id)
                 or payload["proposed_by"] != str(p.proposed_by)
+                or payload["proposal_revision"] != p.proposal_revision
                 or payload["case_revision"] != p.case_revision
                 or payload["plan_revision"] != p.plan_revision
                 or payload["policy_version"] != p.policy_version

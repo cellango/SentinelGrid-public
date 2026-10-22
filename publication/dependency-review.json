@@ -10,11 +10,11 @@
     "findings": 0,
     "hash_required": true,
     "manifest": "scripts/requirements-preview.txt",
-    "manifest_sha256": "238735c2b5cf7c7a2331d099658311cecef0db8cac9a3e00cb885830a6587275",
+    "manifest_sha256": "80c1e22396e1c4df17026d3703ed9753aaec5ca7d5bd3c5845729bd9956c3582",
     "additional_inputs": [
       {
         "path": "scripts/requirements-mcp-sdk.txt",
-        "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873"
+        "sha256": "e94d943769f423826fbf9edc8dc0609b7b0414c475b11b8968bfd3fc7af151ea"
       }
     ],
     "fresh_installation": "Historical56pin environment extended offline with reviewed rfc8785 wheel using --no-index --no-deps; fresh57pin/Linux execution not qualified",
@@ -175,5 +175,37 @@
     "runtime_dependencies": [],
     "distribution": "No implementation or wheel redistributed; test/tool install only",
     "scope": "Versioned proposal canonical bytes; no provider enablement"
+  },
+  "pre_mcp_record_python_review": {
+    "audit_tool": "OSV querybatch API exact package/version queries",
+    "audit_date": "2026-10-22",
+    "audit_source": "https://api.osv.dev/v1/querybatch",
+    "audited_pins": 57,
+    "findings": 0,
+    "hash_required": true,
+    "manifest": "scripts/requirements-preview.txt",
+    "manifest_sha256": "238735c2b5cf7c7a2331d099658311cecef0db8cac9a3e00cb885830a6587275",
+    "additional_inputs": [
+      {
+        "path": "scripts/requirements-mcp-sdk.txt",
+        "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873"
+      }
+    ],
+    "fresh_installation": "Historical56pin environment extended offline with reviewed rfc8785 wheel using --no-index --no-deps; fresh57pin/Linux execution not qualified",
+    "expanded_Linux_execution": false,
+    "security_update": {
+      "package": "certifi",
+      "from": "2026.7.22",
+      "to": "2026.10.19",
+      "advisory": "GHSA-6q48-6c7w-9gw2",
+      "source": "https://github.com/certifi/python-certifi/security/advisories/GHSA-6q48-6c7w-9gw2"
+    }
+  },
+  "MCP_case_records_extension": {
+    "resolved_package_version_changes": false,
+    "pins": 57,
+    "canonicalization_package": "rfc8785==0.1.4",
+    "source_test_pin_location": "scripts/requirements-mcp-sdk.txt",
+    "note": "Existing reviewed RFC8785 pin/hash moved into included MCP requirements; root graph unchanged. MCP runtime requirements now declare it for the shared contract. No new installation or runtime graph clearance."
   }
 }

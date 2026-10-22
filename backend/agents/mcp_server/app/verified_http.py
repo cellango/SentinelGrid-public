@@ -1,8 +1,8 @@
 """Opt-in authenticated MCP discovery using the installed SDK HTTP transport.
 
 The default stdio preview is unchanged. This factory is not mounted/deployed by
-any entrypoint. It authenticates a user, grants no tool/action capability, and
-keeps every execution path denied until domain contracts are qualified.
+any entrypoint. It authenticates a user and keeps legacy provider execution denied. An explicitly
+configured profile can submit/read case records through the shared authority API.
 """
 
 from contextlib import asynccontextmanager
@@ -19,7 +19,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Route
 
-from app.servers.core_server import create_core_server
+from .servers.core_server import create_core_server
 from sg_core.http_ingress import GatewayIngressMiddleware, IngressPolicy
 from sg_core.http_rate_limit import (
     RateLimitPolicy,
@@ -27,6 +27,8 @@ from sg_core.http_rate_limit import (
     PeerBudgetMiddleware,
 )
 from sg_core.iam_verification import IAMVerificationSettings
+from .core.case_records import CaseRecordPolicy, CaseRecordTools
+from sg_core.action_contracts import strict_json
 from sg_core.request_credentials import request_bearer_token
 from sg_core.security import get_verified_request_identity
 from sg_core.user_principals import UserPrincipalSettings, require_user_binding
@@ -40,7 +42,7 @@ class MCPTransportCaller:
     actor_subject_id: UUID
     client_id: str
     expires_at: float
-    # Identity and discovery never grant an execution capability.
+    # Only owned case-record operations may be granted; never provider execution.
     capabilities: tuple[str, ...] = ()
 
 
@@ -74,6 +76,9 @@ def _authenticate(request: Request) -> MCPTransportCaller:
         UUID(identity.user_id),
         binding.client_id,
         float(expires),
+        request.app.state.case_record_policy.operations
+        if request.app.state.case_record_policy is not None
+        else (),
     )
 
 
@@ -82,6 +87,19 @@ def get_transport_caller(request: Request) -> MCPTransportCaller:
     value = request.scope.get(_CONTEXT)
     if not isinstance(value, MCPTransportCaller) or value.expires_at <= time.time():
         raise HTTPException(401, "Verified MCP transport context required")
+    identity = get_verified_request_identity(request)
+    expected = (
+        request.app.state.case_record_policy.operations
+        if request.app.state.case_record_policy is not None
+        else ()
+    )
+    if (
+        str(value.tenant_id) != identity.tenant_id
+        or str(value.actor_subject_id) != identity.user_id
+        or value.client_id != identity.payload().get("azp")
+        or value.capabilities != expected
+    ):
+        raise HTTPException(401, "MCP transport context changed")
     return value
 
 
@@ -92,6 +110,7 @@ def create_verified_http_app(
     allowed_hosts: tuple[str, ...],
     allowed_origins: tuple[str, ...] = (),
     rate_policy: RateLimitPolicy = RateLimitPolicy(),
+    case_records: CaseRecordPolicy | None = None,
 ) -> Starlette:
     if not isinstance(verification, IAMVerificationSettings) or not isinstance(
         users, UserPrincipalSettings
@@ -116,7 +135,21 @@ def create_verified_http_app(
         raise ValueError(
             "Non-development MCP requires TLS Redis and fail-closed rate limiting"
         )
-    server = create_core_server()
+    if case_records is not None:
+        if not isinstance(case_records, CaseRecordPolicy):
+            raise ValueError("Owned case-record policy required")
+        if verification.ENVIRONMENT not in {
+            "development",
+            "test",
+        } and not case_records.origin.startswith("https://"):
+            raise ValueError("Case-record TLS required outside development")
+    server = (
+        create_core_server(
+            case_records=CaseRecordTools(case_records, get_transport_caller)
+        )
+        if case_records is not None
+        else create_core_server()
+    )
     manager = StreamableHTTPSessionManager(
         server,
         stateless=True,
@@ -142,6 +175,23 @@ def create_verified_http_app(
                 raise HTTPException(403, "MCP origin not allowed")
             caller = await anyio.to_thread.run_sync(_authenticate, request)
             scope[_CONTEXT] = caller
+            if case_records is not None:
+                raw = await request.body()
+                try:
+                    strict_json(raw, limit=65536)
+                except (ValueError, TypeError, UnicodeError, RecursionError):
+                    raise HTTPException(400, "Invalid or ambiguous MCP JSON") from None
+                pending = True
+                original_receive = receive
+
+                async def replay():
+                    nonlocal pending
+                    if pending:
+                        pending = False
+                        return {"type": "http.request", "body": raw, "more_body": False}
+                    return await original_receive()
+
+                receive = replay
         except HTTPException as exc:
             return await JSONResponse(
                 {"detail": exc.detail},
@@ -164,8 +214,13 @@ def create_verified_http_app(
     app.state.request_budget_store = create_budget_store(rate_policy)
     app.add_middleware(PeerBudgetMiddleware, store=app.state.request_budget_store)
     app.add_middleware(
-        GatewayIngressMiddleware, policy=IngressPolicy(allowed_origins=allowed_origins)
+        GatewayIngressMiddleware,
+        policy=IngressPolicy(
+            allowed_origins=allowed_origins,
+            max_body_bytes=65536 if case_records is not None else 2 * 1024 * 1024,
+        ),
     )
+    app.state.case_record_policy = case_records
     app.state.iam_verification_settings = verification
     app.state.user_principal_settings = users
     return app

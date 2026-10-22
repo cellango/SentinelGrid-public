@@ -1,8 +1,8 @@
 # Current HTTP transport boundaries
 
 Status: local source qualification on October 22, 2026. The gateway and optional
-MCP discovery transport share ingress and request-budget code. This does not
-qualify a deployment, a live issuer, tool execution or all domain routes.
+MCP HTTP transport share ingress and request-budget code. This does not
+qualify a deployment, a live issuer, provider execution or all domain routes.
 
 ## Browser ingress
 
@@ -71,7 +71,7 @@ actual byte bound and a 30-second total proxy deadline. Non-identity upstream Co
 proxy/data paths still require individual contract review; this helper does not
 replace domain authorization or unblock unavailable actions.
 
-## Optional MCP HTTP discovery
+## Optional MCP HTTP profiles
 
 `app.verified_http.create_verified_http_app` requires owned IAM verifier/user-client
 settings and exact host/origin allowlists. It uses the installed MCP 1.30.0
@@ -82,13 +82,16 @@ public HTTP endpoint is added by this factory.
 Every request needs a direct bearer, current verified user binding and UUID
 identity. Cookies/markers, forwarded identity hints, mismatched tenants/clients,
 expired or invalid signatures and unowned origins are denied. The SDK receives
-that request's immutable actor/tenant snapshot; capabilities are empty. A constructed
+that request's immutable actor/tenant snapshot; the default capability tuple is empty. A constructed
 context, body target or approval flag grants nothing. There is no resumable session
 or cross-request authentication cache. Shared ingress bounds apply, and owned
 `rate_policy` enables the same peer/tenant/subject budgets. Non-development
 configuration requires TLS Redis and fail-closed policy.
 
-Discovery is authenticated; **all tool execution remains unavailable**. Exact
+Discovery is authenticated; **all legacy provider-tool execution remains unavailable**.
+An owned [case-record profile](mcp-case-records.md) can add two proposal/inspection
+operations, with receiving-API authentication and case permissions. It cannot
+approve or execute actions and is not installed by a deployment entrypoint. Exact
 operation/target grants, replay controls for effects, downstream data ownership,
 deterministic action authority and durable outcomes remain required before any
 operation can be enabled. Authentication alone does not satisfy those gates.

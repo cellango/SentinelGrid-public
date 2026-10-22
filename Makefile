@@ -147,4 +147,4 @@ preview-legacy-actions:
 
 # Separate non-skipping gate: reviewed PG/Flyway, owned synthetic cluster only.
 preview-action-db:
-	PYTHONPATH=backend/libs:backend/services/case_runtime $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/case_runtime/tests/test_action_database.py -q
+	PYTHONPATH=backend/libs:backend/services/case_runtime $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/case_runtime/tests/test_action_database.py backend/services/case_runtime/tests/test_mcp_case_records_database.py -q

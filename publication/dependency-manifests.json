@@ -272,7 +272,7 @@
     {
       "path": "backend/agents/mcp_server/requirements.txt",
       "kind": "python_requirements",
-      "sha256": "be56565a3c70e282246c754e01dc6481ecb29ceb14d6cb40152bad8fc3d4780d",
+      "sha256": "ed4d7d36e32a8a87a56b43b3af01bddaa34572b0556a5a44f4255c33df40b954",
       "scope": "experimental_reference_only"
     },
     {
@@ -870,13 +870,13 @@
     {
       "path": "scripts/requirements-mcp-sdk.txt",
       "kind": "python_requirements",
-      "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873",
+      "sha256": "e94d943769f423826fbf9edc8dc0609b7b0414c475b11b8968bfd3fc7af151ea",
       "scope": "supported_source_preview_test_dependency_input"
     },
     {
       "path": "scripts/requirements-preview.txt",
       "kind": "python_requirements",
-      "sha256": "238735c2b5cf7c7a2331d099658311cecef0db8cac9a3e00cb885830a6587275",
+      "sha256": "80c1e22396e1c4df17026d3703ed9753aaec5ca7d5bd3c5845729bd9956c3582",
       "scope": "supported_preview"
     },
     {

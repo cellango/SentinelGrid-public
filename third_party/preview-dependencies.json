@@ -4,16 +4,16 @@
   "scope": "Dependencies referenced by the supported source-preview checks; installed implementations/binaries are not publication contents. License declarations do not relicense third-party code or certify generated bundles.",
   "python_input": {
     "path": "scripts/requirements-preview.txt",
-    "sha256": "238735c2b5cf7c7a2331d099658311cecef0db8cac9a3e00cb885830a6587275",
+    "sha256": "80c1e22396e1c4df17026d3703ed9753aaec5ca7d5bd3c5845729bd9956c3582",
     "packages": 57,
     "upstream_artifact_hashes": 962,
     "platforms": "Existing56pin macOS Python3.13 arm64 source-test environment extended offline with the pinned RFC8785 wheel; fresh57pin/Linux qualification pending",
     "includes": [
       {
         "path": "scripts/requirements-mcp-sdk.txt",
-        "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873",
-        "packages": 11,
-        "upstream_artifact_hashes": 148
+        "sha256": "e94d943769f423826fbf9edc8dc0609b7b0414c475b11b8968bfd3fc7af151ea",
+        "packages": 12,
+        "upstream_artifact_hashes": 149
       }
     ]
   },
@@ -10586,6 +10586,21 @@
         "sha256": "94f6d64d94d70ba28096fc49b82eb2e725afab9350e78081652044c4ea50c873",
         "packages": 11,
         "upstream_artifact_hashes": 148
+      }
+    ]
+  },
+  "pre_mcp_record_python_input": {
+    "path": "scripts/requirements-preview.txt",
+    "sha256": "238735c2b5cf7c7a2331d099658311cecef0db8cac9a3e00cb885830a6587275",
+    "packages": 57,
+    "upstream_artifact_hashes": 962,
+    "platforms": "Existing56pin macOS Python3.13 arm64 source-test environment extended offline with the pinned RFC8785 wheel; fresh57pin/Linux qualification pending",
+    "includes": [
+      {
+        "path": "scripts/requirements-mcp-sdk.txt",
+        "sha256": "e94d943769f423826fbf9edc8dc0609b7b0414c475b11b8968bfd3fc7af151ea",
+        "packages": 12,
+        "upstream_artifact_hashes": 149
       }
     ]
   }

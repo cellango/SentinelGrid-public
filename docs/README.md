@@ -45,3 +45,5 @@ private. See [the documentation review](release/documentation.md) and
 The archive is for investigating history, not choosing a setup guide.
 
 - [Action proposal and approval records](reference/action-authority.md): partial durable boundary; execution and deployment remain unqualified.
+
+- [MCP case records](reference/mcp-case-records.md): opt-in proposal submission and inspection through the existing deterministic authority.

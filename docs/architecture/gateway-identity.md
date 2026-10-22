@@ -11,7 +11,7 @@ supported login remain open.
 
 The [current HTTP boundary reference](../reference/http-boundaries.md) records
 shared ingress/CSRF bounds, fixed-window Redis budgets, bounded proxy forwarding
-and optional authenticated MCP discovery. These local source checks do not close
+and optional authenticated MCP discovery/case-record profiles. These local source checks do not close
 the issuer, domain/action, full caller compatibility or runtime adoption gates below.
 
 ## Owned verification transport
@@ -812,3 +812,5 @@ credential, metadata-rights, data and caller adoption gates remain required.
 The gateway also mounts three exact [action-record routes](../reference/action-authority.md) under `/api/v1/cases`. It forwards the selected bearer, verified tenant and one unambiguous `Idempotency-Key` to the owned `CASE_RUNTIME_URL`. There is no generic case execution proxy. The receiver revalidates identity and case access; proposal and approval records do not grant provider execution.
 
 The OpenAPI schema has one operation ID per method/path. Ambiguous generated IDs from multi-method handlers and slash aliases are replaced deterministically using method/path and a digest. Existing unique operation IDs and HTTP methods/paths remain unchanged. FastAPI's other schema metadata is retained. These schema checks do not qualify downstream domain behavior.
+
+The separate [MCP case-record profile](../reference/mcp-case-records.md) reuses the same receiving action authority. It adds no gateway route or provider execution. Legacy MCP tool containment remains in effect.

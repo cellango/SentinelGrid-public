@@ -24,20 +24,23 @@ logical `<domain>.<action>` name and intended effect class. That metadata grants
 no capabilities. Reads also need verified tenant/data authority. No renaming of
 installed endpoints or external wire names is included.
 
-The core server imports no downstream tool module. Direct legacy tool helpers,
+The default core server imports no downstream provider tool module. Direct legacy tool helpers,
 raw service-client properties, arbitrary tenant-header construction and unverified
 audit emission also reject before downstream credentials/client/data access.
 There is no eager HTTP client initialization. The caller's identity never replaces
 a resource's `user_id`; tool arguments are not mutated. Removing text markers is
 not a prompt-injection security boundary: retrieved content remains untrusted.
 
-## Optional authenticated HTTP discovery
+## Optional authenticated HTTP profiles
 
 The [verified HTTP factory](app/verified_http.py) uses the actual MCP1.30.0
 stateless Streamable HTTP SDK with owned IAM/user settings, exact host/origin
 allowlists, request-bound immutable actor/tenant context and shared ingress/Redis
 budget support. It is not mounted by the stdio entrypoint or deployed here. Every
-tool remains unavailable. Read the [current HTTP contract](../../../docs/reference/http-boundaries.md)
+legacy provider tool remains unavailable. An explicitly configured
+[case-record profile](../../../docs/reference/mcp-case-records.md) adds submission and
+inspection through the existing case API, with independent receiver authentication
+and case permissions. It exposes no approval/execution tool. Read the [current HTTP contract](../../../docs/reference/http-boundaries.md)
 for configuration, test scope and remaining action/data/issuer gates.
 
 ## Source checks
@@ -68,6 +71,8 @@ downstream reads/data ownership too; a shared bearer token cannot prove authorit
 Full gateway/MCP caller compatibility, additional legacy tools, production ingress/Redis
 topology, remaining route contracts, credential/TLS lifecycle and full installation
 remain migration work. The shared local HTTP checks cover only the documented source scope. No deployed HTTP/OAuth service, live provider/model,
-case runtime, durable audit or complete feature equivalence is qualified here.
+complete case scheduling, production data/audit rollout or full feature equivalence
+is qualified here. Native case-record/ASGI integration qualification is scoped in
+the record-profile reference; it is not a deployed MCP/provider service.
 All original code remains under the repository's Apache-2.0 terms; dependencies
 retain their upstream licenses.

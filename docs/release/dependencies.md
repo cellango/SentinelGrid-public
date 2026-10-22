@@ -189,3 +189,7 @@ The service SDK pin does not resolve the rest of its experimental runtime graph.
 ## Action proposal canonicalization
 
 Added `rfc8785==0.1.4` (Apache-2.0), a reviewed pure Python wheel with no runtime dependencies. The exact wheel SHA-256 is pinned in the source-test requirements. Its bytes agree with independent JavaScript vectors. All57 exact pins had zero OSV findings on October22. The installed56pin environment was extended offline; this does not claim a fresh57pin/Linux installation. No package implementation or wheel is redistributed. This supports partial [action records](../reference/action-authority.md), with provider execution still unavailable.
+
+## MCP case-record contract
+
+The source-test graph remains57 exact package/version pins. The existing reviewed `rfc8785==0.1.4` pin/hash now lives in the included MCP requirements so the standalone MCP source checks have the shared contract dependency. No version or installed package changed. MCP runtime requirements also declare that package; the broader experimental runtime graph remains unqualified.
