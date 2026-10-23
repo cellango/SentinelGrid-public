@@ -182,3 +182,7 @@ preview-case-provenance-db:
 preview-domain-foundation:
 	$(PYTHON) scripts/iam_consolidation_rehearsal.py
 	$(PYTHON) -m unittest discover -s scripts/tests -p test_iam_consolidation_rehearsal.py -v
+
+.PHONY: preview-iam-consolidation-db
+preview-iam-consolidation-db:
+	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_iam_consolidation_database.py -q

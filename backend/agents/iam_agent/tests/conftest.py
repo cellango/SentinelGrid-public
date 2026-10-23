@@ -174,7 +174,7 @@ def customer_record_factory():
 @pytest.fixture(autouse=True)
 def prevent_unintended_database_connections(request):
     """Unit routes must override storage; only the owned cluster suite uses SQL."""
-    if request.node.path.name == "test_iam_database.py":
+    if request.node.path.name in {"test_iam_database.py", "test_iam_consolidation_database.py"}:
         yield
     else:
         with patch("sqlalchemy.engine.Engine.connect", side_effect=AssertionError(
