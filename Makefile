@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity preview-workload-issuer preview-gateway-redis preview-action-authority preview-action-db preview-legacy-actions preview-application-db
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity preview-workload-issuer preview-gateway-redis preview-action-authority preview-action-db preview-legacy-actions preview-application-db preview-action-role-db
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -153,3 +153,7 @@ preview-action-db:
 # Separate native gate; missing tools fail rather than skip. No existing DB input.
 preview-application-db:
 	$(PYTHON) scripts/qualify_application_database.py
+
+# Full shared catalog and current privilege boundary; no existing DB input.
+preview-action-role-db:
+	SG_ACTION_DB_PROFILE=shared_application PYTHONPATH=backend/libs:backend/services/case_runtime $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/case_runtime/tests/test_action_database.py backend/services/case_runtime/tests/test_mcp_case_records_database.py backend/services/case_runtime/tests/test_database_role.py -q

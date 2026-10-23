@@ -18,6 +18,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.authority.contracts import canonical, digest, proposal_payload, canonical_uuid
+from app.authority.database_role import require_safe_database_role
 from sg_core.action_identity import require_actor
 from app.authority.models import (
     Case,
@@ -49,13 +50,7 @@ class ActionAuthority:
                 Session(self.engine, expire_on_commit=False) as session,
                 session.begin(),
             ):
-                role = session.execute(
-                    text(
-                        "SELECT rolsuper,rolbypassrls FROM pg_roles WHERE rolname=current_user"
-                    )
-                ).one()
-                if role.rolsuper or role.rolbypassrls:
-                    raise HTTPException(503, "Action database role is unsafe")
+                require_safe_database_role(session)
                 session.execute(
                     text("SELECT set_config('app.current_tenant_id',:tenant,true)"),
                     {"tenant": actor.tenant_id},

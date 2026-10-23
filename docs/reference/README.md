@@ -18,3 +18,5 @@ using them. Supported setup/check commands live only in the root [README](../../
 - [Current HTTP transport boundaries](http-boundaries.md): ingress, proxy forwarding, Redis budgets and authenticated MCP discovery; source qualification only.
 
 - [Shared application database qualification](application-database.md): complete unchanged migration lineage, isolated upgrade/recovery evidence and production adoption limits.
+
+- [Action database role admission](action-database-role.md): dedicated application-role checks and native privilege-denial/recovery evidence.

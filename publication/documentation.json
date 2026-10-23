@@ -1910,6 +1910,11 @@
       "authority": "partial_implementation_with_explicit_qualification_limits"
     },
     {
+      "path": "docs/reference/action-database-role.md",
+      "class": "current_source_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
       "path": "docs/reference/agent-components.md",
       "class": "current_source_reference",
       "authority": "current_within_source_preview_scope"
@@ -2253,7 +2258,7 @@
   "counts_by_class": {
     "contributor_instructions": 1,
     "current_architecture": 14,
-    "current_source_reference": 11,
+    "current_source_reference": 12,
     "developer_guidance": 3,
     "documentation_index": 1,
     "experimental_component_reference": 110,

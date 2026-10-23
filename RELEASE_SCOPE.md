@@ -248,3 +248,10 @@ The opt-in [issuer-core source audit](infra/keycloak/keycloak_registration_conne
 is the first approved research component. Its JDK parser verifies pinned source
 and emits an inventory; it does not build/run vendor classes or implement issuer
 authority. No production version, core patch, storage or caller adoption follows.
+
+The action receiver now checks current database role memberships, ownership and
+table/column privileges on every transaction, rejecting unsafe case/grant/history
+and other-domain access before business reads/writes. The native full-catalog
+[role-admission gate](docs/reference/action-database-role.md) covers51additional
+privilege-denial/recovery cases. Production provisioning and the full database
+security surface remain unqualified; no provider execution is enabled.

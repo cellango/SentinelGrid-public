@@ -106,3 +106,7 @@ physical contract/RLS, hosted CI, Temporal infrastructure and live issuer/provid
 effects remain open. The authority remains disabled by default. See the
 [compatibility plan](../architecture/database-compatibility.md) and
 [action boundary](action-authority.md).
+
+The [action role-admission gate](action-database-role.md) adds actual catalog/ACL
+denial and recovery checks to this full profile; it does not provision deployment
+privileges or certify every PostgreSQL security surface.

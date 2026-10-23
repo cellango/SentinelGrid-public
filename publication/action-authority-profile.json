@@ -16,5 +16,10 @@
     "tables": 12
   },
   "production_role_provisioning": "unqualified; application rejects superuser and BYPASSRLS",
-  "provider_execution": false
+  "provider_execution": false,
+  "runtime_role_admission": {
+    "path": "backend/services/case_runtime/app/authority/database_role.py",
+    "scope": "Per-transaction dedicated application role, membership, ownership, relation/column ACLs, required privileges and RLS flags; not production provisioning/full database-security audit",
+    "automatic_provisioning_or_repair": false
+  }
 }
