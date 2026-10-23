@@ -1,6 +1,6 @@
 # Identity and tenant review boundaries
 
-Status: focused source and disposable-database review; deployment qualification remains pending. The [tenant UUID rule](../AGENTS.md) is a required
+Status: focused source and disposable-database review; deployment qualification remains pending. The [tenant UUID rule](../../AGENTS.md) is a required
 invariant, not evidence that all existing endpoints enforce it. Slugs are a
 customer-facing convenience at the gateway edge; downstream programmatic traffic
 must use the authenticated tenant UUID and reject mismatches.

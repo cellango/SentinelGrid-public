@@ -80,4 +80,4 @@ Compose files and deployment scripts are retained as experimental implementation
 
 Original SentinelGrid code is licensed under [Apache-2.0](LICENSE). AI Shield retains its existing Apache-2.0 license, and third-party components retain their respective terms. See [LICENSING.md](LICENSING.md) and [third-party notices](THIRD_PARTY_NOTICES.md) for the boundaries. Wazuh installers are not part of the source preview.
 
-[Documentation index](docs/README.md) · [Agent guidance](docs/AGENTS.md)
+[Documentation index](docs/README.md) · [Agent guidance](AGENTS.md)

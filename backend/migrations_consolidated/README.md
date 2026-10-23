@@ -1,7 +1,7 @@
 # Consolidated Flyway source
 
 Current schema-change guidance is [database changes](../../docs/development/database-changes.md)
-and [AGENTS.md](../../docs/AGENTS.md). Pair ORM and Flyway changes, keep globally unique
+and [AGENTS.md](../../AGENTS.md). Pair ORM and Flyway changes, keep globally unique
 versions, and explicitly target the schema. Do not refresh or overwrite V001 to
 apply a new schema change. Existing numbered history is retained for review.
 

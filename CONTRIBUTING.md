@@ -47,7 +47,7 @@ separately from the locally available Git refs.
 Use focused branches and explain the problem, resulting behavior, and checks run.
 Use synthetic credentials and dedicated tenant UUIDs. Keep local agent state,
 environment secrets, databases, scanner exports, and vendor installers out of Git.
-Follow [docs/AGENTS.md](docs/AGENTS.md); schema changes require matching model and
+Follow [AGENTS.md](AGENTS.md); schema changes require matching model and
 consolidated Flyway migration updates.
 
 Use issues for ordinary bugs and review comments. Follow [SECURITY.md](SECURITY.md)

@@ -148,7 +148,7 @@ contract, not authorization to operate a customer's systems.
 
 ## Compatibility and delivery boundaries
 
-- Naming rules in [AGENTS.md](../AGENTS.md) apply to new components. Inventory and
+- Naming rules in [AGENTS.md](../../AGENTS.md) apply to new components. Inventory and
   translate existing identifiers; never rename services, routes, queues or sensor IDs
   merely by changing display labels.
 - Alias mappings are versioned, scoped and tested. They cannot widen old permissions,

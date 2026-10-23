@@ -1,7 +1,7 @@
 # SentinelGrid documentation
 
 This is a developer source preview. Read [release scope](../RELEASE_SCOPE.md),
-[contributing](../CONTRIBUTING.md), and [security reporting](../SECURITY.md) before
+[contributing](../CONTRIBUTING.md), [agent guidance](../AGENTS.md), and [security reporting](../SECURITY.md) before
 running commands. Original code uses [Apache-2.0](../LICENSING.md).
 
 ## Current reading order

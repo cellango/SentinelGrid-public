@@ -15,6 +15,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "AGENTS.md",
+      "class": "contributor_instructions",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
       "path": "CONTRIBUTING.md",
       "class": "repository_entrypoint",
       "authority": "current_within_source_preview_scope"
@@ -378,11 +383,6 @@
       "path": "docker/agents/README.md",
       "class": "experimental_component_reference",
       "authority": "experimental_reference"
-    },
-    {
-      "path": "docs/AGENTS.md",
-      "class": "contributor_instructions",
-      "authority": "current_within_source_preview_scope"
     },
     {
       "path": "docs/README.md",

@@ -1,6 +1,6 @@
 # Database source changes
 
-The authoritative contributor rules are in [AGENTS.md](../AGENTS.md). A schema
+The authoritative contributor rules are in [AGENTS.md](../../AGENTS.md). A schema
 change must pair SQLAlchemy model changes with a Flyway-managed migration in the
 same review. Do not use runtime table creation, startup scripts, or ad hoc SQL as
 a replacement migration mechanism.

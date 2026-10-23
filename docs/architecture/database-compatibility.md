@@ -14,7 +14,7 @@ The application migration authority is
 [backend/migrations_consolidated](../../backend/migrations_consolidated/).
 Retain the exact V001–V013 files and their checksums. New application changes pair
 explicit-schema SQLAlchemy models and new Flyway migrations in the same review,
-under [the contributor rules](../AGENTS.md). Allocate the next globally available
+under [the contributor rules](../../AGENTS.md). Allocate the next globally available
 version when implementing each change; this plan reserves no numbers.
 
 | Public versions | Existing schema intent | Compatibility requirement |

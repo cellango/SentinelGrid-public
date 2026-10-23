@@ -67,4 +67,4 @@ Examples use synthetic resource IDs and documentation networks. Do not treat a
 pilot name or registry entry as a real customer, supported provider, or permission
 to connect an account. Richer target selection, additional adapters, live migration
 qualification, and end-to-end provider tests remain future work. New schema changes
-must follow [AGENTS.md](../AGENTS.md).
+must follow [AGENTS.md](../../AGENTS.md).

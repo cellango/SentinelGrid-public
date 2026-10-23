@@ -118,7 +118,7 @@ def documentation_failures(files: list[Path], root: Path = ROOT) -> list[str]:
 
 
 def documentation_class(name: str) -> str:
-    if name == "docs/AGENTS.md":
+    if name == "AGENTS.md":
         return "contributor_instructions"
     if name == "docs/README.md":
         return "documentation_index"

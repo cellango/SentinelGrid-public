@@ -3,7 +3,7 @@
 Status: proposed role definitions with agreed naming, October 16, 2026. These rows
 are not registered or enabled runtime capabilities. A role needs the complete
 [agent contract](agentic-contracts.md), permitted tools and an evaluation suite
-before implementation. [AGENTS.md](../AGENTS.md) owns the naming rules;
+before implementation. [AGENTS.md](../../AGENTS.md) owns the naming rules;
 [component categories](agent-components.md) describe existing source.
 
 ## Shared conventions

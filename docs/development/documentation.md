@@ -4,7 +4,7 @@ Each topic has one current page under `docs/architecture`, `docs/development`,
 `docs/reference`, or `docs/release`. Link to that page instead of maintaining a
 second quick start, status report, or competing overall design. Root README,
 release scope, contribution guidance, licensing, and security policy remain the
-repository entrypoints. Keep [AGENTS.md](../AGENTS.md) in its instruction location.
+repository entrypoints. Keep [AGENTS.md](../../AGENTS.md) at the repository root.
 
 ## Classification rules
 
