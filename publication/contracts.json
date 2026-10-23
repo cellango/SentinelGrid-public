@@ -173,6 +173,39 @@
       "test_profile": "make preview-tooling",
       "review_scope": "Exact referenced paths only; owner review required for behavioral adequacy",
       "replacement_ids": []
+    },
+    {
+      "id": "PROV-001",
+      "owner": "Case runtime + security + database",
+      "reason": "Inactive tenant-bound immutable evidence and run provenance storage",
+      "gap": "No admitted provisioning writer, source semantic proof, Temporal integration or provider qualification",
+      "status": "partial",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/reference/agentic-contracts.md",
+        "docs/architecture/database-compatibility.md"
+      ],
+      "implementation": [
+        "backend/services/case_runtime/app/provenance/__init__.py",
+        "backend/services/case_runtime/app/provenance/models.py",
+        "backend/migrations_consolidated/V019__case_runtime_evidence_provenance.sql",
+        "publication/case-provenance-profile.json"
+      ],
+      "tests": [
+        "backend/services/case_runtime/tests/test_provenance_database.py",
+        "backend/services/case_runtime/tests/test_action_database.py",
+        "scripts/tests/test_application_profile.py"
+      ],
+      "documentation": [
+        "docs/reference/case-provenance-storage.md",
+        "docs/reference/action-authority.md",
+        "docs/development/testing.md"
+      ],
+      "test_profile": "make preview-case-provenance-db; make preview-action-role-db; make preview-tooling",
+      "review_scope": "Native disposable storage only; no deployed database, accepted writer authority or effects",
+      "replacement_ids": []
     }
   ]
 }

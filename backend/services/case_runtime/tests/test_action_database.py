@@ -352,6 +352,7 @@ def lab(request):
                 )
 
             yield dict(
+                bundle=bundle,
                 restart=restart,
                 engine=engine,
                 owner=owner,

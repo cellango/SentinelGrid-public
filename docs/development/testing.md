@@ -79,3 +79,15 @@ Do not remove tests to obtain green results. A quarantine retains owner, reason,
 replacement coverage and a re-entry criterion; skipped is not passed. Source
 checks and simulated effects are never live containment or full E2E evidence.
 CI execution is separate from local checks; this tooling does not alter CI state.
+
+## Inactive case provenance extension
+
+`make preview-case-provenance-db` uses the reviewed native PostgreSQL/Flyway tools
+and an owned temporary cluster. It qualifies the separate V001–V019 storage
+profile, populated V018 upgrade, tenant/link denial, immutable manifests and
+recovery. It adds no application writer or privileges. See the
+[scope and authorization contract](../reference/case-provenance-storage.md).
+Run `make preview-tooling`, `make preview-impact BASE=<reviewed-commit>`, and the
+existing action/role gates as regressions. The established application gate still
+pins V001–V018; these profiles must be reported separately. Local execution does
+not re-enable or imply CI.

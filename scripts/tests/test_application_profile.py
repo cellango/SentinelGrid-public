@@ -31,7 +31,8 @@ class ApplicationProfileTests(unittest.TestCase):
             self.assertEqual(
                 [int(p.name.split("__")[0][1:]) for p in copied], list(range(1, 19))
             )
-            for source in (ROOT / "backend/migrations_consolidated").glob("V*.sql"):
+            for entry in json.loads(gate.PROFILE.read_text())["migrations"]:
+                source = ROOT / entry["path"]
                 self.assertEqual(
                     source.read_bytes(), (output / "sql" / source.name).read_bytes()
                 )
@@ -86,3 +87,35 @@ class ApplicationProfileTests(unittest.TestCase):
         ):
             with self.assertRaisesRegex(ValueError, "native PostgreSQL"):
                 gate.qualify()
+
+
+class ProvenanceProfileTests(unittest.TestCase):
+    def test_extension_preserves_baseline_and_covers_global_lineage(self):
+        profile = ROOT / "publication/case-provenance-profile.json"
+        extended = json.loads(profile.read_text())
+        baseline = json.loads(gate.PROFILE.read_text())
+        self.assertEqual(extended["migrations"][:-1], baseline["migrations"])
+        self.assertEqual(
+            {entry["path"] for entry in extended["migrations"]},
+            {
+                str(p.relative_to(ROOT))
+                for p in (ROOT / "backend/migrations_consolidated").glob("V*.sql")
+            },
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertEqual(
+                bundle.prepare(Path(directory) / "bundle", profile=profile), 19
+            )
+
+    def test_extension_checksum_drift_fails_before_bundle_creation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            data = json.loads(
+                (ROOT / "publication/case-provenance-profile.json").read_text()
+            )
+            data["migrations"][-1]["sha256"] = "0" * 64
+            profile = directory / "profile.json"
+            profile.write_text(json.dumps(data))
+            with self.assertRaisesRegex(ValueError, "checksum"):
+                bundle.prepare(directory / "bundle", profile=profile)
+            self.assertFalse((directory / "bundle").exists())

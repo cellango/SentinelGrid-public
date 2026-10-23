@@ -1,0 +1,86 @@
+{
+  "format_version": 1,
+  "profile": "case_provenance_storage_only",
+  "status": "disabled_storage_no_application_grants_or_writer",
+  "base_profile": "publication/application-database-profile.json",
+  "automatic_baseline": false,
+  "history_table": "public.flyway_schema_history",
+  "migrations": [
+    {
+      "path": "backend/migrations_consolidated/V001__initial_schema.sql",
+      "sha256": "ca5c2b292b0754e912436a229ca33c6c8535743ab25abf72f2b2a9db22a252d0"
+    },
+    {
+      "path": "backend/migrations_consolidated/V002__add_scan_type_to_scans.sql",
+      "sha256": "94e009b6b903c65eeba3ec5aa8f4ce26a11a8d2cca91c4568566fe8d1094330f"
+    },
+    {
+      "path": "backend/migrations_consolidated/V003__row_level_security.sql",
+      "sha256": "83dae5f65e89f3fde8d4e903626e68fb713174325e4ec3da706ae371b74373ce"
+    },
+    {
+      "path": "backend/migrations_consolidated/V004__report_template_shared_select_policy.sql",
+      "sha256": "7f0e7cfd45d2ba03ebc63973acb1a04c8266ee3d45a1b47af5225219c2a0f5fc"
+    },
+    {
+      "path": "backend/migrations_consolidated/V005__control_evidence_requirements.sql",
+      "sha256": "64129c2e5dbd09125362b1b386b71ad1f18a01efff978f0f533a6e45dc359269"
+    },
+    {
+      "path": "backend/migrations_consolidated/V006__tenant_framework_selections.sql",
+      "sha256": "e3f349632feed18947e6f9085bb90fb452dbfbde212a8840e7d1e6c06c020961"
+    },
+    {
+      "path": "backend/migrations_consolidated/V007__tenant_control_status_coverage_model.sql",
+      "sha256": "ca81c062c3b6dcfe9bfa9189fda700fc7dbccedff8f8dfd975a29cd8bb54bf14"
+    },
+    {
+      "path": "backend/migrations_consolidated/V008__evidence_repository_lifecycle.sql",
+      "sha256": "a506347985f8416243149ed6f7951d293533fd8bcce07b816fdd325de8ea2d42"
+    },
+    {
+      "path": "backend/migrations_consolidated/V009__evidence_idempotency_keys.sql",
+      "sha256": "2d7c3d0697ae414206ae3b37af2f1c16a6b2ba74cd728ac3de6f782cd0ddb3c6"
+    },
+    {
+      "path": "backend/migrations_consolidated/V010__compliance_agent_recommendations.sql",
+      "sha256": "465a7eaa2955e26818770681b9508352d7e3ae2d7cdbb97c58996b8169d1c992"
+    },
+    {
+      "path": "backend/migrations_consolidated/V011__evidence_integrity_retention_controls.sql",
+      "sha256": "b49810fd6cde29b9f020aa8f80290634ef90bf78e77fcd159b7d5e7f4ddbbe48"
+    },
+    {
+      "path": "backend/migrations_consolidated/V012__tenant_compliance_launch_controls.sql",
+      "sha256": "8576ae8e71e5420ec20bd4c509dc6a33ff6cb486f7822bc8668ed1b819702c45"
+    },
+    {
+      "path": "backend/migrations_consolidated/V013__public_hetzner_infrastructure_change_requests.sql",
+      "sha256": "9da492a1b8c682df78bdea22bc7bc6eaf39a4641e7225a84289dfd5d49560104"
+    },
+    {
+      "path": "backend/migrations_consolidated/V014__public_iam_audit_and_tenant_guards.sql",
+      "sha256": "3c5ab510583fe92b5e59d5a1e1447e7fce17e96340f4e2ff796575d6da5b4775"
+    },
+    {
+      "path": "backend/migrations_consolidated/V015__public_governance_contract.sql",
+      "sha256": "e67fec4d06d0d3a7f1b5dfda009b0d56e13ecfe624e211791e180c8f999c92b2"
+    },
+    {
+      "path": "backend/migrations_consolidated/V016__public_role_grant_provenance.sql",
+      "sha256": "847464bee17fd1330dd0fb9b85b8a79a6231a6ae1eae903a7d94cc7c8f3798e5"
+    },
+    {
+      "path": "backend/migrations_consolidated/V017__public_service_account_registry.sql",
+      "sha256": "9425b080e0edf7deae907604b8b29dddd6c35d72a8d75b007fc4b340f3f1ee87"
+    },
+    {
+      "path": "backend/migrations_consolidated/V018__case_runtime_action_authority.sql",
+      "sha256": "ae77319b26e61e7aa017bb5753f8b9b0311586eb7bb96df7230d7d5e7f1fc6fd"
+    },
+    {
+      "path": "backend/migrations_consolidated/V019__case_runtime_evidence_provenance.sql",
+      "sha256": "0a8366ca1001b769d46e5376c6ff1a8170121a63b527c0576c82bcfd8889841c"
+    }
+  ]
+}

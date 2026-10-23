@@ -71,8 +71,8 @@ use the disposable lab owner; they do not demonstrate a least-privilege
 production provisioner. Existing rows, V001-V018, application privileges and
 default-disabled behavior remain unchanged.
 
-Full source/evidence-reference and immutable run-manifest storage still need
-paired models/Flyway, approved record contracts and their own native
-install/upgrade/recovery tests. The [target schema](../architecture/database-compatibility.md)
-is not proof those records exist. These prerequisites do not complete workflow
-storage, runtime execution or end-to-end qualification.
+The separate [V019 provenance extension](case-provenance-storage.md) adds paired
+evidence-reference/link and immutable run-manifest/link storage with its own native
+install/upgrade/recovery tests. It grants no application access and adds no writer.
+Full provenance producer semantics, authorized provisioning, workflow storage,
+runtime execution and end-to-end qualification remain incomplete.

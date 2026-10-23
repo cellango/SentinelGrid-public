@@ -172,3 +172,8 @@ preview-impact:
 
 preview-frontend:
 	cd frontend && npm run test:preview
+
+# Inactive provenance extension; owns its synthetic native cluster, no existing DB.
+.PHONY: preview-case-provenance-db
+preview-case-provenance-db:
+	SG_ACTION_DB_PROFILE=shared_application PYTHONPATH=backend/libs:backend/services/case_runtime $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/case_runtime/tests/test_provenance_database.py -q

@@ -1940,6 +1940,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/reference/case-provenance-storage.md",
+      "class": "current_source_reference",
+      "authority": "partial_implementation_with_explicit_qualification_limits"
+    },
+    {
       "path": "docs/reference/entity-model.md",
       "class": "current_source_reference",
       "authority": "current_within_source_preview_scope"

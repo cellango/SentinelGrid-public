@@ -109,7 +109,8 @@ qualification decisions for the implementation tasks, not selected pins here.
 The [adaptive Playbook refinement](adaptive-playbooks.md) supersedes the earlier
 independent `workflow_definitions` proposal with immutable versions of the existing
 Playbook identity and a coverage catalog. It also makes the manifest/event/artifact
-audit records explicit. No physical table or migration has changed.
+audit records explicit. The target table inventory is broader than the physical
+implementation described below.
 
 The table below is the target schema, not a claim that every column or contract
 is implemented. V018 now implements twelve application-record tables: `cases`,
@@ -117,8 +118,12 @@ is implemented. V018 now implements twelve application-record tables: `cases`,
 `approval_decisions`, `policy_decisions`, `action_claims`, `resource_fences`,
 `action_attempts`, `action_receipts`, `action_verifications` and `outbox_events`.
 See the [current action boundary](../reference/action-authority.md) for its narrower
-implemented columns, privileges and unavailable execution. Other tables below,
-including evidence links and full run manifests, remain planned. Every
+implemented columns, privileges and unavailable execution. The inactive
+[V019 extension](../reference/case-provenance-storage.md) adds `evidence_references`,
+`case_evidence_links`, `run_manifests` and `run_evidence_links` with no application
+grants or enabled writer. Its bounded manifest storage does not implement all
+producer semantics or the event/artifact audit graph below. Other tables remain
+planned. Every
 tenant-owned row has `tenant_id UUID NOT NULL`. Unless shown otherwise, use a UUID
 primary key plus a unique `(tenant_id, id)` target for composite child references.
 Existing domain links carry the source schema/type and tenant-bound source UUID.
