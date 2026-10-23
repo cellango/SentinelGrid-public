@@ -1,7 +1,7 @@
 # Database compatibility and case storage plan
 
-Reviewed October 16, 2026. Status: accepted platform planning baseline; **full
-database/runtime qualification remains pending**. The focused IAM audit/session
+Reviewed October 16, 2026. Status: accepted platform planning baseline; **bounded full-lineage native migration/restore qualification passes;
+production database/runtime adoption remains pending**. The focused IAM audit/session
 implementation and synthetic qualification are recorded below. This page defines storage boundaries and migration gates for
 the [runtime decision](decisions/0001-case-runtime.md) and
 [logical contracts](../reference/agentic-contracts.md). The planning sections add no schema or execution dependencies; the focused IAM
@@ -30,11 +30,13 @@ version when implementing each change; this plan reserves no numbers.
 | V013 | `public.infrastructure_change_requests` | Preserve cloud change review fields and matching model/index/default contract |
 
 V001 statically declares 147 tables; the consolidated files through V013 declare
-157 distinct table names. These are source inventory counts, not a verified live
-catalog or proof of complete model coverage. Only the
-[V013 offline contract](../../backend/tests/test_infrastructure_change_schema.py)
-is currently checked against its paired model. PostgreSQL execution, baseline
-installation, historical upgrades and RLS remain unqualified.
+157 distinct table names. These are source inventory counts, not proof of complete model coverage. The
+[shared native gate](../reference/application-database.md) now executes the unchanged
+V001–V018 lineage and focused recovery checks in a disposable cluster. Model
+checks cover the [V013 offline contract](../../backend/tests/test_infrastructure_change_schema.py),
+the separate IAM profile described below and the V018 action-record tables.
+All-domain historical data, RLS and deployment privilege qualification remain open;
+the shared native gate has a narrower synthetic witness and action-record scope.
 
 Flyway versions identify a sequence, not a merge strategy. For a database that
 actually applied a conflicting V003, stop and preserve its history, schema and
@@ -528,3 +530,26 @@ not qualify the retained Compose Flyway10 images, every default/index/FK/check/R
 deployment privileges, populated upgrade/restore, the full shared profile, existing
 grant expiry/reconciliation, or complete application/feature equivalence. These
 remain explicit acceptance gates before installation or private-source retirement.
+
+
+### Full shared profile: native qualification
+
+On October 22, 2026, the complete unchanged V001–V018 lineage passed actual
+Flyway11.20.2/PostgreSQL17.5 execution with its required extensions. Fresh install,
+eighteen checksummed history entries, repeat migration, changed/missing-highest
+version rejection, unversioned populated refusal, a populated synthetic V013
+upgrade, immediate crash recovery and logical dump/restore pass. The general gate
+uses a privileged disposable migrator; its witness is one complete tenant row.
+
+The separate action/MCP native suite also passes all27checks against this full
+lineage, using explicitly bootstrapped extension custody, a non-superuser migrator with
+owner membership and temporary BYPASSRLS (revoked before application checks) and a distinct nonowner/non-BYPASSRLS action application role.
+This updates the historical missing-extension result above without changing any
+SQL checksum. The IAM-local eight-file profile remains separate.
+
+The reviewed bundle generator now sets `ignoreMigrationPatterns=` explicitly; the
+default future-version ignore previously allowed removal of the highest applied
+file to pass validation. No repair, baseline, history edits or missing-version
+ignore is permitted. See the [reproducible gate and exact limitations](../reference/application-database.md).
+Production custody/roles/TLS/capacity/PITR, every domain's populated data and RLS,
+unknown installation adoption, hosted CI and full runtime qualification remain open.

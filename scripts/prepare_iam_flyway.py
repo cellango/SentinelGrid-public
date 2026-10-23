@@ -22,7 +22,7 @@ def prepare(output: Path, *, root=ROOT, profile=PROFILE):
             raise ValueError(f"Migration checksum changed: {item['path']}")
         version = int(source.name.split("__", 1)[0][1:])
         if version in versions:
-            raise ValueError("Duplicate migration version in IAM profile")
+            raise ValueError("Duplicate migration version in reviewed profile")
         versions.add(version)
         selected.append(source)
     if output.exists() or output.is_symlink():
@@ -40,6 +40,7 @@ def prepare(output: Path, *, root=ROOT, profile=PROFILE):
         "flyway.createSchemas=false\n"
         "flyway.validateOnMigrate=true\n"
         "flyway.validateMigrationNaming=true\n"
+        "flyway.ignoreMigrationPatterns=\n"
         "flyway.baselineOnMigrate=false\n"
         "flyway.cleanDisabled=true\n"
     )

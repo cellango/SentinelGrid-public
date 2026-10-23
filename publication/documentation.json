@@ -1925,6 +1925,11 @@
       "authority": "accepted_design_not_implemented"
     },
     {
+      "path": "docs/reference/application-database.md",
+      "class": "current_source_reference",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
       "path": "docs/reference/entity-model.md",
       "class": "current_source_reference",
       "authority": "current_within_source_preview_scope"
@@ -2248,7 +2253,7 @@
   "counts_by_class": {
     "contributor_instructions": 1,
     "current_architecture": 14,
-    "current_source_reference": 10,
+    "current_source_reference": 11,
     "developer_guidance": 3,
     "documentation_index": 1,
     "experimental_component_reference": 110,

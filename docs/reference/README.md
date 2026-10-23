@@ -16,3 +16,5 @@ Older API tables, deployment instructions, and protocol notes are classified und
 using them. Supported setup/check commands live only in the root [README](../../README.md).
 
 - [Current HTTP transport boundaries](http-boundaries.md): ingress, proxy forwarding, Redis budgets and authenticated MCP discovery; source qualification only.
+
+- [Shared application database qualification](application-database.md): complete unchanged migration lineage, isolated upgrade/recovery evidence and production adoption limits.

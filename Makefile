@@ -1,4 +1,4 @@
-.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity preview-workload-issuer preview-gateway-redis preview-action-authority preview-action-db preview-legacy-actions
+.PHONY: help install dev up down logs test clean apply-ingestion-templates lint preview-check preview-secrets preview-history preview-iam-db preview-mcp preview-gateway-identity preview-gateway preview-workload-reads preview-iam-identity preview-orchestrator-identity preview-soar-identity preview-ingestion-identity preview-connector-identity preview-detection-identity preview-observables-identity preview-wazuh-identity preview-workload-issuer preview-gateway-redis preview-action-authority preview-action-db preview-legacy-actions preview-application-db
 
 PYTHON ?= python3
 RUFF ?= ruff
@@ -8,6 +8,7 @@ help:
 	@echo "  make install          - Install isolated source-review test dependencies"
 	@echo "  make preview-check    - Check paths, documentation, source hygiene, V013 schema, and IAM auth/policy and MCP/user/workload identity boundaries"
 	@echo "  make preview-mcp       - Check discovery/protocol errors and unavailable legacy tools"
+	@echo "  make preview-application-db - Qualify full shared V001-V018 in a new native lab"
 	@echo "  make preview-iam-db    - Test audit/RLS in an owned disposable PostgreSQL cluster"
 	@echo "  make preview-secrets  - Scan candidate source with Gitleaks 8.30.1"
 	@echo "  make preview-history  - Scan all locally available Git refs (full clone required)"
@@ -148,3 +149,7 @@ preview-legacy-actions:
 # Separate non-skipping gate: reviewed PG/Flyway, owned synthetic cluster only.
 preview-action-db:
 	PYTHONPATH=backend/libs:backend/services/case_runtime $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/case_runtime/tests/test_action_database.py backend/services/case_runtime/tests/test_mcp_case_records_database.py -q
+
+# Separate native gate; missing tools fail rather than skip. No existing DB input.
+preview-application-db:
+	$(PYTHON) scripts/qualify_application_database.py

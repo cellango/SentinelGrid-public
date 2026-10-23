@@ -44,6 +44,12 @@ make preview-check
 # Included: shared IAM receipt and mounted-gateway identity checks.
 ```
 
+An optional [native shared-database gate](docs/reference/application-database.md)
+uses reviewed PostgreSQL/extension and Flyway tools in a new disposable lab. Run
+`make preview-application-db` only with those binary paths configured as documented;
+missing tools fail. It tests installation/upgrade/recovery without adopting an
+existing database or enabling the platform.
+
 For frontend tests, use Node.js 22 and the committed npm lockfile:
 
 ```bash

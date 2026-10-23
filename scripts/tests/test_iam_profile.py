@@ -27,7 +27,8 @@ class IAMProfileTests(unittest.TestCase):
             self.assertFalse(any(name.startswith("V001__") for name in files))
             config = (dest / "flyway.conf").read_text()
             for expected in ("flyway.baselineOnMigrate=false", "flyway.defaultSchema=public",
-                             "flyway.schemas=public", "flyway.createSchemas=false"):
+                             "flyway.schemas=public", "flyway.createSchemas=false",
+                             "flyway.ignoreMigrationPatterns=\n"):
                 self.assertIn(expected, config)
 
     def test_drift_is_rejected_before_output_creation(self):

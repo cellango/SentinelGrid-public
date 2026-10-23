@@ -74,10 +74,14 @@ owned physical profile. An owned PostgreSQL17.5/Flyway11.20.2 probe now verifies
 unchanged eight-file separate IAM profile, real checksummed history, repeat migration,
 drift/missing-version rejection and refusal to baseline a populated database. See
 the [exact qualification scope](docs/architecture/database-compatibility.md#separate-iam-profile-actual-flyway-verification).
-Full shared baseline/install/restore, deployment and live provider qualification
-remain open: the local installation lacks `pgcrypto`/`vector`. The source-review
-environment cannot import the full app; a temporary bcrypt overlay next stops at
-missing `redis`, with no project dependency or environment changes.
+The complete unchanged shared V001–V018 lineage now passes an isolated native
+fresh install, synthetic populated V013 upgrade, drift/missing-highest rejection,
+crash recovery and logical restore with the required extensions. The27action/MCP
+storage checks also pass against that full catalog with a separate nonowner app
+role. See the [exact shared qualification scope](docs/reference/application-database.md).
+Production privileges/custody, all-domain data/RLS, existing-environment adoption,
+deployment and live provider qualification remain open. Full application
+import/startup and its broader dependency graph remain outside this database gate.
 The legacy migration launcher refuses execution and cannot fabricate Flyway history.
 Existing installations also need explicit provider-grant expiry/reconciliation before
 adopting disabled legacy jobs. No schema/history/data adoption or feature-equivalence

@@ -18,7 +18,8 @@ For design review, read the [selected agentic target](architecture/agentic-platf
 the [consistency/issuance remediation plan](architecture/decisions/0003-association-consistency-and-issuance.md)
 and [issuer-core research ownership/storage decision](architecture/decisions/0004-issuer-core-storage-and-compatibility.md),
 [logical contracts](reference/agentic-contracts.md),
-[database compatibility plan](architecture/database-compatibility.md),
+[database compatibility plan](architecture/database-compatibility.md) and
+[bounded shared database qualification](reference/application-database.md),
 [adaptive Playbook and evidence design](architecture/adaptive-playbooks.md), and
 [proposed role catalog](reference/agent-registry.md). They are explicitly labeled
 as future design; names and accepted decisions do not establish implementation or enablement.

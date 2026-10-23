@@ -6,7 +6,7 @@ fail this separate gate. No SQLite, create_all, baseline, repair or skipped gate
 
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
-import json, os, secrets, shutil, socket, subprocess
+import hashlib, json, os, secrets, shutil, socket, subprocess
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from uuid import UUID, uuid4
@@ -33,7 +33,13 @@ OTHER = "22222222-2222-4222-8222-222222222222"
 
 
 @pytest.fixture(scope="module")
-def lab():
+def lab(request):
+    failed_at_start = request.session.testsfailed
+    profile_name = os.environ.get("SG_ACTION_DB_PROFILE", "v018_only")
+    assert profile_name in {"v018_only", "shared_application"}, (
+        "Unknown database profile"
+    )
+    shared = profile_name == "shared_application"
     bindir = Path(os.environ.get("SG_TEST_PG_BINDIR", "/missing"))
     flyway = Path(os.environ.get("SG_TEST_FLYWAY", "/missing"))
     assert (
@@ -121,7 +127,30 @@ def lab():
                 )
                 q.execute("CREATE DATABASE sg_case_lab OWNER sg_migrator")
                 q.execute("CREATE DATABASE sg_case_dirty OWNER sg_migrator")
+            if shared:
+                with c.cursor() as q:
+                    q.execute("CREATE ROLE sg NOLOGIN SUPERUSER")
+                    q.execute("GRANT sg TO sg_migrator")
+                    # V008 validates a FK over FORCE RLS under V001 row_security=off.
+                    # Migration authority is privileged; the application never is.
+                    q.execute("ALTER ROLE sg_migrator BYPASSRLS")
             c.close()
+            if shared:
+                c = connect()
+                with c, c.cursor() as q:
+                    # Bootstrap extension custody in the disposable cluster, then
+                    # remove elevated privilege before Flyway connects as sg_migrator.
+                    q.execute("SET ROLE sg")
+                    for extension in ("pgcrypto", "uuid-ossp", "vector"):
+                        q.execute(
+                            sql.SQL("CREATE EXTENSION {} WITH SCHEMA public").format(
+                                sql.Identifier(extension)
+                            )
+                        )
+                    q.execute("RESET ROLE")
+                    q.execute("ALTER ROLE sg NOSUPERUSER NOBYPASSRLS")
+                    q.execute("GRANT USAGE, CREATE ON SCHEMA public TO sg")
+                c.close()
             bundle = root / "bundle"
             bundle.mkdir()
             (bundle / "sql").mkdir()
@@ -129,9 +158,27 @@ def lab():
                 ROOT / "migrations_consolidated/V018__case_runtime_action_authority.sql"
             )
             copied = bundle / "sql" / migration.name
-            shutil.copyfile(migration, copied)
+            if shared:
+                profile = json.loads(
+                    (
+                        ROOT.parent / "publication/application-database-profile.json"
+                    ).read_text()
+                )
+                assert len(profile["migrations"]) == 18
+                for item in profile["migrations"]:
+                    source = ROOT.parent / item["path"]
+                    assert not source.is_symlink() and source.resolve().is_relative_to(
+                        ROOT.parent
+                    )
+                    assert (
+                        hashlib.sha256(source.read_bytes()).hexdigest()
+                        == item["sha256"]
+                    )
+                    shutil.copyfile(source, bundle / "sql" / source.name)
+            else:
+                shutil.copyfile(migration, copied)
             (bundle / "flyway.conf").write_text(
-                "flyway.locations=filesystem:sql\nflyway.table=flyway_schema_history\nflyway.defaultSchema=public\nflyway.schemas=public\nflyway.createSchemas=false\nflyway.validateOnMigrate=true\nflyway.validateMigrationNaming=true\nflyway.baselineOnMigrate=false\nflyway.cleanDisabled=true\n"
+                "flyway.locations=filesystem:sql\nflyway.table=flyway_schema_history\nflyway.defaultSchema=public\nflyway.schemas=public\nflyway.createSchemas=false\nflyway.validateOnMigrate=true\nflyway.validateMigrationNaming=true\nflyway.ignoreMigrationPatterns=\nflyway.baselineOnMigrate=false\nflyway.cleanDisabled=true\n"
             )
             reports = []
 
@@ -175,7 +222,31 @@ def lab():
                 return passed, value
 
             ok, result = migrate("migrate")
-            assert ok and result["migrationsExecuted"] == 1, result
+            if not ok and os.environ.get("SG_ACTION_LAB_REPORT"):
+                Path(os.environ["SG_ACTION_LAB_REPORT"]).write_text(
+                    json.dumps(
+                        {"passed": False, "profile": profile_name, "flyway": reports},
+                        indent=2,
+                    )
+                    + "\n"
+                )
+            assert ok and result["migrationsExecuted"] == (18 if shared else 1), result
+            c = connect()
+            with c, c.cursor() as q:
+                q.execute(
+                    "SELECT rolname, rolsuper, rolbypassrls FROM pg_roles WHERE rolname IN ('sg_migrator','sg_action_app') ORDER BY rolname"
+                )
+                migration_roles = q.fetchall()
+                if shared:
+                    q.execute("ALTER ROLE sg_migrator NOBYPASSRLS")
+                q.execute(
+                    "SELECT rolname, rolsuper, rolbypassrls FROM pg_roles WHERE rolname IN ('sg_migrator','sg_action_app') ORDER BY rolname"
+                )
+                application_phase_roles = q.fetchall()
+                assert all(not r[1] and not r[2] for r in application_phase_roles)
+                q.execute("SELECT pg_has_role('sg_action_app','sg_migrator','MEMBER')")
+                assert q.fetchone()[0] is False
+            c.close()
             assert migrate("validate")[0]
             ok, result = migrate("migrate")
             assert ok and result["migrationsExecuted"] == 0, result
@@ -183,6 +254,13 @@ def lab():
             copied.write_bytes(original + b"\nSELECT 1;\n")
             assert not migrate("validate")[0]
             copied.write_bytes(original)
+            assert migrate("validate")[0]
+            hidden = copied.with_suffix(".unavailable")
+            try:
+                copied.rename(hidden)
+                assert not migrate("validate")[0]
+            finally:
+                hidden.rename(copied)
             assert migrate("validate")[0]
             c = connect("sg_case_dirty", "sg_migrator")
             with c, c.cursor() as q:
@@ -288,8 +366,15 @@ def lab():
                 Path(report).write_text(
                     json.dumps(
                         {
-                            "passed": True,
-                            "scope": "fresh isolated V018 only; no full shared baseline, existing data, provider or deployment qualification",
+                            "passed": request.session.testsfailed == failed_at_start,
+                            "scope": (
+                                "full shared V001-V018; isolated extension bootstrap and non-superuser member-of-owner migrator with BYPASSRLS only during migration, revoked before application tests; nonowner action application role; no existing data, provider or deployment qualification"
+                                if shared
+                                else "fresh isolated V018 only; no full shared baseline, existing data, provider or deployment qualification"
+                            ),
+                            "profile": profile_name,
+                            "migration_phase_roles": migration_roles,
+                            "application_phase_roles": application_phase_roles,
                             "flyway": reports,
                         },
                         indent=2,
