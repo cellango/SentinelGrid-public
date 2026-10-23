@@ -72,11 +72,11 @@ was never reported as native qualification.
 
 ## Remaining design and migration gates
 
-Consolidation permits a local transaction; it does not rewrite existing writers
-to use one. In particular, `PolicyService.create_policy` commits its policy before
-extracting child rules. That is an integration obligation, not fixed here. All
-portal, seed/template, bulk, governance, role-sync and principal/credential writers
-must participate before activation. Audit and principal/governance relationship
+Consolidation permits a local transaction; it does not automatically rewrite all
+writers. The atomic mutation checkpoint below corrects the existing PolicyService
+create/update and its tenant-template clone path. All alternate portal,
+seed/template, bulk, governance, role-sync and principal/credential writers must
+still be reviewed before activation. Audit and principal/governance relationship
 transfer is not covered by this selected row-copy rehearsal.
 
 This does not establish a stable authorization generation, order revocation
@@ -97,3 +97,40 @@ Crash/restart during migration, lock contention/deadlocks, unknown populated
 history, production-role admission, template version publication and full writer
 coverage remain explicit later qualification gates. CI stays paused; publication
 requires a tested checkpoint and separate commit/push approval.
+
+## Atomic policy/rule mutation checkpoint
+
+The existing PolicyService now commits a created policy and its extracted rules
+once, after validating the response object. Updates acquire a tenant-filtered
+parent row lock before replacing rules and updating the parent. This serializes
+competing service updates so they cannot leave a parent from one revision with
+children from another. The extraction helper validates the DSL and parent tenant,
+uses explicit JSONB serialization, never commits/rolls back independently, and
+propagates failure to the caller's rollback. Tenant-template cloning delegates to
+the same create path. Shared seed cloning remains disabled.
+
+This changes no database routing, schema, role grants, authorization policy or
+HTTP request/response shape. Existing service failure conventions remain
+`None`/`False`, mapped by the API to HTTP 400. One deliberate compatibility change:
+update/activate/deactivate for missing or foreign-tenant IDs now returns failure
+(HTTP 400) before attempting child writes, instead of an apparent successful
+update followed by HTTP 404 on the subsequent read. Neither response exposes
+another tenant's object. Empty updates succeed only for an existing own-tenant
+policy. Existing delete semantics are outside this checkpoint.
+
+Native tests exercise both current catalog policy storage and the consolidated
+IAM fixture: successful create/update; failure before extraction, after rule
+delete/insert, after parent update and before commit; invalid DSL; absent/foreign
+parents; clone success/failure; API success/failure mapping; caller-controlled
+helper rollback; and two concurrent writers with PostgreSQL blocking evidence.
+Templates in the clone-specific test are supplied synthetic objects: that test
+qualifies delegation and atomicity, not immutable publication or template lookup.
+Existing native tenant-template tests remain the visibility regression gate.
+
+Failure tests cover errors before a successful commit. A lost commit acknowledgement
+can have an uncertain durable outcome and is not solved by rollback alone; this
+checkpoint does not introduce idempotent create keys or claim exactly-once writes.
+Parent locks protect cooperating PolicyService writers; they do not prove that
+all alternate SQL writers follow the protocol. Full writer coverage, IAM
+admission generations, cross-store case ordering and external issuer freshness
+remain separate gates. No automatic activation follows local test success.

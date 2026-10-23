@@ -71,14 +71,12 @@ class PolicyService:
                 }
             )
             row = result.fetchone()
-            self.db.commit()
-
             policy_uuid = row[0] if isinstance(row[0], UUID) else UUID(str(row[0]))
             
             # Extract rules and store them
             self._extract_and_store_rules(policy_uuid, policy_data.policy_data)
             
-            return Policy(
+            policy = Policy(
                 id=policy_uuid,
                 tenant_id=self.tenant_id,
                 name=policy_data.name,
@@ -94,6 +92,8 @@ class PolicyService:
                 created_at=row[1],
                 updated_at=row[2]
             )
+            self.db.commit()
+            return policy
         except Exception as e:
             logger.error(f"Failed to create policy: {e}")
             self.db.rollback()
@@ -160,8 +160,14 @@ class PolicyService:
         try:
             from sqlalchemy import text
             
-            updates = []
             params = {"policy_id": str(policy_id), "tenant_id": str(self.tenant_id)}
+            # Serialize parent and rule replacement, including concurrent updates.
+            parent = self.db.execute(text(
+                "SELECT id FROM policies WHERE id=:policy_id AND tenant_id=:tenant_id FOR UPDATE"
+            ), params).first()
+            if parent is None:
+                return False
+            updates = []
             
             if policy_update.display_name is not None:
                 updates.append("display_name = :display_name")
@@ -549,41 +555,28 @@ class PolicyService:
             return False
 
     def _extract_and_store_rules(self, policy_id: UUID, policy_data: Dict[str, Any]):
-        """Extract rules from policy DSL and store them."""
-        try:
-            from sqlalchemy import text
-            
-            # Delete existing rules
-            self.db.execute(
-                text("DELETE FROM policy_rules WHERE policy_id = :policy_id"),
-                {"policy_id": str(policy_id)}
-            )
-            
-            # Insert new rules
-            policy_dsl = PolicyDSL(**policy_data)
-            for rule in policy_dsl.rules:
-                self.db.execute(
-                    text("""
-                        INSERT INTO policy_rules (policy_id, rule_id, name, description, conditions, actions, priority, is_active)
-                        VALUES (:policy_id, :rule_id, :name, :description, :conditions, :actions, :priority, :is_active)
-                    """),
-                    {
-                        "policy_id": str(policy_id),
-                        "rule_id": rule.id,
-                        "name": rule.name,
-                        "description": rule.description,
-                        "conditions": [c.dict() for c in rule.conditions],
-                        "actions": [a.dict() for a in rule.actions],
-                        "priority": rule.priority,
-                        "is_active": True
-                    }
-                )
-            
-            self.db.commit()
-        except Exception as e:
-            logger.error(f"Failed to extract and store rules: {e}")
-            self.db.rollback()
-    
+        """Replace child rows inside the caller's transaction; never swallow failure."""
+        policy_dsl = self._parse_policy_dsl(policy_data)
+        params = {"policy_id": str(policy_id), "tenant_id": str(self.tenant_id)}
+        parent = self.db.execute(text(
+            "SELECT id FROM policies WHERE id=:policy_id AND tenant_id=:tenant_id FOR UPDATE"
+        ), params).first()
+        if parent is None:
+            raise ValueError("Policy is not available in this tenant")
+        self.db.execute(text("DELETE FROM policy_rules WHERE policy_id=:policy_id"),
+                        {"policy_id": str(policy_id)})
+        for rule in policy_dsl.rules:
+            self.db.execute(text("""
+                INSERT INTO policy_rules (policy_id, rule_id, name, description, conditions, actions, priority, is_active)
+                VALUES (:policy_id, :rule_id, :name, :description, CAST(:conditions AS jsonb), CAST(:actions AS jsonb), :priority, true)
+            """), {
+                "policy_id": str(policy_id), "rule_id": rule.id,
+                "name": rule.name, "description": rule.description,
+                "conditions": json.dumps([c.model_dump(mode="json") for c in rule.conditions]),
+                "actions": json.dumps([a.model_dump(mode="json") for a in rule.actions]),
+                "priority": rule.priority,
+            })
+
     def _log_evaluation(self, policy_id: UUID, evaluation_type: str, context: EvaluationContext, result: PolicyEvaluationResult):
         """Log policy evaluation."""
         try:

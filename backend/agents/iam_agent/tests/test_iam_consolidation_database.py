@@ -210,3 +210,226 @@ def test_dump_restore_preserves_decisions_audit_and_rows(consolidated):
         assert evaluate(sessionmaker(bind=engine)).decision == "deny"
     finally:
         engine.dispose()
+
+# Atomic runtime mutation qualification uses both current and consolidated stores.
+@pytest.fixture(params=["split", "consolidated"])
+def mutation_store(consolidated, request):
+    params, local, _, policies = consolidated
+    if request.param == "split":
+        return params, policies, "catalog_test"
+    return params, local, "consolidated_test"
+
+
+def mutation_payload(marker="first", action="allow"):
+    return {"id": marker, "type": "access", "rules": [{"id": marker, "conditions": [], "actions": [{"type": action}]}]}
+
+
+def create_request(marker="first"):
+    from app.models.policies import PolicyCreate
+    return PolicyCreate(name=marker, display_name=marker, policy_type="access", policy_data=mutation_payload(marker))
+
+
+def policy_snapshot(params, database):
+    return {name: rows(params, database, name) for name in ("policies", "policy_rules")}
+
+
+def test_atomic_create_update_success(mutation_store):
+    from app.models.policies import PolicyUpdate
+    params, factory, database = mutation_store
+    with tenant_session(factory, A) as session:
+        service = PolicyService(session, A, "", load_seed_tenant=False)
+        created = service.create_policy(create_request(), str(USER))
+        assert created is not None
+        assert service.update_policy(created.id, PolicyUpdate(policy_data=mutation_payload("second", "deny")))
+    data = policy_snapshot(params, database)
+    parent = next(p for p in data["policies"] if p["id"] == str(created.id))
+    children = [r for r in data["policy_rules"] if r["policy_id"] == str(created.id)]
+    assert parent["policy_data"]["rules"][0]["id"] == "second"
+    assert [r["rule_id"] for r in children] == ["second"]
+    assert children[0]["actions"][0]["type"] == "deny"
+
+
+@pytest.mark.parametrize("stage", ["before_rules", "after_rule_delete", "after_rule_insert"])
+def test_failed_create_rolls_back_parent_and_rules(mutation_store, monkeypatch, stage):
+    params, factory, database = mutation_store
+    before = policy_snapshot(params, database)
+    with tenant_session(factory, A) as session:
+        service = PolicyService(session, A, "", load_seed_tenant=False)
+        execute = session.execute
+        def failing(statement, *args, **kwargs):
+            sql = str(statement)
+            if stage == "before_rules" and "DELETE FROM policy_rules" in sql:
+                raise RuntimeError("synthetic extraction failure")
+            result = execute(statement, *args, **kwargs)
+            if (stage == "after_rule_delete" and "DELETE FROM policy_rules" in sql) or (stage == "after_rule_insert" and "INSERT INTO policy_rules" in sql):
+                raise RuntimeError("synthetic extraction failure")
+            return result
+        monkeypatch.setattr(session, "execute", failing)
+        assert service.create_policy(create_request(), str(USER)) is None
+    assert policy_snapshot(params, database) == before
+
+
+@pytest.mark.parametrize("stage", ["after_rule_delete", "after_parent_update"])
+def test_failed_update_restores_previous_policy_and_rules(mutation_store, monkeypatch, stage):
+    from app.models.policies import PolicyUpdate
+    params, factory, database = mutation_store
+    with tenant_session(factory, A) as session:
+        created = PolicyService(session, A, "", load_seed_tenant=False).create_policy(create_request(), str(USER))
+        assert created
+    before = policy_snapshot(params, database)
+    with tenant_session(factory, A) as session:
+        service = PolicyService(session, A, "", load_seed_tenant=False)
+        execute = session.execute
+        def failing(statement, *args, **kwargs):
+            result = execute(statement, *args, **kwargs)
+            sql = str(statement)
+            if (stage == "after_rule_delete" and "DELETE FROM policy_rules" in sql) or (stage == "after_parent_update" and "UPDATE policies" in sql):
+                raise RuntimeError("synthetic update failure")
+            return result
+        monkeypatch.setattr(session, "execute", failing)
+        assert not service.update_policy(created.id, PolicyUpdate(policy_data=mutation_payload("replacement")))
+    assert policy_snapshot(params, database) == before
+
+
+def test_invalid_dsl_and_missing_or_foreign_ids_do_not_write(mutation_store):
+    from app.models.policies import PolicyCreate, PolicyUpdate
+    params, factory, database = mutation_store
+    before = policy_snapshot(params, database)
+    foreign = next(p["id"] for p in before["policies"] if p["tenant_id"] == str(B))
+    own = next(p["id"] for p in before["policies"] if p["tenant_id"] == str(A))
+    with tenant_session(factory, A) as session:
+        service = PolicyService(session, A, "", load_seed_tenant=False)
+        invalid = {"id": "bad", "type": "access", "rules": []}
+        assert service.create_policy(PolicyCreate(name="bad", display_name="bad", policy_type="access", policy_data=invalid), str(USER)) is None
+        assert not service.update_policy(own, PolicyUpdate(policy_data=invalid))
+        for identifier in (foreign, uuid4()):
+            assert not service.update_policy(identifier, PolicyUpdate(policy_data=mutation_payload()))
+            assert not service.update_policy(identifier, PolicyUpdate())
+            with pytest.raises(ValueError, match="not available"):
+                service._extract_and_store_rules(identifier, mutation_payload())
+    assert policy_snapshot(params, database) == before
+
+
+def test_template_clone_inherits_atomic_create(mutation_store, monkeypatch):
+    from types import SimpleNamespace
+    params, factory, database = mutation_store
+    template_id = uuid4()
+    template = SimpleNamespace(id=template_id, description="Synthetic catalog template", policy_type="access", template_data=mutation_payload("clone"))
+    with tenant_session(factory, A) as session:
+        service = PolicyService(session, A, "", load_seed_tenant=False)
+        # Publication/visibility is not under test; existing tenant-template suite covers it.
+        monkeypatch.setattr(service, "list_templates", lambda: [template])
+        cloned = service.create_policy_from_template(template_id, "clone", "Clone", str(USER))
+        assert cloned
+        assert service.create_policy_from_template(uuid4(), "absent", "Absent", str(USER)) is None
+    before = policy_snapshot(params, database)
+    with tenant_session(factory, A) as session:
+        service = PolicyService(session, A, "", load_seed_tenant=False)
+        monkeypatch.setattr(service, "list_templates", lambda: [template])
+        extract = service._extract_and_store_rules
+        def fail_after_rules(*args):
+            extract(*args)
+            raise RuntimeError("synthetic clone failure")
+        monkeypatch.setattr(service, "_extract_and_store_rules", fail_after_rules)
+        assert service.create_policy_from_template(template_id, "failed", "Failed", str(USER)) is None
+    assert policy_snapshot(params, database) == before
+
+
+def test_api_failure_envelopes_and_success(mutation_store):
+    from app.api import policies as api
+    from app.models.policies import PolicyUpdate
+    from fastapi import HTTPException
+    _, factory, _ = mutation_store
+    with tenant_session(factory, A) as session:
+        service = PolicyService(session, A, "", load_seed_tenant=False)
+        created = asyncio.run(api.create_policy(create_request("api"), service, str(USER)))
+        updated = asyncio.run(api.update_policy(created.id, PolicyUpdate(display_name="Updated"), service))
+        assert updated.display_name == "Updated"
+        with pytest.raises(HTTPException) as error:
+            asyncio.run(api.update_policy(uuid4(), PolicyUpdate(), service))
+        assert error.value.status_code == 400
+
+
+def test_concurrent_updates_serialize_policy_and_rules(mutation_store):
+    from concurrent.futures import ThreadPoolExecutor
+    from queue import Queue
+    from threading import Event
+    import time
+    from app.models.policies import PolicyUpdate
+    params, factory, database = mutation_store
+    with tenant_session(factory, A) as session:
+        created = PolicyService(session, A, "", load_seed_tenant=False).create_policy(create_request(), str(USER))
+        assert created
+    entered, release = Event(), Event()
+    second_pid = Queue()
+    second_engine = app_engine(params, database)  # independent pool: prove DB locking, not pool queuing
+    second_factory = sessionmaker(bind=second_engine)
+    def first():
+        with tenant_session(factory, A) as session:
+            service = PolicyService(session, A, "", load_seed_tenant=False)
+            extract = service._extract_and_store_rules
+            def pause(*args):
+                entered.set()
+                assert release.wait(8), "test coordinator timeout"
+                return extract(*args)
+            service._extract_and_store_rules = pause
+            return service.update_policy(created.id, PolicyUpdate(policy_data=mutation_payload("one")))
+    def second():
+        with tenant_session(second_factory, A) as session:
+            second_pid.put(session.scalar(text("SELECT pg_backend_pid()")))
+            session.execute(text("SET LOCAL lock_timeout='8s'"))
+            return PolicyService(session, A, "", load_seed_tenant=False).update_policy(created.id, PolicyUpdate(policy_data=mutation_payload("two")))
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            one = pool.submit(first)
+            try:
+                assert entered.wait(5)
+                two = pool.submit(second)
+                pid = second_pid.get(timeout=5)
+                deadline = time.monotonic() + 5
+                blocked = False
+                while time.monotonic() < deadline:
+                    with connect(params, database) as connection, connection.cursor() as cursor:
+                        cursor.execute("SELECT cardinality(pg_blocking_pids(%s)) > 0", (pid,))
+                        blocked = cursor.fetchone()[0]
+                    if blocked:
+                        break
+                    time.sleep(0.02)
+                assert blocked, "second writer did not wait on the PostgreSQL row lock"
+            finally:
+                release.set()
+            assert one.result(timeout=5) and two.result(timeout=5)
+    finally:
+        release.set()
+        second_engine.dispose()
+    snapshot = policy_snapshot(params, database)
+    parent = next(p for p in snapshot["policies"] if p["id"] == str(created.id))
+    children = [r for r in snapshot["policy_rules"] if r["policy_id"] == str(created.id)]
+    assert parent["policy_data"]["rules"][0]["id"] == "two"
+    assert [r["rule_id"] for r in children] == ["two"]
+
+
+def test_rule_helper_does_not_commit_callers_transaction(mutation_store):
+    params, factory, database = mutation_store
+    with tenant_session(factory, A) as session:
+        created = PolicyService(session, A, "", load_seed_tenant=False).create_policy(create_request(), str(USER))
+        assert created
+    before = policy_snapshot(params, database)
+    with pytest.raises(RuntimeError, match="caller aborted"):
+        with tenant_session(factory, A) as session:
+            PolicyService(session, A, "", load_seed_tenant=False)._extract_and_store_rules(created.id, mutation_payload("uncommitted"))
+            raise RuntimeError("caller aborted")
+    assert policy_snapshot(params, database) == before
+
+
+def test_failure_before_commit_rolls_back_complete_create(mutation_store, monkeypatch):
+    params, factory, database = mutation_store
+    before = policy_snapshot(params, database)
+    with tenant_session(factory, A) as session:
+        service = PolicyService(session, A, "", load_seed_tenant=False)
+        def fail_commit():
+            raise RuntimeError("synthetic failure before commit")
+        with monkeypatch.context() as scoped:
+            scoped.setattr(session, "commit", fail_commit)
+            assert service.create_policy(create_request("commit-failure"), str(USER)) is None
+    assert policy_snapshot(params, database) == before
