@@ -4,7 +4,7 @@
   "automatic_baseline": false,
   "canonical_migration_authority": "backend/migrations_consolidated",
   "existing_iam_history_excluded": true,
-  "scope": "Fresh isolated V018 storage qualification; full shared V001-V018 install/upgrade and existing data adoption are unqualified",
+  "scope": "Fresh isolated V018 storage qualification; the separate shared_application_lineage profile qualifies unchanged V001-V018 in a synthetic lab. Existing data adoption and production provisioning remain unqualified",
   "migrations": [
     {
       "path": "backend/migrations_consolidated/V018__case_runtime_action_authority.sql",

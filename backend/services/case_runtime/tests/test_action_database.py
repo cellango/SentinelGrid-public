@@ -808,3 +808,127 @@ def test_committed_approval_and_idempotency_survive_actual_database_crash_restar
         )
         assert q.fetchone()[0] == 1
     c.close()
+
+
+def test_synthetic_case_and_grants_roll_back_as_one_unit(lab):
+    """Privileged fixture transaction only; not a production provisioner."""
+    case_id, subject = uuid4(), uuid4()
+    with pytest.raises(DBAPIError) as failure:
+        with Session(lab["owner"]) as session, session.begin():
+            session.add(
+                Case(
+                    id=case_id,
+                    tenant_id=UUID(TENANT),
+                    policy_version="action-policy-v1",
+                )
+            )
+            session.flush()
+            for _ in range(2):
+                session.add(
+                    CaseAccessGrant(
+                        id=uuid4(),
+                        tenant_id=UUID(TENANT),
+                        case_id=case_id,
+                        subject_id=subject,
+                        permission="read",
+                        expires_at=datetime.now(timezone.utc) + timedelta(hours=1),
+                    )
+                )
+            session.flush()
+    assert failure.value.orig.pgcode == "23505"
+    with lab["owner"].connect() as conn:
+        for table in ("cases", "case_access_grants"):
+            column = "id" if table == "cases" else "case_id"
+            assert (
+                conn.execute(
+                    text(
+                        f"SELECT count(*) FROM case_runtime.{table} WHERE {column}=:id"
+                    ),
+                    {"id": case_id},
+                ).scalar_one()
+                == 0
+            )
+
+
+def test_foreign_tenant_grant_cannot_bind_existing_case(flow):
+    with pytest.raises(DBAPIError) as failure:
+        with Session(flow["lab"]["owner"]) as session, session.begin():
+            session.add(
+                CaseAccessGrant(
+                    id=uuid4(),
+                    tenant_id=UUID(OTHER),
+                    case_id=UUID(flow["case_id"]),
+                    subject_id=UUID(flow["users"][3]),
+                    permission="read",
+                    expires_at=datetime.now(timezone.utc) + timedelta(hours=1),
+                )
+            )
+    assert failure.value.orig.pgcode == "23503"
+    assert flow["submit"](user=3).status_code == 403
+
+
+@pytest.mark.parametrize(
+    "statement",
+    [
+        "INSERT INTO case_runtime.case_access_grants(id,tenant_id,case_id,subject_id,permission,expires_at) VALUES (gen_random_uuid(),:tenant,:case,:subject,'approve',clock_timestamp()+interval '1 hour')",
+        "UPDATE case_runtime.case_access_grants SET expires_at=clock_timestamp()+interval '2 hours' WHERE case_id=:case",
+        "DELETE FROM case_runtime.case_access_grants WHERE case_id=:case",
+    ],
+)
+def test_action_application_cannot_provision_extend_or_revoke_grants(flow, statement):
+    with pytest.raises(DBAPIError) as failure:
+        with flow["lab"]["engine"].begin() as conn:
+            conn.execute(
+                text("SELECT set_config('app.current_tenant_id',:tenant,true)"),
+                {"tenant": TENANT},
+            )
+            conn.execute(
+                text(statement),
+                {
+                    "tenant": TENANT,
+                    "case": flow["case_id"],
+                    "subject": flow["users"][3],
+                },
+            )
+    assert failure.value.orig.pgcode == "42501"
+    # Failed privileged writes do not grant the otherwise unauthorized principal.
+    assert flow["submit"](user=3).status_code == 403
+    assert flow["submit"]().status_code == 201
+
+
+def test_committed_grant_revocation_survives_restart_without_reservation(flow):
+    proposal_record = flow["submit"]().json()
+    assert flow["decide"](proposal_record).status_code == 201
+    with flow["lab"]["owner"].begin() as conn:
+        conn.execute(
+            text(
+                "DELETE FROM case_runtime.case_access_grants WHERE case_id=:case AND subject_id=:subject AND permission='approve'"
+            ),
+            {"case": flow["case_id"], "subject": flow["users"][1]},
+        )
+    flow["lab"]["restart"]()
+    flow["api"].app.state.action_authority = ActionAuthority(
+        flow["lab"]["engine"], enabled=True
+    )
+    with pytest.raises(HTTPException) as failure:
+        flow["reserve"](proposal_record)
+    assert failure.value.status_code == 403
+    with flow["lab"]["owner"].connect() as conn:
+        assert (
+            conn.execute(
+                text(
+                    "SELECT count(*) FROM case_runtime.action_claims WHERE proposal_id=:proposal"
+                ),
+                {"proposal": proposal_record["proposal_id"]},
+            ).scalar_one()
+            == 0
+        )
+        assert (
+            conn.execute(
+                text(
+                    "SELECT count(*) FROM case_runtime.approval_decisions WHERE proposal_id=:proposal"
+                ),
+                {"proposal": proposal_record["proposal_id"]},
+            ).scalar_one()
+            == 1
+        )

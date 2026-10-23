@@ -49,3 +49,30 @@ The test creates its own synthetic loopback/SCRAM cluster and cleans it up. Miss
 ## MCP record entrypoint
 
 An [opt-in MCP record profile](mcp-case-records.md) submits and inspects proposals through these same API/grant/storage checks. Submission and inspection metadata now includes `tenant_id` and `case_id`. Proposal/hash bytes are unchanged. These tools cannot approve or execute an action.
+
+## Case provisioning prerequisites
+
+Cases and case grants already exist in V018, but no production provisioning
+interface is admitted. The action application's INSERT/UPDATE restrictions are
+intentional and must not be expanded merely to seed a workflow. An administrator
+claim, tenant parameter or test-fixture owner does not supply case-creation or
+grant-management authority. Before adding a writer, specify and qualify its
+verified caller lifecycle, server-owned permission/source mapping, separation
+from action execution, bounded grant expiry/revocation, atomic audit and outbox
+records, and operational credential custody. Issuer qualification remains
+separate; ordinary caller proof must not be confused with unqualified conditional
+acquisition. No new writer is introduced by storage prerequisite tests.
+
+The native action suite additionally checks all-or-nothing synthetic case/grant
+provisioning on a uniqueness failure, composite tenant/case grant rejection,
+application denial of grant creation/extension/deletion, and persisted grant
+revocation across an actual PostgreSQL immediate crash/restart. Fixture writes
+use the disposable lab owner; they do not demonstrate a least-privilege
+production provisioner. Existing rows, V001-V018, application privileges and
+default-disabled behavior remain unchanged.
+
+Full source/evidence-reference and immutable run-manifest storage still need
+paired models/Flyway, approved record contracts and their own native
+install/upgrade/recovery tests. The [target schema](../architecture/database-compatibility.md)
+is not proof those records exist. These prerequisites do not complete workflow
+storage, runtime execution or end-to-end qualification.

@@ -111,7 +111,14 @@ independent `workflow_definitions` proposal with immutable versions of the exist
 Playbook identity and a coverage catalog. It also makes the manifest/event/artifact
 audit records explicit. No physical table or migration has changed.
 
-These are physical planning names, **all absent until implemented**. Every
+The table below is the target schema, not a claim that every column or contract
+is implemented. V018 now implements twelve application-record tables: `cases`,
+`case_access_grants`, `action_proposals`, `approval_requests`,
+`approval_decisions`, `policy_decisions`, `action_claims`, `resource_fences`,
+`action_attempts`, `action_receipts`, `action_verifications` and `outbox_events`.
+See the [current action boundary](../reference/action-authority.md) for its narrower
+implemented columns, privileges and unavailable execution. Other tables below,
+including evidence links and full run manifests, remain planned. Every
 tenant-owned row has `tenant_id UUID NOT NULL`. Unless shown otherwise, use a UUID
 primary key plus a unique `(tenant_id, id)` target for composite child references.
 Existing domain links carry the source schema/type and tenant-bound source UUID.

@@ -67,7 +67,7 @@
       "id": "DATA-001",
       "owner": "Database + security",
       "reason": "Retain model/migration, application role and tenant boundaries",
-      "gap": "Native database qualification requires explicit disposable profile; no existing deployment proof",
+      "gap": "Production case/grant writer authority is not qualified. Evidence-reference and immutable run-manifest storage remain target work. Native tests use disposable privileged fixture provisioning, not deployment proof.",
       "status": "partial",
       "disposition": "keep",
       "evidence": "not_asserted",
@@ -78,7 +78,8 @@
       "implementation": [
         "backend/services/case_runtime/app/authority/models.py",
         "backend/services/case_runtime/app/authority/database_role.py",
-        "scripts/qualify_application_database.py"
+        "scripts/qualify_application_database.py",
+        "publication/action-authority-profile.json"
       ],
       "tests": [
         "backend/services/case_runtime/tests/test_database_role.py",
