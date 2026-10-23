@@ -48,3 +48,5 @@ The archive is for investigating history, not choosing a setup guide.
 - [Action proposal and approval records](reference/action-authority.md): partial durable boundary; execution and deployment remain unqualified.
 
 - [MCP case records](reference/mcp-case-records.md): opt-in proposal submission and inspection through the existing deterministic authority.
+
+- [Local test profiles and contract reconciliation](development/testing.md).

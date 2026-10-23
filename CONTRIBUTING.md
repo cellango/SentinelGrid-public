@@ -57,3 +57,7 @@ destructive tools are outside routine source-review checks.
 Legacy deployment and packaging workflows use `.yml.disabled` extensions.
 Restoring them requires review of permissions, protected environments, secrets,
 provenance, and release tests.
+
+Follow the [test and contract reconciliation loop](docs/development/testing.md).
+Keep explicit replacement coverage when updating stale tests and documentation;
+never weaken tenant, authority or recovery assertions to obtain green results.

@@ -23,3 +23,8 @@ when moving or adding docs. Review the selected file diff before refreshing
 must target retained source, never ignored private recovery folders.
 Ordinary feedback uses this repository's review issue template; vulnerabilities
 follow [SECURITY.md](../../SECURITY.md).
+
+Map changed design, implementation, tests and current documentation in the
+[contract ledger](../../publication/contracts.json). Follow the
+[local test and reconciliation guide](testing.md); structural link checks do
+not establish behavioral correctness or completed qualification.

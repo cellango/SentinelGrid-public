@@ -6,7 +6,10 @@ RUFF ?= ruff
 help:
 	@echo "SentinelGrid developer source preview (see RELEASE_SCOPE.md)"
 	@echo "  make install          - Install isolated source-review test dependencies"
-	@echo "  make preview-check    - Check paths, documentation, source hygiene, V013 schema, and IAM auth/policy and MCP/user/workload identity boundaries"
+	@echo "  make preview-check    - Run tooling, source hygiene, V013 schema and selected identity/authority regressions"
+	@echo "  make preview-tooling  - Check source/docs/contracts and tooling tests without application imports"
+	@echo "  make preview-impact BASE=<commit> - Require contract mapping for changed paths"
+	@echo "  make preview-frontend - Run focused auth tests using installed frontend dependencies"
 	@echo "  make preview-mcp       - Check discovery/protocol errors and unavailable legacy tools"
 	@echo "  make preview-application-db - Qualify full shared V001-V018 in a new native lab"
 	@echo "  make preview-iam-db    - Test audit/RLS in an owned disposable PostgreSQL cluster"
@@ -35,9 +38,7 @@ logs:
 
 test: preview-check
 
-preview-check:
-	$(PYTHON) scripts/check_public_preview.py
-	$(PYTHON) -m unittest discover -s scripts/tests -v
+preview-check: preview-tooling
 	$(PYTHON) -m pytest --noconftest backend/tests/test_infrastructure_change_schema.py -q
 	$(RUFF) check --select F821 backend SentinelGridAIShield SentinelGridPenTestAgent SentinelGridPostureAgent scripts
 	$(PYTHON) -m pytest backend/agents/iam_agent/tests/test_auth_api.py backend/agents/iam_agent/tests/test_token_validator.py backend/agents/iam_agent/tests/test_config_security.py backend/agents/iam_agent/tests/test_policy_enforcement.py backend/agents/iam_agent/tests/test_authorize_tenant_isolation.py backend/agents/iam_agent/tests/test_policies_tenant_session.py backend/agents/iam_agent/tests/test_audit_tenant_controls.py backend/agents/iam_agent/tests/test_entitlements_tenant_isolation.py backend/agents/iam_agent/tests/test_access_requests_authorization.py backend/agents/iam_agent/tests/test_anomaly_detection.py backend/agents/iam_agent/tests/test_automation_request_context.py backend/agents/iam_agent/tests/test_source_admission.py backend/agents/iam_agent/tests/test_iam_acceptance_boundaries.py backend/agents/iam_agent/tests/test_sync_jobs_request_context.py backend/agents/iam_agent/tests/test_ai_editor_controls.py backend/agents/iam_agent/tests/test_protocols_request_context.py backend/agents/iam_agent/tests/test_ai_chat_request_context.py backend/agents/iam_agent/tests/test_ai_features_request_context.py backend/agents/iam_agent/tests/test_ai_chat_service.py backend/agents/iam_agent/tests/test_scim_controls.py backend/agents/iam_agent/tests/test_nhi_controls.py backend/agents/iam_agent/tests/test_itdr_controls.py backend/agents/iam_agent/tests/test_role_sync_controls.py backend/agents/iam_agent/tests/test_role_directory.py backend/agents/iam_agent/tests/test_governance_controls.py backend/agents/iam_agent/tests/test_governance_tenant_isolation.py backend/agents/iam_agent/tests/test_access_request_controls.py backend/agents/iam_agent/tests/test_role_mappings_access_requests_tenant_isolation.py -q
@@ -157,3 +158,17 @@ preview-application-db:
 # Full shared catalog and current privilege boundary; no existing DB input.
 preview-action-role-db:
 	SG_ACTION_DB_PROFILE=shared_application PYTHONPATH=backend/libs:backend/services/case_runtime $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/case_runtime/tests/test_action_database.py backend/services/case_runtime/tests/test_mcp_case_records_database.py backend/services/case_runtime/tests/test_database_role.py -q
+
+# Read-only developer checks. Dependencies must already be installed.
+.PHONY: preview-tooling preview-impact preview-frontend
+preview-tooling:
+	$(PYTHON) scripts/check_public_preview.py
+	$(PYTHON) scripts/check_contracts.py
+	$(PYTHON) -m unittest discover -s scripts/tests -v
+
+preview-impact:
+	@test -n "$(BASE)" || (echo "Set BASE to the reviewed commit"; exit 1)
+	$(PYTHON) scripts/check_contracts.py --base "$(BASE)"
+
+preview-frontend:
+	cd frontend && npm run test:preview

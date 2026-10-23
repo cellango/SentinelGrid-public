@@ -1900,6 +1900,11 @@
       "authority": "current_within_source_preview_scope"
     },
     {
+      "path": "docs/development/testing.md",
+      "class": "developer_guidance",
+      "authority": "current_within_source_preview_scope"
+    },
+    {
       "path": "docs/reference/README.md",
       "class": "current_source_reference",
       "authority": "current_within_source_preview_scope"

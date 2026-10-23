@@ -1,0 +1,177 @@
+{
+  "format_version": 1,
+  "scope": "Initial developer-tooling, action, storage and runtime-seam contracts only. Not a complete test inventory or operational certification. Test commands are descriptive and never executed by the validator.",
+  "contracts": [
+    {
+      "id": "TRACE-001",
+      "owner": "Developer tooling + documentation",
+      "reason": "Keep contract, test and current documentation paths reviewable",
+      "gap": "Structural links cannot prove test adequacy or current runtime qualification",
+      "status": "source_present",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/development/documentation.md"
+      ],
+      "implementation": [
+        "scripts/check_contracts.py",
+        "publication/contracts.json",
+        "Makefile",
+        "publication/source-files.json",
+        "publication/documentation.json"
+      ],
+      "tests": [
+        "scripts/tests/test_contracts.py",
+        "scripts/tests/test_documentation.py"
+      ],
+      "documentation": [
+        "docs/development/testing.md",
+        "README.md",
+        "CONTRIBUTING.md",
+        "docs/README.md"
+      ],
+      "test_profile": "make preview-tooling; make preview-impact BASE=<reviewed-commit>",
+      "review_scope": "Exact referenced paths only; owner review required for behavioral adequacy",
+      "replacement_ids": []
+    },
+    {
+      "id": "AUTH-001",
+      "owner": "Security + case runtime",
+      "reason": "Preserve default denial and exact action approval",
+      "gap": "No qualified provider execution or complete issuer lifecycle",
+      "status": "partial",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/reference/action-authority.md"
+      ],
+      "implementation": [
+        "backend/services/case_runtime/app/main.py",
+        "backend/services/case_runtime/app/authority/contracts.py",
+        "backend/services/case_runtime/app/authority/store.py"
+      ],
+      "tests": [
+        "backend/services/case_runtime/tests/test_action_boundary.py",
+        "backend/services/case_runtime/tests/test_canonical_vectors.py"
+      ],
+      "documentation": [
+        "docs/reference/action-authority.md"
+      ],
+      "test_profile": "make preview-action-authority",
+      "review_scope": "Exact referenced paths only; owner review required for behavioral adequacy",
+      "replacement_ids": []
+    },
+    {
+      "id": "DATA-001",
+      "owner": "Database + security",
+      "reason": "Retain model/migration, application role and tenant boundaries",
+      "gap": "Native database qualification requires explicit disposable profile; no existing deployment proof",
+      "status": "partial",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/architecture/database-compatibility.md"
+      ],
+      "implementation": [
+        "backend/services/case_runtime/app/authority/models.py",
+        "backend/services/case_runtime/app/authority/database_role.py",
+        "scripts/qualify_application_database.py"
+      ],
+      "tests": [
+        "backend/services/case_runtime/tests/test_database_role.py",
+        "backend/services/case_runtime/tests/test_action_database.py",
+        "backend/services/case_runtime/tests/test_mcp_case_records_database.py",
+        "scripts/tests/test_application_profile.py"
+      ],
+      "documentation": [
+        "docs/reference/application-database.md",
+        "docs/reference/action-database-role.md"
+      ],
+      "test_profile": "Explicit native DB profiles in database references; source profile mocks are not DB qualification",
+      "review_scope": "Exact referenced paths only; owner review required for behavioral adequacy",
+      "replacement_ids": []
+    },
+    {
+      "id": "RUNTIME-001",
+      "owner": "Runtime + identity",
+      "reason": "Replace legacy shared-token task submission only with qualified durable handoff",
+      "gap": "Current client and its tests characterize legacy behavior; retain until caller migration and replacement coverage qualify",
+      "status": "legacy",
+      "disposition": "replace",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/architecture/decisions/0001-case-runtime.md"
+      ],
+      "implementation": [
+        "backend/libs/sg_agent_runtime/soc_case_runtime_client.py"
+      ],
+      "tests": [
+        "backend/tests/test_soc_case_runtime_client.py"
+      ],
+      "documentation": [
+        "docs/reference/agentic-contracts.md"
+      ],
+      "test_profile": "Legacy characterization; review prerequisites before running; not E2E",
+      "review_scope": "Exact referenced paths only; owner review required for behavioral adequacy",
+      "replacement_ids": [
+        "RUNTIME-002"
+      ]
+    },
+    {
+      "id": "RUNTIME-002",
+      "owner": "Runtime + security",
+      "reason": "One execution and recovery owner behind case_runtime",
+      "gap": "Temporal integration, authenticated intake and replay/recovery tests are still required; current tests cover unavailable boundary only",
+      "status": "target",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/architecture/decisions/0001-case-runtime.md"
+      ],
+      "implementation": [
+        "backend/services/case_runtime/app/main.py"
+      ],
+      "tests": [
+        "backend/services/case_runtime/tests/test_action_boundary.py"
+      ],
+      "documentation": [
+        "docs/architecture/agentic-platform.md",
+        "docs/reference/agentic-contracts.md"
+      ],
+      "test_profile": "make preview-action-authority: unavailable boundary only; future Temporal qualification blocked",
+      "review_scope": "Exact referenced paths only; owner review required for behavioral adequacy",
+      "replacement_ids": []
+    },
+    {
+      "id": "DOCS-001",
+      "owner": "Documentation + QA",
+      "reason": "Keep current/archive classification and selected-source links",
+      "gap": "Historical records cannot provide current acceptance evidence",
+      "status": "source_present",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "docs/development/documentation.md"
+      ],
+      "implementation": [
+        "scripts/check_documentation.py",
+        "scripts/check_public_preview.py"
+      ],
+      "tests": [
+        "scripts/tests/test_documentation.py"
+      ],
+      "documentation": [
+        "docs/README.md",
+        "docs/release/documentation.md"
+      ],
+      "test_profile": "make preview-tooling",
+      "review_scope": "Exact referenced paths only; owner review required for behavioral adequacy",
+      "replacement_ids": []
+    }
+  ]
+}
