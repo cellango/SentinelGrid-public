@@ -177,3 +177,8 @@ preview-frontend:
 .PHONY: preview-case-provenance-db
 preview-case-provenance-db:
 	SG_ACTION_DB_PROFILE=shared_application PYTHONPATH=backend/libs:backend/services/case_runtime $(PYTHON) -m pytest -c backend/services/case_runtime/tests/pytest.ini backend/services/case_runtime/tests/test_provenance_database.py -q
+
+.PHONY: preview-domain-foundation
+preview-domain-foundation:
+	$(PYTHON) scripts/iam_consolidation_rehearsal.py
+	$(PYTHON) -m unittest discover -s scripts/tests -p test_iam_consolidation_rehearsal.py -v

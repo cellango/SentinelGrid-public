@@ -1945,6 +1945,11 @@
       "authority": "partial_implementation_with_explicit_qualification_limits"
     },
     {
+      "path": "docs/reference/domain-store-foundation.md",
+      "class": "current_source_reference",
+      "authority": "partial_implementation_with_explicit_qualification_limits"
+    },
+    {
       "path": "docs/reference/entity-model.md",
       "class": "current_source_reference",
       "authority": "current_within_source_preview_scope"

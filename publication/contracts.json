@@ -206,6 +206,36 @@
       "test_profile": "make preview-case-provenance-db; make preview-action-role-db; make preview-tooling",
       "review_scope": "Native disposable storage only; no deployed database, accepted writer authority or effects",
       "replacement_ids": []
+    },
+    {
+      "id": "DBF-001",
+      "owner": "IAM + database architecture",
+      "reason": "Define ownership and reject unsafe synthetic transfer plans before database changes",
+      "gap": "Offline only; native migrations, complete writer coverage, RLS, restore and cross-store ordering pending",
+      "status": "partial",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/reference/domain-store-foundation.md"
+      ],
+      "implementation": [
+        "scripts/iam_consolidation_rehearsal.py",
+        "publication/domain-store-foundation.json",
+        "Makefile",
+        "publication/source-files.json",
+        "publication/documentation.json",
+        "publication/contracts.json"
+      ],
+      "tests": [
+        "scripts/tests/test_iam_consolidation_rehearsal.py"
+      ],
+      "documentation": [
+        "docs/reference/domain-store-foundation.md"
+      ],
+      "test_profile": "make preview-domain-foundation; make preview-tooling",
+      "review_scope": "DBF-01 synthetic row transfer only; does not certify deployed databases or authorization",
+      "replacement_ids": []
     }
   ]
 }

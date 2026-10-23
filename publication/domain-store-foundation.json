@@ -1,0 +1,101 @@
+{
+  "format_version": 1,
+  "scope": "DBF-01 selected authorization boundary only; not full database ownership certification",
+  "runtime_enabled": false,
+  "profiles": [
+    "publication/application-database-profile.json",
+    "publication/iam-database-profile.json",
+    "publication/case-provenance-profile.json"
+  ],
+  "owners": [
+    {
+      "source": "catalog.public.policies",
+      "target_owner": "IAM",
+      "classification": "mutable_effective_policy",
+      "evidence": "backend/migrations_consolidated/V001__initial_schema.sql",
+      "write_boundary": "IAM transaction; migration pending"
+    },
+    {
+      "source": "catalog.public.policy_rules",
+      "target_owner": "IAM",
+      "classification": "effective_policy_children",
+      "evidence": "backend/migrations_consolidated/V001__initial_schema.sql",
+      "write_boundary": "same IAM transaction; inherit parent tenant"
+    },
+    {
+      "source": "iam.public.entitlements",
+      "target_owner": "IAM",
+      "classification": "subject_grants",
+      "evidence": "backend/agents/iam_agent/migrations/V1__create_entitlements_schema.sql",
+      "write_boundary": "IAM transaction"
+    },
+    {
+      "source": "catalog.public.entitlements",
+      "target_owner": "Catalog",
+      "classification": "permission_definitions",
+      "evidence": "backend/migrations_consolidated/V001__initial_schema.sql",
+      "write_boundary": "catalog; never merge with subject grants"
+    },
+    {
+      "source": "catalog.public.policy_templates",
+      "target_owner": "Catalog",
+      "classification": "mutable_template_candidates_not_immutable_versions",
+      "evidence": "backend/migrations_consolidated/V001__initial_schema.sql",
+      "write_boundary": "versioned publication required; IAM owns effective activation"
+    }
+  ],
+  "writer_review_queue": [
+    {
+      "path": "backend/agents/iam_agent/app/services/policy_service.py",
+      "status": "participation_not_qualified"
+    },
+    {
+      "path": "backend/agents/iam_agent/app/services/iam_portal_service.py",
+      "status": "participation_not_qualified"
+    },
+    {
+      "path": "backend/scripts/seed_demo_data.py",
+      "status": "participation_not_qualified"
+    },
+    {
+      "path": "backend/agents/iam_agent/app/api/entitlements.py",
+      "status": "participation_not_qualified"
+    },
+    {
+      "path": "backend/agents/iam_agent/app/api/bulk_operations.py",
+      "status": "participation_not_qualified"
+    },
+    {
+      "path": "backend/agents/iam_agent/app/api/access_requests.py",
+      "status": "participation_not_qualified"
+    },
+    {
+      "path": "backend/agents/iam_agent/app/services/governance_service.py",
+      "status": "participation_not_qualified"
+    },
+    {
+      "path": "backend/agents/iam_agent/app/services/role_sync_service.py",
+      "status": "participation_not_qualified"
+    }
+  ],
+  "runner_review_queue": [
+    {
+      "path": "docker-compose.dev.yml",
+      "status": "not_changed_or_executed"
+    },
+    {
+      "path": "docker-compose.minimal.yml",
+      "status": "not_changed_or_executed"
+    }
+  ],
+  "pending": [
+    "principal and credential lifecycle writer completeness",
+    "all tables and FK closure",
+    "native paired model/Flyway migration",
+    "nonowner/RLS evaluation parity",
+    "template versioning",
+    "cross-store admission placement",
+    "restore custody",
+    "live history inspection separately authorized"
+  ]
+}
