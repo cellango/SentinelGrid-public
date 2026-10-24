@@ -82,6 +82,56 @@ run versions remain pending. No Temporal worker, provider effect, database chang
 or end-to-end qualification is supplied by these tests. The compilation path owns
 no scheduling or recovery; Temporal remains the selected execution owner.
 
+## Content packaging gate and synthetic input
+
+Every procedure needs a complete definition, not a separate YAML file. The current
+loader accepts multiple definitions in one YAML bundle and derives `PlaybookIR`
+objects using the catalog, crosswalk and executor aliases. These are recommendation
+representations, not qualified Temporal workflows. The target remains one library
+with immutable source and compiled payload versions; editor forms and other source
+formats must pass explicit compatible adapters rather than become separate engines.
+
+The public export's Python-only data-directory exceptions omitted the loader's
+default YAML resource. Source inventory checks validate selected files, not every
+runtime resource dependency. Historical tests assumed that content existed; their
+source-preview syntax checks did not execute those assertions. This explains the
+observed coverage gap; it does not establish a file-specific decision that the
+omitted source is safe or unsafe to publish.
+
+Run the separate, read-only content gate before claiming packaged procedure content:
+
+```sh
+python scripts/check_playbook_content.py
+```
+
+It currently exits nonzero because the default source is absent. Keep that result
+visible as a release blocker, separate from passing source-hygiene checks. The gate
+has no automatic fallback and does not seed databases or execute actions. It also
+requires the default resource in the publication inventory, so an ignored local
+copy cannot hide an export omission. It checks
+all crosswalk keys by default, rejects duplicate source IDs and non-ready compiled
+content, and supports explicit key selection for bounded fixture qualification.
+Passing the gate cannot establish graph semantics, approval enforcement, provider
+availability or runtime authorization. CI remains paused; this command is not wired
+into CI or production startup.
+
+The authored test-only bundle can be checked explicitly:
+
+```sh
+python scripts/check_playbook_content.py --source backend/tests/fixtures/account_compromise.synthetic.yaml --key ACCOUNT-COMPROMISE
+python -m pytest backend/tests/test_playbook_content.py backend/tests/test_playbook_ir_loader.py -q
+```
+
+This fixture retains the existing identity/crosswalk and is labeled synthetic and
+effect-disabled. Its nine manual steps describe evidence review, abstention,
+protected-account denial, exact proposal/approval, simulated lock, independent
+observation, uncertainty and outcome obligations. They are descriptions, not
+implemented control gates. No executor binding, real provider call, conditional
+execution or claim of containment is supplied. The default loader never selects it.
+Future qualification must implement and test those semantics through actual
+case/authority/persistence and Temporal boundaries with a simulated provider.
+Neither private historical YAML candidate is restored by this fixture.
+
 ## Detection routing and quality gates
 
 The [detection catalog](../../cfg/detections/catalog.yaml),

@@ -350,6 +350,35 @@
       "test_profile": "python -m pytest backend/tests/test_playbook_ir_loader.py -q; make preview-tooling",
       "review_scope": "Synthetic compiler/loader/planner regression and missing-source denial only; not execution or authorization qualification",
       "replacement_ids": []
+    },
+    {
+      "id": "PB-002",
+      "owner": "SOC content packaging",
+      "reason": "Expose missing default content separately from source hygiene and synthetic fixture checks",
+      "gap": "Default bundled source remains absent; synthetic manual descriptions do not implement workflow control semantics",
+      "status": "partial",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/architecture/adaptive-playbooks.md"
+      ],
+      "implementation": [
+        "scripts/check_playbook_content.py",
+        "backend/tests/fixtures/account_compromise.synthetic.yaml",
+        "publication/source-files.json",
+        "publication/contracts.json"
+      ],
+      "tests": [
+        "backend/tests/test_playbook_content.py",
+        "backend/tests/test_playbook_ir_loader.py"
+      ],
+      "documentation": [
+        "docs/architecture/adaptive-playbooks.md"
+      ],
+      "test_profile": "python -m pytest backend/tests/test_playbook_content.py backend/tests/test_playbook_ir_loader.py -q; python scripts/check_playbook_content.py (currently expected blocked)",
+      "review_scope": "Content presence/compiler gate and explicit effect-disabled input only; not execution or E2E",
+      "replacement_ids": []
     }
   ]
 }

@@ -1,0 +1,26 @@
+# Authored synthetic qualification input; not production content or a fallback.
+# Descriptions express obligations, not implemented approval/evidence semantics.
+playbooks:
+  - id: ID-ACCOUNT-COMPROMISE-v1
+    name: Synthetic account compromise qualification
+    version: synthetic-qualification-1
+    tags: [synthetic, effect-disabled, qualification-only]
+    artifacts_required:
+      - Synthetic sign-in timeline
+      - Synthetic account ownership and protected-account classification
+    phases:
+      - name: Detection and review
+        steps:
+          - {id: evidence, type: manual, label: Review synthetic evidence}
+          - {id: disposition, type: manual, label: Record benign abstention or malicious assessment}
+          - {id: protected, type: manual, label: Deny protected-account action}
+      - name: Approval and simulation specification
+        steps:
+          - {id: proposal, type: manual, label: Record exact target and proposal hash}
+          - {id: approval, type: manual, label: Require separate authorized approval}
+          - {id: simulation, type: manual, label: Specify simulated account lock with no provider call}
+      - name: Independent verification and outcome
+        steps:
+          - {id: verify, type: manual, label: Independently observe synthetic account state}
+          - {id: uncertainty, type: manual, label: Keep ambiguous or unavailable effects unresolved}
+          - {id: outcome, type: manual, label: Record simulated outcome and residual work}
