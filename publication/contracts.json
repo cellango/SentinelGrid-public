@@ -295,6 +295,35 @@
       "test_profile": "make preview-iam-consolidation-db; make preview-iam-db; IAM policy/API regression tests",
       "review_scope": "Atomic PolicyService create/update/template clone on synthetic split and consolidated stores; no new authority or routing",
       "replacement_ids": []
+    },
+    {
+      "id": "DBF-004",
+      "owner": "IAM policy and portal services",
+      "reason": "Use one atomic mutation boundary for both policy writer interfaces while preserving portal fields",
+      "gap": "Other writers, uncertain commit outcomes and cross-store admission remain unqualified",
+      "status": "partial",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/reference/iam-consolidation-qualification.md"
+      ],
+      "implementation": [
+        "backend/agents/iam_agent/app/services/policy_service.py",
+        "backend/agents/iam_agent/app/services/iam_portal_service.py",
+        "publication/contracts.json"
+      ],
+      "tests": [
+        "backend/agents/iam_agent/tests/test_iam_consolidation_database.py",
+        "backend/agents/iam_agent/tests/test_policy_enforcement.py",
+        "backend/agents/iam_agent/tests/test_iam_portal_tenant_session.py"
+      ],
+      "documentation": [
+        "docs/reference/iam-consolidation-qualification.md"
+      ],
+      "test_profile": "make preview-iam-consolidation-db; native IAM and policy/portal authorization regressions; make preview-tooling",
+      "review_scope": "Synthetic shared-writer transaction, field compatibility and tenant/API tests; no live routing or effects",
+      "replacement_ids": []
     }
   ]
 }

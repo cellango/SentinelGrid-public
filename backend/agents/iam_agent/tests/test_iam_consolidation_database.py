@@ -350,7 +350,8 @@ def test_api_failure_envelopes_and_success(mutation_store):
         assert error.value.status_code == 400
 
 
-def test_concurrent_updates_serialize_policy_and_rules(mutation_store):
+@pytest.mark.parametrize("portal_second", [False, True])
+def test_concurrent_updates_serialize_policy_and_rules(mutation_store, monkeypatch, portal_second):
     from concurrent.futures import ThreadPoolExecutor
     from queue import Queue
     from threading import Event
@@ -378,6 +379,9 @@ def test_concurrent_updates_serialize_policy_and_rules(mutation_store):
         with tenant_session(second_factory, A) as session:
             second_pid.put(session.scalar(text("SELECT pg_backend_pid()")))
             session.execute(text("SET LOCAL lock_timeout='8s'"))
+            if portal_second:
+                from app.models.iam_portal import PolicyUpdate as PortalUpdate
+                return make_portal(session, A, monkeypatch).update_policy(created.id, PortalUpdate(policy_data=mutation_payload("two")))
             return PolicyService(session, A, "", load_seed_tenant=False).update_policy(created.id, PolicyUpdate(policy_data=mutation_payload("two")))
     try:
         with ThreadPoolExecutor(max_workers=2) as pool:
@@ -433,3 +437,165 @@ def test_failure_before_commit_rolls_back_complete_create(mutation_store, monkey
             scoped.setattr(session, "commit", fail_commit)
             assert service.create_policy(create_request("commit-failure"), str(USER)) is None
     assert policy_snapshot(params, database) == before
+
+
+def make_portal(session, tenant, monkeypatch):
+    from types import SimpleNamespace
+    from app.services import iam_portal_service as portal
+    # Provider boundary unused in this storage test; never initialize real admin credentials.
+    monkeypatch.setattr(portal, "KeycloakRoleClient", lambda: SimpleNamespace(realm="synthetic"))
+    return portal.IAMPortalService(session, tenant, "synthetic")
+
+
+def portal_request(marker="portal"):
+    from app.models.iam_portal import PolicyCreate
+    return PolicyCreate(name=marker, display_name=marker, policy_type="access",
+                        policy_data=mutation_payload(marker), approval_required=True)
+
+
+def test_portal_create_and_expanded_update_preserve_fields(mutation_store, monkeypatch):
+    from app.models.iam_portal import PolicyUpdate
+    params, factory, database = mutation_store
+    scope_id = uuid4()
+    with tenant_session(factory, A) as session:
+        service = make_portal(session, A, monkeypatch)
+        created = service.create_policy(portal_request(), str(USER))
+        assert created and created.approval_required and created.approval_status == "approved"
+        data = mutation_payload("expanded")
+        data.update(type="authorization", scope="app", scope_id=str(scope_id))
+        updated = service.update_policy(created.id, PolicyUpdate(name="renamed", display_name="Renamed", description="Description",
+            policy_type="authorization", scope="app", scope_id=scope_id, policy_data=data,
+            priority=7, is_active=False, approval_required=True, approval_status="pending"))
+        assert updated
+        assert (updated.name, updated.display_name, updated.description) == ("renamed", "Renamed", "Description")
+        assert (updated.policy_type, updated.scope, updated.scope_id) == ("authorization", "app", scope_id)
+        assert (updated.priority, updated.is_active, updated.approval_required, updated.approval_status) == (7, False, True, "pending")
+    before_rules = rows(params, database, "policy_rules")
+    with tenant_session(factory, A) as session:
+        service = make_portal(session, A, monkeypatch)
+        approved = service.update_policy(created.id, PolicyUpdate(approval_required=False, approval_status="approved"))
+        assert approved and not approved.approval_required and approved.approval_status == "approved"
+        # None retains existing values, matching historical COALESCE behavior.
+        unchanged = service.update_policy(created.id, PolicyUpdate(description=None, scope_id=None))
+        assert unchanged and unchanged.description == "Description" and unchanged.scope_id == scope_id
+    assert rows(params, database, "policy_rules") == before_rules
+    own_rules = [r for r in before_rules if r["policy_id"] == str(created.id)]
+    assert [r["rule_id"] for r in own_rules] == ["expanded"]
+
+
+@pytest.mark.parametrize("operation", ["create", "update", "clone"])
+def test_portal_rule_failure_rolls_back_whole_operation(mutation_store, monkeypatch, operation):
+    from app.models.iam_portal import PolicyUpdate
+    params, factory, database = mutation_store
+    with tenant_session(factory, A) as session:
+        original = make_portal(session, A, monkeypatch).create_policy(portal_request("original"), str(USER))
+        assert original
+        session.execute(text("UPDATE policies SET is_template=true WHERE id=:id"), {"id": original.id})
+    before = policy_snapshot(params, database)
+    with tenant_session(factory, A) as session:
+        service = make_portal(session, A, monkeypatch)
+        execute = session.execute
+        def failing(statement, *args, **kwargs):
+            result = execute(statement, *args, **kwargs)
+            if "INSERT INTO policy_rules" in str(statement):
+                raise RuntimeError("synthetic portal child failure")
+            return result
+        monkeypatch.setattr(session, "execute", failing)
+        if operation == "create":
+            assert service.create_policy(portal_request("failed"), str(USER)) is None
+        elif operation == "update":
+            assert service.update_policy(original.id, PolicyUpdate(name="failed", policy_data=mutation_payload("failed"))) is None
+        else:
+            assert service.create_policy_from_template(original.id, "failed", "Failed", str(USER)) is None
+    assert policy_snapshot(params, database) == before
+
+
+def test_portal_clone_uses_real_tenant_template_row(mutation_store, monkeypatch):
+    params, factory, database = mutation_store
+    with tenant_session(factory, A) as session:
+        service = make_portal(session, A, monkeypatch)
+        template = service.create_policy(portal_request("template"), str(USER))
+        assert template
+        session.execute(text("UPDATE policies SET is_template=true WHERE id=:id"), {"id": template.id})
+    with tenant_session(factory, A) as session:
+        cloned = make_portal(session, A, monkeypatch).create_policy_from_template(template.id, "clone", "Clone", str(USER))
+        assert cloned and cloned.id != template.id and not cloned.is_template
+        assert not cloned.approval_required and cloned.approval_status == "approved"
+    children = [r for r in rows(params, database, "policy_rules") if r["policy_id"] == str(cloned.id)]
+    assert [r["rule_id"] for r in children] == ["template"]
+    before = policy_snapshot(params, database)
+    with tenant_session(factory, B) as session:
+        assert make_portal(session, B, monkeypatch).create_policy_from_template(template.id, "foreign", "Foreign", str(USER)) is None
+    assert policy_snapshot(params, database) == before
+
+
+def test_portal_invalid_dsl_missing_foreign_and_restricted_fields(mutation_store, monkeypatch):
+    from app.models.iam_portal import PolicyUpdate
+    params, factory, database = mutation_store
+    before = policy_snapshot(params, database)
+    own = next(p["id"] for p in before["policies"] if p["tenant_id"] == str(A))
+    foreign = next(p["id"] for p in before["policies"] if p["tenant_id"] == str(B))
+    with tenant_session(factory, A) as session:
+        service = make_portal(session, A, monkeypatch)
+        bad = portal_request("bad").model_copy(update={"policy_data": {"id":"bad", "type":"access", "rules":[]}})
+        assert service.create_policy(bad, str(USER)) is None
+        assert service.update_policy(own, PolicyUpdate(policy_data=bad.policy_data)) is None
+        for identifier in (foreign, uuid4()):
+            assert service.update_policy(identifier, PolicyUpdate(policy_data=mutation_payload())) is None
+            assert service.update_policy(identifier, PolicyUpdate()) is None
+        writer = PolicyService(session, A, "", load_seed_tenant=False)
+        assert not writer._update_policy_fields(own, {"tenant_id": B})
+        assert not writer._update_policy_fields(own, {"is_template": True})
+    assert policy_snapshot(params, database) == before
+
+
+@pytest.mark.parametrize("operation", ["create", "update"])
+def test_portal_response_failure_rolls_back(mutation_store, monkeypatch, operation):
+    from app.models.iam_portal import PolicyUpdate
+    params, factory, database = mutation_store
+    before = policy_snapshot(params, database)
+    own = next(p["id"] for p in before["policies"] if p["tenant_id"] == str(A))
+    with tenant_session(factory, A) as session:
+        service = make_portal(session, A, monkeypatch)
+        monkeypatch.setattr(service, "get_policy", lambda *_: None)
+        if operation == "create":
+            assert service.create_policy(portal_request(), str(USER)) is None
+        else:
+            assert service.update_policy(own, PolicyUpdate(policy_data=mutation_payload("failed"))) is None
+    assert policy_snapshot(params, database) == before
+
+
+def test_portal_parent_constraint_failure_restores_rules(mutation_store, monkeypatch):
+    from app.models.iam_portal import PolicyUpdate
+    params, factory, database = mutation_store
+    before = policy_snapshot(params, database)
+    own = next(p["id"] for p in before["policies"] if p["tenant_id"] == str(A))
+    with tenant_session(factory, A) as session:
+        assert make_portal(session, A, monkeypatch).update_policy(own, PolicyUpdate(
+            policy_data=mutation_payload("must-rollback"), approval_status="invalid-status")) is None
+    assert policy_snapshot(params, database) == before
+
+
+def test_portal_api_preserves_failure_status_mapping(mutation_store, monkeypatch):
+    from app.api import iam_portal as api
+    from app.models.iam_portal import PolicyUpdate
+    from fastapi import HTTPException
+    params, factory, database = mutation_store
+    with tenant_session(factory, A) as session:
+        service = make_portal(session, A, monkeypatch)
+        created = asyncio.run(api.create_policy(portal_request("api"), service, str(USER)))
+        assert created.approval_required
+        updated = asyncio.run(api.update_policy(created.id, PolicyUpdate(display_name="API"), service))
+        assert updated.display_name == "API"
+        bad = portal_request("bad").model_copy(update={"policy_data": {"id":"bad", "type":"access", "rules":[]}})
+        with pytest.raises(HTTPException) as failure:
+            asyncio.run(api.create_policy(bad, service, str(USER)))
+        assert failure.value.status_code == 400
+        foreign = next(p["id"] for p in rows(params, database, "policies") if p["tenant_id"] == str(B))
+        for identifier in (uuid4(), foreign):
+            with pytest.raises(HTTPException) as failure:
+                asyncio.run(api.update_policy(identifier, PolicyUpdate(), service))
+            assert failure.value.status_code == 404
+            with pytest.raises(HTTPException) as failure:
+                asyncio.run(api.create_policy_from_template(identifier, "clone", "Clone", service, str(USER)))
+            assert failure.value.status_code == 404

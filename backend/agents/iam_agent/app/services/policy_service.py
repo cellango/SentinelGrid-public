@@ -37,7 +37,11 @@ class PolicyService:
     # ==================== Policy CRUD ====================
     
     def create_policy(self, policy_data: PolicyCreate, created_by: str) -> Optional[Policy]:
-        """Create a new policy."""
+        """Create a new policy through the shared atomic writer."""
+        return self._create_policy_record(policy_data, created_by)
+
+    def _create_policy_record(self, policy_data, created_by, *, approval_required=False, result_factory=None):
+        """Internal adapter boundary; return validation happens before the one commit."""
         try:
             from sqlalchemy import text
             
@@ -52,8 +56,8 @@ class PolicyService:
             # Insert policy
             result = self.db.execute(
                 text("""
-                    INSERT INTO policies (tenant_id, name, display_name, description, policy_type, scope, scope_id, policy_data, is_active, priority, created_by)
-                    VALUES (:tenant_id, :name, :display_name, :description, :policy_type, :scope, :scope_id, :policy_data, :is_active, :priority, :created_by)
+                    INSERT INTO policies (tenant_id, name, display_name, description, policy_type, scope, scope_id, policy_data, is_active, priority, created_by, approval_required)
+                    VALUES (:tenant_id, :name, :display_name, :description, :policy_type, :scope, :scope_id, :policy_data, :is_active, :priority, :created_by, :approval_required)
                     RETURNING id, created_at, updated_at
                 """),
                 {
@@ -67,7 +71,8 @@ class PolicyService:
                     "policy_data": policy_json,
                     "is_active": policy_data.is_active,
                     "priority": policy_data.priority,
-                    "created_by": created_by
+                    "created_by": created_by,
+                    "approval_required": approval_required
                 }
             )
             row = result.fetchone()
@@ -76,7 +81,7 @@ class PolicyService:
             # Extract rules and store them
             self._extract_and_store_rules(policy_uuid, policy_data.policy_data)
             
-            policy = Policy(
+            policy = result_factory(policy_uuid) if result_factory else Policy(
                 id=policy_uuid,
                 tenant_id=self.tenant_id,
                 name=policy_data.name,
@@ -92,6 +97,8 @@ class PolicyService:
                 created_at=row[1],
                 updated_at=row[2]
             )
+            if policy is None:
+                raise ValueError("Policy response could not be constructed")
             self.db.commit()
             return policy
         except Exception as e:
@@ -156,62 +163,48 @@ class PolicyService:
         return next((p for p in policies if p.id == policy_id), None)
     
     def update_policy(self, policy_id: UUID, policy_update: PolicyUpdate) -> bool:
-        """Update policy."""
+        """Preserve the narrow API while using the shared atomic writer."""
+        return self._update_policy_fields(policy_id, policy_update.model_dump(exclude_none=True))
+
+    def _update_policy_fields(self, policy_id, fields, *, result_factory=None):
+        """Internal portal adapter accepts only existing policy columns, never authority."""
+        allowed = {"name", "display_name", "description", "policy_type", "scope", "scope_id",
+                   "policy_data", "is_active", "priority", "approval_required", "approval_status"}
         try:
-            from sqlalchemy import text
-            
+            if not set(fields).issubset(allowed):
+                raise ValueError("Unsupported policy update field")
             params = {"policy_id": str(policy_id), "tenant_id": str(self.tenant_id)}
-            # Serialize parent and rule replacement, including concurrent updates.
             parent = self.db.execute(text(
                 "SELECT id FROM policies WHERE id=:policy_id AND tenant_id=:tenant_id FOR UPDATE"
             ), params).first()
             if parent is None:
                 return False
             updates = []
-            
-            if policy_update.display_name is not None:
-                updates.append("display_name = :display_name")
-                params["display_name"] = policy_update.display_name
-            
-            if policy_update.description is not None:
-                updates.append("description = :description")
-                params["description"] = policy_update.description
-            
-            if policy_update.policy_data is not None:
-                if not self._validate_policy_dsl(policy_update.policy_data):
-                    return False
-                updates.append("policy_data = :policy_data")
-                params["policy_data"] = json.dumps(policy_update.policy_data)
-                # Re-extract rules
-                self._extract_and_store_rules(policy_id, policy_update.policy_data)
-            
-            if policy_update.is_active is not None:
-                updates.append("is_active = :is_active")
-                params["is_active"] = policy_update.is_active
-            
-            if policy_update.priority is not None:
-                updates.append("priority = :priority")
-                params["priority"] = policy_update.priority
-            
-            if not updates:
+            for field, value in fields.items():
+                if field == "policy_data":
+                    self._extract_and_store_rules(policy_id, value)
+                    value = json.dumps(value)
+                    updates.append("policy_data = CAST(:policy_data AS jsonb)")
+                else:
+                    updates.append(f"{field} = :{field}")
+                    if field == "scope_id":
+                        value = str(value)
+                params[field] = value
+            if not updates and result_factory is None:
                 return True
-            
             updates.append("updated_at = now()")
-            
-            query = f"""
-                UPDATE policies
-                SET {', '.join(updates)}
-                WHERE id = :policy_id AND tenant_id = :tenant_id
-            """
-            
-            self.db.execute(text(query), params)
+            self.db.execute(text(f"UPDATE policies SET {', '.join(updates)} "
+                                 "WHERE id=:policy_id AND tenant_id=:tenant_id"), params)
+            result = result_factory(policy_id) if result_factory else True
+            if result is None:
+                raise ValueError("Policy response could not be constructed")
             self.db.commit()
-            return True
+            return result
         except Exception as e:
             logger.error(f"Failed to update policy: {e}")
             self.db.rollback()
             return False
-    
+
     def delete_policy(self, policy_id: UUID) -> bool:
         """Delete policy."""
         try:

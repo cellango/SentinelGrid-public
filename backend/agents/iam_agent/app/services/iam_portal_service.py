@@ -427,78 +427,20 @@ class IAMPortalService:
         raise HTTPException(status_code=503, detail="Shared policy publication and cloning require explicit admission")
 
     def create_policy(self, payload: PolicyCreate, created_by: Optional[str] = None) -> Optional[Policy]:
-        try:
-            from sqlalchemy import text
-            r = self.db.execute(
-                text("""
-                    INSERT INTO policies (tenant_id, name, display_name, description, policy_type, scope, scope_id, policy_data, is_active, priority, created_by, is_template, approval_required, approval_status)
-                    VALUES (:t, :name, :display_name, :description, :ptype, :scope, :scope_id, :pdata, :is_active, :priority, :created_by, false, :approval_required, 'approved')
-                    RETURNING id, created_at, updated_at
-                """),
-                {
-                    "t": str(self.tenant_id),
-                    "name": payload.name,
-                    "display_name": payload.display_name,
-                    "description": payload.description,
-                    "ptype": payload.policy_type,
-                    "scope": payload.scope or "tenant",
-                    "scope_id": str(payload.scope_id) if payload.scope_id else None,
-                    "pdata": payload.policy_data or {},
-                    "is_active": payload.is_active if payload.is_active is not None else True,
-                    "priority": payload.priority if payload.priority is not None else 100,
-                    "created_by": created_by,
-                    "approval_required": payload.approval_required if payload.approval_required is not None else False,
-                },
-            ).fetchone()
-            self.db.commit()
-            return self.get_policy(r[0])
-        except Exception as e:
-            logger.error(f"Failed to create policy: {e}", exc_info=True)
-            self.db.rollback()
-            return None
+        from app.services.policy_service import PolicyService
+        writer = PolicyService(self.db, self.tenant_id, self.realm_name, load_seed_tenant=False)
+        return writer._create_policy_record(
+            payload, created_by, approval_required=payload.approval_required,
+            result_factory=self.get_policy,
+        )
 
     def update_policy(self, policy_id: UUID, payload: PolicyUpdate) -> Optional[Policy]:
-        try:
-            from sqlalchemy import text
-            self.db.execute(
-                text("""
-                    UPDATE policies
-                    SET name = COALESCE(:name, name),
-                        display_name = COALESCE(:display_name, display_name),
-                        description = COALESCE(:description, description),
-                        policy_type = COALESCE(:ptype, policy_type),
-                        scope = COALESCE(:scope, scope),
-                        scope_id = COALESCE(:scope_id, scope_id),
-                        policy_data = COALESCE(:pdata, policy_data),
-                        is_active = COALESCE(:is_active, is_active),
-                        priority = COALESCE(:priority, priority),
-                        approval_required = COALESCE(:approval_required, approval_required),
-                        approval_status = COALESCE(:approval_status, approval_status),
-                        updated_at = now()
-                    WHERE id = :id AND tenant_id = :t
-                """),
-                {
-                    "id": str(policy_id),
-                    "t": str(self.tenant_id),
-                    "name": payload.name,
-                    "display_name": payload.display_name,
-                    "description": payload.description,
-                    "ptype": payload.policy_type,
-                    "scope": payload.scope,
-                    "scope_id": str(payload.scope_id) if payload.scope_id else None,
-                    "pdata": payload.policy_data,
-                    "is_active": payload.is_active,
-                    "priority": payload.priority,
-                    "approval_required": payload.approval_required,
-                    "approval_status": payload.approval_status,
-                },
-            )
-            self.db.commit()
-            return self.get_policy(policy_id)
-        except Exception as e:
-            logger.error(f"Failed to update policy: {e}", exc_info=True)
-            self.db.rollback()
-            return None
+        from app.services.policy_service import PolicyService
+        writer = PolicyService(self.db, self.tenant_id, self.realm_name, load_seed_tenant=False)
+        result = writer._update_policy_fields(
+            policy_id, payload.model_dump(exclude_none=True), result_factory=self.get_policy,
+        )
+        return result if result is not False else None
 
     def list_policy_templates(self, policy_type: Optional[str] = None) -> List[Policy]:
         try:

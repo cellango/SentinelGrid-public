@@ -134,3 +134,43 @@ Parent locks protect cooperating PolicyService writers; they do not prove that
 all alternate SQL writers follow the protocol. Full writer coverage, IAM
 admission generations, cross-store case ordering and external issuer freshness
 remain separate gates. No automatic activation follows local test success.
+
+## Portal writer integration checkpoint
+
+IAMPortalService create/update and tenant-template clone now delegate to the same
+transaction-owning methods used by PolicyService. The common writer locks the
+parent for updates, replaces rules only when policy_data changes, validates the
+result object before committing and rolls back on failure. There is no second
+policy evaluator or independently committing rule helper.
+
+Portal-only name, type, scope, scope_id, approval_required and approval_status
+updates are preserved through a fixed internal column allowlist. Tenant ID,
+identity and template flags cannot be changed through that adapter. None values
+remain no-ops, matching the previous COALESCE behavior; approval-only updates
+leave extracted rules unchanged. Create retains the existing approved status and
+requested approval_required flag. Tenant-template clone retains its existing
+non-template/approval_required=false behavior. These are compatibility rules,
+not new permission or approval authority. Shared seed cloning stays disabled.
+
+Intentional correction: portal writes now reject invalid/unsupported policy DSL
+instead of saving it without extracted rules, and rule or response-construction
+failures roll back the whole mutation. Public DTOs and authorization dependencies
+are unchanged. Existing portal HTTP failure mapping is preserved: create 400;
+update/approve/reject 404; template clone 404. PolicyService's previously documented
+400 mapping remains separate. These routes do not disclose foreign tenant rows.
+
+Native tests use both split and consolidated fixtures. They cover expanded fields,
+approval-only and None updates, real tenant-template rows, missing/foreign parents,
+invalid DSL, forbidden adapter columns, extraction failures in create/update/clone,
+response construction failure, parent approval-constraint failure, API status
+mapping and competing PolicyService/portal updates. Concurrency checks use separate
+connections and observe PostgreSQL blocking. Provider-client initialization is
+stubbed in portal storage tests; no provider authentication or external effect is
+claimed. Existing API authorization and tenant-session tests remain regressions.
+
+Only this alternate writer family is integrated. Seed/import, governance,
+principal and other direct SQL writers still require inventory and qualification.
+No schema/migration, routing, database identity, privileges, CI or deployment
+changes accompany this checkpoint. Lost commit acknowledgement remains an
+uncertain outcome; cross-store admission/revocation and production activation
+remain separate gates.
