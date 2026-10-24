@@ -132,6 +132,45 @@ Future qualification must implement and test those semantics through actual
 case/authority/persistence and Temporal boundaries with a simulated provider.
 Neither private historical YAML candidate is restored by this fixture.
 
+## Retained recommendation snapshots
+
+`playbook_ir_snapshot.py` adds a pure library contract, currently exercised only
+with synthetic input. It captures one existing Playbook key, non-nil tenant and
+version UUIDs, explicit compiler build, full normalized compiler inputs (including
+catalog, crosswalk, executor aliases and response packs), and the compiled IR.
+The frozen envelope retains canonical JSON and its SHA-256 digest. Sorted object
+keys are deterministic; array order remains meaningful. Payloads reject non-finite
+numbers, ambiguous object keys and content exceeding 256 KiB.
+
+This is normalized JSON source retention, not byte-for-byte original YAML, comments,
+source signatures or a complete executable build archive. Those provenance and
+retention obligations remain at the future trusted publication boundary. The
+compiler build is caller-supplied metadata, not an attestation.
+
+Reads require expected tenant UUID, version UUID and payload digest, supplied by a
+trusted retained run/publication record. They validate the envelope and recover a
+fresh IR instance without loading current catalog content or recompiling. Changed
+input or returned mutable models cannot rewrite an existing snapshot. A changed
+payload under a reused version UUID fails a read pinned to the original digest.
+
+These are content-integrity checks, not authentication or authorization. A caller
+can hash its own content. The future service must authenticate scope, authorize
+publication/read access, enforce unique immutable version ownership and retain the
+approved snapshot before acknowledging a run. This library has no writer, endpoint,
+version registry or durable storage. `ready` remains recommendation-compiler status,
+not permission to execute. Expected digest/version values must never be taken from
+untrusted model arguments or substituted from the artifact being checked.
+
+The inactive run-manifest storage contract is not modified or activated. Its outer
+payload budget must be checked separately when snapshot references/content are
+integrated; this envelope's 256 KiB bound does not guarantee a containing manifest
+will fit. No schema migration, Temporal replay test, provider effect or E2E
+qualification is included. Execution and recovery remain Temporal responsibilities.
+
+```sh
+python -m pytest backend/tests/test_playbook_ir_snapshot.py backend/tests/test_playbook_content.py backend/tests/test_playbook_ir_loader.py -q
+```
+
 ## Detection routing and quality gates
 
 The [detection catalog](../../cfg/detections/catalog.yaml),

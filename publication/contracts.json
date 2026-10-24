@@ -379,6 +379,36 @@
       "test_profile": "python -m pytest backend/tests/test_playbook_content.py backend/tests/test_playbook_ir_loader.py -q; python scripts/check_playbook_content.py (currently expected blocked)",
       "review_scope": "Content presence/compiler gate and explicit effect-disabled input only; not execution or E2E",
       "replacement_ids": []
+    },
+    {
+      "id": "PB-003",
+      "owner": "Playbook publication / case runtime",
+      "reason": "Retain normalized compiler inputs and compiled IR with explicit tenant/version/digest read pins",
+      "gap": "No durable version registry, trusted writer, original YAML retention, full graph semantics or Temporal qualification",
+      "status": "partial",
+      "disposition": "keep",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/architecture/adaptive-playbooks.md",
+        "docs/reference/agentic-contracts.md"
+      ],
+      "implementation": [
+        "backend/libs/sg_agent_runtime/playbook_ir_snapshot.py",
+        "publication/contracts.json",
+        "publication/source-files.json"
+      ],
+      "tests": [
+        "backend/tests/test_playbook_ir_snapshot.py",
+        "backend/tests/test_playbook_ir_loader.py",
+        "backend/tests/test_playbook_content.py"
+      ],
+      "documentation": [
+        "docs/architecture/adaptive-playbooks.md"
+      ],
+      "test_profile": "python -m pytest backend/tests/test_playbook_ir_snapshot.py backend/tests/test_playbook_content.py backend/tests/test_playbook_ir_loader.py -q; make preview-tooling",
+      "review_scope": "Pure synthetic content pin/read integrity; no persistence, authorization or E2E",
+      "replacement_ids": []
     }
   ]
 }
