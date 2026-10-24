@@ -324,6 +324,32 @@
       "test_profile": "make preview-iam-consolidation-db; native IAM and policy/portal authorization regressions; make preview-tooling",
       "review_scope": "Synthetic shared-writer transaction, field compatibility and tenant/API tests; no live routing or effects",
       "replacement_ids": []
+    },
+    {
+      "id": "PB-001",
+      "owner": "SOC planning / case runtime",
+      "reason": "Reject unsupported and ambiguous source steps before treating recommendation IR as ready",
+      "gap": "Missing published source, immutable versions, full graph/evidence validation and Temporal E2E remain pending",
+      "status": "partial",
+      "disposition": "update",
+      "evidence": "not_asserted",
+      "design": [
+        "AGENTS.md",
+        "docs/architecture/adaptive-playbooks.md"
+      ],
+      "implementation": [
+        "backend/libs/sg_agent_runtime/playbook_ir_compiler.py",
+        "publication/contracts.json"
+      ],
+      "tests": [
+        "backend/tests/test_playbook_ir_loader.py"
+      ],
+      "documentation": [
+        "docs/architecture/adaptive-playbooks.md"
+      ],
+      "test_profile": "python -m pytest backend/tests/test_playbook_ir_loader.py -q; make preview-tooling",
+      "review_scope": "Synthetic compiler/loader/planner regression and missing-source denial only; not execution or authorization qualification",
+      "replacement_ids": []
     }
   ]
 }

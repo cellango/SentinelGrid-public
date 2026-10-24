@@ -289,6 +289,32 @@ def _build_actions_and_decisions(
         for step in phase.get("steps") or []:
             flattened_steps.append({"phase_name": phase_name, "step": step})
 
+    # Preserve legacy manual steps with omitted type, but never silently treat
+    # an unsupported control node as an ordinary action. This is validation for
+    # recommendation IR, not authorization or executable graph qualification.
+    seen_step_ids: set[str] = set()
+    for index, item in enumerate(flattened_steps):
+        step = item["step"]
+        step_type = step.get("type", "manual")
+        if step_type not in ("manual", "automated", "decision"):
+            issues.append(PlaybookIRValidationIssue(
+                severity="error", code="unsupported_step_type",
+                message=f"Step {index + 1} has unsupported type {step_type!r}.",
+            ))
+        if "id" in step and (not isinstance(step["id"], str) or not step["id"].strip()):
+            issues.append(PlaybookIRValidationIssue(
+                severity="error", code="invalid_step_id",
+                message=f"Step {index + 1} requires a nonblank string ID when supplied.",
+            ))
+        prefix = "decision" if step_type == "decision" else "action"
+        step_id = str(step.get("id") or f"{prefix}_{index + 1}")
+        if step_id in seen_step_ids:
+            issues.append(PlaybookIRValidationIssue(
+                severity="error", code="duplicate_step_id",
+                message=f"Step ID {step_id!r} is repeated across the playbook.",
+            ))
+        seen_step_ids.add(step_id)
+
     sequence = 1
     action_index: dict[int, str] = {}
     for index, item in enumerate(flattened_steps):

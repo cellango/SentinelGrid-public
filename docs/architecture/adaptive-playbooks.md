@@ -52,6 +52,36 @@ required work and incompatible schemas block publication/execution; no all-skipp
 graph may count as successful completion. Old content remains accessible through
 versioned provenance and compatibility adapters.
 
+## Current recommendation compiler qualification
+
+The existing `playbook_ir_compiler.py` now marks unsupported step types,
+nonblank-string ID violations and duplicate IDs (including action/decision and
+cross-phase collisions) as errors. These produce `manual_review` and
+`supervised_recommendation_only`; the existing planner projects manual review.
+Omitted step types still mean manual, and omitted IDs retain the legacy generated
+IDs. Empty definitions and automated actions without known aliases remain blocked
+from `ready`. This validates recommendation IR, not a schedulable graph or an
+authorization decision. In particular, `ready` is not execution permission.
+
+The public checkout does not contain the loader's default
+`backend/agents/soar_agent/app/data/ootb_playbooks.yaml`. Catalog and crosswalk
+entries alone therefore do not establish a compiled ACCOUNT-COMPROMISE procedure.
+The missing-source test requires manual review and no invented actions. Existing
+alias and planner assertions are retained against explicitly synthetic YAML input;
+these fixtures are not restored published content or production procedure versions.
+
+Run the focused compiler/loader/planner tests with:
+
+```sh
+python -m pytest backend/tests/test_playbook_ir_loader.py -q
+```
+
+Immutable publication, complete source recovery/approval, typed capability checks,
+branch/join and mandatory-evidence semantics, tenant-specific overrides and pinned
+run versions remain pending. No Temporal worker, provider effect, database change
+or end-to-end qualification is supplied by these tests. The compilation path owns
+no scheduling or recovery; Temporal remains the selected execution owner.
+
 ## Detection routing and quality gates
 
 The [detection catalog](../../cfg/detections/catalog.yaml),
